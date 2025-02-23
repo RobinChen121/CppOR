@@ -18,7 +18,13 @@ else()
     message(FATAL_ERROR "Could not find Boost!")
 endif()
 
-add_executable(${PROJECT_NAME} main.cpp boost_folder/boost_test.cpp)
+add_executable(${PROJECT_NAME} main.cpp junior_practices/fibonacci_test.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+
+# 设置构建类型为 Release, 开启 o2,o3做准备
+set(CMAKE_BUILD_TYPE Release)
+
+# 修改 Release 模式下的编译选项，强制使用 -O3（你也可以改为 -O2）
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 

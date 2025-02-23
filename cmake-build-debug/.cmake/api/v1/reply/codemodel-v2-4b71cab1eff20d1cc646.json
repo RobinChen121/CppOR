@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"jsonFile" : "directory-.-Release-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.30"
@@ -19,7 +19,7 @@
 					]
 				}
 			],
-			"name" : "Debug",
+			"name" : "Release",
 			"projects" : 
 			[
 				{
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CppClion::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CppClion-Debug-1722e640c37449c6c6b3.json",
+					"jsonFile" : "target-CppClion-Release-f403e0d6285f8829d077.json",
 					"name" : "CppClion",
 					"projectIndex" : 0
 				}
