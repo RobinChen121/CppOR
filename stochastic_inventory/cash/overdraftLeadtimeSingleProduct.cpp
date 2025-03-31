@@ -4,7 +4,8 @@
  * Description: For 3 period, c++ is faster than java, but for 4 period, it is
  * lower (over 120s vs 41s in java). The main reason lies in the recursion for
  * double hash map. If round the cash in recursion, running time is about 9s
- * while java is still 41s; rounding 1 decimal, running time is about 60s; no
+ * while java is still 41s;
+ * rounding 1 decimal, running time is about 60s; no
  * rounding, running time is 128s. Java's JIT seems to optimize some
  * computations: after running the DP sometimes in Java, its result becomes not
  * related with the number of decimals.
@@ -29,15 +30,15 @@ private:
   double ini_cash = 0;
   CashLeadtimeState ini_state =
       CashLeadtimeState{1, ini_inventory, ini_cash, 0.0};
-  static constexpr std::vector<double> demands = {15, 15, 15, 15, 15};
+  std::vector<double> demands = {10, 10};
   std::string distribution_type = "poisson";
-  static constexpr size_t T = demands.size(); // 直接获取大小
+  size_t T = demands.size(); // 直接获取大小
 
-  std::vector<double> prices = std::vector<double>(T, 10.0);
+  std::vector<double> prices = std::vector<double>(T, 5.0);
   // std::vector<double> fixed_order_costs = std::vector<double>(T, 0.0);
   std::vector<double> unit_vari_order_costs = std::vector<double>(T, 1.0);
   // std::vector<double> unit_hold_costs = std::vector<double>(T, 0.0);
-  std::vector<double> overhead_costs = std::vector<double>(T, 50.0);
+  std::vector<double> overhead_costs = std::vector<double>(T, 0.0);
   double unit_salvage_value = 0.5; //  * unit_vari_order_costs[T - 1];
 
   double r0 = 0.0;
@@ -49,16 +50,19 @@ private:
   double truncated_quantile = 0.9999;
   double step_size = 1.0;
   double min_inventory = 0;
-  double max_inventory = 60;
-  double min_cash = -200;
+  double max_inventory = 50;
+  double min_cash = -600;
   double max_cash = 300;
 
-  const std::vector<std::vector<std::vector<double>>> pmf =
-      PMF(truncated_quantile, step_size, distribution_type).getPMF(demands);
+  std::vector<std::vector<std::vector<double>>> pmf;
   std::unordered_map<CashLeadtimeState, double> cacheActions;
   std::unordered_map<CashLeadtimeState, double> cacheValues;
 
 public:
+  OverdraftLeadtimeSingleProduct() {
+    pmf = PMF(truncated_quantile, step_size, distribution_type).getPMF(demands);
+  }
+
   [[nodiscard]] std::vector<double> feasibleActions() const {
     const int QNum = static_cast<int>(max_order_quantity / step_size);
 
@@ -163,9 +167,11 @@ int main() {
   const auto start_time = std::chrono::high_resolution_clock::now();
   const auto final_value = problem.solve()[0];
   const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> duration = end_time - start_time;
-  std::cout << "running time is " << duration << std::endl;
+  const std::chrono::duration<double> time = end_time - start_time;
+  std::cout << "running time is " << time.count() << std::endl;
   std::cout << "Final expected cash increment is " << final_value << std::endl;
   std::cout << "Optimal Q in the first period is " << problem.solve()[1]
             << std::endl;
+
+  return 0;
 }

@@ -13,8 +13,8 @@
  * values.
  *
  */
-#include "../../utils/Sampling.h"
 #include "../../utils/removeDuplicates.h"
+#include "../../utils/sampling.h"
 #include "common.h"
 #include "gurobi_c++.h"
 
@@ -29,8 +29,8 @@ private:
   // problem settings
   double iniI = 0;
   double iniCash = 0;
-  std::vector<double> meanDemands = {10.0, 10.0, 10.0, 10.0,
-                                     10.0}; // std::vector<double>(4, 15);
+  std::vector<double> meanDemands = {15.0, 15.0, 15.0,
+                                     15.0}; // std::vector<double>(4, 15);
   std::string distribution_name = "poisson";
   size_t T = meanDemands.size();
   std::vector<double> unitVariOderCosts = std::vector<double>(T, 1);
@@ -45,7 +45,7 @@ private:
   // sddp settings
   int sampleNum = 10;  // 10; // 2
   int forwardNum = 20; // 20; // 8
-  int iterNum = 40;    //
+  int iterNum = 30;    //
   double thetaInitialValue = -500;
 
 public:
@@ -57,8 +57,7 @@ void SingleProduct::solve() const {
   std::vector<std::vector<double>> sampleDetails(T);
   for (int t = 0; t < T; t++) {
     sampleDetails[t].resize(sampleNums[t]);
-    auto sampling = Sampling(distribution_name, meanDemands[t]);
-    sampleDetails[t] = sampling.generateSamples(sampleNums[t]);
+    sampleDetails[t] = generateSamplesPoisson(sampleNums[t], meanDemands[t]);
   }
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
 
@@ -188,8 +187,7 @@ void SingleProduct::solve() const {
     std::vector<std::unordered_map<IStatus, std::array<std::vector<double>, 2>>>
         results_status_lastStage(forwardNum);
 
-    auto scenarioPaths =
-        Sampling::generateScenarioPaths(forwardNum, sampleNums);
+    auto scenarioPaths = generateScenarioPaths(forwardNum, sampleNums);
 
     // scenarioPaths = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {1, 0, 0}, // change
     //                  {1, 1, 0}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}};
@@ -272,16 +270,17 @@ void SingleProduct::solve() const {
 
       // forward
       for (int n = 0; n < forwardNum; n++) {
+        double rhs2 = 0;
         int index = scenarioPaths[n][t - 1];
         double demand = sampleDetails[t - 1][index];
         double rhs1 = t == 1 ? iniI - demand
-                             : IForwardValues[iter - 1][t - 1][n] +
-                                   qpreValues[iter - 1][t - 2][n] - demand;
+                             : IForwardValues[iter][t - 1][n] +
+                                   qpreValues[iter][t - 2][n] - demand;
         if (t < T) {
-          double rhs2 = prices[t - 1] * demand +
-                        (1 + r0) * W0ForwardValues[iter - 1][t - 1][n] -
-                        (1 + r1) * W1ForwardValues[iter - 1][t - 1][n] -
-                        (1 + r2) * W2ForwardValues[iter - 1][t - 1][n];
+          rhs2 = prices[t - 1] * demand +
+                 (1 + r0) * W0ForwardValues[iter][t - 1][n] -
+                 (1 + r1) * W1ForwardValues[iter][t - 1][n] -
+                 (1 + r2) * W2ForwardValues[iter][t - 1][n];
           double rhs3 = qValues[iter][t - 1][n];
           models[t].setObjective(
               overheadCosts[t] + unitVariOderCosts[t] * q[t] -
@@ -295,6 +294,19 @@ void SingleProduct::solve() const {
                                  unitSalvageValue * I[t - 1]);
         }
         models[t].getConstr(0).set(GRB_DoubleAttr_RHS, rhs1);
+
+        // set lb and up for some variables
+        double this_I_value = rhs1 > 0 ? rhs1 : 0;
+        double this_B_value = rhs1 < 0 ? -rhs1 : 0;
+        I[t - 1].set(GRB_DoubleAttr_LB, this_I_value);
+        I[t - 1].set(GRB_DoubleAttr_UB, this_I_value);
+        B[t - 1].set(GRB_DoubleAttr_LB, this_B_value);
+        B[t - 1].set(GRB_DoubleAttr_UB, this_B_value);
+        if (t < T) {
+          double this_end_cash = rhs2 - prices[t - 1] * this_B_value;
+          cash[t - 1].set(GRB_DoubleAttr_LB, this_end_cash);
+          cash[t - 1].set(GRB_DoubleAttr_UB, this_end_cash);
+        }
 
         // optimize
         models[t].optimize();
@@ -339,12 +351,21 @@ void SingleProduct::solve() const {
       }
     }
     for (size_t t = T; t > 0; t--) {
+      // de set lb and up for some variables
+      I[t - 1].set(GRB_DoubleAttr_LB, 0.0);
+      I[t - 1].set(GRB_DoubleAttr_UB, GRB_INFINITY);
+      B[t - 1].set(GRB_DoubleAttr_LB, 0.0);
+      B[t - 1].set(GRB_DoubleAttr_UB, GRB_INFINITY);
+      if (t < T) {
+        cash[t - 1].set(GRB_DoubleAttr_LB, -GRB_INFINITY);
+        cash[t - 1].set(GRB_DoubleAttr_UB, GRB_INFINITY);
+      }
+
       IStatus status_last_stage;
       PairStatus status;
 
       for (int n = 0; n < forwardNum; n++) {
         size_t S = sampleDetails[t - 1].size();
-        bool skip = false;
         double last_q = 0;
         double rhs2 = 0;
         int piNum = models[t].get(GRB_IntAttr_NumConstrs);
@@ -352,13 +373,11 @@ void SingleProduct::solve() const {
         std::vector<double> rhs(piNum);
 
         for (size_t s = 0; s < S; s++) {
+          bool skip = false;
           auto demand = sampleDetails[t - 1][s];
           double rhs1 = t == 1 ? iniI - demand
                                : IForwardValues[iter][t - 1][n] +
                                      qpreValues[iter][t - 2][n] - demand;
-          if (iter == 4 and t == 2 and n == 5 and s == 0) {
-            ;
-          }
           if (t == T) {
             if (status_last_stage =
                     rhs1 > 0 ? IStatus::POSITIVE : IStatus::NEGATIVE;
@@ -421,7 +440,6 @@ void SingleProduct::solve() const {
               results_status_lastStage[n][status_last_stage] = {pi, rhs};
             else
               results_status[t - 1][n][status] = {pi, rhs};
-            skip = false;
 
             // if (iter == 4 and t == 2 and n == 5 and s == 1) {
             //   models[t].write("iter" + std::to_string(iter + 1) + "_sub_" +
@@ -506,7 +524,7 @@ void SingleProduct::solve() const {
   std::cout << "final expected cash balance is " << finalValue << std::endl;
   std::cout << "ordering Q in the first period is " << Q1 << std::endl;
   double optimal_value = 167.31;
-  double gap = std::abs((finalValue - optimal_value) / optimal_value);
+  double gap = (finalValue - optimal_value) / optimal_value;
   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
 }
 

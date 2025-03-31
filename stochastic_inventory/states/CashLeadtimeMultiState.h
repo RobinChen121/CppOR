@@ -33,6 +33,15 @@ public:
                                   const CashLeadtimeMultiState &state);
 
   friend struct std::hash<CashLeadtimeMultiState>;
+
+  // [[nodiscard]] 是 C++17 引入的属性，它的作用是
+  // 提示调用者不要忽略返回值，否则编译器会给出警告
+  [[nodiscard]] int getPeriod() const { return period; }
+  [[nodiscard]] double getIniI1() const { return ini_I1; }
+  [[nodiscard]] double getIniI2() const { return ini_I2; }
+  [[nodiscard]] double getQpre1() const { return Qpre1; }
+  [[nodiscard]] double getQpre2() const { return Qpre2; }
+  [[nodiscard]] double getIniCash() const { return iniCash; }
 };
 
 template <> // 表示模版特化， override 标准库中的 hash

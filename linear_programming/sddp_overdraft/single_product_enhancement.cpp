@@ -9,8 +9,8 @@
  * running time is 0.48s;
  *
  */
-#include "../../utils/Sampling.h"
 #include "../../utils/removeDuplicates.h"
+#include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 
 #include <iomanip> // for precision
@@ -51,8 +51,7 @@ void SingleProduct::solve() const {
   std::vector<std::vector<double>> sampleDetails(T);
   for (int t = 0; t < T; t++) {
     sampleDetails[t].resize(sampleNums[t]);
-    auto sampling = Sampling(distribution_name, meanDemands[t]);
-    sampleDetails[t] = sampling.generateSamples(sampleNums[t]);
+    sampleDetails[t] = generateSamplesPoisson(sampleNums[t], meanDemands[t]);
   }
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
 
@@ -141,9 +140,7 @@ void SingleProduct::solve() const {
 
   int iter = 0;
   while (iter < iterNum) {
-
-    auto scenarioPaths =
-        Sampling::generateScenarioPaths(forwardNum, sampleNums);
+    auto scenarioPaths = generateScenarioPaths(forwardNum, sampleNums);
     // scenarioPaths = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     //                  {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
 
@@ -427,7 +424,7 @@ void SingleProduct::solve() const {
   std::cout << "final expected cash balance is " << finalValue << std::endl;
   std::cout << "ordering Q in the first period is " << Q1 << std::endl;
   double optimal_value = 167.31;
-  double gap = std::abs((finalValue - optimal_value) / optimal_value);
+  double gap = (finalValue - optimal_value) / optimal_value;
   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
 }
 

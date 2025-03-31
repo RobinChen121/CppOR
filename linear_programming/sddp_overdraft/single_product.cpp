@@ -6,7 +6,7 @@
  * removing.
  *
  */
-#include "../../utils/Sampling.h"
+#include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 
 #include <iomanip> // for precision
@@ -48,8 +48,7 @@ void SingleProduct::solve() const {
   std::vector<std::vector<double>> sampleDetails(T);
   for (int t = 0; t < T; t++) {
     sampleDetails[t].resize(sampleNums[t]);
-    auto sampling = Sampling(distribution_name, meanDemands[t]);
-    sampleDetails[t] = sampling.generateSamples(sampleNums[t]);
+    sampleDetails[t] = generateSamplesPoisson(sampleNums[t], meanDemands[t]);
   }
 
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
@@ -61,7 +60,7 @@ void SingleProduct::solve() const {
 
   // decision variables
   std::vector<GRBVar> q(T);
-  std::vector<GRBVar> q_pre(T-1);
+  std::vector<GRBVar> q_pre(T - 1);
   std::vector<GRBVar> theta(T);
   std::vector<GRBVar> I(T);
   std::vector<GRBVar> B(T);
@@ -134,8 +133,7 @@ void SingleProduct::solve() const {
   double W2ForwardValues[iterNum][T][forwardNum];
   int iter = 0;
   while (iter < iterNum) {
-    auto scenarioPaths =
-        Sampling::generateScenarioPaths(forwardNum, sampleNums);
+    auto scenarioPaths = generateScenarioPaths(forwardNum, sampleNums);
 
     // int scenarioPaths[8][3] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     // {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}

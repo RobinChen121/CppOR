@@ -1,4 +1,4 @@
-set(RUN_NAME overdraft) # 设置运行程序的名字
+set(RUN_NAME sddp-overdraft) # 设置运行程序的名字
 
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -6,10 +6,10 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
-        single_product_enhancement.cpp
+        single_product_enhancement_further.cpp
         common.cpp
         ../../utils/removeDuplicates.cpp
-        ../../utils/Sampling.cpp
+        ../../utils/sampling.cpp
 )
 
 # 设置 Gurobi 路径（根据你的安装调整）
