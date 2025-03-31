@@ -3,7 +3,7 @@ set(RUN_NAME junior_practice) # 设置运行程序的名字
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
         #        MyClass.cpp
-        sets_test.cpp
+        qt_test.cpp
 )
 
 # 查找 Qt5
@@ -13,8 +13,8 @@ if (QT5_FOUND)
 else ()
     message("not found")
 endif ()
-## 链接 Boost, Qt
-#target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES} Qt5::Widgets)
+# 链接 Boost, Qt
+target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES} Qt5::Widgets)
 
 # 需要手动设置 OpenMP 头文件和库路径
 set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
