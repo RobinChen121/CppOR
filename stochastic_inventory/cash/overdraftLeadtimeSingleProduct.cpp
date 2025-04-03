@@ -46,7 +46,7 @@ private:
   double r2 = 2.0;
   double overdraft_limit = 500;
 
-  double max_order_quantity = 30.0;
+  double max_order_quantity = 42.0;
   double truncated_quantile = 0.9999;
   double step_size = 1.0;
   double min_inventory = 0;
