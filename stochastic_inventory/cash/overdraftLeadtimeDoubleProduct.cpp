@@ -6,9 +6,18 @@
  * (actually it takes 8017s for the 3 periods problem where the demand for one
  * product is 0; when it is not 0, 4 hours no result).
  *
- * For the self defined discrete distribution, round 1 decimal for the cash
- * states, Final expected cash increment is 76.0762, Optimal Qs in the first
- * period is 29 and 20, running time is 2609.67.
+ * std::vector<std::vector<double>> demand1_values =
+ *     std::vector(T, std::vector<double>{20.0, 30.0, 40.0});
+ * std::vector<std::vector<double>> demand1_weights =
+ *     std::vector(T, std::vector<double>{0.25, 0.5, 0.25});
+ * std::vector<std::vector<double>> demand2_values =
+ *     std::vector(T, std::vector<double>(3));
+ * std::vector<std::vector<double>> demand2_weights =
+ *     std::vector(T, std::vector<double>(3));
+ * std::string distribution_type = "self_discrete";
+ * For the self defined discrete distribution, T = 2, round 1 decimal for the
+ * cash states, Final expected cash increment is -17.8, Optimal Qs in the
+ * first period is 40 and 20, running time is 6.46708.
  *
  *
  *
@@ -33,14 +42,14 @@ private:
                                    ini_Qpre1, ini_Qpre2,      ini_cash};
 
   std::vector<double> mean_demand1 = {10, 10, 10};
-  size_t T = mean_demand1.size(); // 直接获取大小
+  size_t T = 3; // mean_demand1.size(); // 直接获取大小
   std::vector<double> mean_demand2 = std::vector<double>(T);
   // std::string distribution_type = "poisson";
 
   std::vector<std::vector<double>> demand1_values =
-      std::vector(T, std::vector<double>{20.0, 30.0, 40.0});
+      std::vector(T, std::vector<double>{10.0, 30.0});
   std::vector<std::vector<double>> demand1_weights =
-      std::vector(T, std::vector<double>{0.25, 0.5, 0.25});
+      std::vector(T, std::vector<double>{0.5, 0.5});
   std::vector<std::vector<double>> demand2_values =
       std::vector(T, std::vector<double>(3));
   std::vector<std::vector<double>> demand2_weights =
@@ -64,7 +73,7 @@ private:
   double r2 = 2.0;
   double overdraft_limit = 500;
 
-  double max_order_quantity = 40.0;
+  double max_order_quantity = 42.0;
   double truncated_quantile = 0.9999;
   double step_size = 1.0;
   double min_inventory = 0;
@@ -186,7 +195,7 @@ public:
     nextInventory2 =
         nextInventory2 < min_inventory ? min_inventory : nextInventory2;
     // cash is integer or not
-    nextCash = std::round(nextCash * 10) / 10.0; // the right should be a
+    // nextCash = std::round(nextCash * 10) / 10.0; // the right should be a
     // decimal
     return CashLeadtimeMultiState{state.getPeriod() + 1,
                                   nextInventory1,
