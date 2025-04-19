@@ -173,11 +173,12 @@ void Simplex::displayTableau() const {
 
 int main() {
     // 初始化单纯形表
-    // 目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + z = 0
+    // 标准化的单纯性表，目标函数为 max
+    // 目标函数: max z = 2x1 + 3x2 转换为 z -2x1 - 3x2
     // 约束: 2x1 + x2 + s1 = 4
     //       x1 + 2x2 + s2 = 5
     const std::vector<std::vector<double> > tableau = {
-        {-2, -3, 0, 0, 0}, // 目标函数 -3x1 - 2x2 + z = 0
+        {-2, -3, 0, 0, 0}, // 目标函数 z -2x1 - 3x2
         {2, 1, 1, 0, 4}, // 约束1
         {1, 2, 0, 1, 5} // 约束2
     };

@@ -1,4 +1,4 @@
-set(RUN_NAME inventory) # 设置运行程序的名字
+set(RUN_NAME sdp-inventory) # 设置运行程序的名字
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

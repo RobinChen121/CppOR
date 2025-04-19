@@ -61,7 +61,7 @@ void SingleProduct::solve() const {
   // decision variables
   std::vector<GRBVar> q(T);
   std::vector<GRBVar> q_pre(T - 1);
-  std::vector<GRBVar> theta(T);
+  std::vector<GRBVar> theta(T); // previous is T - 1, which causing the error
   std::vector<GRBVar> I(T);
   std::vector<GRBVar> B(T);
   std::vector<GRBVar> cash(T);
@@ -193,7 +193,7 @@ void SingleProduct::solve() const {
         int index = scenarioPaths[n][t - 1];
         double demand = sampleDetails[t - 1][index];
         double rhs1 = t == 1 ? iniI - demand
-                             : IForwardValues[iter][t - 1][n] +
+                             : IForwardValues[iter][t - 2][n] +
                                    qpreValues[iter][t - 2][n] - demand;
         if (t < T) {
           double rhs2 = prices[t - 1] * demand +
@@ -255,7 +255,7 @@ void SingleProduct::solve() const {
         for (size_t s = 0; s < S; s++) {
           auto demand = sampleDetails[t - 1][s];
           double rhs1 = t == 1 ? iniI - demand
-                               : IForwardValues[iter][t - 1][n] +
+                               : IForwardValues[iter][t - 2][n] +
                                      qpreValues[iter][t - 2][n] - demand;
           if (t < T) {
             double rhs2 = prices[t - 1] * demand +
