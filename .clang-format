@@ -2,3 +2,5 @@
 BasedOnStyle: LLVM
 IndentWidth: 2  # 设置每个缩进级别为 4 个空格
 UseTab: Never    # 禁止使用制表符(Tab)，确保使用空格
+ColumnLimit: 100
+

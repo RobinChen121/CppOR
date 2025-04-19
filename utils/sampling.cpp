@@ -27,8 +27,7 @@ double poissonCDF(const int k, const double lambda) {
 
 // get inverse cumulative distribution function value of Poisson
 int poissonQuantile(const double p, const double lambda) {
-  int low = 0,
-      high = std::max(100, static_cast<int>(lambda * 3)); // 初始搜索区间
+  int low = 0, high = std::max(100, static_cast<int>(lambda * 3)); // 初始搜索区间
   while (low < high) {
     if (const int mid = (low + high) / 2; poissonCDF(mid, lambda) < p) {
       low = mid + 1;
@@ -40,8 +39,7 @@ int poissonQuantile(const double p, const double lambda) {
 }
 
 // 一个 const 函数 通常指的是一个 成员函数，它承诺不会修改类的成员数据
-std::vector<double> generateSamplesPoisson(const int num_samples,
-                                           const double mean) {
+std::vector<double> generateSamplesPoisson(const int num_samples, const double mean) {
   std::vector<double> samples(num_samples);
   // 创建随机数引擎
   std::random_device rd;  // 随机设备，用来生成随机种子
@@ -57,9 +55,9 @@ std::vector<double> generateSamplesPoisson(const int num_samples,
   return samples;
 }
 
-std::vector<double>
-generateSamplesSelfDiscrete(const int num_samples, std::vector<double> &weights,
-                            const std::vector<double> &values) {
+std::vector<double> generateSamplesSelfDiscrete(const int num_samples,
+                                                const std::vector<double> &values,
+                                                const std::vector<double> &weights) {
   std::random_device rd;
   std::mt19937 gen(rd());
 
@@ -87,9 +85,8 @@ int randInt(const int a, const int b) {
   return random_number;
 }
 
-std::vector<std::vector<int>>
-generateScenarioPaths(const int scenarioNum,
-                      const std::vector<int> &num_sampless) {
+std::vector<std::vector<int>> generateScenarioPaths(const int scenarioNum,
+                                                    const std::vector<int> &num_sampless) {
   const size_t T = num_sampless.size();
   std::vector<std::vector<int>> scenarioPaths(scenarioNum);
   for (int i = 0; i < scenarioNum; ++i) {
@@ -104,8 +101,7 @@ generateScenarioPaths(const int scenarioNum,
   return scenarioPaths;
 }
 
-template <typename T>
-void print2DArray(const std::vector<std::vector<T>> &arr) {
+template <typename T> void print2DArray(const std::vector<std::vector<T>> &arr) {
   for (const auto &row : arr) {
     for (const int num : row) {
       std::cout << num << " ";
@@ -116,14 +112,13 @@ void print2DArray(const std::vector<std::vector<T>> &arr) {
 
 // 按照所有列依次排序
 void sortRowsByAllColumns(std::vector<std::vector<int>> &matrix) {
-  std::ranges::sort(matrix,
-                    [](const std::vector<int> &a, const std::vector<int> &b) {
-                      for (size_t i = 0; i < a.size(); ++i) {
-                        if (a[i] != b[i])
-                          return a[i] < b[i]; // 按列顺序排序
-                      }
-                      return false; // 所有列都相等
-                    });
+  std::ranges::sort(matrix, [](const std::vector<int> &a, const std::vector<int> &b) {
+    for (size_t i = 0; i < a.size(); ++i) {
+      if (a[i] != b[i])
+        return a[i] < b[i]; // 按列顺序排序
+    }
+    return false; // 所有列都相等
+  });
 }
 
 // int main() {
