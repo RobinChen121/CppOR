@@ -1,14 +1,23 @@
 /*
- * Created by Zhen Chen on 2025/4/12.
+ * Created by Zhen Chen on 2025/4/19.
  * Email: chen.zhen5526@gmail.com
  * Description:
  *
  *
  */
 
-#ifndef SINGLE_PRODUCT_ENHANCEMENT_H
-#define SINGLE_PRODUCT_ENHANCEMENT_H
+#ifndef SINGLE_PRODUCT_ENHANCEMENT_FURTHER_H
+#define SINGLE_PRODUCT_ENHANCEMENT_FURTHER_H
 
+#include "../../utils/common.h"
+#include "../../utils/sampling.h"
+#include "I_cash_status.h"
+#include "gurobi_c++.h"
+
+#include <array>
+#include <fstream>
+#include <numeric>
+#include <unordered_set>
 #include <vector>
 
 class SingleProduct {
@@ -17,22 +26,22 @@ private:
   double iniI = 0;
   double iniCash = 0;
   std::vector<double> mean_demands = {
-      7, 12, 17, 23}; // {15.0, 15.0, 15.0, 15.0}; // std::vector<double>(4, 15);
+      7, 12, 17, 23}; // 15.0, 15.0, 15.0, 15.0}; // std::vector<double>(4, 15);
   std::string distribution_name = "poisson";
   size_t T = mean_demands.size();
-  std::vector<double> unit_vari_costs = std::vector<double>(T, 1);
+  std::vector<double> unitVariOderCosts = std::vector<double>(T, 1);
   std::vector<double> prices = std::vector<double>(T, 10);
-  double unit_salvage_value = 0.5;
+  double unitSalvageValue = 0.5;
   std::vector<double> overhead_costs = std::vector<double>(T, 25);
   double r0 = 0; // interest rate
   double r1 = 0;
   double r2 = 2;
-  double overdraftLimit = 300;
+  double overdraftLimit = 500;
 
   // sddp settings
-  int sampleNum = 10;
-  int forwardNum = 30;
-  int iterNum = 50;
+  int sampleNum = 10;  // 10; // 2
+  int forwardNum = 30; // 20; // 8
+  int iterNum = 50;    //
   double thetaInitialValue = -500;
 
 public:
@@ -48,4 +57,4 @@ public:
   std::array<double, 2> solve() const;
 };
 
-#endif // SINGLE_PRODUCT_ENHANCEMENT_H
+#endif // SINGLE_PRODUCT_ENHANCEMENT_FURTHER_H

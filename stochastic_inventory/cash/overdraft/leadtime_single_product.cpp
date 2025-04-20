@@ -83,6 +83,7 @@ Optimal Q in the first period is 42.
     interest = cash_before_interest * r1;
   } else {
     interest = -overdraft_limit * r1 + (cash_before_interest - overdraft_limit) * r2;
+    // interest = cash_before_interest * r2;
   }
   const double cash_after_interest = cash_before_interest + interest + revenue;
   double cash_increment = cash_after_interest - state.getIniCash();
