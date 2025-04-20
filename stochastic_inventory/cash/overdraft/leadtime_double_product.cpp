@@ -155,8 +155,8 @@ public:
                cash_before_interest < 1e-6) {
       interest = cash_before_interest * r1;
     } else {
-      interest =
-          -overdraft_limit * r1 + (cash_before_interest - overdraft_limit) * r2;
+       interest = -overdraft_limit * r1 + (cash_before_interest - overdraft_limit) * r2;
+//      interest = cash_before_interest * r2;
     }
     const double cash_after_interest =
         cash_before_interest + interest + revenue;

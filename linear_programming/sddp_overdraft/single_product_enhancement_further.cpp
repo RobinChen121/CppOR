@@ -13,50 +13,14 @@
  * values.
  *
  */
-#include "../../utils/common.h"
-#include "../../utils/sampling.h"
-#include "I_cash_status.h"
-#include "gurobi_c++.h"
+#include "single_product_enhancement_further.h"
 
-#include <fstream>
-#include <numeric>
-#include <unordered_set>
-#include <vector>
-
-class SingleProduct {
-private:
-  // problem settings
-  double iniI = 0;
-  double iniCash = 0;
-  std::vector<double> meanDemands = {7, 12, 17,
-                                     23}; // 15.0, 15.0, 15.0, 15.0}; // std::vector<double>(4, 15);
-  std::string distribution_name = "poisson";
-  size_t T = meanDemands.size();
-  std::vector<double> unitVariOderCosts = std::vector<double>(T, 1);
-  std::vector<double> prices = std::vector<double>(T, 10);
-  double unitSalvageValue = 0.5;
-  std::vector<double> overheadCosts = std::vector<double>(T, 25);
-  double r0 = 0; // interest rate
-  double r1 = 0;
-  double r2 = 2;
-  double overdraftLimit = 500;
-
-  // sddp settings
-  int sampleNum = 10;  // 10; // 2
-  int forwardNum = 30; // 20; // 8
-  int iterNum = 50;    //
-  double thetaInitialValue = -500;
-
-public:
-  void solve() const;
-};
-
-void SingleProduct::solve() const {
+std::array<double, 2> SingleProduct::solve() const {
   const std::vector<int> sampleNums(T, sampleNum);
   std::vector<std::vector<double>> sampleDetails(T);
   for (int t = 0; t < T; t++) {
     sampleDetails[t].resize(sampleNums[t]);
-    sampleDetails[t] = generateSamplesPoisson(sampleNums[t], meanDemands[t]);
+    sampleDetails[t] = generateSamplesPoisson(sampleNums[t], mean_demands[t]);
   }
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
 
@@ -116,16 +80,16 @@ void SingleProduct::solve() const {
       models[t].addConstr(W1[t] <= overdraftLimit);
       if (t == 0)
         models[t].addConstr(iniCash - unitVariOderCosts[t] * q[t] - W0[t] + W1[t] + W2[t] ==
-                            overheadCosts[t]);
+                            overhead_costs[t]);
       else {
         models[t].addConstr(cash[t - 1] - unitVariOderCosts[t] * q[t] - W0[t] + W1[t] + W2[t] ==
-                            overheadCosts[t]);
+                            overhead_costs[t]);
       }
       models[t].addConstr(theta[t] >= thetaInitialValue * (static_cast<double>(T) - t));
       models[t].update();
     }
     if (t == 0)
-      models[t].setObjective(overheadCosts[0] + unitVariOderCosts[0] * q[0] + r2 * W2[0] +
+      models[t].setObjective(overhead_costs[0] + unitVariOderCosts[0] * q[0] + r2 * W2[0] +
                              r1 * W1[0] - r0 * W0[0] + theta[0]);
   }
 
@@ -255,7 +219,7 @@ void SingleProduct::solve() const {
                  (1 + r1) * W1ForwardValues[iter][t - 1][n] -
                  (1 + r2) * W2ForwardValues[iter][t - 1][n];
           double rhs3 = qValues[iter][t - 1][n];
-          models[t].setObjective(overheadCosts[t] + unitVariOderCosts[t] * q[t] -
+          models[t].setObjective(overhead_costs[t] + unitVariOderCosts[t] * q[t] -
                                  prices[t - 1] * (demand - B[t - 1]) + r2 * W2[t] + r1 * W1[t] -
                                  r0 * W0[t] + theta[t]);
 
@@ -362,7 +326,7 @@ void SingleProduct::solve() const {
             double rhs3 = qValues[iter][t - 1][n];
             if (s > 0) {
               double this_end_cash = rhs1 > 0 ? rhs2 : rhs2 + prices[t - 1] * rhs1;
-              double this_W = this_end_cash - overheadCosts[t] - unitVariOderCosts[t] * last_q;
+              double this_W = this_end_cash - overhead_costs[t] - unitVariOderCosts[t] * last_q;
               status = checkPairStatus(rhs1, this_W, overdraftLimit);
               if (results_status[t - 1][n].contains(status)) {
                 skip = true;
@@ -372,7 +336,7 @@ void SingleProduct::solve() const {
                 rhs[1] = rhs2;
               }
             }
-            models[t].setObjective(overheadCosts[t] + unitVariOderCosts[t] * q[t] -
+            models[t].setObjective(overhead_costs[t] + unitVariOderCosts[t] * q[t] -
                                    prices[t - 1] * (demand - B[t - 1]) + r2 * W2[t] + r1 * W1[t] -
                                    r0 * W0[t] + theta[t]);
             models[t].getConstr(1).set(GRB_DoubleAttr_RHS, rhs2);
@@ -397,7 +361,7 @@ void SingleProduct::solve() const {
               results_status_lastStage[n][status_last_stage] = {pi, rhs};
             } else {
               double this_end_cash = rhs1 > 0 ? rhs2 : rhs2 + prices[t - 1] * rhs1;
-              double this_W = this_end_cash - overheadCosts[t] - unitVariOderCosts[t] * last_q;
+              double this_W = this_end_cash - overhead_costs[t] - unitVariOderCosts[t] * last_q;
               status = checkPairStatus(rhs1, this_W, overdraftLimit);
               results_status[t - 1][n][status] = {pi, rhs};
             }
@@ -433,7 +397,7 @@ void SingleProduct::solve() const {
           if (t < T) {
             intercept_values_backward[t - 1][n][s] += -pi[0] * demand +
                                                       pi[1] * prices[t - 1] * demand -
-                                                      prices[t - 1] * demand + overheadCosts[t];
+                                                      prices[t - 1] * demand + overhead_costs[t];
           } else {
             intercept_values_backward[t - 1][n][s] += -pi[0] * demand - prices[t - 1] * demand;
           }
@@ -476,24 +440,24 @@ void SingleProduct::solve() const {
     iter = iter + 1;
   }
 
-  std::cout << "********************************************" << std::endl;
   double finalValue = -models[0].get(GRB_DoubleAttr_ObjVal);
   double Q1 = qValues[iter - 1][0][0];
-  std::cout << "after " << iter << " iterations: " << std::endl;
-  std::cout << "final expected cash balance is " << finalValue << std::endl;
-  std::cout << "ordering Q in the first period is " << Q1 << std::endl;
-  double optimal_value = 167.31;
-  double gap = (finalValue - optimal_value) / optimal_value;
-  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+  return {finalValue, Q1};
 }
 
-int main() {
-  const SingleProduct singleProduct;
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  singleProduct.solve();
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> diff = end_time - start_time;
-  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-
-  return 0;
-}
+// int main() {
+//   const SingleProduct singleProduct;
+//   const auto start_time = std::chrono::high_resolution_clock::now();
+//   const auto result = singleProduct.solve();
+//   const auto end_time = std::chrono::high_resolution_clock::now();
+//   const std::chrono::duration<double> diff = end_time - start_time;
+//   std::cout << "********************************************" << std::endl;
+//   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+//   std::cout << "final expected cash balance is " << result[0] << std::endl;
+//   std::cout << "ordering Q in the first period is " << result[1] << std::endl;
+//   constexpr double optimal_value = 167.31;
+//   constexpr double gap = (result[0] - optimal_value) / optimal_value;
+//   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+//
+//   return 0;
+// }

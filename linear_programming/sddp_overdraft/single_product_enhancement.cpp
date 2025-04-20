@@ -14,12 +14,13 @@
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 
+#include <array>
 #include <iomanip> // for precision
 #include <numeric>
 #include <unordered_set>
 #include <vector>
 
-void SingleProduct::solve() const {
+std::array<double, 2> SingleProduct::solve() const {
   const std::vector<int> sampleNums(T, sampleNum);
   std::vector<std::vector<double>> sampleDetails(T);
   for (int t = 0; t < T; t++) {
@@ -357,24 +358,25 @@ void SingleProduct::solve() const {
     iter = iter + 1;
   }
 
-  std::cout << "********************************************" << std::endl;
+  // std::cout << "********************************************" << std::endl;
   double finalValue = -models[0].get(GRB_DoubleAttr_ObjVal);
   double Q1 = qValues[iter - 1][0][0];
-  std::cout << "after " << iter << " iterations: " << std::endl;
-  std::cout << "final expected cash balance is " << finalValue << std::endl;
-  std::cout << "ordering Q in the first period is " << Q1 << std::endl;
-  double optimal_value = 167.31;
-  double gap = (finalValue - optimal_value) / optimal_value;
-  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+
+  // std::cout << "after " << iterNum << " iterations: " << std::endl;
+  // std::cout << "final expected cash balance is " << finalValue << std::endl;
+  // std::cout << "ordering Q in the first period is " << Q1 << std::endl;
+
+  return {finalValue, Q1};
 }
 
-int main() {
-  const SingleProduct singleProduct;
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  singleProduct.solve();
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> diff = end_time - start_time;
-  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-
-  return 0;
-}
+// int main() {
+//   const SingleProduct singleProduct;
+//   const auto start_time = std::chrono::high_resolution_clock::now();
+//   double finalValue = singleProduct.solve();
+//   const auto end_time = std::chrono::high_resolution_clock::now();
+//   const std::chrono::duration<double> diff = end_time - start_time;
+//   double optimal_value = 167.31;
+//   double gap = (finalValue - optimal_value) / optimal_value;
+//   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+//   return 0;
+// }
