@@ -288,19 +288,19 @@ std::array<double, 2> SingleProduct::solve() const {
   return {finalValue, Q1};
 }
 
-// int main() {
-//   const SingleProduct singleProduct;
-//   const auto start_time = std::chrono::high_resolution_clock::now();
-//   const auto result = singleProduct.solve();
-//   const auto end_time = std::chrono::high_resolution_clock::now();
-//   const std::chrono::duration<double> diff = end_time - start_time;
-//   std::cout << "********************************************" << std::endl;
-//   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-//   std::cout << "final expected cash balance is " << result[0] << std::endl;
-//   std::cout << "ordering Q in the first period is " << result[1] << std::endl;
-//   constexpr double optimal_value = 167.31;
-//   constexpr double gap = (result[0] - optimal_value) / optimal_value;
-//   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
-//
-//   return 0;
-// }
+int main() {
+  const SingleProduct singleProduct;
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  const auto result = singleProduct.solve();
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> diff = end_time - start_time;
+  std::cout << "********************************************" << std::endl;
+  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+  std::cout << "final expected cash balance is " << result[0] << std::endl;
+  std::cout << "ordering Q in the first period is " << result[1] << std::endl;
+  double optimal_value = 167.31;
+  double gap = (result[0] - optimal_value) / optimal_value;
+  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+
+  return 0;
+}

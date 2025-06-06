@@ -15,5 +15,6 @@ add_executable(${RUN_NAME}
 
 #-----------------------------------
 # Boost
+# Boost 提供了很多通用的的库，例如数值计算等
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES})

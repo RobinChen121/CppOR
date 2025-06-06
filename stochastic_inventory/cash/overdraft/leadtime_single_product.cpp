@@ -112,21 +112,21 @@ double OverdraftLeadtimeSingleProduct::recursion(
     const CashLeadtimeState &state) { // NOLINT(*-no-recursion)
   double bestQ = 0.0;
   double bestValue = std::numeric_limits<double>::lowest();
-  std::vector<double> actions;
-  if (state.getPeriod() == 4) {
-    actions = {0.0};
-  } else {
-    actions = feasibleActions();
-  }
+  std::vector<double> actions = feasibleActions();
+  //  if (state.getPeriod() == 4) {
+  //    actions = {0.0};
+  //  } else {
+  //    actions = feasibleActions();
+  //  }
   for (const double action : actions) {
     double thisValue = 0.0;
     for (auto demandAndProb : pmf[state.getPeriod() - 1]) {
       thisValue += demandAndProb[1] * immediateValueFunction(state, action, demandAndProb[0]);
       if (state.getPeriod() < T) {
         auto newState = stateTransitionFunction(state, action, demandAndProb[0]);
-        if (cacheValues.contains(newState)) {
+        if (auto it = cacheValues.find(newState); it != cacheValues.end()) {
           // some issues here
-          thisValue += demandAndProb[1] * cacheValues[newState];
+          thisValue += demandAndProb[1] * it->second;
         } else {
           thisValue += demandAndProb[1] * recursion(newState);
         }

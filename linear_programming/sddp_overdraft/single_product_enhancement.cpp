@@ -10,15 +10,6 @@
  *
  */
 #include "single_product_enhancement.h"
-#include "../../utils/common.h"
-#include "../../utils/sampling.h"
-#include "gurobi_c++.h"
-
-#include <array>
-#include <iomanip> // for precision
-#include <numeric>
-#include <unordered_set>
-#include <vector>
 
 std::array<double, 2> SingleProduct::solve() const {
   const std::vector<int> sampleNums(T, sampleNum);
@@ -358,23 +349,24 @@ std::array<double, 2> SingleProduct::solve() const {
     iter = iter + 1;
   }
 
-  // std::cout << "********************************************" << std::endl;
+  std::cout << "********************************************" << std::endl;
   double finalValue = -models[0].get(GRB_DoubleAttr_ObjVal);
   double Q1 = qValues[iter - 1][0][0];
 
-  // std::cout << "after " << iterNum << " iterations: " << std::endl;
-  // std::cout << "final expected cash balance is " << finalValue << std::endl;
-  // std::cout << "ordering Q in the first period is " << Q1 << std::endl;
+  std::cout << "after " << iterNum << " iterations: " << std::endl;
+  std::cout << "final expected cash balance is " << finalValue << std::endl;
+  std::cout << "ordering Q in the first period is " << Q1 << std::endl;
 
   return {finalValue, Q1};
 }
 
 // int main() {
-//   const SingleProduct singleProduct;
+//   auto singleProduct = SingleProduct();
 //   const auto start_time = std::chrono::high_resolution_clock::now();
-//   double finalValue = singleProduct.solve();
+//   double finalValue = singleProduct.solve()[0];
 //   const auto end_time = std::chrono::high_resolution_clock::now();
 //   const std::chrono::duration<double> diff = end_time - start_time;
+//   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
 //   double optimal_value = 167.31;
 //   double gap = (finalValue - optimal_value) / optimal_value;
 //   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;

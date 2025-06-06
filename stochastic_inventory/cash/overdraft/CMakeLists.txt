@@ -15,10 +15,10 @@ add_executable(${RUN_NAME}
 
         ../../../utils/selfHash.cpp
 
-        #        ../states/CashLeadtimeMultiState.cpp
-
+        ../../states/CashLeadtimeMultiState.cpp
         leadtime_single_product.cpp
-        leadtime_single_product_testing.cpp
+
+        #        leadtime_single_product_testing.cpp
 
 )
 

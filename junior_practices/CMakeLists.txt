@@ -3,20 +3,23 @@ set(RUN_NAME junior_practice) # 设置运行程序的名字
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
         #        MyClass.cpp
-        pair_test.cpp
+        #        pair_test.cpp
+        python_draw.cpp
 )
 
 # 查找 Qt5
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 if (QT5_FOUND)
-    message(STATUS "qtfound")
+    message(STATUS "qt found")
 else ()
     message("not found")
 endif ()
 # 链接 Boost, Qt
 target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES} Qt5::Widgets)
 
+#-----------------------------------
 # 需要手动设置 OpenMP 头文件和库路径
+# 并行计算的 api
 set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
 set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.0/lib/libomp.dylib")
 # 手动设置 OpenMP 相关的编译和链接选项
@@ -31,10 +34,26 @@ include_directories(${OpenMP_INCLUDE_DIR})
 
 #-----------------------------------
 # OpenMP, Eigen3
+# 高性能、跨平台的 C++ 线性代数库
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 target_link_libraries(${RUN_NAME} ${OpenMP_LIBRARY} ${Boost_LIBRARIES} Qt5::Widgets Eigen3::Eigen)
 
+#-----------------------------------
 # spdlog
+# 日志库
 find_package(spdlog)
 target_link_libraries(${RUN_NAME} spdlog::spdlog)
+
+#-----------------------------------
+# 下面为调用 matplotlibcpp 的设置
+# 设置 Python 头文件路径
+include_directories(/opt/anaconda3/include/python3.12)
+# numpy 头文件路径
+include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
+
+# 链接所需库
+target_link_libraries(${RUN_NAME}
+        /opt/anaconda3/lib/libpython3.12.dylib
+        dl
+)
