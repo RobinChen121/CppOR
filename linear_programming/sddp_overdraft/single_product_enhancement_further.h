@@ -53,7 +53,7 @@ public:
     prices = std::vector(T, price);
     overhead_costs = std::vector(T, overhead_cost);
   };
-  SingleProduct();
+  SingleProduct() {};
   std::array<double, 2> solve() const;
 };
 

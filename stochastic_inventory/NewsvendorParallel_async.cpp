@@ -166,7 +166,7 @@ int main() {
     constexpr double minI = -300; // minimum possible inventory
 
 
-    const auto pmf = PMF(truncQuantile, stepSize, distribution_type).getPMF(demands);
+    const auto pmf = PMF(truncQuantile, stepSize, distribution_type).getPMFPoisson(demands);
     const size_t T = demands.size();
     auto model1 = NewsvendorDP(T, capacity, stepSize, fixOrderCost, unitVariOderCost, unitHoldCost, unitPenaltyCost,
                                truncQuantile, maxI, minI, pmf);

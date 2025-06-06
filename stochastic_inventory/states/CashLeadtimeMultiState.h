@@ -13,24 +13,22 @@
 
 class CashLeadtimeMultiState {
 private:
-  int period;
-  double ini_I1;
-  double ini_I2;
-  double Qpre1;
-  double Qpre2;
-  double iniCash;
+  int period{}; // c++11, {} 值初始化，默认为 0
+  double ini_I1{};
+  double ini_I2{};
+  double Qpre1{};
+  double Qpre2{};
+  double iniCash{};
 
 public:
-  CashLeadtimeMultiState(const int period, const double ini_I1,
-                         const double ini_I2, const double Qpre1,
-                         const double Qpre2, const double iniCash)
-      : period(period), ini_I1(ini_I1), ini_I2(ini_I2), Qpre1(Qpre1),
-        Qpre2(Qpre2), iniCash(iniCash) {};
+  CashLeadtimeMultiState(const int period, const double ini_I1, const double ini_I2,
+                         const double Qpre1, const double Qpre2, const double iniCash)
+      : period(period), ini_I1(ini_I1), ini_I2(ini_I2), Qpre1(Qpre1), Qpre2(Qpre2),
+        iniCash(iniCash) {};
 
   bool operator==(const CashLeadtimeMultiState &other) const;
 
-  friend std::ostream &operator<<(std::ostream &os,
-                                  const CashLeadtimeMultiState &state);
+  friend std::ostream &operator<<(std::ostream &os, const CashLeadtimeMultiState &state);
 
   friend struct std::hash<CashLeadtimeMultiState>;
 

@@ -47,3 +47,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/stochastic_inventory/states/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/stochastic_inventory/workforce/cmake_install.cmake")
+endif()
+

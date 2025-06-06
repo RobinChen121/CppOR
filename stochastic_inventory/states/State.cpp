@@ -8,40 +8,35 @@
 #include <iostream>
 #include <map>
 
-State::State() = default;
+State::State() = default; // 由编译器生成，行为是“成员逐个默认初始化”
 
-State::State(const int period, const double initialInventory): period(period),
-                                                               initialInventory(initialInventory) {
-};
+State::State(const int period, const double initialInventory)
+    : period(period), initialInventory(initialInventory) {};
 
-double State::getInitialInventory() const {
-    return initialInventory;
-}
+double State::getInitialInventory() const { return initialInventory; }
 
-int State::getPeriod() const {
-    return period;
-}
+int State::getPeriod() const { return period; }
 
 void State::print() const {
-    std::cout << "period: " << period << ", ini I: " << initialInventory << std::endl;
+  std::cout << "period: " << period << ", ini I: " << initialInventory << std::endl;
 }
 
 bool State::operator<(const State &other) const {
-    if (period < other.period) {
-        return true;
-    }
-    if (period == other.period) {
-        if (initialInventory < other.initialInventory) {
-            return true;
-        }
-        return false;
+  if (period < other.period) {
+    return true;
+  }
+  if (period == other.period) {
+    if (initialInventory < other.initialInventory) {
+      return true;
     }
     return false;
+  }
+  return false;
 }
 
 std::ostream &operator<<(std::ostream &os, const State &state) {
-    os << "period: " << state.period << ", ini I: " << state.initialInventory << std::endl;
-    return os;
+  os << "period: " << state.period << ", ini I: " << state.initialInventory << std::endl;
+  return os;
 }
 
 // // ✅ 自定义比较器
