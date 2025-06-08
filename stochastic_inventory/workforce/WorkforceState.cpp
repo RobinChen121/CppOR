@@ -14,7 +14,7 @@ bool WorkforceState::operator<(const WorkforceState &other) const {
     return true;
   }
   if (period == other.period) {
-    if (initialWorkers < other.initialWorkers) {
+    if (initial_workers < other.initial_workers) {
       return true;
     }
     return false;

@@ -1,12 +1,9 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/zhenchen/CLionProjects/CppClion -B /Users/zhenchen/CLionProjects/CppClion/cmake-build-debug
--- Boost found: /opt/homebrew/Cellar/boost/1.87.0/include
+"C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -G Ninja -S D:\chenzhen\CppOR -B D:\chenzhen\CppOR\cmake-build-debug
 -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
-CMake Error at /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake:233 (message):
-  Could NOT find OpenMP_C (missing: OpenMP_C_FLAGS OpenMP_C_LIB_NAMES)
-Call Stack (most recent call first):
-  /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake:603 (_FPHSA_FAILURE_MESSAGE)
-  /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindOpenMP.cmake:600 (find_package_handle_standard_args)
-  CMakeLists.txt:50 (find_package)
-
-
--- Configuring incomplete, errors occurred!
+-- Qt6 Core and Widgets found.
+-- Found Python3: C:/ProgramData/anaconda3/python.exe (found version "3.12.7") found components: Interpreter Development Development.Module Development.Embed
+-- Found Python3: C:/ProgramData/anaconda3/libs/python312.lib (found version "3.12.7") found components: NumPy Interpreter Development.Module
+-- Found Python3: C:/ProgramData/anaconda3/python.exe (found version "3.12.7") found components: Interpreter Development NumPy Development.Module Development.Embed
+-- Configuring done (2.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/chenzhen/CppOR/cmake-build-debug

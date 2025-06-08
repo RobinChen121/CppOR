@@ -8,10 +8,12 @@
 
 #include "../../utils/PMF.h"
 #include "WorkforceState.h"
+#include <chrono>
 #include <iostream>
+#include <unordered_map>
 
 class WorkforcePlan {
-  std::vector<double> turnover_rate = {0.5};
+  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
   size_t T = turnover_rate.size();
 
   int initial_workers = 0;
@@ -20,7 +22,7 @@ class WorkforcePlan {
   double fix_hire_cost = 50.0;
   double unit_vari_cost = 0.0;
   double salary = 30.0;
-  double unit_penalty = 100.0;
+  double unit_penalty = 40.0;
   std::vector<int> min_workers = std::vector<int>(T, 40);
 
   int max_hire_num = 500;
@@ -44,8 +46,8 @@ public:
                                        const int overturn_num) const {
     const double fix_cost = action > 0 ? fix_hire_cost : 0;
     const double vari_cost = unit_vari_cost * action;
-    int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
-    next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
+    int next_workers = ini_state.get_initial_workers() + action - overturn_num;
+    // next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     const double salary_cost = salary * next_workers;
     const int t = ini_state.getPeriod() - 1;
     const double penalty_cost =
@@ -56,7 +58,7 @@ public:
 
   [[nodiscard]] WorkforceState state_transition(const WorkforceState ini_state, const int action,
                                                 const int overturn_num) const {
-    int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
+    int next_workers = ini_state.get_initial_workers() + action - overturn_num;
     next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     // 类可以直接使用列表初始化
     // 等价于 WorkforceState{ini_state.getPeriod() + 1, next_workers}
@@ -67,42 +69,50 @@ public:
   double recursion(const WorkforceState ini_state) {
     int best_hire_num = 0;
     double best_cost = std::numeric_limits<double>::max();
-    for (const int action : feasible_actions()) {
+    const int t = ini_state.getPeriod() - 1;
+
+    std::vector<double> policy_values(max_hire_num + 1);
+    for (int i = 0; i <= max_hire_num; i++) {
       double this_value = 0;
-      const int t_index = ini_state.getPeriod() - 1;
-      const auto &d_and_p = pmf[t_index];
-      int turnover_num = 0;
-      int hire_up_to = ini_state.getInitialWorkers() + action;
-      if (hire_up_to >= d_and_p.size() - 1)
-        hire_up_to = static_cast<int>(d_and_p.size()) - 1;
-      try {
-        for (const double prob : d_and_p[hire_up_to]) {
-          this_value += prob * immediate_value(ini_state, action, turnover_num);
-          if (t_index < T - 1) {
-            // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
-            // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
-            // cache_values.at[new_state] 或 cache_values[new_state] 会再触发一次哈希查找
-            auto new_state = state_transition(ini_state, action, turnover_num);
-            if (auto it = cache_values.find(new_state); it != cache_values.end())
-              this_value += prob * it->second;
-            else
-              this_value += prob * recursion(new_state);
-          }
-          ++turnover_num; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
+      // int turnover_num = 0;
+      int hire_up_to = ini_state.get_initial_workers() + i;
+      if (hire_up_to >= pmf[t].size() - 1)
+        hire_up_to = static_cast<int>(pmf[t].size() - 1);
+      const auto &d_and_p = pmf[t][hire_up_to];
+
+      if (t == 0 and i >= 119)
+        int a = 0;
+
+      for (size_t j = 0; j < d_and_p.size(); j++) {
+        this_value += d_and_p[j] * immediate_value(ini_state, i, j);
+        if (t < T - 1) {
+          // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
+          // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
+          // cache_values.at[new_state] 或 cache_values[new_state] 会再触发一次哈希查找
+          auto new_state = state_transition(ini_state, i, j);
+          // if (cache_values.contains(new_state))
+          //   this_value += d_and_p[j] * cache_values.at(new_state);
+          if (auto it = cache_values.find(new_state); it != cache_values.end())
+            this_value += d_and_p[j] * it->second;
+          else
+            this_value += d_and_p[j] * recursion(new_state);
         }
-      } catch (...) { // ... 表示所有异常
-        int temp1 = ini_state.getInitialWorkers();
-        int temp2 = action;
+        // turnover_num =
+        //     turnover_num + 1; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
       }
+      policy_values[i] = this_value;
+      if (t == 0 and i >= 119)
+        int a = 0;
       if (this_value < best_cost) {
         best_cost = this_value;
-        best_hire_num = action;
+        best_hire_num = i;
       }
     }
     cache_actions[ini_state] = best_hire_num;
     cache_values[ini_state] = best_cost;
     return best_cost;
   }
+
   std::vector<double> solve() { return {recursion(ini_state), cache_actions.at(ini_state)}; }
 };
 

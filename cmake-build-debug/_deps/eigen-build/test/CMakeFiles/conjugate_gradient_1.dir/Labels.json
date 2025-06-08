@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-debug/_deps/eigen-src/test/conjugate_gradient.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"BuildOfficial"
+		],
+		"name" : "conjugate_gradient_1"
+	}
+}
