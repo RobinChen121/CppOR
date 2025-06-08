@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.30)
 project(CppClion)
 
@@ -26,8 +25,14 @@ add_executable(${PROJECT_NAME}
 
 )  # no need to put .h file here
 
-find_package(Eigen3 REQUIRED)
-target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+#if(APPLE)
+#    find_package(Eigen3 REQUIRED)
+#    target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+#else()
+#    set(EIGEN3_INCLUDE_DIR "D:/c++Library/eigen-3.4.0")
+#    target_include_directories(${PROJECT_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
+#endif()
+
 
 #------------------------
 # 如果 Boost 安装在非标准路径，手动设置 BOOST_ROOT 和相关变量

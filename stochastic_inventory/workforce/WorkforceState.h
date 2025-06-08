@@ -13,15 +13,15 @@
 
 class WorkforceState {
   int period{};
-  int initialWorkers{};
+  int initial_workers{};
 
 public:
   WorkforceState() = default; // WorkforceState() {} 并不初始化类的变量
-  WorkforceState(int period, int initialWorkers)
-      : period(period), initialWorkers(initialWorkers) {};
+  WorkforceState(int period, int initial_workers)
+      : period(period), initial_workers(initial_workers) {};
 
   [[nodiscard]] int getPeriod() const { return period; }
-  [[nodiscard]] int getInitialWorkers() const { return initialWorkers; }
+  [[nodiscard]] int get_initial_workers() const { return initial_workers; }
 
   // define operator < or give a self defined comparator for sorting map
   bool operator<(const WorkforceState &other) const;
@@ -33,7 +33,7 @@ public:
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
     // 不会修改成员变量的方法 都可以在函数声明的结尾添加 const
-    return period == other.period && initialWorkers == other.initialWorkers;
+    return period == other.period && initial_workers == other.initial_workers;
   }
 
   // 允许哈希结构体访问私有成员
@@ -55,11 +55,11 @@ struct std::hash<WorkforceState> {
     // boost 的哈希计算更安全
     std::size_t seed = 0;
     boost::hash_combine(seed, s.period);
-    boost::hash_combine(seed, s.initialWorkers);
+    boost::hash_combine(seed, s.initial_workers);
     return seed;
 
     // return std::hash<int>()(s.period) ^
-    // std::hash<double>()(s.initialWorkers) << 1; // 计算哈希值
+    // std::hash<double>()(s.initial_workers) << 1; // 计算哈希值
     // std::hash<int>() 是一个 std::hash<int> 类型的对象，调用 () 运算符可以计算
     // obj.id（整数）的哈希值
     // ^（异或）是位运算，不会造成进位，适合合并多个哈希值

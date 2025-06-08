@@ -8,6 +8,7 @@
 
 #include <span>
 #include <vector>
+#include <string>
 
 class PMF {
   double truncatedQuantile = 1;

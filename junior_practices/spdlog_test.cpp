@@ -7,12 +7,16 @@
  */
 #include <iostream>
 
-#include <iostream>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 int main() {
+    SetConsoleOutputCP(CP_UTF8);
     // 创建一个文件日志记录器
     const auto logger = spdlog::basic_logger_mt("file_logger", "app.log");
 
