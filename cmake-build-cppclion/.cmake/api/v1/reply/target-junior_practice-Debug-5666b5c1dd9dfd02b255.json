@@ -12,19 +12,22 @@
 		[
 			"add_executable",
 			"target_link_libraries",
-			"set_property",
-			"_populate_Widgets_target_properties",
-			"find_package",
-			"boost_find_component",
 			"set_target_properties",
 			"include",
-			"include_directories"
+			"find_package",
+			"set_property",
+			"boost_find_component",
+			"include_directories",
+			"target_include_directories"
 		],
 		"files" : 
 		[
 			"junior_practices/CMakeLists.txt",
-			"/opt/anaconda3/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
-			"/opt/anaconda3/lib/cmake/Qt5/Qt5Config.cmake",
+			"/opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
+			"/opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
+			"/opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake",
+			"/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
+			"/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
 			"/opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake",
 			"/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake",
 			"/opt/anaconda3/lib/cmake/spdlog/spdlogConfigTargets.cmake",
@@ -38,139 +41,175 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 4,
+				"line" : 7,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 40,
+				"line" : 34,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 18,
+				"line" : 76,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 46,
+				"line" : 116,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 56,
+				"line" : 132,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 11,
+				"line" : 27,
 				"parent" : 0
 			},
 			{
-				"file" : 2,
+				"file" : 3,
 				"parent" : 6
 			},
 			{
 				"command" : 4,
-				"file" : 2,
-				"line" : 28,
+				"file" : 3,
+				"line" : 190,
 				"parent" : 7
 			},
 			{
-				"file" : 1,
+				"file" : 2,
 				"parent" : 8
 			},
 			{
 				"command" : 3,
-				"file" : 1,
-				"line" : 201,
+				"file" : 2,
+				"line" : 55,
 				"parent" : 9
+			},
+			{
+				"file" : 1,
+				"parent" : 10
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 44,
-				"parent" : 10
+				"line" : 62,
+				"parent" : 11
 			},
 			{
 				"command" : 4,
-				"file" : 0,
-				"line" : 39,
-				"parent" : 0
+				"file" : 3,
+				"line" : 190,
+				"parent" : 7
 			},
 			{
-				"file" : 4,
-				"parent" : 12
-			},
-			{
-				"command" : 5,
-				"file" : 4,
-				"line" : 262,
+				"file" : 5,
 				"parent" : 13
 			},
 			{
-				"command" : 4,
-				"file" : 4,
-				"line" : 141,
+				"command" : 3,
+				"file" : 5,
+				"line" : 57,
 				"parent" : 14
 			},
 			{
-				"file" : 3,
+				"file" : 4,
 				"parent" : 15
 			},
 			{
 				"command" : 2,
-				"file" : 3,
-				"line" : 103,
+				"file" : 4,
+				"line" : 62,
 				"parent" : 16
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 45,
+				"line" : 75,
 				"parent" : 0
 			},
 			{
-				"file" : 6,
+				"file" : 7,
 				"parent" : 18
 			},
 			{
-				"command" : 7,
-				"file" : 6,
-				"line" : 42,
+				"command" : 6,
+				"file" : 7,
+				"line" : 262,
 				"parent" : 19
 			},
 			{
-				"file" : 5,
+				"command" : 4,
+				"file" : 7,
+				"line" : 141,
 				"parent" : 20
 			},
 			{
-				"command" : 6,
-				"file" : 5,
-				"line" : 61,
+				"file" : 6,
 				"parent" : 21
 			},
 			{
-				"command" : 8,
+				"command" : 5,
+				"file" : 6,
+				"line" : 103,
+				"parent" : 22
+			},
+			{
+				"command" : 4,
 				"file" : 0,
-				"line" : 33,
+				"line" : 131,
+				"parent" : 0
+			},
+			{
+				"file" : 9,
+				"parent" : 24
+			},
+			{
+				"command" : 3,
+				"file" : 9,
+				"line" : 42,
+				"parent" : 25
+			},
+			{
+				"file" : 8,
+				"parent" : 26
+			},
+			{
+				"command" : 2,
+				"file" : 8,
+				"line" : 61,
+				"parent" : 27
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 50,
 				"parent" : 0
 			},
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 51,
+				"line" : 109,
 				"parent" : 0
 			},
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 53,
+				"line" : 112,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 124,
 				"parent" : 0
 			}
 		]
@@ -182,126 +221,139 @@
 			[
 				{
 					"fragment" : " -Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.0/include -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics"
-				},
-				{
-					"backtrace" : 3,
-					"fragment" : "-fPIC"
 				}
 			],
 			"defines" : 
 			[
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_ATOMIC_DYN_LINK"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_ATOMIC_NO_LIB"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_FILESYSTEM_DYN_LINK"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_FILESYSTEM_NO_LIB"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_SYSTEM_DYN_LINK"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_SYSTEM_NO_LIB"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_THREAD_DYN_LINK"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "BOOST_THREAD_NO_LIB"
 				},
 				{
-					"backtrace" : 4,
+					"backtrace" : 5,
 					"define" : "FMT_SHARED"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "QT_CORE_LIB"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "QT_GUI_LIB"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "QT_WIDGETS_LIB"
 				},
 				{
-					"backtrace" : 4,
+					"backtrace" : 5,
 					"define" : "SPDLOG_COMPILED_LIB"
 				},
 				{
-					"backtrace" : 4,
+					"backtrace" : 5,
 					"define" : "SPDLOG_FMT_EXTERNAL"
 				},
 				{
-					"backtrace" : 4,
+					"backtrace" : 5,
 					"define" : "SPDLOG_SHARED_LIB"
+				}
+			],
+			"frameworks" : 
+			[
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtCore.framework"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtGui.framework"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtWidgets.framework"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 23,
+					"backtrace" : 29,
 					"path" : "/opt/homebrew/Cellar/libomp/20.1.0/include"
 				},
 				{
-					"backtrace" : 24,
+					"backtrace" : 30,
+					"path" : "/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/_deps/matplotlib_cpp-src"
+				},
+				{
+					"backtrace" : 31,
 					"path" : "/opt/anaconda3/include/python3.12"
 				},
 				{
-					"backtrace" : 25,
+					"backtrace" : 31,
 					"path" : "/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/opt/anaconda3/include/qt"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "/opt/anaconda3/include/qt/QtWidgets"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "/opt/anaconda3/include/qt/QtGui"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "/opt/anaconda3/include/qt/QtCore"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "/opt/anaconda3/./mkspecs/macx-clang"
+					"path" : "/opt/homebrew/lib/QtCore.framework/Headers"
 				},
 				{
 					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/share/qt/mkspecs/macx-clang"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/include"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtGui.framework/Headers"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtWidgets.framework/Headers"
+				},
+				{
+					"backtrace" : 3,
 					"isSystem" : true,
 					"path" : "/opt/anaconda3/include"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 32,
 					"isSystem" : true,
 					"path" : "/opt/homebrew/include/eigen3"
 				}
@@ -311,8 +363,9 @@
 			{
 				"backtraces" : 
 				[
-					3,
-					4
+					2,
+					2,
+					5
 				],
 				"standard" : "20"
 			},
@@ -332,70 +385,103 @@
 				"role" : "flags"
 			},
 			{
-				"fragment" : "-L -lomp",
+				"fragment" : "-L/opt/homebrew/Cellar/libomp/20.1.0/lib -lomp",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "-Wl,-rpath,/opt/anaconda3/lib",
+				"fragment" : "-F/opt/homebrew/lib",
+				"role" : "frameworkPath"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/opt/anaconda3/lib -Wl,-rpath,/opt/homebrew/lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/opt/homebrew/Cellar/libomp/20.1.0/lib/libomp.dylib",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "/opt/anaconda3/lib/libboost_system.dylib",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "/opt/anaconda3/lib/libboost_thread.dylib",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "/opt/anaconda3/lib/libboost_filesystem.dylib",
+				"fragment" : "/opt/homebrew/lib/QtWidgets.framework/Versions/A/QtWidgets",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "/opt/anaconda3/lib/libQt5Widgets.5.15.2.dylib",
+				"fragment" : "/opt/anaconda3/lib/libboost_system.dylib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/opt/anaconda3/lib/libboost_thread.dylib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/opt/anaconda3/lib/libboost_filesystem.dylib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 4,
-				"fragment" : "/opt/anaconda3/lib/libspdlog.1.15.1.dylib",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 5,
 				"fragment" : "/opt/anaconda3/lib/libpython3.12.dylib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 5,
-				"fragment" : "-ldl",
+				"fragment" : "/opt/anaconda3/lib/libspdlog.1.15.1.dylib",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 11,
-				"fragment" : "/opt/anaconda3/lib/libQt5Gui.5.15.2.dylib",
+				"backtrace" : 2,
+				"fragment" : "/opt/homebrew/lib/QtGui.framework/Versions/A/QtGui",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 11,
-				"fragment" : "/opt/anaconda3/lib/libQt5Core.5.15.2.dylib",
+				"fragment" : "-framework AGL",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 12,
+				"fragment" : "-framework AppKit",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 12,
+				"fragment" : "-framework OpenGL",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 12,
+				"fragment" : "-framework ImageIO",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 12,
+				"fragment" : "-framework Metal",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/homebrew/lib/QtCore.framework/Versions/A/QtCore",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 17,
+				"fragment" : "-framework IOKit",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 17,
+				"fragment" : "-framework DiskArbitration",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 17,
+				"fragment" : "-framework UniformTypeIdentifiers",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 23,
 				"fragment" : "/opt/anaconda3/lib/libboost_atomic.dylib",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 22,
+				"backtrace" : 28,
 				"fragment" : "/opt/anaconda3/lib/libfmt.11.0.2.dylib",
 				"role" : "libraries"
 			}

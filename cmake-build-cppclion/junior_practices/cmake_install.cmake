@@ -37,3 +37,8 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/Library/Developer/CommandLineTools/usr/bin/objdump")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/_deps/matplotlib_cpp-build/cmake_install.cmake")
+endif()
+

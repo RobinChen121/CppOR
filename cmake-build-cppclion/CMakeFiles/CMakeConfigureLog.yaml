@@ -494,3 +494,43 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckCXXSourceCompiles.cmake:52 (cmake_check_source_compiles)"
+      - "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapAtomic.cmake:36 (check_cxx_source_compiles)"
+      - "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake:36 (find_dependency)"
+      - "/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake:35 (_qt_internal_find_third_party_dependencies)"
+      - "/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfig.cmake:45 (include)"
+      - "/opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake:190 (find_package)"
+      - "junior_practices/CMakeLists.txt:27 (find_package)"
+    checks:
+      - "Performing Test HAVE_STDATOMIC"
+    directories:
+      source: "/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/CMakeFiles/CMakeScratch/TryCompile-ZxuUvT"
+      binary: "/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/CMakeFiles/CMakeScratch/TryCompile-ZxuUvT"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6;/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/3rdparty/kwin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk"
+    buildResult:
+      variable: "HAVE_STDATOMIC"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/CMakeFiles/CMakeScratch/TryCompile-ZxuUvT'
+        
+        Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_6bf37
+        [1/2] /Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_STDATOMIC  -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics -MD -MT CMakeFiles/cmTC_6bf37.dir/src.cxx.o -MF CMakeFiles/cmTC_6bf37.dir/src.cxx.o.d -o CMakeFiles/cmTC_6bf37.dir/src.cxx.o -c /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/CMakeFiles/CMakeScratch/TryCompile-ZxuUvT/src.cxx
+        [2/2] : && /Library/Developer/CommandLineTools/usr/bin/c++ -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTC_6bf37.dir/src.cxx.o -o cmTC_6bf37   && :
+        
+      exitCode: 0
+...
