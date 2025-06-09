@@ -122,6 +122,29 @@ PMF::getPMFBinomial(const int max_staff, const std::span<const double> ps) {
   return pmf;
 }
 
+std::vector<std::vector<std::vector<std::array<double, 2>>>>
+PMF::getPMFBinomial2(const int max_staff, const std::span<const double> ps) {
+  const auto T = ps.size();
+  std::vector pmf(T, std::vector<std::vector<std::array<double, 2>>>());
+  for (size_t t = 0; t < T; ++t) {
+    pmf[t] = std::vector(max_staff + 1, std::vector<std::array<double, 2>>());
+    for (int i = 0; i < max_staff; ++i) {
+      pmf[t][i] = std::vector<std::array<double, 2>>(i + 1);
+      if (i == 0) {
+        pmf[t][i][0][0] = 0;
+        pmf[t][i][0][1] = 1;
+      } else {
+        boost::math::binomial_distribution<double> dist(i, ps[t]);
+        for (int j = 0; j <= i; ++j) {
+          pmf[t][i][j][0] = j;
+          pmf[t][i][j][1] = pdf(dist, j);
+        }
+      }
+    }
+  }
+  return pmf;
+}
+
 // get probability mass function values for each period of Poisson of two
 // products
 std::vector<std::vector<std::vector<double>>>

@@ -7,16 +7,16 @@
 #define PROBABILITYMASSFUNCTIONS_H
 
 #include <span>
-#include <vector>
 #include <string>
+#include <vector>
 
 class PMF {
   double truncatedQuantile = 1;
   double stepSize = 1;
-  std::string distributionName = "";
+  std::string distributionName;
 
 public:
-  PMF() {};
+  PMF() = default;
   PMF(double truncatedQuantile, double stepSize, std::string distributionName);
 
   // std::string getName();
@@ -37,8 +37,11 @@ public:
   getPMFPoisson(std::span<const double> demands) const;
 
   // 函数声明为 static 表示不需要对象初始化就能调用该函数, 不能与 函数的const 同时用
-  [[nodiscard]] std::vector<std::vector<std::vector<double>>> static getPMFBinomial(
-      int max_staff, std::span<const double> ps);
+  [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
+  getPMFBinomial(int max_staff, std::span<const double> ps);
+
+  static std::vector<std::vector<std::vector<std::array<double, 2>>>>
+  getPMFBinomial2(int max_staff, std::span<const double> ps);
 
   static int poissonQuantile(double p, double lambda);
 
