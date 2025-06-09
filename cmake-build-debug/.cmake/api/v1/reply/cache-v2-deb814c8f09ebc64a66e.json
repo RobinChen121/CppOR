@@ -1627,7 +1627,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "12"
+			"value" : "11"
 		},
 		{
 			"name" : "CMAKE_OBJCOPY",
@@ -10144,6 +10144,18 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "172d12aabed85c218cd458d7dd567620"
+		},
+		{
+			"name" : "_Python3_Interpreter_REASON_FAILURE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Interpreter reason failure"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
 		},
 		{
 			"name" : "_Python3_LIBRARY_DEBUG",
