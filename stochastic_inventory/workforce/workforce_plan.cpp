@@ -13,10 +13,10 @@
 #include <unordered_map>
 
 class WorkforcePlan {
-  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
+  std::vector<double> turnover_rate = {0.1};
   size_t T = turnover_rate.size();
 
-  int initial_workers = 0;
+  int initial_workers = 1;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkforceState ini_state = WorkforceState{1, initial_workers};
   double fix_hire_cost = 50.0;
@@ -29,11 +29,15 @@ class WorkforcePlan {
   int max_worker_num = 600;
 
   std::vector<std::vector<std::vector<double>>> pmf;
+  std::vector<std::vector<std::vector<std::array<double, 2>>>> pmf2;
   std::unordered_map<WorkforceState, double> cache_actions;
   std::unordered_map<WorkforceState, double> cache_values;
 
 public:
-  WorkforcePlan() { pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate); }
+  WorkforcePlan() {
+    pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
+    pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rate);
+  }
 
   [[nodiscard]] std::vector<int> feasible_actions() const {
     std::vector<int> actions(max_hire_num + 1);
@@ -71,7 +75,7 @@ public:
     double best_cost = std::numeric_limits<double>::max();
     const int t = ini_state.getPeriod() - 1;
 
-    for (const int action: feasible_actions()) {
+    for (const int action : feasible_actions()) {
       double this_value = 0;
       int turnover_num = 0;
       int hire_up_to = ini_state.get_initial_workers() + action;
@@ -79,7 +83,7 @@ public:
         hire_up_to = static_cast<int>(pmf[t].size() - 1);
       const auto &d_and_p = pmf[t][hire_up_to];
 
-      for (const double prob: d_and_p) {
+      for (const double prob : d_and_p) {
         this_value += prob * immediate_value(ini_state, action, turnover_num);
         if (t < T - 1) {
           // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
@@ -89,7 +93,7 @@ public:
           if (auto it = cache_values.find(new_state); it != cache_values.end())
             this_value += prob * it->second;
           else
-            this_value += prob * recursion(new_state);
+            this_value += prob * recursion2(new_state);
         }
         turnover_num =
             turnover_num + 1; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
@@ -116,14 +120,14 @@ public:
     for (size_t i = 0; i <= actions.size(); i++) {
       const int hire_num = actions[i];
       int hire_up_to = initial_workers + hire_num;
-      if (hire_up_to >= pmf[t].size() - 1)
-        hire_up_to = static_cast<int>(pmf[t].size() - 1);
-      const auto d_and_p = pmf[t][hire_up_to];
+      if (hire_up_to >= pmf2[t].size() - 1)
+        hire_up_to = static_cast<int>(pmf2[t].size() - 1);
+      const auto d_and_p = pmf2[t][hire_up_to];
       double this_value = 0;
 
       for (size_t j = 0; j < d_and_p.size(); j++) {
-        const int demand = static_cast<int> (j);
-        this_value += d_and_p[j] * immediate_value(ini_state, hire_num, demand);
+        const int demand = static_cast<int>(d_and_p[j][0]);
+        this_value += d_and_p[j][1] * immediate_value(ini_state, hire_num, demand);
         if (t < T - 1) {
           // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
           // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
@@ -132,9 +136,9 @@ public:
           // if (cache_values.contains(new_state))
           //   this_value += d_and_p[j] * cache_values.at(new_state);
           if (auto it = cache_values.find(new_state); it != cache_values.end())
-            this_value += d_and_p[j] * it->second;
+            this_value += d_and_p[j][1] * it->second;
           else
-            this_value += d_and_p[j] * recursion(new_state);
+            this_value += d_and_p[j][1] * recursion(new_state);
         }
       }
       policy_values[i] = this_value;
@@ -143,8 +147,8 @@ public:
         best_hire_num = hire_num;
       }
     }
-    cache_actions[ini_state] = best_hire_num;
     cache_values[ini_state] = best_cost;
+    cache_actions[ini_state] = best_hire_num;
     return best_cost;
   }
 
