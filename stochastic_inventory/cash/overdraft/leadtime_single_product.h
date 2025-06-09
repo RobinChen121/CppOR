@@ -16,7 +16,7 @@ private:
   double ini_inventory = 0;
   double ini_cash = 0;
   CashLeadtimeState ini_state = CashLeadtimeState{1, ini_inventory, ini_cash, 0.0};
-  std::vector<double> demands = {15.0, 15.0, 15.0, 15.0};
+  std::vector<double> demands = {15.0, 15.0};
   std::string distribution_type = "poisson";
   size_t T = demands.size(); // 直接获取大小
 

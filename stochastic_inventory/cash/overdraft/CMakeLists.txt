@@ -13,9 +13,9 @@ add_executable(${RUN_NAME}
         ../../states/CashState.cpp
         ../../states/CashLeadtimeState.cpp
 
-        ../../../utils/selfHash.cpp
+#        ../../../utils/selfHash.cpp
 
-        ../../states/CashLeadtimeMultiState.cpp
+#        ../../states/CashLeadtimeMultiState.cpp
         leadtime_single_product.cpp
 
         #        leadtime_single_product_testing.cpp

@@ -49,7 +49,7 @@ private:
                                    ini_Qpre1, ini_Qpre2,      ini_cash};
 
   std::vector<double> mean_demand1 = {15, 15, 15};
-  size_t T = 3; // mean_demand1.size(); // 直接获取大小
+  size_t T = 2; // mean_demand1.size(); // 直接获取大小
   std::vector<double> mean_demand2 = std::vector<double>(T);
   std::string distribution_type = "poisson";
 

@@ -17,7 +17,7 @@ class WorkforceState {
 
 public:
   WorkforceState() = default; // WorkforceState() {} 并不初始化类的变量
-  WorkforceState(int period, int initial_workers)
+  WorkforceState(const int period, const int initial_workers)
       : period(period), initial_workers(initial_workers) {};
 
   [[nodiscard]] int getPeriod() const { return period; }
