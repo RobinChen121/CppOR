@@ -66,30 +66,69 @@ public:
     return {ini_state.getPeriod() + 1, next_workers};
   }
 
-  double recursion(const WorkforceState ini_state) {
+  double recursion2(const WorkforceState ini_state) {
     int best_hire_num = 0;
     double best_cost = std::numeric_limits<double>::max();
     const int t = ini_state.getPeriod() - 1;
 
-    std::vector<double> policy_values(max_hire_num + 1);
-    for (int i = 0; i <= max_hire_num; i++) {
+    for (const int action: feasible_actions()) {
       double this_value = 0;
-      // int turnover_num = 0;
-      int hire_up_to = ini_state.get_initial_workers() + i;
+      int turnover_num = 0;
+      int hire_up_to = ini_state.get_initial_workers() + action;
       if (hire_up_to >= pmf[t].size() - 1)
         hire_up_to = static_cast<int>(pmf[t].size() - 1);
       const auto &d_and_p = pmf[t][hire_up_to];
 
-      if (t == 0 and i >= 119)
-        int a = 0;
-
-      for (size_t j = 0; j < d_and_p.size(); j++) {
-        this_value += d_and_p[j] * immediate_value(ini_state, i, j);
+      for (const double prob: d_and_p) {
+        this_value += prob * immediate_value(ini_state, action, turnover_num);
         if (t < T - 1) {
           // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
           // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
           // cache_values.at[new_state] 或 cache_values[new_state] 会再触发一次哈希查找
-          auto new_state = state_transition(ini_state, i, j);
+          auto new_state = state_transition(ini_state, action, turnover_num);
+          if (auto it = cache_values.find(new_state); it != cache_values.end())
+            this_value += prob * it->second;
+          else
+            this_value += prob * recursion(new_state);
+        }
+        turnover_num =
+            turnover_num + 1; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
+      }
+      if (this_value < best_cost) {
+        best_cost = this_value;
+        best_hire_num = action;
+      }
+    }
+    cache_actions[ini_state] = best_hire_num;
+    cache_values[ini_state] = best_cost;
+    return best_cost;
+  }
+
+  double recursion(const WorkforceState ini_state) {
+    const auto actions = feasible_actions();
+    const int initial_workers = ini_state.get_initial_workers();
+    const int t = ini_state.getPeriod() - 1;
+
+    int best_hire_num = 0;
+    std::vector<double> policy_values(feasible_actions().size());
+    double best_cost = std::numeric_limits<double>::max();
+
+    for (size_t i = 0; i <= actions.size(); i++) {
+      const int hire_num = actions[i];
+      int hire_up_to = initial_workers + hire_num;
+      if (hire_up_to >= pmf[t].size() - 1)
+        hire_up_to = static_cast<int>(pmf[t].size() - 1);
+      const auto d_and_p = pmf[t][hire_up_to];
+      double this_value = 0;
+
+      for (size_t j = 0; j < d_and_p.size(); j++) {
+        const int demand = static_cast<int> (j);
+        this_value += d_and_p[j] * immediate_value(ini_state, hire_num, demand);
+        if (t < T - 1) {
+          // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
+          // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
+          // cache_values.at[new_state] 或 cache_values[new_state] 会再触发一次哈希查找
+          auto new_state = state_transition(ini_state, hire_num, demand);
           // if (cache_values.contains(new_state))
           //   this_value += d_and_p[j] * cache_values.at(new_state);
           if (auto it = cache_values.find(new_state); it != cache_values.end())
@@ -97,15 +136,11 @@ public:
           else
             this_value += d_and_p[j] * recursion(new_state);
         }
-        // turnover_num =
-        //     turnover_num + 1; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
       }
       policy_values[i] = this_value;
-      if (t == 0 and i >= 119)
-        int a = 0;
-      if (this_value < best_cost) {
+      if (policy_values[i] < best_cost) {
         best_cost = this_value;
-        best_hire_num = i;
+        best_hire_num = hire_num;
       }
     }
     cache_actions[ini_state] = best_hire_num;
