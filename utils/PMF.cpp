@@ -107,7 +107,7 @@ PMF::getPMFBinomial(const int max_staff, const std::span<const double> ps) {
   std::vector pmf(T, std::vector<std::vector<double>>());
   for (size_t t = 0; t < T; ++t) {
     pmf[t] = std::vector(max_staff + 1, std::vector<double>());
-    for (int i = 0; i < max_staff; ++i) {
+    for (int i = 0; i <= max_staff; ++i) {
       pmf[t][i] = std::vector<double>(i + 1);
       if (i == 0)
         pmf[t][i][0] = 1;
@@ -128,7 +128,7 @@ PMF::getPMFBinomial2(const int max_staff, const std::span<const double> ps) {
   std::vector pmf(T, std::vector<std::vector<std::array<double, 2>>>());
   for (size_t t = 0; t < T; ++t) {
     pmf[t] = std::vector(max_staff + 1, std::vector<std::array<double, 2>>());
-    for (int i = 0; i < max_staff; ++i) {
+    for (int i = 0; i <= max_staff; ++i) {
       pmf[t][i] = std::vector<std::array<double, 2>>(i + 1);
       if (i == 0) {
         pmf[t][i][0][0] = 0;

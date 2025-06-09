@@ -146,15 +146,15 @@ std::vector<double> OverdraftLeadtimeSingleProduct::solve() {
   return {recursion(ini_state), cacheActions.at(ini_state)};
 }
 
-// int main() {
-//   auto problem = OverdraftLeadtimeSingleProduct();
-//   const auto start_time = std::chrono::high_resolution_clock::now();
-//   const auto final_value = problem.solve()[0];
-//   const auto end_time = std::chrono::high_resolution_clock::now();
-//   const std::chrono::duration<double> time = end_time - start_time;
-//   std::cout << "running time is " << time.count() << 's' << std::endl;
-//   std::cout << "Final expected cash increment is " << final_value << std::endl;
-//   std::cout << "Optimal Q in the first period is " << problem.solve()[1] << std::endl;
-//
-//   return 0;
-// }
+int main() {
+  auto problem = OverdraftLeadtimeSingleProduct();
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  const auto final_value = problem.solve()[0];
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time = end_time - start_time;
+  std::cout << "running time is " << time.count() << 's' << std::endl;
+  std::cout << "Final expected cash increment is " << final_value << std::endl;
+  std::cout << "Optimal Q in the first period is " << problem.solve()[1] << std::endl;
+
+  return 0;
+}
