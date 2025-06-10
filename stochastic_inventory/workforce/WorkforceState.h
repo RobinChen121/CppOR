@@ -21,7 +21,7 @@ public:
       : period(period), initial_workers(initial_workers) {};
 
   [[nodiscard]] int getPeriod() const { return period; }
-  [[nodiscard]] int get_initial_workers() const { return initial_workers; }
+  [[nodiscard]] int getInitialWorkers() const { return initial_workers; }
 
   // define operator < or give a self defined comparator for sorting map
   bool operator<(const WorkforceState &other) const;
