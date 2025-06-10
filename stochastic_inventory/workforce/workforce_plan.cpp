@@ -1,8 +1,8 @@
 /*
  * Created by Zhen Chen on 2025/6/3.
  * Email: chen.zhen5526@gmail.com
- * Description:
- *
+ * Description: For a 3 period problem, c++ serial can solve in 0.63 seconds while java is 7s.
+ * For 5 periods, c++ parallel time is 0.77s while serial is 1.76s.
  *
  */
 
@@ -10,10 +10,16 @@
 #include "WorkforceState.h"
 #include <chrono>
 #include <iostream>
+#include <mutex>
+#include <thread>
 #include <unordered_map>
 
+enum class Direction { FORWARD, BACKWARD };
+
 class WorkforcePlan {
-  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
+  Direction direction = Direction::FORWARD;
+
+  std::vector<double> turnover_rate = {0.1, 0.1, 0.1, 0.1, 0.1};
   size_t T = turnover_rate.size();
 
   int initial_workers = 0;
@@ -33,38 +39,44 @@ class WorkforcePlan {
   std::unordered_map<WorkforceState, double> cache_actions;
   std::unordered_map<WorkforceState, double> cache_values;
 
+  std::mutex mtx; // 互斥锁保护共享数据写入
+
 public:
+  std::vector<std::unordered_map<WorkforceState, double>> value;
+  std::vector<std::unordered_map<WorkforceState, double>> policy;
+
   WorkforcePlan() {
     pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
     // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rate);
   }
 
-  [[nodiscard]] std::vector<int> feasible_actions() const {
+  Direction get_direction() const { return direction; };
+  [[nodiscard]] std::vector<int> feasibleActions() const {
     std::vector<int> actions(max_hire_num + 1);
     for (int i = 0; i <= max_hire_num; i++)
       actions[i] = i;
     return actions;
   }
 
-  [[nodiscard]] double immediate_value(const WorkforceState ini_state, const int action,
-                                       const int overturn_num) const {
+  [[nodiscard]] double immediateValue(const WorkforceState ini_state, const int action,
+                                      const int overturn_num) const {
     const double fix_cost = action > 0 ? fix_hire_cost : 0;
     const double vari_cost = unit_vari_cost * action;
-    int next_workers = ini_state.get_initial_workers() + action - overturn_num;
+    const int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
     // next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     const double salary_cost = salary * next_workers;
     const int t = ini_state.getPeriod() - 1;
     const double penalty_cost =
         next_workers > min_workers[t] ? 0 : unit_penalty * (min_workers[t] - next_workers);
     const double total_cost = fix_cost + vari_cost + salary_cost + penalty_cost;
-    if (t == 2 and ini_state.get_initial_workers() == 119)
+    if (t == 2 and ini_state.getInitialWorkers() == 119)
       int a = 0;
     return total_cost;
   }
 
-  [[nodiscard]] WorkforceState state_transition(const WorkforceState ini_state, const int action,
-                                                const int overturn_num) const {
-    int next_workers = ini_state.get_initial_workers() + action - overturn_num;
+  [[nodiscard]] WorkforceState stateTransition(const WorkforceState ini_state, const int action,
+                                               const int overturn_num) const {
+    int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
     next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     // 类可以直接使用列表初始化
     // 等价于 WorkforceState{ini_state.getPeriod() + 1, next_workers}
@@ -72,29 +84,29 @@ public:
     return {ini_state.getPeriod() + 1, next_workers};
   }
 
-  double recursion(const WorkforceState ini_state) {
+  double recursionForward(const WorkforceState ini_state) {
     int best_hire_num = 0;
     double best_cost = std::numeric_limits<double>::max();
     const int t = ini_state.getPeriod() - 1;
 
-    for (const int action : feasible_actions()) {
+    for (const int action : feasibleActions()) {
       double this_value = 0;
       int turnover_num = 0;
-      int hire_up_to = ini_state.get_initial_workers() + action;
+      int hire_up_to = ini_state.getInitialWorkers() + action;
       if (hire_up_to >= pmf[t].size() - 1)
         hire_up_to = static_cast<int>(pmf[t].size() - 1);
 
       for (const auto &d_and_p = pmf[t][hire_up_to]; const double prob : d_and_p) {
-        this_value += prob * immediate_value(ini_state, action, turnover_num);
+        this_value += prob * immediateValue(ini_state, action, turnover_num);
         if (t < T - 1) {
           // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
           // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
           // cache_values.at[new_state] 或 cache_values[new_state] 会再触发一次哈希查找
-          auto new_state = state_transition(ini_state, action, turnover_num);
+          auto new_state = stateTransition(ini_state, action, turnover_num);
           if (auto it = cache_values.find(new_state); it != cache_values.end())
             this_value += prob * it->second;
           else
-            this_value += prob * recursion(new_state);
+            this_value += prob * recursionForward(new_state);
         }
         ++turnover_num; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
       }
@@ -108,7 +120,84 @@ public:
     return best_cost;
   }
 
-  std::vector<double> solve() { return {recursion(ini_state), cache_actions.at(ini_state)}; }
+  void recursionBackwardParallel() {
+    value.resize(T + 1);
+    policy.resize(T);
+
+    // 最后一阶段边界条件
+    for (int i = 0; i <= max_worker_num; ++i) {
+      auto state = WorkforceState(T + 1, i);
+      value[T][state] = 0.0;
+    }
+
+    for (int t = T - 1; t >= 0; --t) {
+      std::vector<std::thread> threads;
+      const int thread_num = std::thread::hardware_concurrency();
+      const int chunk_size = max_worker_num / thread_num;
+      for (int thread_index = 0; thread_index < thread_num; ++thread_index) {
+        const int start_workers = thread_index * chunk_size;
+        const int end_workers =
+            (thread_index == thread_num - 1) ? max_worker_num : start_workers + chunk_size;
+
+        // emplace_back 是 std::vector 提供的一个成员函数，用于在向量末尾直接构造一个新对象
+        // 而不是先创建对象再插入（相比 push_back 更高效）
+
+        // 语法为：emplace_back(func, arg)
+        // 但若 func 为非静态成员函数，需要用到 this，并且前面的成员函数要用引用
+        // std::ref(x) 会把 x 包装成一个可以被复制但实际是引用的对象
+        // 但是原函数构造中不用 & 在大规模数据时会影响计算速度
+
+        // std::thread 构造函数参数始终默认按值传递, 即使参数前用 & 也是，此时 & 表示指针，不是引用
+        // & 在声明变量或函数构造时中跟参数表示引用，调用函数时跟参数表示指针
+        threads.emplace_back(&WorkforcePlan::computeStage, this, t, start_workers, end_workers,
+                             std::ref(value), std::ref(policy));
+      }
+      for (auto &thread : threads) {
+        // 不要忘了关闭线程
+        thread.join();
+      }
+    }
+  }
+
+  void computeStage(const int t, const int start_inventory, const int end_inventory,
+                    std::vector<std::unordered_map<WorkforceState, double>> &value,
+                    std::vector<std::unordered_map<WorkforceState, double>> &policy) {
+    for (int i = start_inventory; i <= end_inventory; i++) {
+      double bestQ = 0.0;
+      double best_value = std::numeric_limits<double>::max();
+      WorkforceState ini_state(t + 1, i);
+      for (const std::vector<int> actions = feasibleActions(); const int action : actions) {
+        double this_value = 0;
+        int demand = 0;
+        int hire_up_to = ini_state.getInitialWorkers() + action;
+        if (hire_up_to >= pmf[t].size() - 1)
+          hire_up_to = static_cast<int>(pmf[t].size() - 1);
+        for (const auto &demand_prob : pmf[t][hire_up_to]) {
+          this_value += demand_prob * immediateValue(ini_state, action, demand);
+          if (t < T - 1) {
+            auto new_state = stateTransition(ini_state, action, demand);
+            this_value += demand_prob * value[t + 1][new_state];
+          }
+          ++demand;
+        }
+        if (this_value < best_value) {
+          best_value = this_value;
+          bestQ = action;
+        }
+      }
+
+      std::lock_guard<std::mutex> lock(mtx); // 保护共享数据写入
+      value[t][ini_state] = best_value;
+      policy[t][ini_state] = bestQ;
+    }
+  }
+
+  std::vector<double> solve() {
+    if (direction == Direction::FORWARD)
+      return {recursionForward(ini_state), cache_actions.at(ini_state)};
+    recursionBackwardParallel();
+    return {value[0][ini_state], policy[0][ini_state]};
+  }
 };
 
 int main() {
@@ -117,7 +206,13 @@ int main() {
   const auto final_value = problem.solve()[0];
   const auto end_time = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time = end_time - start_time;
-  std::cout << "running time is " << time.count() << 's' << std::endl;
+  if (problem.get_direction() == Direction::FORWARD)
+    std::cout << "running time is " << time.count() << 's' << std::endl;
+  else {
+    const int thread_num = std::thread::hardware_concurrency();
+    std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
+              << time.count() << 's' << std::endl;
+  }
   std::cout << "Final optimal cost is " << final_value << std::endl;
   std::cout << "Optimal hiring number in the first period is " << problem.solve()[1] << std::endl;
 

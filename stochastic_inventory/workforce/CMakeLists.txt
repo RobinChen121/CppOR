@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
+set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里

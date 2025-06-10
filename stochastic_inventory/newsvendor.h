@@ -32,20 +32,18 @@ class NewsvendorDP {
   std::unordered_map<State, double> cacheValues;
 
 public:
-  NewsvendorDP(const size_t T, const int capacity, const double stepSize,
-               const double fixOrderCost, const double unitVariOrderCost,
-               const double unitHoldCost, const double unitPenaltyCost,
-               const double truncatedQuantile, const double max_I,
-               const double min_I,
+  NewsvendorDP(size_t T, int capacity, double stepSize, double fixOrderCost,
+               double unitVariOrderCost, double unitHoldCost, double unitPenaltyCost,
+               double truncatedQuantile, double max_I, double min_I,
                std::vector<std::vector<std::vector<double>>> pmf);
 
-  std::vector<double> feasibleActions() const;
+  [[nodiscard]] std::vector<double> feasibleActions() const;
 
-  State stateTransitionFunction(const State &state, const double action,
-                                const double demand) const;
+  [[nodiscard]] State stateTransitionFunction(const State &state, double action,
+                                              double demand) const;
 
-  double immediateValueFunction(const State &state, const double action,
-                                const double demand) const;
+  [[nodiscard]] double immediateValueFunction(const State &state, double action,
+                                              double demand) const;
 
   double getOptAction(const State &state);
 
@@ -55,18 +53,19 @@ public:
 
   double recursion_parallel(const State &state);
 
-  void computeStage(const int t, const int start_inventory,
-                    const int end_inventory,
+  void computeStage(int t, int start_inventory, int end_inventory,
                     std::vector<std::unordered_map<State, double>> &value,
                     std::vector<std::unordered_map<State, double>> &policy);
 
   struct DpResult {
-    std::vector<std::unordered_map<State, double>> value; // V[t][inventory]
-    std::vector<std::unordered_map<State, double>>
-        policy; // policy[t][inventory]
+    std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
+    std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
   };
 
-  DpResult backward_parallel(const int thread_num);
+  std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
+  std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
+
+  void backward_parallel(const int thread_num);
 };
 
 #endif // NEWSVENDOR_H

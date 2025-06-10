@@ -2355,69 +2355,6 @@
 			"path" : "/opt/anaconda3/lib/cmake/spdlog/spdlogConfigTargets-release.cmake"
 		},
 		{
-			"isGenerated" : true,
-			"path" : "cmake-build-cppclion/_deps/matplotlib_cpp-src/CMakeLists.txt"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/GNUInstallDirs.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPython3.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPython/Support.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageMessage.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPython3.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPython/Support.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageMessage.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakePackageConfigHelpers.cmake"
-		},
-		{
-			"isCMake" : true,
-			"isExternal" : true,
-			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/WriteBasicConfigVersionFile.cmake"
-		},
-		{
-			"isGenerated" : true,
-			"path" : "cmake-build-cppclion/_deps/matplotlib_cpp-src/cmake/matplotlib_cppConfig.cmake.in"
-		},
-		{
 			"path" : "stochastic_inventory/CMakeLists.txt"
 		},
 		{
