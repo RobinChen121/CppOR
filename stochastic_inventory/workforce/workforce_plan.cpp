@@ -2,12 +2,13 @@
  * Created by Zhen Chen on 2025/6/3.
  * Email: chen.zhen5526@gmail.com
  * Description: For a 3 period problem, c++ serial can solve in 0.63 seconds while java is 7s.
- * For 5 periods, c++ parallel time is 0.77s while serial is 1.76s.
+ * For 5 periods, c++ parallel 8 threads mac m1 time is 0.77s while serial is 1.76s.
+ * dell 7740, 12 threads, time is 1.85s while serial is 3.98s
  *
  */
 
 #include "../../utils/PMF.h"
-#include "WorkforceState.h"
+#include "WorkerState.h"
 #include <chrono>
 #include <iostream>
 #include <mutex>
@@ -24,7 +25,7 @@ class WorkforcePlan {
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
-  WorkforceState ini_state = WorkforceState{1, initial_workers};
+  WorkerState ini_state = WorkerState{1, initial_workers};
   double fix_hire_cost = 50.0;
   double unit_vari_cost = 0.0;
   double salary = 30.0;
@@ -36,14 +37,14 @@ class WorkforcePlan {
 
   std::vector<std::vector<std::vector<double>>> pmf;
   // std::vector<std::vector<std::vector<std::array<double, 2>>>> pmf2;
-  std::unordered_map<WorkforceState, double> cache_actions;
-  std::unordered_map<WorkforceState, double> cache_values;
+  std::unordered_map<WorkerState, double> cache_actions;
+  std::unordered_map<WorkerState, double> cache_values;
 
   std::mutex mtx; // 互斥锁保护共享数据写入
 
 public:
-  std::vector<std::unordered_map<WorkforceState, double>> value;
-  std::vector<std::unordered_map<WorkforceState, double>> policy;
+  std::vector<std::unordered_map<WorkerState, double>> value;
+  std::vector<std::unordered_map<WorkerState, double>> policy;
 
   WorkforcePlan() {
     pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
@@ -58,7 +59,7 @@ public:
     return actions;
   }
 
-  [[nodiscard]] double immediateValue(const WorkforceState ini_state, const int action,
+  [[nodiscard]] double immediateValue(const WorkerState ini_state, const int action,
                                       const int overturn_num) const {
     const double fix_cost = action > 0 ? fix_hire_cost : 0;
     const double vari_cost = unit_vari_cost * action;
@@ -74,17 +75,17 @@ public:
     return total_cost;
   }
 
-  [[nodiscard]] WorkforceState stateTransition(const WorkforceState ini_state, const int action,
-                                               const int overturn_num) const {
+  [[nodiscard]] WorkerState stateTransition(const WorkerState ini_state, const int action,
+                                            const int overturn_num) const {
     int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
     next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     // 类可以直接使用列表初始化
-    // 等价于 WorkforceState{ini_state.getPeriod() + 1, next_workers}
-    // 等价于 WorkforceState(ini_state.getPeriod() + 1, next_workers)
+    // 等价于 WorkerState{ini_state.getPeriod() + 1, next_workers}
+    // 等价于 WorkerState(ini_state.getPeriod() + 1, next_workers)
     return {ini_state.getPeriod() + 1, next_workers};
   }
 
-  double recursionForward(const WorkforceState ini_state) {
+  double recursionForward(const WorkerState ini_state) {
     int best_hire_num = 0;
     double best_cost = std::numeric_limits<double>::max();
     const int t = ini_state.getPeriod() - 1;
@@ -126,13 +127,13 @@ public:
 
     // 最后一阶段边界条件
     for (int i = 0; i <= max_worker_num; ++i) {
-      auto state = WorkforceState(T + 1, i);
+      auto state = WorkerState(T + 1, i);
       value[T][state] = 0.0;
     }
 
-    for (int t = T - 1; t >= 0; --t) {
+    for (int t = static_cast<int>(T) - 1; t >= 0; --t) {
       std::vector<std::thread> threads;
-      const int thread_num = std::thread::hardware_concurrency();
+      const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
       const int chunk_size = max_worker_num / thread_num;
       for (int thread_index = 0; thread_index < thread_num; ++thread_index) {
         const int start_workers = thread_index * chunk_size;
@@ -160,12 +161,12 @@ public:
   }
 
   void computeStage(const int t, const int start_inventory, const int end_inventory,
-                    std::vector<std::unordered_map<WorkforceState, double>> &value,
-                    std::vector<std::unordered_map<WorkforceState, double>> &policy) {
+                    std::vector<std::unordered_map<WorkerState, double>> &value,
+                    std::vector<std::unordered_map<WorkerState, double>> &policy) {
     for (int i = start_inventory; i <= end_inventory; i++) {
       double bestQ = 0.0;
       double best_value = std::numeric_limits<double>::max();
-      WorkforceState ini_state(t + 1, i);
+      WorkerState ini_state(t + 1, i);
       for (const std::vector<int> actions = feasibleActions(); const int action : actions) {
         double this_value = 0;
         int demand = 0;
@@ -198,6 +199,19 @@ public:
     recursionBackwardParallel();
     return {value[0][ini_state], policy[0][ini_state]};
   }
+
+  std::vector<std::vector<double>>
+  getOptTable() {
+    std::vector<std::vector<double>> arr;
+    arr.reserve(cache_actions.size()); // 预分配空间
+
+    for (const auto &[fst, snd] : cache_actions) {
+      arr.push_back({static_cast<double>(fst.getPeriod()),
+                     static_cast<double>(fst.getInitialWorkers()), snd});
+    }
+
+    return arr;
+  }
 };
 
 int main() {
@@ -209,7 +223,7 @@ int main() {
   if (problem.get_direction() == Direction::FORWARD)
     std::cout << "running time is " << time.count() << 's' << std::endl;
   else {
-    const int thread_num = std::thread::hardware_concurrency();
+    const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
     std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
               << time.count() << 's' << std::endl;
   }
@@ -219,7 +233,7 @@ int main() {
   return 0;
 }
 
-// double recursion2(const WorkforceState ini_state) {
+// double recursion2(const WorkerState ini_state) {
 //   const auto actions = feasible_actions();
 //   const int initial_workers = ini_state.get_initial_workers();
 //   const int t = ini_state.getPeriod() - 1;

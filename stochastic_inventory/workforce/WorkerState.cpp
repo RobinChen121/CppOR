@@ -6,10 +6,10 @@
  *
  */
 
-#include "WorkforceState.h"
+#include "WorkerState.h"
 #include <iostream>
 
-bool WorkforceState::operator<(const WorkforceState &other) const {
+bool WorkerState::operator<(const WorkerState &other) const {
   if (period < other.period) {
     return true;
   }
@@ -24,6 +24,6 @@ bool WorkforceState::operator<(const WorkforceState &other) const {
 
 // int main() {
 //   constexpr auto state =
-//       WorkforceState(); // constexpr 表示“这个东西（变量或函数）能在编译时就被求值”，用来提升性能
+//       WorkerState(); // constexpr 表示“这个东西（变量或函数）能在编译时就被求值”，用来提升性能
 //   std::cout << state.getPeriod() << std::endl;
 // }
