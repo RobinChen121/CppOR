@@ -11,6 +11,7 @@
 #include "WorkerState.h"
 #include <chrono>
 #include <iostream>
+#include <map>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -18,9 +19,9 @@
 enum class Direction { FORWARD, BACKWARD };
 
 class WorkforcePlan {
-  Direction direction = Direction::FORWARD;
+  Direction direction = Direction::BACKWARD;
 
-  std::vector<double> turnover_rate = {0.1, 0.1, 0.1, 0.1, 0.1};
+  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
   size_t T = turnover_rate.size();
 
   int initial_workers = 0;
@@ -200,16 +201,29 @@ public:
     return {value[0][ini_state], policy[0][ini_state]};
   }
 
-  std::vector<std::vector<double>>
-  getOptTable() {
+  std::vector<std::vector<double>> getOptTable() {
     std::vector<std::vector<double>> arr;
-    arr.reserve(cache_actions.size()); // 预分配空间
+    if (direction == Direction::FORWARD) {
+      arr.reserve(cache_actions.size()); // 预分配空间
 
-    for (const auto &[fst, snd] : cache_actions) {
-      arr.push_back({static_cast<double>(fst.getPeriod()),
-                     static_cast<double>(fst.getInitialWorkers()), snd});
+      // map 可以通过迭代范围构造
+      std::map<WorkerState, double> ordered_cache_actions(cache_actions.begin(),
+                                                          cache_actions.end());
+
+      for (const auto &[fst, snd] : ordered_cache_actions) {
+        arr.push_back({static_cast<double>(fst.getPeriod()),
+                       static_cast<double>(fst.getInitialWorkers()), snd});
+      }
+      return arr;
     }
-
+    arr.reserve(policy.size() * policy[0].size());
+    for (size_t t = 0; t < policy.size(); ++t) {
+      for (std::map<WorkerState, double> ordered_cache_actions(policy[t].begin(), policy[t].end());
+           const auto &[fst, snd] : ordered_cache_actions) {
+        arr.push_back({static_cast<double>(fst.getPeriod()),
+                       static_cast<double>(fst.getInitialWorkers()), snd});
+      }
+    }
     return arr;
   }
 };
@@ -229,6 +243,8 @@ int main() {
   }
   std::cout << "Final optimal cost is " << final_value << std::endl;
   std::cout << "Optimal hiring number in the first period is " << problem.solve()[1] << std::endl;
+
+  problem.getOptTable();
 
   return 0;
 }

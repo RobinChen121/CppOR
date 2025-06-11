@@ -9,7 +9,7 @@
 #ifndef DOUBLE_PRODUCT_ENHANCEMENT_H
 #define DOUBLE_PRODUCT_ENHANCEMENT_H
 
-#include "../../utils/common.h"
+#include "../../utils/fileOperations.h"
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 #include <iomanip> // for precision

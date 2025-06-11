@@ -1,12 +1,8 @@
-set(RUN_NAME sdp-inventory) # 设置运行程序的名字
+set(RUN_NAME newsvendor) # 设置运行程序的名字
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(cash)
-add_subdirectory(states)
-add_subdirectory(workforce)
-add_subdirectory(newsvendor)
 
 set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
 
@@ -15,12 +11,10 @@ set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
 add_executable(${RUN_NAME}
         #        NewsvendorParallel.cpp
         #        newsvendor.cpp
-        #        ../utils/PMF.cpp
-        #        states/State.cpp
-        #        newsvendor/newsvendorParallel.cpp
+        ../../utils/PMF.cpp
+        ../states/State.cpp
+        newsvendorParallel.cpp
         #        cash/CashState.cpp
-
-        FindsS.cpp
 )
 
 #-----------------------------------

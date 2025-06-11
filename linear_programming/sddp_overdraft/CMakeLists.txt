@@ -7,12 +7,12 @@ set(CMAKE_BUILD_TYPE Release)
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
         double_product_testing.cpp
-        double_product.cpp
+        double_product_enhancement_further.cpp
 
         #        single_product_testing_iteratonNum.cpp
         #        single_product_enhancement.cpp
         I_cash_status.cpp
-        ../../utils/common.cpp
+        ../../utils/fileOperations.cpp
         ../../utils/sampling.cpp
 )
 

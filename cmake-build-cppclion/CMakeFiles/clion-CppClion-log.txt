@@ -2,6 +2,9 @@
 mac
 -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
 -- Qt6 Core and Widgets found.
--- Configuring done (0.5s)
--- Generating done (0.0s)
+-- Found Python3: /opt/homebrew/Frameworks/Python.framework/Versions/3.13/bin/python3.13 (found version "3.13.2") found components: Interpreter Development Development.Module Development.Embed
+-- Found Python3: /opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/include/python3.13 (found version "3.13.2") found components: NumPy Interpreter Development.Module
+-- Found Python3: /opt/anaconda3/bin/python3.12 (found version "3.12.2") found components: Interpreter Development NumPy Development.Module Development.Embed
+-- Configuring done (1.2s)
+-- Generating done (0.1s)
 -- Build files have been written to: /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion
