@@ -6,29 +6,29 @@
  *
  */
 
-#ifndef WORKFORCESTATE_H
-#define WORKFORCESTATE_H
+#ifndef WorkerSTATE_H
+#define WorkerSTATE_H
 
 #include <boost/functional/hash.hpp>
 
-class WorkforceState {
+class WorkerState {
   int period{};
   int initial_workers{};
 
 public:
-  WorkforceState() = default; // WorkforceState() {} 并不初始化类的变量
-  WorkforceState(const int period, const int initial_workers)
+  WorkerState() = default; // WorkerState() {} 并不初始化类的变量
+  WorkerState(const int period, const int initial_workers)
       : period(period), initial_workers(initial_workers) {};
 
   [[nodiscard]] int getPeriod() const { return period; }
   [[nodiscard]] int getInitialWorkers() const { return initial_workers; }
 
   // define operator < or give a self defined comparator for sorting map
-  bool operator<(const WorkforceState &other) const;
+  bool operator<(const WorkerState &other) const;
 
   // hashmap must define operator == and a struct to compute hash
   // bool operator == 也可以放在 cpp 文件中，尤其是比较复杂的相等时
-  bool operator==(const WorkforceState &other) const {
+  bool operator==(const WorkerState &other) const {
     // 需要定义 `==`
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
@@ -38,7 +38,7 @@ public:
 
   // 允许哈希结构体访问私有成员
   // friend struct
-  friend struct std::hash<WorkforceState>;
+  friend struct std::hash<WorkerState>;
 };
 
 // `std::hash<State>` 需要特化
@@ -48,9 +48,9 @@ template <>
 // 你并不是定义一个全新的类，而是对已有的模板类 std::hash
 // 进行特化（specialization）。 C++ 要求特化一个模板时，使用 template<>
 // 语法，表示这是一个针对特定类型的特化版本， 而不是一个普通的模板定义。
-struct std::hash<WorkforceState> {
+struct std::hash<WorkerState> {
   // size_t 表示无符号整数
-  size_t operator()(const WorkforceState &s) const noexcept {
+  size_t operator()(const WorkerState &s) const noexcept {
     // noexcept 表示这个函数不会抛出异常
     // boost 的哈希计算更安全
     std::size_t seed = 0;
@@ -68,4 +68,4 @@ struct std::hash<WorkforceState> {
   }
 };
 
-#endif // WORKFORCESTATE_H
+#endif // WorkerSTATE_H

@@ -273,7 +273,7 @@
 				{
 					"directoryIndex" : 5,
 					"id" : "sdp-inventory::@8359d8b257de3d65d78b",
-					"jsonFile" : "target-sdp-inventory-Debug-262864d9e662c770db07.json",
+					"jsonFile" : "target-sdp-inventory-Debug-f9540a5a59b056e84e30.json",
 					"name" : "sdp-inventory",
 					"projectIndex" : 0
 				},
@@ -301,7 +301,7 @@
 				{
 					"directoryIndex" : 9,
 					"id" : "workforce::@89dbaeb67dd0933c275a",
-					"jsonFile" : "target-workforce-Debug-1d1e0376505387ebba25.json",
+					"jsonFile" : "target-workforce-Debug-4075aff73aea92911c85.json",
 					"name" : "workforce",
 					"projectIndex" : 0
 				}
