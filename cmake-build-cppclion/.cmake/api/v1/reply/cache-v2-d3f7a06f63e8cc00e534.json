@@ -983,7 +983,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "11"
+			"value" : "13"
 		},
 		{
 			"name" : "CMAKE_OBJCOPY",
@@ -6230,54 +6230,6 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "Qt5Core_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for Qt5Core."
-				}
-			],
-			"type" : "PATH",
-			"value" : "/opt/anaconda3/lib/cmake/Qt5Core"
-		},
-		{
-			"name" : "Qt5Gui_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for Qt5Gui."
-				}
-			],
-			"type" : "PATH",
-			"value" : "/opt/anaconda3/lib/cmake/Qt5Gui"
-		},
-		{
-			"name" : "Qt5Widgets_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for Qt5Widgets."
-				}
-			],
-			"type" : "PATH",
-			"value" : "/opt/anaconda3/lib/cmake/Qt5Widgets"
-		},
-		{
-			"name" : "Qt5_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for Qt5."
-				}
-			],
-			"type" : "PATH",
-			"value" : "/opt/anaconda3/lib/cmake/Qt5"
-		},
-		{
 			"name" : "Qt6CoreTools_DIR",
 			"properties" : 
 			[
@@ -6568,18 +6520,6 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "8a20e4583e3417637b90d5759e21656a"
-		},
-		{
-			"name" : "_Python3_Interpreter_REASON_FAILURE",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Interpreter reason failure"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : ""
 		},
 		{
 			"name" : "_Python3_LIBRARY_RELEASE",

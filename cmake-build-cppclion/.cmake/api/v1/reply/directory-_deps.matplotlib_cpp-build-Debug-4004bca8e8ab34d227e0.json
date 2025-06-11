@@ -1,0 +1,83 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"cmake-build-cppclion/_deps/matplotlib_cpp-src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 107,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 113,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 130,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"cmake-build-cppclion/_deps/matplotlib_cpp-src/matplotlibcpp.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/matplotlib_cpp/cmake",
+			"exportName" : "install_targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "matplotlib_cpp::@3a94670b1d6c775aa564",
+					"index" : 0
+				}
+			],
+			"paths" : 
+			[
+				"_deps/matplotlib_cpp-build/CMakeFiles/Export/3f1ac978750cdcf3e610322786e2ec96/matplotlib_cppTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/matplotlib_cpp/cmake",
+			"paths" : 
+			[
+				"cmake-build-cppclion/_deps/matplotlib_cpp-build/matplotlib_cppConfig.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/matplotlib_cpp-build",
+		"source" : "cmake-build-cppclion/_deps/matplotlib_cpp-src"
+	}
+}

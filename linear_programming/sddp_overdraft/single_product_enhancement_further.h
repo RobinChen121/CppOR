@@ -9,7 +9,7 @@
 #ifndef SINGLE_PRODUCT_ENHANCEMENT_FURTHER_H
 #define SINGLE_PRODUCT_ENHANCEMENT_FURTHER_H
 
-#include "../../utils/common.h"
+#include "../../utils/fileOperations.h"
 #include "../../utils/sampling.h"
 #include "I_cash_status.h"
 #include "gurobi_c++.h"
