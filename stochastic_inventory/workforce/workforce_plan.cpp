@@ -13,6 +13,7 @@
 #include <iostream>
 #include <map>
 #include <mutex>
+#include <random>
 #include <thread>
 #include <unordered_map>
 
@@ -21,7 +22,7 @@ enum class Direction { FORWARD, BACKWARD };
 class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
 
-  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
+  std::vector<double> turnover_rate = {0.3, 0.1, 0.2};
   size_t T = turnover_rate.size();
 
   int initial_workers = 0;
@@ -53,6 +54,7 @@ public:
   }
 
   Direction get_direction() const { return direction; };
+  WorkerState get_initial_state() const { return ini_state; };
   [[nodiscard]] std::vector<int> feasibleActions() const {
     std::vector<int> actions(max_hire_num + 1);
     for (int i = 0; i <= max_hire_num; i++)
@@ -201,7 +203,94 @@ public:
     return {value[0][ini_state], policy[0][ini_state]};
   }
 
-  std::vector<std::vector<double>> getOptTable() {
+  std::vector<std::array<int, 2>> findsS() const {
+    std::vector<std::array<int, 2>> arr(T);
+
+    if (direction == Direction::FORWARD) {
+      std::map<WorkerState, int> ordered_cache_actions(cache_actions.begin(), cache_actions.end());
+      int t_index = 1;
+      for (const auto &[fst, snd] : ordered_cache_actions) {
+        if (fst.getPeriod() == t_index) {
+          if (snd != 0)
+            arr[t_index - 1][1] = fst.getInitialWorkers() + snd;
+          else {
+            arr[t_index - 1][0] = fst.getInitialWorkers();
+            ++t_index;
+            break;
+          }
+        }
+      }
+      return arr;
+    }
+
+    for (size_t t = 0; t < policy.size(); ++t) {
+      for (std::map<WorkerState, int> ordered_cache_actions(policy[t].begin(), policy[t].end());
+           const auto &[fst, snd] : ordered_cache_actions) {
+        if (fst.getPeriod() == t + 1) {
+          if (snd != 0)
+            arr[t][1] = fst.getInitialWorkers() + snd;
+          else {
+            arr[t][0] = fst.getInitialWorkers();
+            break;
+          }
+        }
+      }
+    }
+    return arr;
+  }
+
+  void simulatesS(const WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const {
+    std::vector<int> sample_nums(T);
+    int sample_num_total = 1;
+    std::vector<int> sample_num_accumulate(T);
+    for (size_t t = 0; t < T; ++t) {
+      if (t > 2)
+        sample_nums[t] = 1;
+      else
+        sample_nums[t] = 30;
+      sample_num_total *= sample_nums[t];
+      sample_num_accumulate[t] = sample_num_total;
+    }
+
+    std::vector<std::vector<int>> inventories(T);
+    std::vector<std::vector<double>> costs(T);
+
+    std::random_device rd;  // 真随机种子（硬件）
+    std::mt19937 gen(rd()); // 伪随机数引擎
+
+    for (size_t t = 0; t < T; ++t) {
+      const int K = sample_nums[t];
+      const size_t last_length = t == 0 ? 1 : inventories[t - 1].size();
+      inventories[t].reserve(K * last_length);
+      costs[t].reserve(K * last_length);
+      for (size_t i = 0; i < last_length; ++i) {
+        WorkerState this_ini_state =
+            t == 0 ? ini_state : WorkerState{static_cast<int>(t) + 1, inventories[t - 1][i]};
+
+        const int ini_workers = this_ini_state.getInitialWorkers();
+        const int Q = ini_workers < sS[t][0] ? sS[t][1] - ini_workers : 0;
+        const int hire_up_to = ini_workers + Q;
+
+        std::binomial_distribution<> dist(hire_up_to, turnover_rate[t]); // 二项分布
+        for (size_t k = 0; k < K; ++k) {
+          const int random_demand = dist(gen);
+          WorkerState new_state = stateTransition(this_ini_state, Q, random_demand);
+          inventories[t].push_back(new_state.getInitialWorkers());
+          if (t == 0)
+            costs[t].push_back(immediateValue(this_ini_state, Q, random_demand));
+          else
+            costs[t].push_back(costs[t - 1][i] + immediateValue(this_ini_state, Q, random_demand));
+        }
+      }
+    }
+    const double simulate_cost =
+        std::accumulate(costs[T - 1].begin(), costs[T - 1].end(), 0.0) / sample_num_total;
+
+    std::cout << "simulate cost in " << sample_num_total << " samples is " << simulate_cost
+              << std::endl;
+  }
+
+  std::vector<std::vector<double>> getOptTable() const {
     std::vector<std::vector<double>> arr;
     if (direction == Direction::FORWARD) {
       arr.reserve(cache_actions.size()); // 预分配空间
@@ -217,8 +306,8 @@ public:
       return arr;
     }
     arr.reserve(policy.size() * policy[0].size());
-    for (size_t t = 0; t < policy.size(); ++t) {
-      for (std::map<WorkerState, double> ordered_cache_actions(policy[t].begin(), policy[t].end());
+    for (const auto &t : policy) {
+      for (std::map<WorkerState, double> ordered_cache_actions(t.begin(), t.end());
            const auto &[fst, snd] : ordered_cache_actions) {
         arr.push_back({static_cast<double>(fst.getPeriod()),
                        static_cast<double>(fst.getInitialWorkers()), snd});
@@ -244,7 +333,16 @@ int main() {
   std::cout << "Final optimal cost is " << final_value << std::endl;
   std::cout << "Optimal hiring number in the first period is " << problem.solve()[1] << std::endl;
 
-  problem.getOptTable();
+  const auto arr_sS = problem.findsS();
+  std::cout << "s, S in each period are: " << std::endl;
+  for (const auto row : arr_sS) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+
+  problem.simulatesS(problem.get_initial_state(), arr_sS);
 
   return 0;
 }
