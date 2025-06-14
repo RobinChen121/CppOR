@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 enum class Direction { FORWARD, BACKWARD };
+enum class ComputeGy { True, False };
 
 class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
@@ -66,15 +67,13 @@ public:
                                       const int overturn_num) const {
     const double fix_cost = action > 0 ? fix_hire_cost : 0;
     const double vari_cost = unit_vari_cost * action;
-    const int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
-    // next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
+    int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
+    next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     const double salary_cost = salary * next_workers;
     const int t = ini_state.getPeriod() - 1;
     const double penalty_cost =
         next_workers > min_workers[t] ? 0 : unit_penalty * (min_workers[t] - next_workers);
     const double total_cost = fix_cost + vari_cost + salary_cost + penalty_cost;
-    if (t == 2 and ini_state.getInitialWorkers() == 119)
-      int a = 0;
     return total_cost;
   }
 
@@ -289,6 +288,8 @@ public:
     std::cout << "simulate cost in " << sample_num_total << " samples is " << simulate_cost
               << std::endl;
   }
+
+  void checkKConvexity() {}
 
   std::vector<std::vector<double>> getOptTable() const {
     std::vector<std::vector<double>> arr;
