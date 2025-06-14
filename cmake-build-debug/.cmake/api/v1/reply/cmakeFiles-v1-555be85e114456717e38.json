@@ -3075,6 +3075,200 @@
 			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
 		},
 		{
+			"path" : "stochastic_inventory/newsvendor/CMakeLists.txt"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0/BoostConfig.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/boost_system-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/boost_system-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/BoostDetectToolset-1.82.0.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/libboost_system-variant-shared.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/libboost_system-variant-static.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/boost_thread-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/boost_thread-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/BoostDetectToolset-1.82.0.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-shared.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-static.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/boost_chrono-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/boost_chrono-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/BoostDetectToolset-1.82.0.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/libboost_chrono-variant-shared.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/libboost_chrono-variant-static.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckLibraryExists.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckIncludeFile.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/BoostDetectToolset-1.82.0.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-shared.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-static.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/boost_atomic-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/boost_atomic-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/BoostDetectToolset-1.82.0.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-shared.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-static.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+		},
+		{
 			"path" : "utils/CMakeLists.txt"
 		},
 		{

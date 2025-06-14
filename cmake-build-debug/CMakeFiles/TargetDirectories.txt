@@ -28,6 +28,9 @@ D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/states/CMakeFiles/rebui
 D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/workforce/CMakeFiles/workforce.dir
 D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/workforce/CMakeFiles/edit_cache.dir
 D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/workforce/CMakeFiles/rebuild_cache.dir
+D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/newsvendor/CMakeFiles/newsvendor.dir
+D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/newsvendor/CMakeFiles/edit_cache.dir
+D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/newsvendor/CMakeFiles/rebuild_cache.dir
 D:/chenzhen/CppOR/cmake-build-debug/utils/CMakeFiles/utils.dir
 D:/chenzhen/CppOR/cmake-build-debug/utils/CMakeFiles/edit_cache.dir
 D:/chenzhen/CppOR/cmake-build-debug/utils/CMakeFiles/rebuild_cache.dir
