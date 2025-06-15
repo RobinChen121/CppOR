@@ -7,14 +7,14 @@
 
 #include <boost/functional/hash.hpp>
 
-class State {
+class state {
   int period{}; // c++11, {} 值初始化，默认为 0
   double initialInventory{};
 
 public:
-  State();
+  state();
 
-  explicit State(int period, double initialInventory);
+  explicit state(int period, double initialInventory);
 
   [[nodiscard]] double getInitialInventory() const;
 
@@ -23,7 +23,7 @@ public:
   void print() const;
 
   // hashmap must define operator == and a struct to compute hash
-  bool operator==(const State &other) const {
+  bool operator==(const state &other) const {
     // 需要定义 `==`
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
@@ -33,12 +33,12 @@ public:
 
   // 允许哈希结构体访问私有成员
   // friend struct
-  friend struct std::hash<State>;
+  friend struct std::hash<state>;
 
   // define operator < or give a self defined comparator for sorting map
-  bool operator<(const State &other) const;
+  bool operator<(const state &other) const;
 
-  friend std::ostream &operator<<(std::ostream &os, const State &state);
+  friend std::ostream &operator<<(std::ostream &os, const state &state);
 };
 
 // `std::hash<State>` 需要特化
@@ -48,9 +48,9 @@ template <>
 // 你并不是定义一个全新的类，而是对已有的模板类 std::hash
 // 进行特化（specialization）。 C++ 要求特化一个模板时，使用 template<>
 // 语法，表示这是一个针对特定类型的特化版本， 而不是一个普通的模板定义。
-struct std::hash<State> {
+struct std::hash<state> {
   // size_t 表示无符号整数
-  size_t operator()(const State &s) const noexcept {
+  size_t operator()(const state &s) const noexcept {
     // noexcept 表示这个函数不会抛出异常
     // boost 的哈希计算更安全
     std::size_t seed = 0;

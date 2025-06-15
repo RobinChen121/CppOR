@@ -415,7 +415,7 @@
 				{
 					"directoryIndex" : 11,
 					"id" : "newsvendor::@44333d3be895461ba489",
-					"jsonFile" : "target-newsvendor-Debug-7636720991d252fccc50.json",
+					"jsonFile" : "target-newsvendor-Debug-3663877f4a4722d3f92b.json",
 					"name" : "newsvendor",
 					"projectIndex" : 0
 				},
@@ -429,28 +429,28 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "sddp-overdraft::@b91144f6cfd2f2b0eb77",
-					"jsonFile" : "target-sddp-overdraft-Debug-7707bfa648aa6df8bc6c.json",
+					"jsonFile" : "target-sddp-overdraft-Debug-1cb93620beb6d6e01f1c.json",
 					"name" : "sddp-overdraft",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 7,
 					"id" : "sdp-cash::@686179159669958344ec",
-					"jsonFile" : "target-sdp-cash-Debug-aa13706d74fb168eccdb.json",
+					"jsonFile" : "target-sdp-cash-Debug-2c265ebd0808e4cc4197.json",
 					"name" : "sdp-cash",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 6,
 					"id" : "sdp-inventory::@8359d8b257de3d65d78b",
-					"jsonFile" : "target-sdp-inventory-Debug-9cc53356fad0dd561712.json",
+					"jsonFile" : "target-sdp-inventory-Debug-ea97919761000a01d79e.json",
 					"name" : "sdp-inventory",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 8,
 					"id" : "sdp-overdraft::@b1a2686b200ee4c0d651",
-					"jsonFile" : "target-sdp-overdraft-Debug-5690e0fe77484c92843a.json",
+					"jsonFile" : "target-sdp-overdraft-Debug-b39595160b02752ef34c.json",
 					"name" : "sdp-overdraft",
 					"projectIndex" : 0
 				},
@@ -464,7 +464,7 @@
 				{
 					"directoryIndex" : 9,
 					"id" : "states::@385b8a4d49cac343cbbd",
-					"jsonFile" : "target-states-Debug-c8596eeff7052369f532.json",
+					"jsonFile" : "target-states-Debug-c6c98e5e279b41e349b8.json",
 					"name" : "states",
 					"projectIndex" : 0
 				},
@@ -499,7 +499,7 @@
 				{
 					"directoryIndex" : 10,
 					"id" : "workforce::@89dbaeb67dd0933c275a",
-					"jsonFile" : "target-workforce-Debug-b68815118cd1e3ecbd83.json",
+					"jsonFile" : "target-workforce-Debug-05f7549c8e3dc085b499.json",
 					"name" : "workforce",
 					"projectIndex" : 0
 				},

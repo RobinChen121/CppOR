@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "stochastic_inventory/sdp-inventory"
+			"path" : "stochastic_inventory/workforce/workforce"
 		}
 	],
 	"backtrace" : 1,
@@ -18,7 +18,7 @@
 		],
 		"files" : 
 		[
-			"stochastic_inventory/CMakeLists.txt",
+			"stochastic_inventory/workforce/CMakeLists.txt",
 			"/opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake",
 			"/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake"
 		],
@@ -30,19 +30,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 15,
+				"line" : 12,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 26,
+				"line" : 22,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 25,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
@@ -142,7 +142,7 @@
 			]
 		}
 	],
-	"id" : "sdp-inventory::@8359d8b257de3d65d78b",
+	"id" : "workforce::@89dbaeb67dd0933c275a",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -182,12 +182,12 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "sdp-inventory",
-	"nameOnDisk" : "sdp-inventory",
+	"name" : "workforce",
+	"nameOnDisk" : "workforce",
 	"paths" : 
 	{
-		"build" : "stochastic_inventory",
-		"source" : "stochastic_inventory"
+		"build" : "stochastic_inventory/workforce",
+		"source" : "stochastic_inventory/workforce"
 	},
 	"sourceGroups" : 
 	[
@@ -206,19 +206,19 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
+			"path" : "stochastic_inventory/workforce/worker_state.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "stochastic_inventory/workforce/workforce_plan.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
 			"path" : "utils/PMF.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "stochastic_inventory/states/State.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "stochastic_inventory/newsvendor/newsvendorParallel.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

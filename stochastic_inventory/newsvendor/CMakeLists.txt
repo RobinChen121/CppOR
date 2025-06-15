@@ -13,7 +13,7 @@ add_executable(${RUN_NAME}
         #        newsvendor.cpp
         ../../utils/PMF.cpp
         ../states/State.cpp
-        newsvendorParallel.cpp
+        newsvendor_parallel.cpp
         #        cash/CashState.cpp
 )
 

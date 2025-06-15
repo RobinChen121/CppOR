@@ -12,7 +12,7 @@ add_executable(${RUN_NAME}
         #        single_product_testing_iteratonNum.cpp
         #        single_product_enhancement.cpp
         I_cash_status.cpp
-        ../../utils/fileOperations.cpp
+        ../../utils/file_operations.cpp
         ../../utils/sampling.cpp
 )
 

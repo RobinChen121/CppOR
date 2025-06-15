@@ -9,16 +9,16 @@
 #ifndef CASHLEADTIMESTATE_H
 #define CASHLEADTIMESTATE_H
 
-#include "../../utils/selfHash.h"
-#include "CashState.h"
+#include "../../utils/self_hash.h"
+#include "cash_state.h"
 
 class CashLeadtimeState : public CashState {
 private:
   double Qpre = 0;
 
 public:
-  CashLeadtimeState(const int period, const double initialInventory,
-                    const double iniCash, const double preQ)
+  CashLeadtimeState(const int period, const double initialInventory, const double iniCash,
+                    const double preQ)
       : CashState(period, initialInventory, iniCash), Qpre(preQ) {};
   double getQpre() const;
 
@@ -32,8 +32,7 @@ public:
            getInitialInventory() == other.getInitialInventory() &&
            other.getIniCash() == other.getIniCash() && Qpre == other.Qpre;
   }
-  friend std::ostream &operator<<(std::ostream &os,
-                                  const CashLeadtimeState &state);
+  friend std::ostream &operator<<(std::ostream &os, const CashLeadtimeState &state);
 
   friend struct std::hash<CashLeadtimeState>;
 };
@@ -53,8 +52,8 @@ struct std::hash<CashLeadtimeState> {
     // boost::hash_combine(seed, s.Qpre);
     // return seed;
 
-    auto combined_hash = hash_combine(s.getPeriod(), s.getInitialInventory(),
-                                      s.getIniCash(), s.getQpre());
+    auto combined_hash =
+        hash_combine(s.getPeriod(), s.getInitialInventory(), s.getIniCash(), s.getQpre());
     return combined_hash;
   }
 };

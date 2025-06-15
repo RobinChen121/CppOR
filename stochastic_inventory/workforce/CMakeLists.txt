@@ -5,11 +5,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
-        WorkerState.cpp
+        worker_state.cpp
         workforce_plan.cpp
         ../../utils/PMF.cpp
 )

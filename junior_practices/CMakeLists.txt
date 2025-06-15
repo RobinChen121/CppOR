@@ -5,7 +5,6 @@ endif ()
 
 
 add_executable(${RUN_NAME}
-        #        MyClass.cpp
         #        pair_test.cpp
         #       spdlog_test.cpp
         #        eigen3_test.cpp

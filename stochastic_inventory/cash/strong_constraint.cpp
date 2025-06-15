@@ -41,7 +41,7 @@ private:
   double min_cash = 0;
 
   const std::vector<std::vector<std::vector<double>>> pmf =
-      PMF(truncated_quantile, step_size, distribution_type).getPMF(demands);
+      pmf(truncated_quantile, step_size, distribution_type).getPMF(demands);
   std::unordered_map<CashState, double> cacheActions;
   std::unordered_map<CashState, double> cacheValues;
 

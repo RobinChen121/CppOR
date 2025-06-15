@@ -11,13 +11,13 @@
 
 #include "State.h"
 
-class CashState : public State {
+class CashState : public state {
   double initialCash{};
 
 public:
   CashState(const int period, const double initialInventory,
             const double initialCash)
-      : State(period, initialInventory), initialCash(initialCash) {};
+      : state(period, initialInventory), initialCash(initialCash) {};
 
   double getIniCash() const;
 

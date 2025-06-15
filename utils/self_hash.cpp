@@ -6,7 +6,7 @@
  *
  */
 
-#include "selfHash.h"
+#include "self_hash.h"
 
 #include <boost/functional/hash.hpp> // boost::hash_combine
 #include <iostream>

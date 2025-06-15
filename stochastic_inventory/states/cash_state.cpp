@@ -6,15 +6,14 @@
  *
  */
 
-#include "CashState.h"
+#include "cash_state.h"
 
 #include <iostream>
 
 double CashState::getIniCash() const { return initialCash; }
 
 std::ostream &operator<<(std::ostream &os, const CashState &state) {
-  os << "Period: " << state.getPeriod()
-     << ", ini inventory: " << state.getInitialInventory()
+  os << "Period: " << state.getPeriod() << ", ini inventory: " << state.getInitialInventory()
      << ", ini cash: " << state.getIniCash() << std::endl;
 }
 
