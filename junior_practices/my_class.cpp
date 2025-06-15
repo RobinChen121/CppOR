@@ -2,7 +2,7 @@
 // Created by Zhen Chen on 2025/2/27.
 //
 
-#include "MyClass.h" // 包含头文件
+#include "my_class.h" // 包含头文件
 
 using namespace std;
 

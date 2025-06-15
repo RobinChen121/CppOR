@@ -10,8 +10,8 @@ add_executable(${RUN_NAME}
         ../../utils/PMF.cpp
 
         ../states/State.cpp
-        ../states/CashState.cpp
-        strongConstraint.cpp
+        ../states/cash_state.cpp
+        strong_constraint.cpp
 )
 
 #-----------------------------------

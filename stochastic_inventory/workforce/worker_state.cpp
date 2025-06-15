@@ -6,7 +6,7 @@
  *
  */
 
-#include "WorkerState.h"
+#include "worker_state.h"
 #include <iostream>
 
 bool WorkerState::operator<(const WorkerState &other) const {

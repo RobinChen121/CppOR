@@ -9,7 +9,7 @@
 #ifndef LEADTIME_SINGLE_PRODUCT_H
 #define LEADTIME_SINGLE_PRODUCT_H
 #include "../../../utils/PMF.h"
-#include "../../states/CashLeadtimeState.h"
+#include "../../states/cash_leadtime_state.h"
 
 class OverdraftLeadtimeSingleProduct {
 private:
@@ -46,7 +46,7 @@ private:
 
 public:
   OverdraftLeadtimeSingleProduct() {
-    pmf = PMF(truncated_quantile, step_size, distribution_type).getPMFPoisson(demands);
+    pmf = pmf(truncated_quantile, step_size, distribution_type).getPMFPoisson(demands);
   }
 
   OverdraftLeadtimeSingleProduct(std::vector<double> &mean_demands, double interest,
@@ -54,7 +54,7 @@ public:
       : demands(mean_demands), r1(interest) {
     overhead_costs = std::vector<double>(T, overhead_cost);
     prices = std::vector<double>(T, price);
-    pmf = PMF(truncated_quantile, step_size, distribution_type).getPMFPoisson(mean_demands);
+    pmf = pmf(truncated_quantile, step_size, distribution_type).getPMFPoisson(mean_demands);
   }
 
   // [[nodiscard]] 表示：“函数的返回值不应该被忽略”

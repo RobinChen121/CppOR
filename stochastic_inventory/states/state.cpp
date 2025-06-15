@@ -2,7 +2,7 @@
 // Created by Zhen Chen on 2025/2/28.
 //
 
-#include "State.h"
+#include "state.h"
 #include <unordered_map>
 
 #include <iostream>
@@ -56,7 +56,7 @@ std::ostream &operator<<(std::ostream &os, const State &state) {
 // };
 
 // int main() {
-//     const State state(1, 10);
-//     state.print();
-//     std::cout << state << std::endl;
+//     const State State(1, 10);
+//     State.print();
+//     std::cout << State << std::endl;
 // }

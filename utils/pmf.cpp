@@ -2,7 +2,7 @@
 // Created by Zhen Chen on 2025/2/27.
 //
 
-#include "PMF.h"
+#include "pmf.h"
 
 // #include <algorithm> // for transform
 // #include <cctype>    // for tolower

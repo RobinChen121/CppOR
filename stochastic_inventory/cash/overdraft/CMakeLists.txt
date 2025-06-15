@@ -7,14 +7,12 @@ set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
         ../../../utils/PMF.cpp
-        ../../../utils/fileOperations.cpp
+        ../../../utils/file_operations.cpp
 
         ../../states/State.cpp
-        ../../states/CashState.cpp
-        ../../states/CashLeadtimeState.cpp
-
-        #        ../../../utils/selfHash.cpp
-
+        ../../states/cash_state.cpp
+        ../../states/cash_leadtime_state.cpp
+        
         #        ../../states/CashLeadtimeMultiState.cpp
         leadtime_single_product.cpp
 

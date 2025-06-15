@@ -8,7 +8,7 @@
  */
 
 #include "../../utils/PMF.h"
-#include "WorkerState.h"
+#include "worker_state.h"
 #include <chrono>
 #include <iostream>
 #include <map>
@@ -18,12 +18,13 @@
 #include <unordered_map>
 
 enum class Direction { FORWARD, BACKWARD };
-enum class ComputeGy { True, False };
+enum class ToComputeGy { True, False };
 
 class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
+  ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rate = {0.3, 0.1, 0.2};
+  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
   size_t T = turnover_rate.size();
 
   int initial_workers = 0;
@@ -50,12 +51,12 @@ public:
   std::vector<std::unordered_map<WorkerState, double>> policy;
 
   WorkforcePlan() {
-    pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
+    pmf = pmf::getPMFBinomial(max_worker_num, turnover_rate);
     // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rate);
   }
 
-  Direction get_direction() const { return direction; };
-  WorkerState get_initial_state() const { return ini_state; };
+  [[nodiscard]] Direction get_direction() const { return direction; };
+  [[nodiscard]] WorkerState get_initial_state() const { return ini_state; };
   [[nodiscard]] std::vector<int> feasibleActions() const {
     std::vector<int> actions(max_hire_num + 1);
     for (int i = 0; i <= max_hire_num; i++)
@@ -65,9 +66,14 @@ public:
 
   [[nodiscard]] double immediateValue(const WorkerState ini_state, const int action,
                                       const int overturn_num) const {
-    const double fix_cost = action > 0 ? fix_hire_cost : 0;
-    const double vari_cost = unit_vari_cost * action;
+    double fix_cost = action > 0 ? fix_hire_cost : 0;
+    double vari_cost = unit_vari_cost * action;
     int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
+    if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1) {
+      fix_cost = 0;
+      vari_cost = unit_vari_cost * ini_state.getInitialWorkers();
+      next_workers = ini_state.getInitialWorkers() - overturn_num;
+    }
     next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     const double salary_cost = salary * next_workers;
     const int t = ini_state.getPeriod() - 1;
@@ -80,6 +86,8 @@ public:
   [[nodiscard]] WorkerState stateTransition(const WorkerState ini_state, const int action,
                                             const int overturn_num) const {
     int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
+    if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
+      next_workers = ini_state.getInitialWorkers() - overturn_num;
     next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
     // 类可以直接使用列表初始化
     // 等价于 WorkerState{ini_state.getPeriod() + 1, next_workers}
@@ -91,8 +99,14 @@ public:
     int best_hire_num = 0;
     double best_cost = std::numeric_limits<double>::max();
     const int t = ini_state.getPeriod() - 1;
+    std::vector<int> actions;
 
-    for (const int action : feasibleActions()) {
+    if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
+      actions = {0};
+    else {
+      actions = feasibleActions();
+    }
+    for (const int action : actions) {
       double this_value = 0;
       int turnover_num = 0;
       int hire_up_to = ini_state.getInitialWorkers() + action;
@@ -129,7 +143,7 @@ public:
 
     // 最后一阶段边界条件
     for (int i = 0; i <= max_worker_num; ++i) {
-      auto state = WorkerState(T + 1, i);
+      auto state = WorkerState(static_cast<int>(T) + 1, i);
       value[T][state] = 0.0;
     }
 
@@ -169,7 +183,14 @@ public:
       double bestQ = 0.0;
       double best_value = std::numeric_limits<double>::max();
       WorkerState ini_state(t + 1, i);
-      for (const std::vector<int> actions = feasibleActions(); const int action : actions) {
+
+      std::vector<int> actions = feasibleActions();
+      if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
+        actions = {0};
+      else {
+        actions = feasibleActions();
+      }
+      for (const int action : actions) {
         double this_value = 0;
         int demand = 0;
         int hire_up_to = ini_state.getInitialWorkers() + action;
@@ -195,14 +216,14 @@ public:
     }
   }
 
-  std::vector<double> solve() {
+  std::vector<double> solve(const WorkerState ini_state) {
     if (direction == Direction::FORWARD)
       return {recursionForward(ini_state), cache_actions.at(ini_state)};
     recursionBackwardParallel();
     return {value[0][ini_state], policy[0][ini_state]};
   }
 
-  std::vector<std::array<int, 2>> findsS() const {
+  [[nodiscard]] std::vector<std::array<int, 2>> findsS() const {
     std::vector<std::array<int, 2>> arr(T);
 
     if (direction == Direction::FORWARD) {
@@ -289,9 +310,21 @@ public:
               << std::endl;
   }
 
-  void checkKConvexity() {}
+  std::vector<std::array<double, 2>> computeGy() {
+    const int y_length = 100;
+    std::vector<std::array<double, 2>> Gy(y_length);
+    to_compute_gy = ToComputeGy::True;
+    for (int y = 0; y < y_length; ++y) {
+      Gy[y][0] = y;
+      const WorkerState ini_state{1, y};
+      Gy[y][1] = solve(ini_state)[0];
+    }
+    return Gy;
+  }
 
-  std::vector<std::vector<double>> getOptTable() const {
+  // void checkKConvexity() {}
+
+  [[nodiscard]] std::vector<std::vector<double>> getOptTable() const {
     std::vector<std::vector<double>> arr;
     if (direction == Direction::FORWARD) {
       arr.reserve(cache_actions.size()); // 预分配空间
@@ -320,10 +353,11 @@ public:
 
 int main() {
   auto problem = WorkforcePlan();
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  const auto final_value = problem.solve()[0];
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> time = end_time - start_time;
+  const WorkerState ini_state{1, 0};
+  auto start_time = std::chrono::high_resolution_clock::now();
+  const auto final_value = problem.solve(ini_state)[0];
+  auto end_time = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> time = end_time - start_time;
   if (problem.get_direction() == Direction::FORWARD)
     std::cout << "running time is " << time.count() << 's' << std::endl;
   else {
@@ -332,7 +366,8 @@ int main() {
               << time.count() << 's' << std::endl;
   }
   std::cout << "Final optimal cost is " << final_value << std::endl;
-  std::cout << "Optimal hiring number in the first period is " << problem.solve()[1] << std::endl;
+  std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
+            << std::endl;
 
   const auto arr_sS = problem.findsS();
   std::cout << "s, S in each period are: " << std::endl;
@@ -344,6 +379,11 @@ int main() {
   }
 
   problem.simulatesS(problem.get_initial_state(), arr_sS);
+  start_time = std::chrono::high_resolution_clock::now();
+  auto arr = problem.computeGy();
+  end_time = std::chrono::high_resolution_clock::now();
+  time = end_time - start_time;
+  std::cout << "running time is " << time.count() << 's' << std::endl;
 
   return 0;
 }

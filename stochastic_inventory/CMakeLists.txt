@@ -13,9 +13,9 @@ set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
 #set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
-                ../utils/PMF.cpp
-                states/State.cpp
-                newsvendor/newsvendorParallel.cpp
+        ../utils/PMF.cpp
+        states/State.cpp
+        newsvendor/newsvendor_parallel.cpp
         #        cash/CashState.cpp
 
 )

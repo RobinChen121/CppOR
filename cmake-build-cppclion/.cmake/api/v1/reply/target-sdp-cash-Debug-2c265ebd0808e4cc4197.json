@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "stochastic_inventory/workforce/workforce"
+			"path" : "stochastic_inventory/cash/sdp-cash"
 		}
 	],
 	"backtrace" : 1,
@@ -18,7 +18,7 @@
 		],
 		"files" : 
 		[
-			"stochastic_inventory/workforce/CMakeLists.txt",
+			"stochastic_inventory/cash/CMakeLists.txt",
 			"/opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake",
 			"/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake"
 		],
@@ -30,19 +30,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 11,
+				"line" : 9,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 21,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 20,
+				"line" : 19,
 				"parent" : 0
 			},
 			{
@@ -138,11 +138,12 @@
 			[
 				0,
 				1,
-				2
+				2,
+				3
 			]
 		}
 	],
-	"id" : "workforce::@89dbaeb67dd0933c275a",
+	"id" : "sdp-cash::@686179159669958344ec",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -182,12 +183,12 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "workforce",
-	"nameOnDisk" : "workforce",
+	"name" : "sdp-cash",
+	"nameOnDisk" : "sdp-cash",
 	"paths" : 
 	{
-		"build" : "stochastic_inventory/workforce",
-		"source" : "stochastic_inventory/workforce"
+		"build" : "stochastic_inventory/cash",
+		"source" : "stochastic_inventory/cash"
 	},
 	"sourceGroups" : 
 	[
@@ -197,7 +198,8 @@
 			[
 				0,
 				1,
-				2
+				2,
+				3
 			]
 		}
 	],
@@ -206,19 +208,25 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "stochastic_inventory/workforce/WorkerState.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "stochastic_inventory/workforce/workforce_plan.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
 			"path" : "utils/PMF.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "stochastic_inventory/states/State.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "stochastic_inventory/states/cash_state.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "stochastic_inventory/cash/strong_constraint.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
