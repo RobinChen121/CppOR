@@ -8,7 +8,7 @@ add_executable(${RUN_NAME}
         #        pair_test.cpp
         #       spdlog_test.cpp
         #        eigen3_test.cpp
-        python_draw.cpp
+        draw_animation.cpp
         #        qt_test.cpp
         #        openMP_test.cpp
 )
