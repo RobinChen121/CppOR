@@ -7,7 +7,8 @@
  *
  */
 
-#include "../../utils/PMF.h"
+#include "../../utils/draw_graph.h"
+#include "../../utils/pmf.h"
 #include "worker_state.h"
 #include <chrono>
 #include <iostream>
@@ -24,14 +25,14 @@ class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rate = {0.1, 0.1, 0.1};
+  std::vector<double> turnover_rate = {0.8, 0.5, 0.1};
   size_t T = turnover_rate.size();
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
   double fix_hire_cost = 50.0;
-  double unit_vari_cost = 0.0;
+  double unit_vari_cost = 0;
   double salary = 30.0;
   double unit_penalty = 40.0;
   std::vector<int> min_workers = std::vector<int>(T, 40);
@@ -51,7 +52,7 @@ public:
   std::vector<std::unordered_map<WorkerState, double>> policy;
 
   WorkforcePlan() {
-    pmf = pmf::getPMFBinomial(max_worker_num, turnover_rate);
+    pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
     // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rate);
   }
 
@@ -242,7 +243,6 @@ public:
       }
       return arr;
     }
-
     for (size_t t = 0; t < policy.size(); ++t) {
       for (std::map<WorkerState, int> ordered_cache_actions(policy[t].begin(), policy[t].end());
            const auto &[fst, snd] : ordered_cache_actions) {
@@ -310,14 +310,17 @@ public:
               << std::endl;
   }
 
-  std::vector<std::array<double, 2>> computeGy() {
-    const int y_length = 100;
+  std::vector<std::array<double, 2>> computeGy(const int S) {
+    const int y_length = max_worker_num; // S + 200;
     std::vector<std::array<double, 2>> Gy(y_length);
     to_compute_gy = ToComputeGy::True;
+    policy.clear();
+    value.clear();
+    solve(ini_state);
     for (int y = 0; y < y_length; ++y) {
       Gy[y][0] = y;
       const WorkerState ini_state{1, y};
-      Gy[y][1] = solve(ini_state)[0];
+      Gy[y][1] = value[0].at(ini_state);
     }
     return Gy;
   }
@@ -379,11 +382,13 @@ int main() {
   }
 
   problem.simulatesS(problem.get_initial_state(), arr_sS);
-  start_time = std::chrono::high_resolution_clock::now();
-  auto arr = problem.computeGy();
-  end_time = std::chrono::high_resolution_clock::now();
-  time = end_time - start_time;
-  std::cout << "running time is " << time.count() << 's' << std::endl;
+  // start_time = std::chrono::high_resolution_clock::now();
+  const auto arr = problem.computeGy(arr_sS[0][1]);
+  // end_time = std::chrono::high_resolution_clock::now();
+  // time = end_time - start_time;
+  // std::cout << "running time is " << time.count() << 's' << std::endl;
+
+  drawGy(arr, arr_sS[0]);
 
   return 0;
 }

@@ -494,9 +494,9 @@ build linear_programming/gurobi_examples/install/strip: phony linear_programming
 
 build cmake_object_order_depends_target_junior_practice: phony || .
 
-build junior_practices/CMakeFiles/junior_practice.dir/python_draw.cpp.o: CXX_COMPILER__junior_practice_unscanned_Debug /Users/zhenchen/CLionProjects/CppOR/junior_practices/python_draw.cpp || cmake_object_order_depends_target_junior_practice
+build junior_practices/CMakeFiles/junior_practice.dir/draw_animation.cpp.o: CXX_COMPILER__junior_practice_unscanned_Debug /Users/zhenchen/CLionProjects/CppOR/junior_practices/draw_animation.cpp || cmake_object_order_depends_target_junior_practice
   DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB -DFMT_SHARED -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB
-  DEP_FILE = junior_practices/CMakeFiles/junior_practice.dir/python_draw.cpp.o.d
+  DEP_FILE = junior_practices/CMakeFiles/junior_practice.dir/draw_animation.cpp.o.d
   FLAGS = -Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.0/include -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
   INCLUDES = -I/opt/homebrew/Cellar/libomp/20.1.0/include -I/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/_deps/matplotlib_cpp-src -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -isystem /opt/homebrew/lib/QtCore.framework/Headers -iframework /opt/homebrew/lib -isystem /opt/homebrew/share/qt/mkspecs/macx-clang -isystem /opt/homebrew/include -isystem /opt/homebrew/lib/QtGui.framework/Headers -isystem /opt/homebrew/lib/QtWidgets.framework/Headers -isystem /opt/anaconda3/include -isystem /opt/homebrew/include/eigen3
   OBJECT_DIR = junior_practices/CMakeFiles/junior_practice.dir
@@ -510,7 +510,7 @@ build junior_practices/CMakeFiles/junior_practice.dir/python_draw.cpp.o: CXX_COM
 #############################################
 # Link the executable junior_practices/junior_practice
 
-build junior_practices/junior_practice: CXX_EXECUTABLE_LINKER__junior_practice_Debug junior_practices/CMakeFiles/junior_practice.dir/python_draw.cpp.o | /opt/homebrew/lib/QtWidgets.framework/Versions/A/QtWidgets /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libpython3.12.dylib /opt/anaconda3/lib/libspdlog.1.15.1.dylib /opt/homebrew/lib/QtGui.framework/Versions/A/QtGui /opt/homebrew/lib/QtCore.framework/Versions/A/QtCore /opt/anaconda3/lib/libboost_atomic.dylib /opt/anaconda3/lib/libfmt.11.0.2.dylib
+build junior_practices/junior_practice: CXX_EXECUTABLE_LINKER__junior_practice_Debug junior_practices/CMakeFiles/junior_practice.dir/draw_animation.cpp.o | /opt/homebrew/lib/QtWidgets.framework/Versions/A/QtWidgets /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libpython3.12.dylib /opt/anaconda3/lib/libspdlog.1.15.1.dylib /opt/homebrew/lib/QtGui.framework/Versions/A/QtGui /opt/homebrew/lib/QtCore.framework/Versions/A/QtCore /opt/anaconda3/lib/libboost_atomic.dylib /opt/anaconda3/lib/libfmt.11.0.2.dylib
   FLAGS = -Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.0/include -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
   LINK_FLAGS = -L/opt/homebrew/Cellar/libomp/20.1.0/lib -lomp
   LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib -Wl,-rpath,/opt/homebrew/lib  /opt/homebrew/lib/QtWidgets.framework/Versions/A/QtWidgets  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libpython3.12.dylib  /opt/anaconda3/lib/libspdlog.1.15.1.dylib  /opt/homebrew/lib/QtGui.framework/Versions/A/QtGui  -framework AGL  -framework AppKit  -framework OpenGL  -framework ImageIO  -framework Metal  /opt/homebrew/lib/QtCore.framework/Versions/A/QtCore  -framework IOKit  -framework DiskArbitration  -framework UniformTypeIdentifiers  /opt/anaconda3/lib/libboost_atomic.dylib  /opt/anaconda3/lib/libfmt.11.0.2.dylib
@@ -1714,7 +1714,7 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o
   DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
   DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o.d
   FLAGS = -O3 -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
-  INCLUDES = -isystem /opt/anaconda3/include
+  INCLUDES = -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -isystem /opt/anaconda3/include
   OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
 
@@ -1722,15 +1722,23 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp
   DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
   DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o.d
   FLAGS = -O3 -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
-  INCLUDES = -isystem /opt/anaconda3/include
+  INCLUDES = -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -isystem /opt/anaconda3/include
   OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
 
-build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/PMF.cpp.o: CXX_COMPILER__workforce_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/utils/PMF.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o: CXX_COMPILER__workforce_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/utils/pmf.cpp || cmake_object_order_depends_target_workforce
   DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
-  DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/PMF.cpp.o.d
+  DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o.d
   FLAGS = -O3 -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
-  INCLUDES = -isystem /opt/anaconda3/include
+  INCLUDES = -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -isystem /opt/anaconda3/include
+  OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
+  OBJECT_FILE_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils
+
+build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o: CXX_COMPILER__workforce_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/utils/draw_graph.cpp || cmake_object_order_depends_target_workforce
+  DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
+  DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o.d
+  FLAGS = -O3 -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
+  INCLUDES = -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -isystem /opt/anaconda3/include
   OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils
 
@@ -1742,9 +1750,9 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/PMF.cp
 #############################################
 # Link the executable stochastic_inventory/workforce/workforce
 
-build stochastic_inventory/workforce/workforce: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/PMF.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libboost_atomic.dylib
+build stochastic_inventory/workforce/workforce: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libpython3.12.dylib /opt/anaconda3/lib/libboost_atomic.dylib
   FLAGS = -O3 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
-  LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libboost_atomic.dylib
+  LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libpython3.12.dylib  -ldl  /opt/anaconda3/lib/libboost_atomic.dylib
   OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -1954,7 +1962,7 @@ build utils/CMakeFiles/utils.dir/PMF.cpp.o: CXX_COMPILER__utils_unscanned_Debug 
   DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
   DEP_FILE = utils/CMakeFiles/utils.dir/PMF.cpp.o.d
   FLAGS = -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
-  INCLUDES = -isystem /opt/anaconda3/include
+  INCLUDES = -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -isystem /opt/anaconda3/include
   OBJECT_DIR = utils/CMakeFiles/utils.dir
   OBJECT_FILE_DIR = utils/CMakeFiles/utils.dir
 
@@ -1966,9 +1974,9 @@ build utils/CMakeFiles/utils.dir/PMF.cpp.o: CXX_COMPILER__utils_unscanned_Debug 
 #############################################
 # Link the executable utils/utils
 
-build utils/utils: CXX_EXECUTABLE_LINKER__utils_Debug utils/CMakeFiles/utils.dir/PMF.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libboost_atomic.dylib
+build utils/utils: CXX_EXECUTABLE_LINKER__utils_Debug utils/CMakeFiles/utils.dir/PMF.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libpython3.12.dylib /opt/anaconda3/lib/libboost_atomic.dylib
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
-  LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libboost_atomic.dylib
+  LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libpython3.12.dylib  -ldl  /opt/anaconda3/lib/libboost_atomic.dylib
   OBJECT_DIR = utils/CMakeFiles/utils.dir
   POST_BUILD = :
   PRE_LINK = :

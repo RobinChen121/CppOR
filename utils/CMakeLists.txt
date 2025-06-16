@@ -11,6 +11,18 @@ add_executable(${RUN_NAME}
 #-----------------------------------
 # Boost
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
 
+
+#-----------------------------------
+# matplotlib
+# 设置 Python 头文件路径
+include_directories(/opt/anaconda3/include/python3.12)
+# numpy 头文件路径
+include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
+# 链接所需库
+target_link_libraries(${RUN_NAME} PRIVATE
+        /opt/anaconda3/lib/libpython3.12.dylib
+        dl
+)
 
