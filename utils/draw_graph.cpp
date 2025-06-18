@@ -8,18 +8,15 @@
 
 #include "draw_graph.h"
 
-void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int, 2> arr_sS) {
+#include <boost/container/container_fwd.hpp>
+
+void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int, 2> &arr_sS) {
   std::vector<double> x, y;
-  for (auto item : arr) {
-    x.push_back(item[0]);
-    y.push_back(item[1]);
+  for (int i = 0; i < arr.size() - 200; ++i) {
+    x.push_back(arr[i][0]);
+    y.push_back(arr[i][1]);
   }
   plt::plot(x, y);
-  // std::vector<double> s, S;
-  // for (const auto item : arr_sS) {
-  //   s.push_back(item);
-  //   S.push_back(y[item]);
-  // }
   const double y_max = y.back();
   const double y_min = y[arr_sS[1]] - 500;
   const double y_scale = y_max - y_min;
@@ -37,6 +34,46 @@ void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int,
   plt::title(title);
   plt::grid(true);
   plt::show();
+}
+
+void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
+                     const std::vector<std::string> &parameter,
+                     const std::vector<std::string> &kconvexity) {
+  int repeat = 3;
+  while (repeat > 0) {
+    for (int i = 0; i < arr.size(); i++) {
+      std::vector<double> x, y;
+      for (int j = 0; j < arr[i].size() - 200; ++j) {
+        x.push_back(arr[i][j][0]);
+        y.push_back(arr[i][j][1]);
+      }
+      plt::plot(x, y);
+      const double x_min = 0;
+      const double x_max = x.back();
+      const double y_max = 8000; // y.back();
+      const double y_min = 1000; // y[arr_sS[i][1]];
+      const double y_scale = y_max - y_min;
+      const double x_scale = x_max - x_min;
+      plt::ylim(y_min, y_max);
+      plt::xlim(x_min, x_max);
+      // plt::axvline(arr_sS[i][0], 0, (y[arr_sS[i][0]] - y_min) / y_scale,
+      //              {{"color", "red"}, {"linestyle", "--"}});
+      // plt::axvline(arr_sS[i][1], 0, (y[arr_sS[i][1]] - y_min) / y_scale,
+      //              {{"color", "red"}, {"linestyle", "--"}});
+      // double GS = y[arr_sS[i][1]];
+      // std::string str = std::format("{:.2f}", GS);
+      // const std::string title = "G(y): s = " + std::to_string(arr_sS[i][0]) +
+      //                           ", S = " + std::to_string(arr_sS[i][1]) + ", G(S) = " + str;
+      // plt::title(title);
+
+      plt::title(parameter[i]);
+      plt::text(0.35 * x_scale, 0.999 * y_scale, kconvexity[i]);
+      plt::grid(true);
+      plt::pause(1);
+      plt::clf();
+    }
+    repeat--;
+  }
 }
 
 // int main() {
