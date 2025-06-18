@@ -10,7 +10,9 @@
 #define COMMON_H
 #include <boost/functional/hash.hpp>
 #include <fstream>
+#include <iomanip> // for std::fixed and std::setprecision
 #include <iostream>
+#include <type_traits> // for std::is_floating_point
 #include <vector>
 
 using Matrix = std::vector<std::vector<double>>;
@@ -44,18 +46,23 @@ std::vector<std::pair<T1, T2>> product(const std::vector<T1> &a, const std::vect
 
 std::string toCSVLine(const std::vector<std::string> &row);
 
-// 将任意类型转为字符串（主要处理数值类型和 string）
-// std::to_string() 只支持少数几种基础类型
-// 但是它 不支持 std::string 本身，也不支持你可能传进来的其他类型(bool, char, class, struct 等)
-template <typename T> std::string toString(const T &value) {
-  if constexpr (std::is_same_v<T, std::string>) {
-    return value;
-  } else {
-    // 创建一个字符串输出流对象 oss，你可以像写文件一样往里面写东西，它会自动拼成一个字符串
-    std::ostringstream oss;
-    oss << value; // 支持任何重载了 << 的类型
-    return oss.str();
+template <typename T>
+std::string vectorToString(const std::vector<T> &vec, const std::string &delimiter = ", ") {
+  std::ostringstream
+      oss; // 创建一个字符串输出流对象 oss，你可以像写文件一样往里面写东西，它会自动拼成一个字符串
+
+  for (size_t i = 0; i < vec.size(); ++i) {
+    if constexpr (std::is_floating_point<T>::value) {
+      oss << std::fixed << std::setprecision(2) << vec[i];
+    } else {
+      oss << vec[i];
+    }
+
+    if (i != vec.size() - 1)
+      oss << delimiter;
   }
+
+  return oss.str();
 }
 
 // 通用写入函数：支持任意类型的 vector
