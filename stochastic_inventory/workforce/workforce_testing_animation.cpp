@@ -42,11 +42,11 @@ int main() {
   for (int i = 0; i < num; i++) {
     auto problem = WorkforcePlan();
 
-    // problem.set_fix_cost(fix_costs[i]);
+    problem.set_fix_cost(fix_costs[i]);
     // problem.set_salary(salaries[i]);
     // problem.set_penalty(penalties[i]);
     // problem.set_min_workers(min_workers[i]);
-    problem.set_turnover_rate(turnover_rate[i]);
+    // problem.set_turnover_rate(turnover_rate[i]);
 
     Gys[i] = problem.computeGy();
     // arr_ss[i] = problem.findsS()[0];

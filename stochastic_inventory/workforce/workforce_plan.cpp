@@ -11,19 +11,22 @@
 
 void WorkforcePlan::set_fix_cost(const double value) {
   fix_hire_cost = value;
-  const std::string text = std::format("{:.2f}", fix_hire_cost);
+  const std::string text = std::to_string(fix_hire_cost);
+  // const std::string text = fmt::format("{:.2f}", fix_hire_cost);
   varied_parameter = "fix hiring cost K = " + text;
 };
 
 void WorkforcePlan::set_salary(const double value) {
   salary = value;
-  const std::string text = std::format("{:.2f}", salary);
+  const std::string text = std::to_string(salary);
+  // const std::string text = fmt::format("{:.2f}", salary);
   varied_parameter = "salary = " + text;
 };
 
 void WorkforcePlan::set_penalty(const double value) {
   unit_penalty = value;
-  const std::string text = std::format("{:.2f}", unit_penalty);
+  const std::string text = std::to_string(unit_penalty);
+  // const std::string text = fmt::format("{:.2f}", unit_penalty);
   varied_parameter = "unit_penalty = " + text;
 };
 
