@@ -18,21 +18,45 @@ add_executable(${RUN_NAME}
         ../../utils/draw_graph.cpp
 )
 
+##-----------------------------------
+## fmt for format output
+#find_package(fmt REQUIRED)
+#target_link_libraries(${RUN_NAME} PRIVATE fmt::fmt)
 
 #-----------------------------------
 # Boost
 # Boost 提供了很多通用的的库，例如数值计算等
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
 
 #-----------------------------------
 # matplotlib
 # 设置 Python 头文件路径
-include_directories(/opt/anaconda3/include/python3.12)
-# numpy 头文件路径
-include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
-# 链接所需库
-target_link_libraries(${RUN_NAME}
-        /opt/anaconda3/lib/libpython3.12.dylib
-        dl
-)
+if (APPLE)
+    include_directories(/opt/anaconda3/include/python3.12)
+    # numpy 头文件路径
+    include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
+    # 链接所需库
+    target_link_libraries(${RUN_NAME} PRIVATE
+            /opt/anaconda3/lib/libpython3.12.dylib
+            dl
+    )
+else ()
+    FetchContent_Declare(
+            matplotlib_cpp
+            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
+            GIT_TAG master
+    )
+    FetchContent_MakeAvailable(matplotlib_cpp)
+    # Include matplotlib-cpp
+    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
+    # Link Python and NumPy
+    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+    target_include_directories(${RUN_NAME} PRIVATE
+            ${Python3_INCLUDE_DIRS}
+            ${Python3_NumPy_INCLUDE_DIRS}
+    )
+    target_link_libraries(${RUN_NAME} PRIVATE
+            ${Python3_LIBRARIES}
+    )
+endif ()

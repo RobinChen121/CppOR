@@ -7,6 +7,7 @@
  */
 
 #include "draw_graph.h"
+// #include <fmt/core.h>
 
 #include <boost/container/container_fwd.hpp>
 
@@ -28,7 +29,8 @@ void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int,
   // plt::text(static_cast<double>(arr_sS[0]), y_min, "s");
   // plt::text(static_cast<double>(arr_sS[1]), y_min, "S");
   double GS = y[arr_sS[1]];
-  const std::string str = std::format("{:.2f}", GS);
+  const std::string str = std::to_string(GS);
+  // const std::string str = fmt::format("{:.2f}", GS);
   const std::string title = "G(y): s = " + std::to_string(arr_sS[0]) +
                             ", S = " + std::to_string(arr_sS[1]) + ", G(S) = " + str;
   plt::title(title);
