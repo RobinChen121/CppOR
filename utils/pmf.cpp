@@ -8,7 +8,7 @@
 // #include <cctype>    // for tolower
 #include <cmath>
 // #include <csignal>
-#include <boost/math/distributions/binomial.hpp> // 二项分布头文件
+#include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
 #include <iostream>
 
 // initializing the class

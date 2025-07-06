@@ -16,6 +16,8 @@ add_executable(${RUN_NAME}
         workforce_testing_animation.cpp
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
+        piecewise.cpp
+        piecewise.h
 )
 
 ##-----------------------------------
