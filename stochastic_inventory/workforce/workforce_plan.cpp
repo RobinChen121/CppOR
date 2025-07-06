@@ -314,18 +314,20 @@ bool WorkforcePlan::checkKConvexity(const std::vector<std::array<double, 2>> &Gy
   const double max_y = Gy[Gy.size() - 1][0];
   const int y_length = static_cast<int>(max_y) + 1;
 
-  for (int y_plus_a = 0; y_plus_a < y_length; y_plus_a++)
-    for (int y = 1; y <= y_plus_a; y++) {
-      if (Gy[y_plus_a][1] + fix_hire_cost > Gy[y][1] + (y_plus_a - y) * (Gy[y][1] - Gy[y - 1][1]))
-        continue;
-      double left = Gy[y_plus_a][1] + fix_hire_cost;
-      double right = Gy[y][1] + (y_plus_a - y) * (Gy[y][1] - Gy[y - 1][1]);
-      std::cout << "****" << std::endl;
-      std::cout << "not K convex" << std::endl;
-      std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
-      KConvexity = "not K convexity!";
-      return false;
-    }
+  for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
+    for (int y = 1; y <= y_plus_a; y++)
+      for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
+        double coe = 1.0 *(y_plus_a - y) / (y - y_minus_b);
+        if (Gy[y_plus_a][1] + fix_hire_cost > Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]))
+          continue;
+        double left = Gy[y_plus_a][1] + fix_hire_cost;
+        double right = Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]);
+        std::cout << "****" << std::endl;
+        std::cout << "not K convex" << std::endl;
+        std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
+        KConvexity = "not K convexity!";
+        return false;
+      }
   std::cout << "K convexity holds!" << std::endl;
   KConvexity = "K convexity holds!";
   return true;
