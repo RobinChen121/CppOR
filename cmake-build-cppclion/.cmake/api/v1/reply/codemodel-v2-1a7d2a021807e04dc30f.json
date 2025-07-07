@@ -10,10 +10,9 @@
 					[
 						1,
 						4,
-						6,
-						12
+						5,
+						11
 					],
-					"hasInstallRule" : true,
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
@@ -58,7 +57,7 @@
 					"source" : "linear_programming/sddp_overdraft",
 					"targetIndexes" : 
 					[
-						16
+						5
 					]
 				},
 				{
@@ -73,16 +72,11 @@
 					"source" : "linear_programming/gurobi_examples",
 					"targetIndexes" : 
 					[
-						9
+						2
 					]
 				},
 				{
 					"build" : "junior_practices",
-					"childIndexes" : 
-					[
-						5
-					],
-					"hasInstallRule" : true,
 					"jsonFile" : "directory-junior_practices-Debug-b0b7f1cab58da30bdfa5.json",
 					"minimumCMakeVersion" : 
 					{
@@ -93,48 +87,17 @@
 					"source" : "junior_practices",
 					"targetIndexes" : 
 					[
-						10
-					]
-				},
-				{
-					"build" : "_deps/matplotlib_cpp-build",
-					"hasInstallRule" : true,
-					"jsonFile" : "directory-_deps.matplotlib_cpp-build-Debug-4004bca8e8ab34d227e0.json",
-					"minimumCMakeVersion" : 
-					{
-						"string" : "3.8"
-					},
-					"parentIndex" : 4,
-					"projectIndex" : 1,
-					"source" : "cmake-build-cppclion/_deps/matplotlib_cpp-src",
-					"targetIndexes" : 
-					[
-						2,
-						3,
-						4,
-						5,
-						6,
-						7,
-						8,
-						11,
-						12,
-						13,
-						15,
-						20,
-						22,
-						23,
-						24,
-						27
+						3
 					]
 				},
 				{
 					"build" : "stochastic_inventory",
 					"childIndexes" : 
 					[
-						7,
+						6,
+						8,
 						9,
-						10,
-						11
+						10
 					],
 					"jsonFile" : "directory-stochastic_inventory-Debug-e3c48947aed8bf5dab27.json",
 					"minimumCMakeVersion" : 
@@ -146,26 +109,26 @@
 					"source" : "stochastic_inventory",
 					"targetIndexes" : 
 					[
-						18
+						7
 					]
 				},
 				{
 					"build" : "stochastic_inventory/cash",
 					"childIndexes" : 
 					[
-						8
+						7
 					],
 					"jsonFile" : "directory-stochastic_inventory.cash-Debug-11e24172bc8a50ca071f.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 6,
+					"parentIndex" : 5,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/cash",
 					"targetIndexes" : 
 					[
-						17
+						6
 					]
 				},
 				{
@@ -175,12 +138,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 7,
+					"parentIndex" : 6,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/cash/overdraft",
 					"targetIndexes" : 
 					[
-						19
+						8
 					]
 				},
 				{
@@ -190,12 +153,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 6,
+					"parentIndex" : 5,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/states",
 					"targetIndexes" : 
 					[
-						21
+						9
 					]
 				},
 				{
@@ -205,12 +168,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 6,
+					"parentIndex" : 5,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/workforce",
 					"targetIndexes" : 
 					[
-						26
+						11
 					]
 				},
 				{
@@ -220,12 +183,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 6,
+					"parentIndex" : 5,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/newsvendor",
 					"targetIndexes" : 
 					[
-						14
+						4
 					]
 				},
 				{
@@ -240,7 +203,7 @@
 					"source" : "utils",
 					"targetIndexes" : 
 					[
-						25
+						10
 					]
 				}
 			],
@@ -248,51 +211,10 @@
 			"projects" : 
 			[
 				{
-					"childIndexes" : 
-					[
-						1
-					],
 					"directoryIndexes" : 
 					[
 						0,
 						1,
-						2,
-						3,
-						4,
-						6,
-						7,
-						8,
-						9,
-						10,
-						11,
-						12
-					],
-					"name" : "CppClion",
-					"targetIndexes" : 
-					[
-						0,
-						1,
-						9,
-						10,
-						14,
-						16,
-						17,
-						18,
-						19,
-						21,
-						25,
-						26
-					]
-				},
-				{
-					"directoryIndexes" : 
-					[
-						5
-					],
-					"name" : "matplotlib_cpp",
-					"parentIndex" : 0,
-					"targetIndexes" : 
-					[
 						2,
 						3,
 						4,
@@ -300,15 +222,25 @@
 						6,
 						7,
 						8,
-						11,
-						12,
-						13,
-						15,
-						20,
-						22,
-						23,
-						24,
-						27
+						9,
+						10,
+						11
+					],
+					"name" : "CppClion",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11
 					]
 				}
 			],
@@ -329,55 +261,6 @@
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 5,
-					"id" : "animation::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-animation-Debug-a13af164f9093c905fa5.json",
-					"name" : "animation",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "bar::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-bar-Debug-ee97b18573cfd5627640.json",
-					"name" : "bar",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "basic::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-basic-Debug-f841a35dedd6966a4b88.json",
-					"name" : "basic",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "colorbar::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-colorbar-Debug-e9d50c06e5bd5edb2616.json",
-					"name" : "colorbar",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "contour::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-contour-Debug-8190c2cc0a0502a94357.json",
-					"name" : "contour",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "fill::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-fill-Debug-b82f7de0a39a8ef87b17.json",
-					"name" : "fill",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "fill_inbetween::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-fill_inbetween-Debug-cc483b2ddf58777c8ed7.json",
-					"name" : "fill_inbetween",
-					"projectIndex" : 1
-				},
-				{
 					"directoryIndex" : 3,
 					"id" : "gurobi_example::@7290f6e2dca3cafcda7e",
 					"jsonFile" : "target-gurobi_example-Debug-1857373250c440ed4b28.json",
@@ -387,128 +270,65 @@
 				{
 					"directoryIndex" : 4,
 					"id" : "junior_practice::@269e48a9846c25342454",
-					"jsonFile" : "target-junior_practice-Debug-fd6c27e0f187f66c29d6.json",
+					"jsonFile" : "target-junior_practice-Debug-2b3e823b01b7adb26f39.json",
 					"name" : "junior_practice",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 5,
-					"id" : "lines3d::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-lines3d-Debug-f2a238cd51b989693198.json",
-					"name" : "lines3d",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "minimal::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-minimal-Debug-065cbbae58e6d7eca02e.json",
-					"name" : "minimal",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "modern::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-modern-Debug-e7926df256b372582309.json",
-					"name" : "modern",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 11,
+					"directoryIndex" : 10,
 					"id" : "newsvendor::@44333d3be895461ba489",
 					"jsonFile" : "target-newsvendor-Debug-3663877f4a4722d3f92b.json",
 					"name" : "newsvendor",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 5,
-					"id" : "nonblock::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-nonblock-Debug-2428fce29e5911fffbc9.json",
-					"name" : "nonblock",
-					"projectIndex" : 1
-				},
-				{
 					"directoryIndex" : 2,
 					"id" : "sddp-overdraft::@b91144f6cfd2f2b0eb77",
-					"jsonFile" : "target-sddp-overdraft-Debug-344aad61808d440819ba.json",
+					"jsonFile" : "target-sddp-overdraft-Debug-d7c410e263a6ca89fbb3.json",
 					"name" : "sddp-overdraft",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 7,
+					"directoryIndex" : 6,
 					"id" : "sdp-cash::@686179159669958344ec",
 					"jsonFile" : "target-sdp-cash-Debug-2c265ebd0808e4cc4197.json",
 					"name" : "sdp-cash",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 6,
+					"directoryIndex" : 5,
 					"id" : "sdp-inventory::@8359d8b257de3d65d78b",
 					"jsonFile" : "target-sdp-inventory-Debug-ea97919761000a01d79e.json",
 					"name" : "sdp-inventory",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 8,
+					"directoryIndex" : 7,
 					"id" : "sdp-overdraft::@b1a2686b200ee4c0d651",
 					"jsonFile" : "target-sdp-overdraft-Debug-b153815e2ff7e1d1017e.json",
 					"name" : "sdp-overdraft",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 5,
-					"id" : "spy::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-spy-Debug-6e1e615d23d5a768b36d.json",
-					"name" : "spy",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 9,
+					"directoryIndex" : 8,
 					"id" : "states::@385b8a4d49cac343cbbd",
 					"jsonFile" : "target-states-Debug-c6c98e5e279b41e349b8.json",
 					"name" : "states",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 5,
-					"id" : "subplot2grid::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-subplot2grid-Debug-71267e7b99cb7c00137d.json",
-					"name" : "subplot2grid",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "surface::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-surface-Debug-04182c9d5f59db97cdf0.json",
-					"name" : "surface",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "update::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-update-Debug-a103d4c97f206ab16382.json",
-					"name" : "update",
-					"projectIndex" : 1
-				},
-				{
-					"directoryIndex" : 12,
+					"directoryIndex" : 11,
 					"id" : "utils::@c810615cce0f7acb82dc",
 					"jsonFile" : "target-utils-Debug-e9c9808937bbd6ddb745.json",
 					"name" : "utils",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 10,
+					"directoryIndex" : 9,
 					"id" : "workforce::@89dbaeb67dd0933c275a",
-					"jsonFile" : "target-workforce-Debug-e87034b78da39172a2c3.json",
+					"jsonFile" : "target-workforce-Debug-f7c4dd745060e41b8db1.json",
 					"name" : "workforce",
 					"projectIndex" : 0
-				},
-				{
-					"directoryIndex" : 5,
-					"id" : "xkcd::@3a94670b1d6c775aa564",
-					"jsonFile" : "target-xkcd-Debug-bdc5a26eed3b012a3eb5.json",
-					"name" : "xkcd",
-					"projectIndex" : 1
 				}
 			]
 		}

@@ -46,6 +46,7 @@ std::vector<std::pair<T1, T2>> product(const std::vector<T1> &a, const std::vect
 
 std::string toCSVLine(const std::vector<std::string> &row);
 
+// 打印一个一维 vector
 template <typename T>
 std::string vectorToString(const std::vector<T> &vec, const std::string &delimiter = ", ") {
   std::ostringstream

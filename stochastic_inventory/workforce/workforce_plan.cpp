@@ -317,7 +317,7 @@ bool WorkforcePlan::checkKConvexity(const std::vector<std::array<double, 2>> &Gy
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y <= y_plus_a; y++)
       for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
-        double coe = 1.0 *(y_plus_a - y) / (y - y_minus_b);
+        double coe = 1.0 * (y_plus_a - y) / (y - y_minus_b);
         if (Gy[y_plus_a][1] + fix_hire_cost > Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]))
           continue;
         double left = Gy[y_plus_a][1] + fix_hire_cost;
