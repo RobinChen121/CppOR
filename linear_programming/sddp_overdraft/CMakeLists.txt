@@ -17,7 +17,11 @@ add_executable(${RUN_NAME}
 )
 
 # 设置 Gurobi 路径（根据你的安装调整）
-set(GUROBI_HOME "/Library/gurobi1201/macos_universal2") # gurobi 的安装地址
+if(apple)
+    set(GUROBI_HOME "/Library/gurobi1201/macos_universal2") # gurobi 的安装地址
+else ()
+    set(GUROBI_HOME "C:/gurobi1202/win64") # gurobi 的安装地址
+endif ()
 set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
 set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
 
