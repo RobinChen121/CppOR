@@ -14,19 +14,23 @@ class PiecewiseWorkforce {
   double salary{};
   double unit_penalty{};
 
-  std::vector<double> turnover_rate{};
-  size_t T = turnover_rate.size();
+  std::vector<double> turnover_rates{};
+  size_t T = turnover_rates.size();
   std::vector<int> min_workers = std::vector<int>(T);
 
 public:
   PiecewiseWorkforce(const int initial_workers, const double fix_hire_cost,
                      const double unit_vari_cost, const double salary, const double unit_penalty,
-                     const std::vector<double> &turnover_rate, const std::vector<int> &min_workers)
+                     const std::vector<double> &turnover_rates, const std::vector<int> &min_workers)
       : initial_workers(initial_workers), fix_hire_cost(fix_hire_cost),
         unit_vari_cost(unit_vari_cost), salary(salary), unit_penalty(unit_penalty),
-        turnover_rate(turnover_rate), min_workers(min_workers) {};
+        turnover_rates(turnover_rates), min_workers(min_workers) {};
 
   static double loss_function(int y, int min_workers, double turnover_rate);
+  static double Fy(int y, int min_workers, double turnover_rate);
+  static std::vector<std::vector<double>> piecewise(int segment_num, int min_workers, double p);
+
+  double piece_approximate(int segment_num);
 };
 
 

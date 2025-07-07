@@ -413,9 +413,6 @@ boost_system_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.
 //The directory containing a CMake configuration file for boost_thread.
 boost_thread_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0
 
-//The directory containing a CMake configuration file for fmt.
-fmt_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/fmt
-
 //Value Computed by CMake
 matplotlib_cpp_BINARY_DIR:STATIC=D:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-build
 
