@@ -17,13 +17,13 @@ add_executable(${RUN_NAME}
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
         piecewise.cpp
-        piecewise.h
 )
 
 
 # 设置 Gurobi 路径（根据你的安装调整）
-if(apple)
+if (APPLE)
     set(GUROBI_HOME "/Library/gurobi1201/macos_universal2") # gurobi 的安装地址
+    message("test")
 else ()
     set(GUROBI_HOME "C:/gurobi1202/win64") # gurobi 的安装地址
 endif ()
