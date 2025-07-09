@@ -198,7 +198,7 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) {
 
     // output results
     double this_obj = model.get(GRB_DoubleAttr_ObjVal);
-    std::count << "objective value of the mip model is " << this_obj << std::endl;
+    std::cout << "objective value of the mip model is " << this_obj << std::endl;
     std::vector<double> x_values(T);
     std::vector<double> y_values(T);
     std::vector<double> u_values(T);

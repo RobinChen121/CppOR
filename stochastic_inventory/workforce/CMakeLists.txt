@@ -35,11 +35,20 @@ include_directories(${GUROBI_LIB_DIR})
 include_directories(${GUROBI_INCLUDE_DIR})
 
 # 链接 Gurobi 库，这个静态库与动态库都需要
-target_link_libraries(${RUN_NAME}
-        PRIVATE
-        "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
-        "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
-)
+if (APPLE)
+    target_link_libraries(${RUN_NAME}
+            PRIVATE
+            "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
+            "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
+    )
+else ()
+    target_link_libraries(${RUN_NAME}
+            PRIVATE
+            "${GUROBI_INCLUDE_DIR}/gurobi_c++.h"
+            "${GUROBI_LIB_DIR}/gurobi120.lib" #
+    )
+endif ()
+
 
 ##-----------------------------------
 ## fmt for format output
