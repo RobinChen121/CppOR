@@ -40,7 +40,9 @@ void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int,
 
 void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
                      const std::vector<std::string> &parameter,
-                     const std::vector<std::string> &kconvexity) {
+                     const std::vector<std::string> &kconvexity,
+                     const std::vector<std::string> &binomial_kconvexity,
+                     const std::vector<std::string> &convexity) {
   int repeat = 3;
   while (repeat > 0) {
     for (int i = 0; i < arr.size(); i++) {
@@ -70,6 +72,8 @@ void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
 
       plt::title(parameter[i]);
       plt::text(0.35 * x_scale, 0.999 * y_scale, kconvexity[i]);
+      plt::text(0.35 * x_scale, 0.929 * y_scale, binomial_kconvexity[i]);
+      plt::text(0.35 * x_scale, 0.859 * y_scale, convexity[i]);
       plt::grid(true);
       plt::pause(1);
       plt::clf();

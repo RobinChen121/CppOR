@@ -18,6 +18,8 @@ void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int,
 
 void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
                      const std::vector<std::string> &parameter,
-                     const std::vector<std::string> &kconvexity);
+                     const std::vector<std::string> &kconvexity,
+                     const std::vector<std::string> &binomial_kconvexity,
+                     const std::vector<std::string> &convexity);
 
 #endif // DRAW_GRAPH_H

@@ -112,7 +112,7 @@ PMF::getPMFBinomial(const int max_staff, const std::span<const double> ps) {
       if (i == 0)
         pmf[t][i][0] = 1;
       else {
-        boost::math::binomial_distribution<double> dist(i, ps[t]);
+        boost::math::binomial_distribution<> dist(i, ps[t]);
         for (int j = 0; j <= i; ++j) {
           pmf[t][i][j] = pdf(dist, j);
         }

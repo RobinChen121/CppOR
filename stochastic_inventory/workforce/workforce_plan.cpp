@@ -8,6 +8,8 @@
  */
 
 #include "workforce_plan.h"
+#include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
+#include <cmath>
 
 void WorkforcePlan::set_fix_cost(const double value) {
   fix_hire_cost = value;
@@ -36,9 +38,9 @@ void WorkforcePlan::set_min_workers(const int value) {
 };
 
 void WorkforcePlan::set_turnover_rate(const double value) {
-  turnover_rate = std::vector<double>(T, value);
-  pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
-  varied_parameter = "turnover_rate = " + vectorToString(turnover_rate);
+  turnover_rates = std::vector<double>(T, value);
+  pmf = PMF::getPMFBinomial(max_worker_num, turnover_rates);
+  varied_parameter = "turnover_rates = " + vectorToString(turnover_rates);
 };
 
 [[nodiscard]] std::vector<int> WorkforcePlan::feasibleActions() const {
@@ -276,7 +278,7 @@ void WorkforcePlan::simulatesS(const WorkerState ini_state,
       const int Q = ini_workers < sS[t][0] ? sS[t][1] - ini_workers : 0;
       const int hire_up_to = ini_workers + Q;
 
-      std::binomial_distribution<> dist(hire_up_to, turnover_rate[t]); // 二项分布
+      std::binomial_distribution<> dist(hire_up_to, turnover_rates[t]); // 二项分布
       for (size_t k = 0; k < K; ++k) {
         const int random_demand = dist(gen);
         WorkerState new_state = stateTransition(this_ini_state, Q, random_demand);
@@ -317,20 +319,56 @@ bool WorkforcePlan::checkKConvexity(const std::vector<std::array<double, 2>> &Gy
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y <= y_plus_a; y++)
       for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
-        double coe = 1.0 * (y_plus_a - y) / (y - y_minus_b);
-        if (Gy[y_plus_a][1] + fix_hire_cost > Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]))
+        const double left = (y - y_minus_b) * (Gy[y_plus_a][1] - Gy[y][1] + fix_hire_cost);
+        const double right = (y_plus_a - y) * (Gy[y][1] - Gy[y_minus_b][1]);
+        if (left >= right)
           continue;
-        double left = Gy[y_plus_a][1] + fix_hire_cost;
-        double right = Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]);
-        std::cout << "****" << std::endl;
+        std::cout << "**************" << std::endl;
         std::cout << "not K convex" << std::endl;
         std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
-        KConvexity = "not K convexity!";
+        K_convexity = "not K convexity!";
         return false;
       }
   std::cout << "K convexity holds!" << std::endl;
-  KConvexity = "K convexity holds!";
+  K_convexity = "K convexity holds!";
   return true;
+}
+
+bool WorkforcePlan::checkBinomialKConvexity(const std::vector<std::array<double, 2>> &Gy) {
+  const double max_y = Gy[Gy.size() - 1][0];
+  const int y_length = static_cast<int>(max_y) + 1;
+
+  for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
+    for (int y = 1; y <= y_plus_a; y++)
+      for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
+        const double left = (y - y_minus_b) * (expectGy(Gy, y, y_plus_a - y_minus_b) -
+                                               expectGy(Gy, y, y - y_minus_b) + fix_hire_cost);
+        const double right = (y_plus_a - y) * (expectGy(Gy, y, y - y_minus_b) - Gy[y][1]);
+
+        double test1 = expectGy(Gy, y, y_plus_a - y_minus_b);
+        double test2 = expectGy(Gy, y, y - y_minus_b);
+        double test3 = Gy[y][1];
+        if (left >= right)
+          continue;
+        std::cout << "**************" << std::endl;
+        std::cout << "not Binomial K convex" << std::endl;
+        std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
+        binomial_K_convexity = "not Binomial K convexity!";
+        return false;
+      }
+  std::cout << "Binomial K convexity holds!" << std::endl;
+  binomial_K_convexity = "Binomial K convexity holds!";
+  return true;
+}
+
+double WorkforcePlan::expectGy(const std::vector<std::array<double, 2>> &Gy, const int y,
+                               const int a) const {
+  double expectation = 0.0;
+  const boost::math::binomial_distribution<> dist(a, turnover_rates[0]);
+  for (int i = 0; i <= a; i++) {
+    expectation += pdf(dist, i) * Gy[y + i][1];
+  }
+  return expectation;
 }
 
 bool WorkforcePlan::checkConvexity(const std::vector<std::array<double, 2>> &Gy) {
@@ -338,16 +376,18 @@ bool WorkforcePlan::checkConvexity(const std::vector<std::array<double, 2>> &Gy)
   const int y_length = static_cast<int>(max_y) + 1;
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
-    for (int y = 1; y <= y_plus_a; y++)
-      for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
-        double coe = 1.0 * (y_plus_a - y) / (y - y_minus_b);
-        if (Gy[y_plus_a][1]  > Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]))
+    for (int y = 1; y < y_plus_a; y++)
+      for (int y_minus_b = 1; y_minus_b < y; y_minus_b++) {
+        const double left = (y - y_minus_b) * (Gy[y_plus_a][1] - Gy[y][1]);
+        const double right = (y_plus_a - y) * (Gy[y][1] - Gy[y_minus_b][1]);
+        double test = std::abs(left - right);
+        if (std::abs(left - right) < 1)
           continue;
-        double left = Gy[y_plus_a][1] + fix_hire_cost;
-        double right = Gy[y][1] + coe * (Gy[y][1] - Gy[y_minus_b][1]);
         std::cout << "****" << std::endl;
         std::cout << "not convex" << std::endl;
-        std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
+        std::cout << "y + a = " << y_plus_a << ", y = " << y << ", y_minus_b = " << y_minus_b
+                  << std::endl;
+        std::cout << "left = " << left << ", right = " << right << std::endl;
         convexity = "not convex!";
         return false;
       }

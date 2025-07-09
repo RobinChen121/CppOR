@@ -39,6 +39,8 @@ int main() {
   std::vector<std::string> parameter(num);
   std::vector<double> parameter_values(num);
   std::vector<std::string> kconvexity(num);
+  std::vector<std::string> binomial_kconvexity(num);
+  std::vector<std::string> convexity(num);
   for (int i = 0; i < num; i++) {
     auto problem = WorkforcePlan();
 
@@ -52,10 +54,13 @@ int main() {
     // arr_ss[i] = problem.findsS()[0];
     parameter[i] = problem.get_varied_parameter();
     problem.checkKConvexity(Gys[i]);
+    problem.checkBinomialKConvexity(Gys[i]);
     problem.checkConvexity(Gys[i]);
-    kconvexity[i] = problem.get_kconvexity();
+    kconvexity[i] = problem.getKConvexity();
+    binomial_kconvexity[i] = problem.getBinomialConvexity();
+    convexity[i] = problem.getConvexity();
   }
 
-  drawGyAnimation(Gys, parameter, kconvexity);
+  drawGyAnimation(Gys, parameter, kconvexity, binomial_kconvexity, convexity);
   return 0;
 }
