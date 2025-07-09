@@ -28,8 +28,8 @@ class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rate = {0.6, 0.5, 0.4};
-  size_t T = turnover_rate.size();
+  std::vector<double> turnover_rates = {0.6, 0.5, 0.4};
+  size_t T = turnover_rates.size();
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
@@ -41,7 +41,8 @@ class WorkforcePlan {
   std::vector<int> min_workers = std::vector<int>(T, 40);
 
   std::string varied_parameter;
-  std::string KConvexity;
+  std::string K_convexity;
+  std::string binomial_K_convexity;
   std::string convexity;
 
   int max_hire_num = 500;
@@ -59,8 +60,8 @@ public:
   std::vector<std::unordered_map<WorkerState, double>> policies;
 
   WorkforcePlan() {
-    pmf = PMF::getPMFBinomial(max_worker_num, turnover_rate);
-    // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rate);
+    pmf = PMF::getPMFBinomial(max_worker_num, turnover_rates);
+    // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rates);
   }
 
   void set_fix_cost(const double value);
@@ -69,7 +70,9 @@ public:
   void set_min_workers(const int value);
   void set_turnover_rate(const double value);
   [[nodiscard]] std::string get_varied_parameter() { return varied_parameter; };
-  [[nodiscard]] std::string get_kconvexity() { return KConvexity; };
+  [[nodiscard]] std::string getKConvexity() { return K_convexity; };
+  [[nodiscard]] std::string getBinomialConvexity() { return binomial_K_convexity; };
+  [[nodiscard]] std::string getConvexity() { return convexity; };
   [[nodiscard]] Direction get_direction() const { return direction; };
   [[nodiscard]] WorkerState get_initial_state() const { return ini_state; };
 
@@ -88,6 +91,9 @@ public:
   std::vector<std::array<double, 2>> computeGy();
   [[nodiscard]] std::vector<std::vector<double>> getOptTable() const;
   bool checkKConvexity(const std::vector<std::array<double, 2>> &Gy);
+  bool checkBinomialKConvexity(const std::vector<std::array<double, 2>> &Gy);
   bool checkConvexity(const std::vector<std::array<double, 2>> &Gy);
+
+  double expectGy(const std::vector<std::array<double, 2>> &Gy, int y, int a) const;
 };
 #endif // WORKFORCE_PLAN_H
