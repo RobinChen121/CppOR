@@ -40,8 +40,9 @@ class WorkforcePlan {
   double unit_penalty = 40.0;
   std::vector<int> min_workers = std::vector<int>(T, 40);
 
-  std::string varied_parameter = "";
-  std::string KConvexity = "";
+  std::string varied_parameter;
+  std::string KConvexity;
+  std::string convexity;
 
   int max_hire_num = 500;
   int max_worker_num = 600;
@@ -87,5 +88,6 @@ public:
   std::vector<std::array<double, 2>> computeGy();
   [[nodiscard]] std::vector<std::vector<double>> getOptTable() const;
   bool checkKConvexity(const std::vector<std::array<double, 2>> &Gy);
+  bool checkConvexity(const std::vector<std::array<double, 2>> &Gy);
 };
 #endif // WORKFORCE_PLAN_H

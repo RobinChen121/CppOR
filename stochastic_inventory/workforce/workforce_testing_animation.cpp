@@ -52,6 +52,7 @@ int main() {
     // arr_ss[i] = problem.findsS()[0];
     parameter[i] = problem.get_varied_parameter();
     problem.checkKConvexity(Gys[i]);
+    problem.checkConvexity(Gys[i]);
     kconvexity[i] = problem.get_kconvexity();
   }
 
