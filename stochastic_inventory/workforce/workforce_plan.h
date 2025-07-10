@@ -88,12 +88,12 @@ public:
   std::vector<double> solve(WorkerState ini_state);
   [[nodiscard]] std::vector<std::array<int, 2>> findsS() const;
   void simulatesS(WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const;
-  std::vector<std::array<double, 2>> computeGy();
+  std::vector<double> computeGy();
+  std::vector<std::array<double, 2>> computeExpectGy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> getOptTable() const;
-  bool checkKConvexity(const std::vector<std::array<double, 2>> &Gy);
-  bool checkBinomialKConvexity(const std::vector<std::array<double, 2>> &Gy);
-  bool checkConvexity(const std::vector<std::array<double, 2>> &Gy);
-
-  double expectGy(const std::vector<std::array<double, 2>> &Gy, int y, int a) const;
+  bool checkKConvexity(const std::vector<double> &Gy);
+  bool checkBinomialKConvexity(const std::vector<double> &Gy,
+                               const std::vector<std::array<double, 2>> &expect_Gy);
+  bool checkConvexity(const std::vector<double> &Gy);
 };
 #endif // WORKFORCE_PLAN_H

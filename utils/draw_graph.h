@@ -16,7 +16,7 @@ namespace plt = matplotlibcpp;
 
 void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int, 2> &arr_sS);
 
-void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
+void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &parameter,
                      const std::vector<std::string> &kconvexity,
                      const std::vector<std::string> &binomial_kconvexity,
