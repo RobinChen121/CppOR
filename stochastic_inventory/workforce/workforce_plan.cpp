@@ -10,6 +10,7 @@
 #include "workforce_plan.h"
 #include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
 #include <cmath>
+#include <omp.h>
 
 void WorkforcePlan::set_fix_cost(const double value) {
   fix_hire_cost = value;
@@ -297,6 +298,7 @@ void WorkforcePlan::simulatesS(const WorkerState ini_state,
             << std::endl;
 }
 
+// row index is y;
 std::vector<double> WorkforcePlan::computeGy() {
   const int y_length = max_worker_num;
   std::vector<double> Gy(y_length);
@@ -311,15 +313,23 @@ std::vector<double> WorkforcePlan::computeGy() {
   return Gy;
 }
 
-std::vector<std::array<double, 2>>
+// row index is y;
+// the first element is a;
+// the second element is the expectation value;
+std::vector<std::vector<double>>
 WorkforcePlan::computeExpectGy(const std::vector<double> &Gy) const {
   const int y_length = max_worker_num;
-  std::vector<std::array<double, 2>> expect_Gy(y_length);
+  std::vector<std::vector<double>> expect_Gy(y_length);
+
+  #pragma omp parallel for
   for (int y = 0; y < y_length; ++y) {
     for (int a = 0; y + a < y_length; ++a) {
-      expect_Gy[y][a] = 0;
+      expect_Gy[y].resize(a + 1);
       for (int i = 0; i <= a; ++i) {
-        expect_Gy[y][a] += pmf[0][a][i] * Gy[y + i];
+        expect_Gy[y][i] = 0;
+        for (int j = 0; j <= i; ++j) {
+          expect_Gy[y][i] += pmf[0][i][j] * Gy[y + j];
+        }
       }
     }
   }
@@ -348,8 +358,8 @@ bool WorkforcePlan::checkKConvexity(const std::vector<double> &Gy) {
 }
 
 bool WorkforcePlan::checkBinomialKConvexity(const std::vector<double> &Gy,
-                                            const std::vector<std::array<double, 2>> &expect_Gy) {
-  const int y_length = Gy.size();
+                                            const std::vector<std::vector<double>> &expect_Gy) {
+  const int y_length = static_cast<int>(Gy.size());
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y <= y_plus_a; y++)
@@ -361,7 +371,7 @@ bool WorkforcePlan::checkBinomialKConvexity(const std::vector<double> &Gy,
         double test1 = expect_Gy[y_minus_b][y_plus_a - y_minus_b];
         double test2 = expect_Gy[y_minus_b][y - y_minus_b];
         double test3 = Gy[y_minus_b];
-        if (right - left < 1)
+        if (right - left < 0.01)
           continue;
         std::cout << "**************" << std::endl;
         std::cout << "not Binomial K convex" << std::endl;
