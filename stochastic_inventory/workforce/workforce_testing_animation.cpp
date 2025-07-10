@@ -33,7 +33,7 @@ int main() {
     turnover_rate[i] = (i + 1) * 0.1;
   }
 
-  std::vector<std::vector<std::array<double, 2>>> Gys(num);
+  std::vector<std::vector<double>> Gys(num);
   // std::vector<std::array<int, 2>> arr_ss(num);
   std::vector<std::string> arr_str(num);
   std::vector<std::string> parameter(num);
@@ -54,7 +54,8 @@ int main() {
     // arr_ss[i] = problem.findsS()[0];
     parameter[i] = problem.get_varied_parameter();
     problem.checkKConvexity(Gys[i]);
-    problem.checkBinomialKConvexity(Gys[i]);
+    auto expect_Gy = problem.computeExpectGy(Gys[i]);
+    problem.checkBinomialKConvexity(Gys[i], expect_Gy);
     problem.checkConvexity(Gys[i]);
     kconvexity[i] = problem.getKConvexity();
     binomial_kconvexity[i] = problem.getBinomialConvexity();

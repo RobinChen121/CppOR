@@ -297,36 +297,49 @@ void WorkforcePlan::simulatesS(const WorkerState ini_state,
             << std::endl;
 }
 
-std::vector<std::array<double, 2>> WorkforcePlan::computeGy() {
+std::vector<double> WorkforcePlan::computeGy() {
   const int y_length = max_worker_num;
-  std::vector<std::array<double, 2>> Gy(y_length);
+  std::vector<double> Gy(y_length);
   to_compute_gy = ToComputeGy::True;
   policies.clear();
   values.clear();
   solve(ini_state);
   for (int y = 0; y < y_length; ++y) {
-    Gy[y][0] = y;
     const WorkerState ini_state{1, y};
-    Gy[y][1] = values[0].at(ini_state);
+    Gy[y] = values[0].at(ini_state);
   }
   return Gy;
 }
 
-bool WorkforcePlan::checkKConvexity(const std::vector<std::array<double, 2>> &Gy) {
-  const double max_y = Gy[Gy.size() - 1][0];
-  const int y_length = static_cast<int>(max_y) + 1;
+std::vector<std::array<double, 2>>
+WorkforcePlan::computeExpectGy(const std::vector<double> &Gy) const {
+  const int y_length = max_worker_num;
+  std::vector<std::array<double, 2>> expect_Gy(y_length);
+  for (int y = 0; y < y_length; ++y) {
+    for (int a = 0; y + a < y_length; ++a) {
+      expect_Gy[y][a] = 0;
+      for (int i = 0; i <= a; ++i) {
+        expect_Gy[y][a] += pmf[0][a][i] * Gy[y + i];
+      }
+    }
+  }
+  return expect_Gy;
+}
+
+bool WorkforcePlan::checkKConvexity(const std::vector<double> &Gy) {
+  const int y_length = Gy.size();
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y <= y_plus_a; y++)
       for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
-        const double left = (y - y_minus_b) * (Gy[y_plus_a][1] - Gy[y][1] + fix_hire_cost);
-        const double right = (y_plus_a - y) * (Gy[y][1] - Gy[y_minus_b][1]);
+        const double left = (y - y_minus_b) * (Gy[y_plus_a] - Gy[y] + fix_hire_cost);
+        const double right = (y_plus_a - y) * (Gy[y] - Gy[y_minus_b]);
         if (left >= right)
           continue;
         std::cout << "**************" << std::endl;
         std::cout << "not K convex" << std::endl;
         std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
-        K_convexity = "not K convexity!";
+        K_convexity = "not K convex!";
         return false;
       }
   std::cout << "K convexity holds!" << std::endl;
@@ -334,26 +347,26 @@ bool WorkforcePlan::checkKConvexity(const std::vector<std::array<double, 2>> &Gy
   return true;
 }
 
-bool WorkforcePlan::checkBinomialKConvexity(const std::vector<std::array<double, 2>> &Gy) {
-  const double max_y = Gy[Gy.size() - 1][0];
-  const int y_length = static_cast<int>(max_y) + 1;
+bool WorkforcePlan::checkBinomialKConvexity(const std::vector<double> &Gy,
+                                            const std::vector<std::array<double, 2>> &expect_Gy) {
+  const int y_length = Gy.size();
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y <= y_plus_a; y++)
       for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
-        const double left = (y - y_minus_b) * (expectGy(Gy, y, y_plus_a - y_minus_b) -
-                                               expectGy(Gy, y, y - y_minus_b) + fix_hire_cost);
-        const double right = (y_plus_a - y) * (expectGy(Gy, y, y - y_minus_b) - Gy[y][1]);
+        const double left = (y - y_minus_b) * (expect_Gy[y_minus_b][y_plus_a - y_minus_b] -
+                                               expect_Gy[y_minus_b][y - y_minus_b] + fix_hire_cost);
+        const double right = (y_plus_a - y) * (expect_Gy[y_minus_b][y - y_minus_b] - Gy[y_minus_b]);
 
-        double test1 = expectGy(Gy, y, y_plus_a - y_minus_b);
-        double test2 = expectGy(Gy, y, y - y_minus_b);
-        double test3 = Gy[y][1];
-        if (left >= right)
+        double test1 = expect_Gy[y_minus_b][y_plus_a - y_minus_b];
+        double test2 = expect_Gy[y_minus_b][y - y_minus_b];
+        double test3 = Gy[y_minus_b];
+        if (right - left < 1)
           continue;
         std::cout << "**************" << std::endl;
         std::cout << "not Binomial K convex" << std::endl;
         std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
-        binomial_K_convexity = "not Binomial K convexity!";
+        binomial_K_convexity = "not Binomial K convex!";
         return false;
       }
   std::cout << "Binomial K convexity holds!" << std::endl;
@@ -361,25 +374,14 @@ bool WorkforcePlan::checkBinomialKConvexity(const std::vector<std::array<double,
   return true;
 }
 
-double WorkforcePlan::expectGy(const std::vector<std::array<double, 2>> &Gy, const int y,
-                               const int a) const {
-  double expectation = 0.0;
-  const boost::math::binomial_distribution<> dist(a, turnover_rates[0]);
-  for (int i = 0; i <= a; i++) {
-    expectation += pdf(dist, i) * Gy[y + i][1];
-  }
-  return expectation;
-}
-
-bool WorkforcePlan::checkConvexity(const std::vector<std::array<double, 2>> &Gy) {
-  const double max_y = Gy[Gy.size() - 1][0];
-  const int y_length = static_cast<int>(max_y) + 1;
+bool WorkforcePlan::checkConvexity(const std::vector<double> &Gy) {
+  const int y_length = Gy.size();
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y < y_plus_a; y++)
       for (int y_minus_b = 1; y_minus_b < y; y_minus_b++) {
-        const double left = (y - y_minus_b) * (Gy[y_plus_a][1] - Gy[y][1]);
-        const double right = (y_plus_a - y) * (Gy[y][1] - Gy[y_minus_b][1]);
+        const double left = (y - y_minus_b) * (Gy[y_plus_a] - Gy[y]);
+        const double right = (y_plus_a - y) * (Gy[y] - Gy[y_minus_b]);
         double test = std::abs(left - right);
         if (std::abs(left - right) < 1)
           continue;

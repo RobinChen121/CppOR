@@ -38,7 +38,7 @@ void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int,
   plt::show();
 }
 
-void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
+void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &parameter,
                      const std::vector<std::string> &kconvexity,
                      const std::vector<std::string> &binomial_kconvexity,
@@ -48,8 +48,8 @@ void drawGyAnimation(const std::vector<std::vector<std::array<double, 2>>> &arr,
     for (int i = 0; i < arr.size(); i++) {
       std::vector<double> x, y;
       for (int j = 0; j < arr[i].size() - 200; ++j) {
-        x.push_back(arr[i][j][0]);
-        y.push_back(arr[i][j][1]);
+        x.push_back(j);
+        y.push_back(arr[i][j]);
       }
       plt::plot(x, y);
       const double x_min = 0;
