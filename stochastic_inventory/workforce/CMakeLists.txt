@@ -13,10 +13,11 @@ add_executable(${RUN_NAME}
         worker_state.cpp
         workforce_plan.cpp
 
-        workforce_testing_animation.cpp
+#        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
-#        piecewise.cpp
+        binomial_test.cpp
+        #        piecewise.cpp
 )
 
 
