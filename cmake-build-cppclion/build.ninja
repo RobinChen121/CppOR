@@ -750,9 +750,9 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_g
   OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils
 
-build stochastic_inventory/workforce/CMakeFiles/workforce.dir/binomial_test.cpp.o: CXX_COMPILER__workforce_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/workforce/binomial_test.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory/workforce/CMakeFiles/workforce.dir/Binomial_logconcave_test.cpp.o: CXX_COMPILER__workforce_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/workforce/Binomial_logconcave_test.cpp || cmake_object_order_depends_target_workforce
   DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
-  DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/binomial_test.cpp.o.d
+  DEP_FILE = stochastic_inventory/workforce/CMakeFiles/workforce.dir/Binomial_logconcave_test.cpp.o.d
   FLAGS = -Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.0/include -O3 -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
   INCLUDES = -I/opt/anaconda3/include/python3.12 -I/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include -I/opt/homebrew/Cellar/libomp/20.1.0/include -isystem /opt/anaconda3/include
   OBJECT_DIR = stochastic_inventory/workforce/CMakeFiles/workforce.dir
@@ -766,7 +766,7 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/binomial_test.cpp.
 #############################################
 # Link the executable stochastic_inventory/workforce/workforce
 
-build stochastic_inventory/workforce/workforce: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/binomial_test.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libpython3.12.dylib /opt/anaconda3/lib/libboost_atomic.dylib
+build stochastic_inventory/workforce/workforce: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o stochastic_inventory/workforce/CMakeFiles/workforce.dir/Binomial_logconcave_test.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libpython3.12.dylib /opt/anaconda3/lib/libboost_atomic.dylib
   FLAGS = -Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.0/include -O3 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
   LINK_FLAGS = -L/opt/homebrew/Cellar/libomp/20.1.0/lib -lomp
   LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libpython3.12.dylib  -ldl  /opt/anaconda3/lib/libboost_atomic.dylib
