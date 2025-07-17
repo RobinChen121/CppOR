@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
+#set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
@@ -16,7 +17,11 @@ add_executable(${RUN_NAME}
 #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
-        binomial_test.cpp
+#        binomial_product_test.cpp
+#        Binomial_conditional_expectation_test.cpp
+#        Binomial_stochastic_order_test.cpp
+        Binomial_probability_decomposition_test.cpp
+        #        Binomial_tail_test.cpp
         #        piecewise.cpp
 )
 
