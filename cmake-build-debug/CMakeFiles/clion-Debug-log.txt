@@ -4,6 +4,6 @@
 -- Found Python3: C:/ProgramData/anaconda3/python.exe (found version "3.12.7") found components: Interpreter Development Development.Module Development.Embed
 -- Found Python3: C:/ProgramData/anaconda3/libs/python312.lib (found version "3.12.7") found components: NumPy Interpreter Development.Module
 -- Found Python3: C:/ProgramData/anaconda3/python.exe (found version "3.12.7") found components: Interpreter Development NumPy Development.Module Development.Embed
--- Configuring done (3.3s)
+-- Configuring done (5.7s)
 -- Generating done (0.1s)
 -- Build files have been written to: D:/chenzhen/CppOR/cmake-build-debug
