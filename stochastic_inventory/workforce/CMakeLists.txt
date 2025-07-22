@@ -17,11 +17,12 @@ add_executable(${RUN_NAME}
         #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
-        #        binomial_product_test.cpp
+        #        binomial_tail_product_test.cpp
         #        Binomial_conditional_expectation_test.cpp
         #        Binomial_stochastic_order_test.cpp
         #        Binomial_probability_decomposition_test.cpp
-        Binomial_logconcave_test.cpp
+#        Binomial_logconcave_test.cpp
+        normal_tail_product_test.cpp
         #        piecewise.cpp
 )
 
