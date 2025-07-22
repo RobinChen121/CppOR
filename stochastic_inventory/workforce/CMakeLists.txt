@@ -14,14 +14,14 @@ add_executable(${RUN_NAME}
         worker_state.cpp
         workforce_plan.cpp
 
-#        workforce_testing_animation.cpp
+        #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
-#        binomial_product_test.cpp
-#        Binomial_conditional_expectation_test.cpp
-        Binomial_stochastic_order_test.cpp
-#        Binomial_probability_decomposition_test.cpp
-        #        Binomial_tail_test.cpp
+        #        binomial_product_test.cpp
+        #        Binomial_conditional_expectation_test.cpp
+        #        Binomial_stochastic_order_test.cpp
+        #        Binomial_probability_decomposition_test.cpp
+        Binomial_logconcave_test.cpp
         #        piecewise.cpp
 )
 
