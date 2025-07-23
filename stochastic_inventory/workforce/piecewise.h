@@ -31,7 +31,7 @@ public:
   static std::vector<std::vector<double>> piecewise(int segment_num, int min_workers, double p);
 
   double piece_approximate(int segment_num);
+  std::vector<std::array<double, 2>> get_sS(int segment);
 };
-
 
 #endif // PIECEWISE_H

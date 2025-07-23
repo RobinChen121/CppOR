@@ -11,11 +11,11 @@
 
 #include <boost/container/container_fwd.hpp>
 
-void drawGy(const std::vector<std::array<double, 2>> &arr, const std::array<int, 2> &arr_sS) {
+void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS) {
   std::vector<double> x, y;
   for (int i = 0; i < arr.size() - 200; ++i) {
-    x.push_back(arr[i][0]);
-    y.push_back(arr[i][1]);
+    x.push_back(i);
+    y.push_back(arr[i]);
   }
   plt::plot(x, y);
   const double y_max = y.back();

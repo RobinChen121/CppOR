@@ -40,6 +40,8 @@ class WorkforcePlan {
   double unit_penalty = 40.0;
   std::vector<int> min_workers = std::vector<int>(T, 40);
 
+  int piece_segment = 10;
+
   std::string varied_parameter;
   std::string K_convexity;
   std::string binomial_K_convexity;
@@ -91,6 +93,9 @@ public:
   std::vector<double> computeGy();
   std::vector<std::vector<double>> computeExpectGy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> getOptTable() const;
+
+  std::vector<std::vector<double>> solveMip();
+
   bool checkKConvexity(const std::vector<double> &Gy);
   bool checkBinomialKConvexity(const std::vector<double> &Gy,
                                const std::vector<std::vector<double>> &expect_Gy);

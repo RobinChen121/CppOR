@@ -8,6 +8,9 @@
  */
 
 #include "workforce_plan.h"
+
+#include "piecewise.h"
+
 #include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
 #include <cmath>
 #include <omp.h>
@@ -321,7 +324,7 @@ WorkforcePlan::computeExpectGy(const std::vector<double> &Gy) const {
   const int y_length = max_worker_num;
   std::vector<std::vector<double>> expect_Gy(y_length);
 
-  #pragma omp parallel for
+#pragma omp parallel for
   for (int y = 0; y < y_length; ++y) {
     for (int a = 0; y + a < y_length; ++a) {
       expect_Gy[y].resize(a + 1);
@@ -433,44 +436,58 @@ bool WorkforcePlan::checkConvexity(const std::vector<double> &Gy) {
   return arr;
 }
 
-// int main() {
-//   auto problem = WorkforcePlan();
-//   const WorkerState ini_state{1, 0};
-//   auto start_time = std::chrono::high_resolution_clock::now();
-//   const auto final_value = problem.solve(ini_state)[0];
-//   auto end_time = std::chrono::high_resolution_clock::now();
-//   std::chrono::duration<double> time = end_time - start_time;
-//   if (problem.get_direction() == Direction::FORWARD)
-//     std::cout << "running time is " << time.count() << 's' << std::endl;
-//   else {
-//     const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
-//     std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
-//               << time.count() << 's' << std::endl;
-//   }
-//   std::cout << "Final optimal cost is " << final_value << std::endl;
-//   std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
-//             << std::endl;
-//
-//   const auto arr_sS = problem.findsS();
-//   std::cout << "s, S in each period are: " << std::endl;
-//   for (const auto row : arr_sS) {
-//     for (const auto col : row) {
-//       std::cout << col << ' ';
-//     }
-//     std::cout << std::endl;
-//   }
-//
-//   problem.simulatesS(problem.get_initial_state(), arr_sS);
-//   // start_time = std::chrono::high_resolution_clock::now();
-//   const auto arr = problem.computeGy();
-//   // end_time = std::chrono::high_resolution_clock::now();
-//   // time = end_time - start_time;
-//   // std::cout << "running time is " << time.count() << 's' << std::endl;
-//   problem.checkKConvexity(arr);
-//   drawGy(arr, arr_sS[0]);
-//
-//   return 0;
-// }
+std::vector<std::vector<double>> WorkforcePlan::solveMip() {
+  const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
+                                          unit_penalty, turnover_rates, min_workers);
+  double mip_obj = mip->piece_approximate(piece_segment);
+  return {};
+}
+
+int main() {
+  auto problem = WorkforcePlan();
+  const WorkerState ini_state{1, 0};
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  const auto final_value = problem.solve(ini_state)[0];
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time = end_time - start_time;
+  if (problem.get_direction() == Direction::FORWARD)
+    std::cout << "running time is " << time.count() << 's' << std::endl;
+  else {
+    const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
+    std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
+              << time.count() << 's' << std::endl;
+  }
+  std::cout << "Final optimal cost is " << final_value << std::endl;
+  std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
+            << std::endl;
+
+  const auto arr_sS = problem.findsS();
+  std::cout << "s, S in each period are: " << std::endl;
+  for (const auto row : arr_sS) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+
+  problem.simulatesS(problem.get_initial_state(), arr_sS);
+
+  // double mipObj = mip.pieceApprox(segmentNum);
+
+  // start_time = std::chrono::high_resolution_clock::now();
+  const auto arr = problem.computeGy();
+  // end_time = std::chrono::high_resolution_clock::now();
+  // time = end_time - start_time;
+  // std::cout << "running time is " << time.count() << 's' << std::endl;
+  std::cout << "*******************************" << std::endl;
+  problem.checkKConvexity(arr);
+  const auto expect_Gy = problem.computeExpectGy(arr);
+  problem.checkBinomialKConvexity(arr, expect_Gy);
+  problem.checkConvexity(arr);
+  drawGy(arr, arr_sS[0]);
+
+  return 0;
+}
 
 // double recursion2(const WorkerState ini_state) {
 //   const auto actions = feasible_actions();
