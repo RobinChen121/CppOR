@@ -228,3 +228,8 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) {
   }
   return 0;
 }
+
+std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment) {
+  std::vector<std::array<double, 2>> sS(T);
+  return {};
+}
