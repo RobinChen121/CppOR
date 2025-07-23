@@ -44,7 +44,7 @@ int main() {
   double eps = 1e-5;
 
 #pragma omp parallel for
-  for (int b = 181; b <= 190; ++b) { // from 1 to 180
+  for (int b = 191; b <= 200; ++b) { // from 1 to 200
     for (double p = 0.1; p < 1.0; p += 0.01) {
       for (int j = 0; j < b - 1; ++j) {
         int b2 = b - j - 1;
