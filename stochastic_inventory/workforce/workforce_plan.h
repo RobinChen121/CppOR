@@ -94,7 +94,7 @@ public:
   std::vector<std::vector<double>> computeExpectGy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> getOptTable() const;
 
-  std::vector<std::vector<double>> solveMip();
+  std::pair<double, std::vector<std::array<double, 2>>> solveMip() const;
 
   bool checkKConvexity(const std::vector<double> &Gy);
   bool checkBinomialKConvexity(const std::vector<double> &Gy,

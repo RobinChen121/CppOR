@@ -8,6 +8,7 @@
 #include <algorithm> // std::max_element
 #include <boost/math/distributions/binomial.hpp> // for binomial distribution cdf and pdf, random library only for generating random numbers
 #include <numeric> // for using accumulate
+// #include <cmath>
 
 double PiecewiseWorkforce::loss_function(const int y, const int min_workers,
                                          const double turnover_rate) {
@@ -101,7 +102,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
   return result;
 }
 
-double PiecewiseWorkforce::piece_approximate(const int segment_num) {
+double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
   try {
     // gurobi environments and model
     GRBEnv env;
@@ -116,13 +117,14 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) {
     std::vector<std::vector<GRBVar>> P(T);
 
     for (int t = 0; t < T; t++) {
-      P[t].resize(T);
+      P[t].resize(t + 1);
       y[t] = model.addVar(0, GRB_INFINITY, unit_vari_cost, GRB_CONTINUOUS, "y");
       x[t] = model.addVar(0, GRB_INFINITY, salary, GRB_CONTINUOUS, "xt");
       u[t] = model.addVar(0, GRB_INFINITY, unit_penalty, GRB_CONTINUOUS, "u");
       z[t] = model.addVar(0, 1, fix_hire_cost, GRB_BINARY, "z");
-      if (t > 0)
-        x[t - 1] = model.addVar(0, GRB_INFINITY, -unit_vari_cost, GRB_CONTINUOUS, "xt-1");
+      for (int j = 0; j <= t; j++) {
+        P[j][t] = model.addVar(0.0, 1, 0.0, GRB_BINARY, "P");
+      }
     }
 
     // constraints
@@ -135,8 +137,8 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) {
         model.addConstr(y[t] - initial_workers >= 0);
         model.addConstr(y[t] - initial_workers <= z[t] * M);
       } else {
-        model.addConstr(y[t] - initial_workers >= 0);
-        model.addConstr(y[t] - initial_workers <= z[t] * M);
+        model.addConstr(y[t] - x[t - 1] >= 0);
+        model.addConstr(y[t] - x[t - 1] <= z[t] * M);
       }
 
       // sum_{j=1}^t P_{jt} == 1
@@ -178,8 +180,8 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) {
         for (int k = j; k <= t; k++)
           p = p * (1 - turnover_rates[k]);
         auto result = piecewise(segment_num, min_workers[t], 1 - p);
-        auto slopes = result[0];
-        auto intercepts = result[1];
+        const auto& slopes = result[0];
+        const auto& intercepts = result[1];
         auto gaps = result[6];
         double error = *std::ranges::max_element(gaps);
 
@@ -229,7 +231,249 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) {
   return 0;
 }
 
-std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment) {
+std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment_num) const {
   std::vector<std::array<double, 2>> sS(T);
-  return {};
+  for (int tt = 0; tt < T; tt++) {
+    try {
+      // gurobi environments and model
+      GRBEnv env;
+      env.set(GRB_IntParam_OutputFlag, 0);
+      auto model = GRBModel(env);
+
+      std::vector<GRBVar> y(T - tt);
+      std::vector<GRBVar> u(T - tt);
+      std::vector<GRBVar> x(T - tt);
+      std::vector<GRBVar> z(T - tt);
+      std::vector<std::vector<GRBVar>> P(T - tt);
+
+      for (int t = 0; t < T - tt; t++) {
+        P[t].resize(T - t);
+        y[t] = model.addVar(0, GRB_INFINITY, unit_vari_cost, GRB_CONTINUOUS, "y");
+        x[t] = model.addVar(0, GRB_INFINITY, salary, GRB_CONTINUOUS, "xt");
+        u[t] = model.addVar(0, GRB_INFINITY, unit_penalty, GRB_CONTINUOUS, "u");
+        z[t] = model.addVar(0, 1, fix_hire_cost, GRB_BINARY, "z");
+        for (int j = 0; j <= t; j++) {
+          P[j][t] = model.addVar(0.0, 1, 0.0, GRB_BINARY, "P");
+        }
+      }
+      GRBVar S = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "S");
+
+      // constraints
+      // z[0] == 0
+      model.addConstr(z[0] == 0);
+
+      // M can not be too large, or a slight difference of P[j][t] affects results
+      const int M =
+          initial_workers + 50 * std::accumulate(min_workers.begin(), min_workers.end(), 0);
+      for (int t = 0; tt < T - tt; t++) {
+        // y_t - x_{t-1} >= 0
+        // y_t - x_{t-1} <= z_t M
+        if (t == 0) {
+          model.addConstr(y[tt] - S >= 0);
+          model.addConstr(y[tt] - S <= z[tt] * M);
+        } else {
+          model.addConstr(y[tt] - x[tt - 1] >= 0);
+          model.addConstr(y[tt] - x[tt - 1] <= z[tt] * M);
+        }
+
+        // sum_{j=1}^t P_{jt} == 1
+        GRBLinExpr left = 0;
+        for (int j = 0; j < t; j++) {
+          left += P[j][t];
+        }
+        model.addConstr(left == 1);
+
+        // P_{jt} >= z_j - \sum_{k=j+1}^t z[k]
+        for (int j = 0; j <= t; j++) {
+          GRBLinExpr right = 0;
+          for (int k = j + 1; k <= t; k++)
+            right += -z[k];
+          right += z[j];
+          model.addConstr(P[j][t] >= right);
+        }
+
+        // x_t >= y_j(1-p)^{t-j+1} - (1-P_{jt})M
+        // x_t <= y_j(1-p)^{t-j+1} + (1-P_{jt})M
+        // revise
+        for (int j = 0; j <= t; j++) {
+          double p = 1;
+          for (int k = j; k <= t; k++)
+            p = p * (1 - turnover_rates[k]);
+          GRBLinExpr right2;
+          right2 = y[j] * p - (1 - P[j][t]) * M;
+          model.addConstr(x[t] >= right2);
+          GRBLinExpr right3;
+          right3 = y[j] * p + (1 - P[j][t]) * M;
+          model.addConstr(x[t] <= right3);
+        }
+
+        // piecewise constraints
+        // u_t >= \alpha y_j + \beta - (1 - P_{jt})M
+        // something wrong in the piecewise for u[t]
+        for (int j = 0; j <= t; j++) {
+          double p = 1;
+          for (int k = j; k <= t; k++)
+            p = p * (1 - turnover_rates[k]);
+          auto result = piecewise(segment_num, min_workers[t], 1 - p);
+          const auto& slopes = result[0];
+          const auto& intercepts = result[1];
+          auto gaps = result[6];
+          double error = *std::ranges::max_element(gaps);
+
+          for (int m = 0; m < segment_num; m++) {
+            // lower bound
+            model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1));
+
+            // // upper bound
+            // model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1) + error);
+          }
+        }
+      }
+
+      // Optimize model
+      model.optimize();
+
+      // output results
+      double S_value = S.get(GRB_DoubleAttr_X);
+      double GS = model.get(GRB_DoubleAttr_Obj) + unit_vari_cost*S.get(GRB_DoubleAttr_X);
+      sS[tt][1] = S_value;
+
+      // find s
+      double s = find_s(segment_num, S_value, GS, tt);
+      sS[tt][0] = s;
+
+    } catch (GRBException &e) {
+      std::cout << "Error code = " << e.getErrorCode() << std::endl;
+      std::cout << e.getMessage() << std::endl;
+    } catch (...) {
+      std::cout << "Exception during optimization" << std::endl;
+    }
+  }
+  return sS;
+}
+
+double PiecewiseWorkforce:: find_s(int segment_num, double S_value, double GS, int tt) const {
+  double low = 0;
+  double high = S_value;
+  double stepSize = 1;
+  double mid = high/2;
+  while (low < high) {
+    mid = std::round((high+low)/2);
+    try {
+      // gurobi environments and model
+      GRBEnv env;
+      env.set(GRB_IntParam_OutputFlag, 0);
+      auto model = GRBModel(env);
+
+      std::vector<GRBVar> y(T - tt);
+      std::vector<GRBVar> u(T - tt);
+      std::vector<GRBVar> x(T - tt);
+      std::vector<GRBVar> z(T - tt);
+      std::vector<std::vector<GRBVar>> P(T - tt);
+
+      for (int t = 0; t < T - tt; t++) {
+        P[t].resize(T - t);
+        y[t] = model.addVar(0, GRB_INFINITY, unit_vari_cost, GRB_CONTINUOUS, "y");
+        x[t] = model.addVar(0, GRB_INFINITY, salary, GRB_CONTINUOUS, "xt");
+        u[t] = model.addVar(0, GRB_INFINITY, unit_penalty, GRB_CONTINUOUS, "u");
+        z[t] = model.addVar(0, 1, fix_hire_cost, GRB_BINARY, "z");
+        for (int j = 0; j <= t; j++) {
+          P[j][t] = model.addVar(0.0, 1, 0.0, GRB_BINARY, "P");
+        }
+      }
+      GRBVar S = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "S");
+
+      // constraints
+      // z[0] == 0
+      model.addConstr(z[0] == 0);
+      // S == mid
+      model.addConstr(S == mid);
+
+      // M can not be too large, or a slight difference of P[j][t] affects results
+      const int M =
+          initial_workers + 50 * std::accumulate(min_workers.begin(), min_workers.end(), 0);
+      for (int t = 0; tt < T - tt; t++) {
+        // y_t - x_{t-1} >= 0
+        // y_t - x_{t-1} <= z_t M
+        if (t == 0) {
+          model.addConstr(y[tt] - S >= 0);
+          model.addConstr(y[tt] - S <= z[tt] * M);
+        } else {
+          model.addConstr(y[tt] - x[tt - 1] >= 0);
+          model.addConstr(y[tt] - x[tt - 1] <= z[tt] * M);
+        }
+
+        // sum_{j=1}^t P_{jt} == 1
+        GRBLinExpr left = 0;
+        for (int j = 0; j < t; j++) {
+          left += P[j][t];
+        }
+        model.addConstr(left == 1);
+
+        // P_{jt} >= z_j - \sum_{k=j+1}^t z[k]
+        for (int j = 0; j <= t; j++) {
+          GRBLinExpr right = 0;
+          for (int k = j + 1; k <= t; k++)
+            right += -z[k];
+          right += z[j];
+          model.addConstr(P[j][t] >= right);
+        }
+
+        // x_t >= y_j(1-p)^{t-j+1} - (1-P_{jt})M
+        // x_t <= y_j(1-p)^{t-j+1} + (1-P_{jt})M
+        // revise
+        for (int j = 0; j <= t; j++) {
+          double p = 1;
+          for (int k = j; k <= t; k++)
+            p = p * (1 - turnover_rates[k]);
+          GRBLinExpr right2;
+          right2 = y[j] * p - (1 - P[j][t]) * M;
+          model.addConstr(x[t] >= right2);
+          GRBLinExpr right3;
+          right3 = y[j] * p + (1 - P[j][t]) * M;
+          model.addConstr(x[t] <= right3);
+        }
+
+        // piecewise constraints
+        // u_t >= \alpha y_j + \beta - (1 - P_{jt})M
+        // something wrong in the piecewise for u[t]
+        for (int j = 0; j <= t; j++) {
+          double p = 1;
+          for (int k = j; k <= t; k++)
+            p = p * (1 - turnover_rates[k]);
+          auto result = piecewise(segment_num, min_workers[t], 1 - p);
+          const auto& slopes = result[0];
+          const auto& intercepts = result[1];
+          auto gaps = result[6];
+          double error = *std::ranges::max_element(gaps);
+
+          for (int m = 0; m < segment_num; m++) {
+            // lower bound
+            model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1));
+
+            // // upper bound
+            // model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1) + error);
+          }
+        }
+      }
+
+      // Optimize model
+      model.optimize();
+
+      if (double G_mid =
+              model.get(GRB_DoubleAttr_ObjVal) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
+          G_mid < GS + fix_hire_cost)
+        high = mid - stepSize;
+      else if (G_mid > GS + fix_hire_cost)
+        low = mid + stepSize;
+      else
+        low = high;
+    } catch (GRBException &e) {
+      std::cout << "Error code = " << e.getErrorCode() << std::endl;
+      std::cout << e.getMessage() << std::endl;
+    } catch (...) {
+      std::cout << "Exception during optimization" << std::endl;
+    }
+  }
+  return 0;
 }

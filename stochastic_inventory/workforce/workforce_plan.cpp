@@ -436,11 +436,12 @@ bool WorkforcePlan::checkConvexity(const std::vector<double> &Gy) {
   return arr;
 }
 
-std::vector<std::vector<double>> WorkforcePlan::solveMip() {
+std::pair<double, std::vector<std::array<double, 2>>> WorkforcePlan::solveMip() const {
   const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
                                           unit_penalty, turnover_rates, min_workers);
   double mip_obj = mip->piece_approximate(piece_segment);
-  return {};
+  auto sS_values = mip->get_sS(piece_segment);
+  return {mip_obj, sS_values};
 }
 
 int main() {
@@ -472,7 +473,15 @@ int main() {
 
   problem.simulatesS(problem.get_initial_state(), arr_sS);
 
-  // double mipObj = mip.pieceApprox(segmentNum);
+  auto  [fst, snd] = problem.solveMip();
+  std::cout << "the objective by MIP is: " << fst << std::endl;
+  std::cout << "s, S in each period by MIP are: " << std::endl;
+  for (const auto row : snd) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
 
   // start_time = std::chrono::high_resolution_clock::now();
   const auto arr = problem.computeGy();
