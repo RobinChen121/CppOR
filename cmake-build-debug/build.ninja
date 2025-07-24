@@ -1723,7 +1723,7 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o
   DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.d
   FLAGS = -O3 -std=gnu++20 -fdiagnostics-color=always -fopenmp -fopenmp
-  INCLUDES = -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
+  INCLUDES = -IC:/gurobi1202/win64/lib -IC:/gurobi1202/win64/include -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
 
@@ -1731,7 +1731,7 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp
   DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.d
   FLAGS = -O3 -std=gnu++20 -fdiagnostics-color=always -fopenmp -fopenmp
-  INCLUDES = -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
+  INCLUDES = -IC:/gurobi1202/win64/lib -IC:/gurobi1202/win64/include -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
 
@@ -1739,7 +1739,7 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cp
   DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.d
   FLAGS = -O3 -std=gnu++20 -fdiagnostics-color=always -fopenmp -fopenmp
-  INCLUDES = -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
+  INCLUDES = -IC:/gurobi1202/win64/lib -IC:/gurobi1202/win64/include -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils
 
@@ -1747,15 +1747,15 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_g
   DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.d
   FLAGS = -O3 -std=gnu++20 -fdiagnostics-color=always -fopenmp -fopenmp
-  INCLUDES = -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
+  INCLUDES = -IC:/gurobi1202/win64/lib -IC:/gurobi1202/win64/include -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils
 
-build stochastic_inventory/workforce/CMakeFiles/workforce.dir/normal_tail_product_test.cpp.obj: CXX_COMPILER__workforce_unscanned_Release D$:/chenzhen/CppOR/stochastic_inventory/workforce/normal_tail_product_test.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.obj: CXX_COMPILER__workforce_unscanned_Release D$:/chenzhen/CppOR/stochastic_inventory/workforce/piecewise.cpp || cmake_object_order_depends_target_workforce
   DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\normal_tail_product_test.cpp.obj.d
+  DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.d
   FLAGS = -O3 -std=gnu++20 -fdiagnostics-color=always -fopenmp -fopenmp
-  INCLUDES = -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
+  INCLUDES = -IC:/gurobi1202/win64/lib -IC:/gurobi1202/win64/include -ID:/chenzhen/CppOR/cmake-build-debug/_deps/matplotlib_cpp-src -IC:/ProgramData/anaconda3/include -IC:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include -isystem C:/ProgramData/anaconda3/Library/include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
 
@@ -1767,10 +1767,10 @@ build stochastic_inventory/workforce/CMakeFiles/workforce.dir/normal_tail_produc
 #############################################
 # Link the executable stochastic_inventory\workforce\workforce.exe
 
-build stochastic_inventory/workforce/workforce.exe: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/normal_tail_product_test.cpp.obj | C$:/ProgramData/anaconda3/Library/lib/libboost_system.lib C$:/ProgramData/anaconda3/Library/lib/libboost_thread.lib C$:/ProgramData/anaconda3/Library/lib/libboost_filesystem.lib C$:/ProgramData/anaconda3/libs/python312.lib C$:/ProgramData/anaconda3/Library/lib/libboost_chrono.lib C$:/ProgramData/anaconda3/Library/lib/libboost_atomic.lib
+build stochastic_inventory/workforce/workforce.exe: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.obj stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.obj | C$:/gurobi1202/win64/include/gurobi_c++.h C$:/gurobi1202/win64/lib/gurobi120.lib C$:/ProgramData/anaconda3/Library/lib/libboost_system.lib C$:/ProgramData/anaconda3/Library/lib/libboost_thread.lib C$:/ProgramData/anaconda3/Library/lib/libboost_filesystem.lib C$:/ProgramData/anaconda3/libs/python312.lib C$:/ProgramData/anaconda3/Library/lib/libboost_chrono.lib C$:/ProgramData/anaconda3/Library/lib/libboost_atomic.lib
   FLAGS = -O3
   LINK_FLAGS = -fopenmp
-  LINK_LIBRARIES = C:/ProgramData/anaconda3/Library/lib/libboost_system.lib  C:/ProgramData/anaconda3/Library/lib/libboost_thread.lib  C:/ProgramData/anaconda3/Library/lib/libboost_filesystem.lib  C:/ProgramData/anaconda3/libs/python312.lib  C:/ProgramData/anaconda3/Library/lib/libboost_chrono.lib  -lbcrypt  -lsynchronization  C:/ProgramData/anaconda3/Library/lib/libboost_atomic.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = C:/gurobi1202/win64/include/gurobi_c++.h  C:/gurobi1202/win64/lib/gurobi120.lib  C:/ProgramData/anaconda3/Library/lib/libboost_system.lib  C:/ProgramData/anaconda3/Library/lib/libboost_thread.lib  C:/ProgramData/anaconda3/Library/lib/libboost_filesystem.lib  C:/ProgramData/anaconda3/libs/python312.lib  C:/ProgramData/anaconda3/Library/lib/libboost_chrono.lib  -lbcrypt  -lsynchronization  C:/ProgramData/anaconda3/Library/lib/libboost_atomic.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
