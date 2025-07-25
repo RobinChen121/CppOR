@@ -46,8 +46,9 @@ std::array<double, 3> DoubleProduct::solve() const {
   }
 
   // gurobi environments and model
-  GRBEnv env;
+  GRBEnv env = GRBEnv(true); // create an empty environment
   env.set(GRB_IntParam_OutputFlag, 0);
+  env.start(); // necessary
   std::vector<GRBModel> models(T + 1, GRBModel(env));
 
   // decision variables
@@ -202,6 +203,9 @@ std::array<double, 3> DoubleProduct::solve() const {
         int index2 = scenario_paths2[n][t - 1];
         double demand1 = sample_details1[t - 1][index1];
         double demand2 = sample_details2[t - 1][index2];
+        if (index2 >= sample_details2[t - 1].size()) {
+          std::cout << "index error" << std::endl;
+        }
         double rhs1_1 =
             t == 1 ? iniI - demand1
                    : I1_forward_values[iter][t - 2][n] + q1_pre_values[iter][t - 2][n] - demand1;
@@ -406,16 +410,16 @@ std::array<double, 3> DoubleProduct::solve() const {
   return {finalValue, Q1, Q2};
 }
 
-// int main() {
-//   const auto problem = DoubleProduct();
-//   auto start = std::chrono::high_resolution_clock::now();
-//   auto result = problem.solve();
-//   auto end = std::chrono::high_resolution_clock::now();
-//
-//   const std::chrono::duration<double> duration = end - start;
-//   std::cout << "running time is " << duration.count() << 's' << std::endl;
-//   std::cout << "final expected cash balance is " << result[0] << std::endl;
-//   std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
-//   std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
-//   return 0;
-// }
+int main() {
+  const auto problem = DoubleProduct();
+  auto start = std::chrono::high_resolution_clock::now();
+  auto result = problem.solve();
+  auto end = std::chrono::high_resolution_clock::now();
+
+  const std::chrono::duration<double> duration = end - start;
+  std::cout << "running time is " << duration.count() << 's' << std::endl;
+  std::cout << "final expected cash balance is " << result[0] << std::endl;
+  std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
+  std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
+  return 0;
+}

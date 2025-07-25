@@ -78,27 +78,27 @@ public:
   [[nodiscard]] Direction get_direction() const { return direction; };
   [[nodiscard]] WorkerState get_initial_state() const { return ini_state; };
 
-  [[nodiscard]] std::vector<int> feasibleActions() const;
-  [[nodiscard]] double immediateValue(WorkerState ini_state, int action, int overturn_num) const;
-  [[nodiscard]] WorkerState stateTransition(WorkerState ini_state, int action,
-                                            int overturn_num) const;
-  double recursionForward(WorkerState ini_state);
-  void recursionBackwardParallel();
-  void computeStage(int t, int start_inventory, int end_inventory,
-                    std::vector<std::unordered_map<WorkerState, double>> &values,
-                    std::vector<std::unordered_map<WorkerState, double>> &policies);
+  [[nodiscard]] std::vector<int> get_feasible_actions() const;
+  [[nodiscard]] double immediate_value(WorkerState ini_state, int action, int overturn_num) const;
+  [[nodiscard]] WorkerState state_transition(WorkerState ini_state, int action,
+                                             int overturn_num) const;
+  double recursion_forward(WorkerState ini_state);
+  void recursion_backward_parallel();
+  void compute_stage(int t, int start_inventory, int end_inventory,
+                     std::vector<std::unordered_map<WorkerState, double>> &values,
+                     std::vector<std::unordered_map<WorkerState, double>> &policies);
   std::vector<double> solve(WorkerState ini_state);
-  [[nodiscard]] std::vector<std::array<int, 2>> findsS() const;
-  void simulatesS(WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const;
-  std::vector<double> computeGy();
-  std::vector<std::vector<double>> computeExpectGy(const std::vector<double> &Gy) const;
-  [[nodiscard]] std::vector<std::vector<double>> getOptTable() const;
+  [[nodiscard]] std::vector<std::array<int, 2>> find_sS() const;
+  void simulate_sS(WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const;
+  std::vector<double> compute_Gy();
+  std::vector<std::vector<double>> compute_expect_Gy(const std::vector<double> &Gy) const;
+  [[nodiscard]] std::vector<std::vector<double>> get_opt_table() const;
 
-  std::pair<double, std::vector<std::array<double, 2>>> solveMip() const;
+  std::pair<double, std::vector<std::array<double, 2>>> solve_mip() const;
 
-  bool checkKConvexity(const std::vector<double> &Gy);
-  bool checkBinomialKConvexity(const std::vector<double> &Gy,
-                               const std::vector<std::vector<double>> &expect_Gy);
-  bool checkConvexity(const std::vector<double> &Gy);
+  bool check_K_convexity(const std::vector<double> &Gy);
+  bool check_Binomial_KConvexity(const std::vector<double> &Gy,
+                                 const std::vector<std::vector<double>> &expect_Gy);
+  bool check_convexity(const std::vector<double> &Gy);
 };
 #endif // WORKFORCE_PLAN_H

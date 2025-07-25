@@ -9,7 +9,7 @@
 #ifndef DOUBLE_PRODUCT_H
 #define DOUBLE_PRODUCT_H
 
-#include "../../utils/fileOperations.h"
+#include "../../utils/common.h"
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 #include <iomanip> // for precision
@@ -21,7 +21,7 @@ private:
   double iniI = 0;
   double iniCash = 0;
 
-  std::vector<double> mean_demand1 = {30, 30, 30, 30, 30, 30};
+  std::vector<double> mean_demand1 = {30, 30, 30, 30};
   size_t T = mean_demand1.size(); // 直接获取大小
   std::vector<double> mean_demand2 = std::vector<double>(T);
   std::vector<double> demand1_weights = std::vector{0.25, 0.5, 0.25};
@@ -43,7 +43,7 @@ private:
   // sddp settings
   int sample_num = 20;  // 10;
   int forward_num = 10; // 20;
-  int iter_num = 100;
+  int iter_num = 50;
   double theta_initial_value = -1000;
 
 public:
