@@ -23,6 +23,9 @@ double PiecewiseWorkforce::loss_function(const int y, const int min_workers,
 
 double PiecewiseWorkforce::Fy(const int y, const int min_workers, const double turnover_rate) {
   const boost::math::binomial_distribution<double> dist(y, turnover_rate);
+  if (y - min_workers < 0) {
+    return 0;
+  }
   return cdf(dist, y - min_workers);
 }
 
@@ -62,6 +65,9 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
       slopes[i] = slopes[i - 1];
 
       for (int j = a + 1; j <= end_x; j++) {
+        double test = 1.0 / segment_num;
+        double test1 = Fy(j, min_workers, p);
+        double test2 = Fy(a, min_workers, p);
         if (Fy(j, min_workers, p) - Fy(a, min_workers, p) > 1.0 / segment_num) {
           tangent_xcoord[i] = j;
           const int b = static_cast<int>(tangent_xcoord[i]);
@@ -105,8 +111,9 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
 double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
   try {
     // gurobi environments and model
-    GRBEnv env;
+    GRBEnv env = GRBEnv(true); // create an empty environment
     env.set(GRB_IntParam_OutputFlag, 0);
+    env.start(); // necessary
     auto model = GRBModel(env);
 
     // Create variables
@@ -180,8 +187,8 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
         for (int k = j; k <= t; k++)
           p = p * (1 - turnover_rates[k]);
         auto result = piecewise(segment_num, min_workers[t], 1 - p);
-        const auto& slopes = result[0];
-        const auto& intercepts = result[1];
+        const auto &slopes = result[0];
+        const auto &intercepts = result[1];
         auto gaps = result[6];
         double error = *std::ranges::max_element(gaps);
 
@@ -236,8 +243,9 @@ std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment_num) c
   for (int tt = 0; tt < T; tt++) {
     try {
       // gurobi environments and model
-      GRBEnv env;
+      GRBEnv env = GRBEnv(true); // create an empty environment
       env.set(GRB_IntParam_OutputFlag, 0);
+      env.start(); // necessary
       auto model = GRBModel(env);
 
       std::vector<GRBVar> y(T - tt);
@@ -315,8 +323,8 @@ std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment_num) c
           for (int k = j; k <= t; k++)
             p = p * (1 - turnover_rates[k]);
           auto result = piecewise(segment_num, min_workers[t], 1 - p);
-          const auto& slopes = result[0];
-          const auto& intercepts = result[1];
+          const auto &slopes = result[0];
+          const auto &intercepts = result[1];
           auto gaps = result[6];
           double error = *std::ranges::max_element(gaps);
 
@@ -325,7 +333,8 @@ std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment_num) c
             model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1));
 
             // // upper bound
-            // model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1) + error);
+            // model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1) +
+            // error);
           }
         }
       }
@@ -335,7 +344,7 @@ std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment_num) c
 
       // output results
       double S_value = S.get(GRB_DoubleAttr_X);
-      double GS = model.get(GRB_DoubleAttr_Obj) + unit_vari_cost*S.get(GRB_DoubleAttr_X);
+      double GS = model.get(GRB_DoubleAttr_Obj) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
       sS[tt][1] = S_value;
 
       // find s
@@ -352,17 +361,18 @@ std::vector<std::array<double, 2>> PiecewiseWorkforce::get_sS(int segment_num) c
   return sS;
 }
 
-double PiecewiseWorkforce:: find_s(int segment_num, double S_value, double GS, int tt) const {
+double PiecewiseWorkforce::find_s(int segment_num, double S_value, double GS, int tt) const {
   double low = 0;
   double high = S_value;
   double stepSize = 1;
-  double mid = high/2;
+  double mid = high / 2;
   while (low < high) {
-    mid = std::round((high+low)/2);
+    mid = std::round((high + low) / 2);
     try {
       // gurobi environments and model
-      GRBEnv env;
+      auto env = GRBEnv(true); // create an empty environment
       env.set(GRB_IntParam_OutputFlag, 0);
+      env.start(); // necessary
       auto model = GRBModel(env);
 
       std::vector<GRBVar> y(T - tt);
@@ -442,8 +452,8 @@ double PiecewiseWorkforce:: find_s(int segment_num, double S_value, double GS, i
           for (int k = j; k <= t; k++)
             p = p * (1 - turnover_rates[k]);
           auto result = piecewise(segment_num, min_workers[t], 1 - p);
-          const auto& slopes = result[0];
-          const auto& intercepts = result[1];
+          const auto &slopes = result[0];
+          const auto &intercepts = result[1];
           auto gaps = result[6];
           double error = *std::ranges::max_element(gaps);
 
@@ -452,7 +462,8 @@ double PiecewiseWorkforce:: find_s(int segment_num, double S_value, double GS, i
             model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1));
 
             // // upper bound
-            // model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1) + error);
+            // model.addConstr(u[t] >= slopes[m] * y[j] + intercepts[m] + M * (P[j][t] - 1) +
+            // error);
           }
         }
       }
@@ -475,5 +486,6 @@ double PiecewiseWorkforce:: find_s(int segment_num, double S_value, double GS, i
       std::cout << "Exception during optimization" << std::endl;
     }
   }
-  return 0;
+  double s = mid - 1;
+  return s;
 }

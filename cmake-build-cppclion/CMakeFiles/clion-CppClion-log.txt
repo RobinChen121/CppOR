@@ -3,6 +3,6 @@ mac
 -- Could NOT find WrapVulkanHeaders (missing: Vulkan_INCLUDE_DIR) 
 -- Qt6 Core and Widgets found.
 test
--- Configuring done (0.3s)
--- Generating done (0.1s)
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
 -- Build files have been written to: /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion

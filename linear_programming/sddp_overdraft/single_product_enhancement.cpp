@@ -21,8 +21,9 @@ std::array<double, 2> SingleProduct::solve() const {
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
 
   // 创建 Gurobi 环境与模型
-  GRBEnv env;
+  GRBEnv env = GRBEnv(true);
   env.set(GRB_IntParam_OutputFlag, 0);
+  env.start();
   std::vector<GRBModel> models(T + 1, GRBModel(env));
 
   // decision variables
@@ -360,15 +361,15 @@ std::array<double, 2> SingleProduct::solve() const {
   return {finalValue, Q1};
 }
 
-// int main() {
-//   auto singleProduct = SingleProduct();
-//   const auto start_time = std::chrono::high_resolution_clock::now();
-//   double finalValue = singleProduct.solve()[0];
-//   const auto end_time = std::chrono::high_resolution_clock::now();
-//   const std::chrono::duration<double> diff = end_time - start_time;
-//   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-//   double optimal_value = 167.31;
-//   double gap = (finalValue - optimal_value) / optimal_value;
-//   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
-//   return 0;
-// }
+int main() {
+  auto singleProduct = SingleProduct();
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  double finalValue = singleProduct.solve()[0];
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> diff = end_time - start_time;
+  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+  double optimal_value = 167.31;
+  double gap = (finalValue - optimal_value) / optimal_value;
+  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+  return 0;
+}

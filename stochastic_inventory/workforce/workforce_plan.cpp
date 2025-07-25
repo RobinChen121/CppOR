@@ -47,15 +47,15 @@ void WorkforcePlan::set_turnover_rate(const double value) {
   varied_parameter = "turnover_rates = " + vectorToString(turnover_rates);
 };
 
-[[nodiscard]] std::vector<int> WorkforcePlan::feasibleActions() const {
+[[nodiscard]] std::vector<int> WorkforcePlan::get_feasible_actions() const {
   std::vector<int> actions(max_hire_num + 1);
   for (int i = 0; i <= max_hire_num; i++)
     actions[i] = i;
   return actions;
 }
 
-[[nodiscard]] double WorkforcePlan::immediateValue(const WorkerState ini_state, const int action,
-                                                   const int overturn_num) const {
+[[nodiscard]] double WorkforcePlan::immediate_value(const WorkerState ini_state, const int action,
+                                                    const int overturn_num) const {
   double fix_cost = action > 0 ? fix_hire_cost : 0;
   double vari_cost = unit_vari_cost * action;
   int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
@@ -73,9 +73,9 @@ void WorkforcePlan::set_turnover_rate(const double value) {
   return total_cost;
 }
 
-[[nodiscard]] WorkerState WorkforcePlan::stateTransition(const WorkerState ini_state,
-                                                         const int action,
-                                                         const int overturn_num) const {
+[[nodiscard]] WorkerState WorkforcePlan::state_transition(const WorkerState ini_state,
+                                                          const int action,
+                                                          const int overturn_num) const {
   int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
   if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
     next_workers = ini_state.getInitialWorkers() - overturn_num;
@@ -86,7 +86,7 @@ void WorkforcePlan::set_turnover_rate(const double value) {
   return {ini_state.getPeriod() + 1, next_workers};
 }
 
-double WorkforcePlan::recursionForward(const WorkerState ini_state) {
+double WorkforcePlan::recursion_forward(const WorkerState ini_state) {
   int best_hire_num = 0;
   double best_cost = std::numeric_limits<double>::max();
   const int t = ini_state.getPeriod() - 1;
@@ -95,7 +95,7 @@ double WorkforcePlan::recursionForward(const WorkerState ini_state) {
   if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
     actions = {0};
   else {
-    actions = feasibleActions();
+    actions = get_feasible_actions();
   }
   for (const int action : actions) {
     double this_value = 0;
@@ -105,16 +105,16 @@ double WorkforcePlan::recursionForward(const WorkerState ini_state) {
       hire_up_to = static_cast<int>(pmf[t].size() - 1);
 
     for (const auto &d_and_p = pmf[t][hire_up_to]; const double prob : d_and_p) {
-      this_value += prob * immediateValue(ini_state, action, turnover_num);
+      this_value += prob * immediate_value(ini_state, action, turnover_num);
       if (t < T - 1) {
         // std::unordered_map、std::map 等容器的 .contains(key) 方法是 从 C++20 才引入的
         // 用 find 速度更快些，相对于 cache_values.at[new_state] 和 cache_values[new_state]
         // cache_values.at[new_state] 或 cache_values[new_state] 会再触发一次哈希查找
-        auto new_state = stateTransition(ini_state, action, turnover_num);
+        auto new_state = state_transition(ini_state, action, turnover_num);
         if (auto it = cache_values.find(new_state); it != cache_values.end())
           this_value += prob * it->second;
         else
-          this_value += prob * recursionForward(new_state);
+          this_value += prob * recursion_forward(new_state);
       }
       ++turnover_num; // 比 turnover_num++ 更快点，因为并不使用 turnover_num 的原值
     }
@@ -128,7 +128,7 @@ double WorkforcePlan::recursionForward(const WorkerState ini_state) {
   return best_cost;
 }
 
-void WorkforcePlan::recursionBackwardParallel() {
+void WorkforcePlan::recursion_backward_parallel() {
   values.resize(T + 1);
   policies.resize(T);
 
@@ -157,7 +157,7 @@ void WorkforcePlan::recursionBackwardParallel() {
 
       // std::thread 构造函数参数始终默认按值传递, 即使参数前用 & 也是，此时 & 表示指针，不是引用
       // & 在声明变量或函数构造时中跟参数表示引用，调用函数时跟参数表示指针
-      threads.emplace_back(&WorkforcePlan::computeStage, this, t, start_workers, end_workers,
+      threads.emplace_back(&WorkforcePlan::compute_stage, this, t, start_workers, end_workers,
                            std::ref(values), std::ref(policies));
     }
     for (auto &thread : threads) {
@@ -167,19 +167,19 @@ void WorkforcePlan::recursionBackwardParallel() {
   }
 }
 
-void WorkforcePlan::computeStage(const int t, const int start_inventory, const int end_inventory,
-                                 std::vector<std::unordered_map<WorkerState, double>> &values,
-                                 std::vector<std::unordered_map<WorkerState, double>> &policies) {
+void WorkforcePlan::compute_stage(const int t, const int start_inventory, const int end_inventory,
+                                  std::vector<std::unordered_map<WorkerState, double>> &values,
+                                  std::vector<std::unordered_map<WorkerState, double>> &policies) {
   for (int i = start_inventory; i <= end_inventory; i++) {
     double bestQ = 0.0;
     double best_value = std::numeric_limits<double>::max();
     WorkerState ini_state(t + 1, i);
 
-    std::vector<int> actions = feasibleActions();
+    std::vector<int> actions = get_feasible_actions();
     if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
       actions = {0};
     else {
-      actions = feasibleActions();
+      actions = get_feasible_actions();
     }
     for (const int action : actions) {
       double this_value = 0;
@@ -188,9 +188,9 @@ void WorkforcePlan::computeStage(const int t, const int start_inventory, const i
       if (hire_up_to >= pmf[t].size() - 1)
         hire_up_to = static_cast<int>(pmf[t].size() - 1);
       for (const auto &demand_prob : pmf[t][hire_up_to]) {
-        this_value += demand_prob * immediateValue(ini_state, action, demand);
+        this_value += demand_prob * immediate_value(ini_state, action, demand);
         if (t < T - 1) {
-          auto new_state = stateTransition(ini_state, action, demand);
+          auto new_state = state_transition(ini_state, action, demand);
           this_value += demand_prob * values[t + 1][new_state];
         }
         ++demand;
@@ -209,12 +209,12 @@ void WorkforcePlan::computeStage(const int t, const int start_inventory, const i
 
 std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
   if (direction == Direction::FORWARD)
-    return {recursionForward(ini_state), cache_actions.at(ini_state)};
-  recursionBackwardParallel();
+    return {recursion_forward(ini_state), cache_actions.at(ini_state)};
+  recursion_backward_parallel();
   return {values[0][ini_state], policies[0][ini_state]};
 }
 
-[[nodiscard]] std::vector<std::array<int, 2>> WorkforcePlan::findsS() const {
+[[nodiscard]] std::vector<std::array<int, 2>> WorkforcePlan::find_sS() const {
   std::vector<std::array<int, 2>> arr(T);
 
   if (direction == Direction::FORWARD) {
@@ -249,8 +249,8 @@ std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
   return arr;
 }
 
-void WorkforcePlan::simulatesS(const WorkerState ini_state,
-                               const std::vector<std::array<int, 2>> &sS) const {
+void WorkforcePlan::simulate_sS(const WorkerState ini_state,
+                                const std::vector<std::array<int, 2>> &sS) const {
   std::vector<int> sample_nums(T);
   int sample_num_total = 1;
   std::vector<int> sample_num_accumulate(T);
@@ -285,12 +285,12 @@ void WorkforcePlan::simulatesS(const WorkerState ini_state,
       std::binomial_distribution<> dist(hire_up_to, turnover_rates[t]); // 二项分布
       for (size_t k = 0; k < K; ++k) {
         const int random_demand = dist(gen);
-        WorkerState new_state = stateTransition(this_ini_state, Q, random_demand);
+        WorkerState new_state = state_transition(this_ini_state, Q, random_demand);
         inventories[t].push_back(new_state.getInitialWorkers());
         if (t == 0)
-          costs[t].push_back(immediateValue(this_ini_state, Q, random_demand));
+          costs[t].push_back(immediate_value(this_ini_state, Q, random_demand));
         else
-          costs[t].push_back(costs[t - 1][i] + immediateValue(this_ini_state, Q, random_demand));
+          costs[t].push_back(costs[t - 1][i] + immediate_value(this_ini_state, Q, random_demand));
       }
     }
   }
@@ -302,7 +302,7 @@ void WorkforcePlan::simulatesS(const WorkerState ini_state,
 }
 
 // row index is y;
-std::vector<double> WorkforcePlan::computeGy() {
+std::vector<double> WorkforcePlan::compute_Gy() {
   const int y_length = max_worker_num;
   std::vector<double> Gy(y_length);
   to_compute_gy = ToComputeGy::True;
@@ -320,7 +320,7 @@ std::vector<double> WorkforcePlan::computeGy() {
 // the first element is a;
 // the second element is the expectation value;
 std::vector<std::vector<double>>
-WorkforcePlan::computeExpectGy(const std::vector<double> &Gy) const {
+WorkforcePlan::compute_expect_Gy(const std::vector<double> &Gy) const {
   const int y_length = max_worker_num;
   std::vector<std::vector<double>> expect_Gy(y_length);
 
@@ -339,7 +339,7 @@ WorkforcePlan::computeExpectGy(const std::vector<double> &Gy) const {
   return expect_Gy;
 }
 
-bool WorkforcePlan::checkKConvexity(const std::vector<double> &Gy) {
+bool WorkforcePlan::check_K_convexity(const std::vector<double> &Gy) {
   const int y_length = Gy.size();
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
@@ -360,8 +360,8 @@ bool WorkforcePlan::checkKConvexity(const std::vector<double> &Gy) {
   return true;
 }
 
-bool WorkforcePlan::checkBinomialKConvexity(const std::vector<double> &Gy,
-                                            const std::vector<std::vector<double>> &expect_Gy) {
+bool WorkforcePlan::check_Binomial_KConvexity(const std::vector<double> &Gy,
+                                              const std::vector<std::vector<double>> &expect_Gy) {
   const int y_length = static_cast<int>(Gy.size());
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
@@ -387,7 +387,7 @@ bool WorkforcePlan::checkBinomialKConvexity(const std::vector<double> &Gy,
   return true;
 }
 
-bool WorkforcePlan::checkConvexity(const std::vector<double> &Gy) {
+bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
   const int y_length = Gy.size();
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
@@ -411,7 +411,7 @@ bool WorkforcePlan::checkConvexity(const std::vector<double> &Gy) {
   return true;
 }
 
-[[nodiscard]] std::vector<std::vector<double>> WorkforcePlan::getOptTable() const {
+[[nodiscard]] std::vector<std::vector<double>> WorkforcePlan::get_opt_table() const {
   std::vector<std::vector<double>> arr;
   if (direction == Direction::FORWARD) {
     arr.reserve(cache_actions.size()); // 预分配空间
@@ -436,7 +436,7 @@ bool WorkforcePlan::checkConvexity(const std::vector<double> &Gy) {
   return arr;
 }
 
-std::pair<double, std::vector<std::array<double, 2>>> WorkforcePlan::solveMip() const {
+std::pair<double, std::vector<std::array<double, 2>>> WorkforcePlan::solve_mip() const {
   const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
                                           unit_penalty, turnover_rates, min_workers);
   double mip_obj = mip->piece_approximate(piece_segment);
@@ -462,7 +462,7 @@ int main() {
   std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
             << std::endl;
 
-  const auto arr_sS = problem.findsS();
+  const auto arr_sS = problem.find_sS();
   std::cout << "s, S in each period are: " << std::endl;
   for (const auto row : arr_sS) {
     for (const auto col : row) {
@@ -471,9 +471,10 @@ int main() {
     std::cout << std::endl;
   }
 
-  problem.simulatesS(problem.get_initial_state(), arr_sS);
+  problem.simulate_sS(problem.get_initial_state(), arr_sS);
 
-  auto  [fst, snd] = problem.solveMip();
+  std::cout << "******************** " << std::endl;
+  auto [fst, snd] = problem.solve_mip();
   std::cout << "the objective by MIP is: " << fst << std::endl;
   std::cout << "s, S in each period by MIP are: " << std::endl;
   for (const auto row : snd) {
@@ -484,15 +485,15 @@ int main() {
   }
 
   // start_time = std::chrono::high_resolution_clock::now();
-  const auto arr = problem.computeGy();
+  const auto arr = problem.compute_Gy();
   // end_time = std::chrono::high_resolution_clock::now();
   // time = end_time - start_time;
   // std::cout << "running time is " << time.count() << 's' << std::endl;
   std::cout << "*******************************" << std::endl;
-  problem.checkKConvexity(arr);
-  const auto expect_Gy = problem.computeExpectGy(arr);
-  problem.checkBinomialKConvexity(arr, expect_Gy);
-  problem.checkConvexity(arr);
+  problem.check_K_convexity(arr);
+  const auto expect_Gy = problem.compute_expect_Gy(arr);
+  problem.check_Binomial_KConvexity(arr, expect_Gy);
+  problem.check_convexity(arr);
   drawGy(arr, arr_sS[0]);
 
   return 0;

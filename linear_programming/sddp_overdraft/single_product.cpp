@@ -19,7 +19,7 @@ std::array<double, 2> SingleProduct::solve() const {
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
 
   // gurobi environments and model
-  GRBEnv env;
+  GRBEnv env = GRBEnv(true);
   env.set(GRB_IntParam_OutputFlag, 0);
   std::vector<GRBModel> models(T + 1, GRBModel(env));
 

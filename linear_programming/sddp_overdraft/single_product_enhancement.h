@@ -9,7 +9,7 @@
 #ifndef SINGLE_PRODUCT_ENHANCEMENT_H
 #define SINGLE_PRODUCT_ENHANCEMENT_H
 
-#include "../../utils/fileOperations.h"
+#include "../../utils/common.h"
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 #include <vector>

@@ -104,8 +104,9 @@ std::array<double, 3> DoubleProduct::solve() const {
   std::vector<std::vector<double>> sample_details2(T);
 
   // gurobi environments and model
-  GRBEnv env;
+  GRBEnv env = GRBEnv(true);
   env.set(GRB_IntParam_OutputFlag, 0);
+  env.start();
   std::vector<GRBModel> models(T + 1, GRBModel(env));
 
   // decision variables
