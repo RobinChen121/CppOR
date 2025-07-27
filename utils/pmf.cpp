@@ -211,9 +211,9 @@ PMF::getPMFSelfDiscreteMulti(const std::vector<std::vector<double>> &demand1_val
   return pmf;
 }
 
-// int main() {
-//   constexpr double ps[] = {0.5, 0.5};
-//
-//   auto pmf = PMF::getPMFBinomial(10, ps);
-//   std::cout << "test" << std::endl;
-// }
+int main() {
+  constexpr double ps[] = {0.5, 0.5};
+
+  auto pmf = PMF::getPMFBinomial(10, ps);
+  std::cout << "test" << std::endl;
+}

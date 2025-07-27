@@ -1,0 +1,239 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "_deps/matplotlib_cpp-build",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.matplotlib_cpp-build-Debug-234ffb3f8210c16221a2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "cmake-build-debug/_deps/matplotlib_cpp-src",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Project",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "matplotlib_cpp",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "animation::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-animation-Debug-f62afb8b9cc05c7ad5bb.json",
+					"name" : "animation",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "bar::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-bar-Debug-8531439d4d985ddef9ac.json",
+					"name" : "bar",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "basic::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-basic-Debug-d54ac933c13774059666.json",
+					"name" : "basic",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "colorbar::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-colorbar-Debug-09073d27457ed18f2278.json",
+					"name" : "colorbar",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "contour::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-contour-Debug-55fcc7b0f8924cb8ffed.json",
+					"name" : "contour",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "fill::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-fill-Debug-f971d9462f10e7e23d8b.json",
+					"name" : "fill",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "fill_inbetween::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-fill_inbetween-Debug-e079dbdd5b14add28622.json",
+					"name" : "fill_inbetween",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "junior_practice::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-junior_practice-Debug-7f9c62889c5b561288a6.json",
+					"name" : "junior_practice",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "lines3d::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-lines3d-Debug-d4e89094c15c6ce26f55.json",
+					"name" : "lines3d",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "minimal::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-minimal-Debug-69f64e3078abf72353e1.json",
+					"name" : "minimal",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "modern::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-modern-Debug-15206e5a3f8d7aa40c9c.json",
+					"name" : "modern",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "nonblock::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-nonblock-Debug-7ffcbd833f39b13bffda.json",
+					"name" : "nonblock",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "spy::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-spy-Debug-f4729073e5aa4b2d085b.json",
+					"name" : "spy",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "subplot2grid::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-subplot2grid-Debug-42912a88a89b8a510bd4.json",
+					"name" : "subplot2grid",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "surface::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-surface-Debug-cbab9aed6a2993030365.json",
+					"name" : "surface",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "update::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-update-Debug-c38d1ac8d0a4a20df4d0.json",
+					"name" : "update",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "xkcd::@3a94670b1d6c775aa564",
+					"jsonFile" : "target-xkcd-Debug-1bd39207d56213d51dd2.json",
+					"name" : "xkcd",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/chenzhen/CppOR/junior_practices/cmake-build-debug",
+		"source" : "D:/chenzhen/CppOR/junior_practices"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

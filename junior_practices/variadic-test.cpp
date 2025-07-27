@@ -31,7 +31,7 @@ template <typename... Args> auto subtractRight(Args... args) {
 
 // C++11 使用可变参数模板
 // 基本函数（终止递归）
-void print() { std::cout << "结束" << std::endl; }
+void print() { std::cout << "end" << std::endl; }
 
 // 可变参数模板
 template <typename T, typename... Args> // 这个... 表示多种不同的变量类型
@@ -47,7 +47,7 @@ template <typename... Args> void printSize(Args... args) {
 
 int main() {
   std::cout << sum2(1, 2, 3, 4, 5) << std::endl; // 输出: 15
-  print(1, 2.5, "Hello", 'A');
+  print(1, 2.5, "Hello 测试", 'A');
 
   std::cout << subtractLeft(10, 3, 2, 1) << std::endl;
   std::cout << subtractRight(10, 3, 2, 1) << std::endl;

@@ -1,6 +1,7 @@
 //
 // Created by Zhen Chen on 2025/2/28.
 //
+// must install gnuplot in the computer first.
 
 #include <iostream>
 #include <fstream>
