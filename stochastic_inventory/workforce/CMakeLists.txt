@@ -50,7 +50,7 @@ else ()
     target_link_libraries(${RUN_NAME}
             PRIVATE
             "${GUROBI_INCLUDE_DIR}/gurobi_c++.h"
-            "${GUROBI_LIB_DIR}/gurobi120.lib" #
+            "${GUROBI_LIB_DIR}/gurobi120.lib"
     )
 endif ()
 

@@ -1,40 +1,60 @@
 set(RUN_NAME junior_practice) # the name of configuration target
-if (POLICY CMP0153)
-    cmake_policy(SET CMP0153 OLD)
-endif ()
 
+set(CMAKE_BUILD_TYPE Release)
+if (MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+else()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
 
 add_executable(${RUN_NAME}
+        cmath_test.cpp
         #        pair_test.cpp
-        #       spdlog_test.cpp
+#               spdlog_test.cpp
         #        eigen3_test.cpp
-        draw_animation.cpp
-        #        qt_test.cpp
-        #        openMP_test.cpp
+#        draw_animation.cpp
+#        draw_QPainter_bar.cpp
+#        draw_QPainter_line.cpp
+#                variadic-test.cpp
+#                qt_test.cpp
+
+#                openMP_test2.cpp
 )
 
-include(FetchContent) # it can fetch content automatically
+# boost setting
+if(MSVC)
+    set(BOOST_ROOT "C:/local/boost_1_88_0")
+    set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+    set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
+    include_directories(${BOOST_INCLUDEDIR})
+    link_directories(${BOOST_LIBRARYDIR})
+    set(BOOST_LIBS
+            boost_system-vc143-mt-x64-1_88
+            boost_thread-vc143-mt-x64-1_88
+            boost_filesystem-vc143-mt-x64-1_88
+    )
+    target_link_libraries(${RUN_NAME} PRIVATE
+            "${BOOST_LIBRARYDIR}/boost_system-vc143-mt-x64-1_88.lib"
+            "${BOOST_LIBRARYDIR}/boost_thread-vc143-mt-x64-1_88.lib"
+            "${BOOST_LIBRARYDIR}/boost_filesystem-vc143-mt-x64-1_88.lib"
+    )
+else ()
+    find_package(Boost REQUIRED COMPONENTS system thread filesystem)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
+endif()
 
-# Qt is too large, can't use FetchContent for it and should be download to
-# the computer first yourself
-# 设置 Qt 安装路径
-if (APPLE)
-    message("mac")
-else ()
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.9.1/mingw_64")
-endif ()
+#include(FetchContent) # it can fetch content automatically, for mingw
+
+# Qt setting
 find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
-if (Qt6Core_FOUND AND Qt6Widgets_FOUND)
-    message(STATUS "Qt6 Core and Widgets found.")
-else ()
-    message(FATAL_ERROR "Qt6 components not found.")
-endif ()
+message(STATUS "Qt6 found at: ${Qt6_DIR}")
 # link Qt
 target_link_libraries(${RUN_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 
+
 #-----------------------------------
-# OpenMP is also too large and needs to be downloaded to the computer yourself first
-# parallel computing api
+# OpenMP needs to be downloaded to the mac, parallel computing api
 if (APPLE)
     set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
     set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.0/lib") # /libomp.dylib
@@ -49,75 +69,55 @@ if (APPLE)
     include_directories(${OpenMP_INCLUDE_DIR})
 else ()
     find_package(OpenMP REQUIRED)
-    target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
-    target_link_options(${RUN_NAME} PRIVATE -fopenmp)
+    if (MSVC)
+        target_compile_options(junior_practice PRIVATE /openmp)
+    else ()
+        target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
+        target_link_options(${RUN_NAME} PRIVATE -fopenmp)
+    endif ()
     if (OpenMP_CXX_FOUND)
         target_link_libraries(${RUN_NAME} PRIVATE OpenMP::OpenMP_CXX)
     endif ()
 endif ()
 
-
 #-----------------------------------
-# Eigen3
-# 高性能、跨平台的 C++ 线性代数库
-# 下载 Eigen3（官方 GitHub）
-#FetchContent_Declare(
-#        eigen
-#        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-#        GIT_TAG        3.4.0  # 或最新版本
-#)
-#FetchContent_MakeAvailable(eigen)
-## 不需要 link，只需要 include
-#target_include_directories(${RUN_NAME} PRIVATE ${eigen_SOURCE_DIR})
-
-# boost
-find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
-
-#-----------------------------------
-# spdlog
-# 日志库,这个不适合 fetchcontent
-#FetchContent_Declare(
-#        spdlog
-#        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-#        GIT_TAG        v1.13.0  # 指定版本号
-#)
-#FetchContent_MakeAvailable(spdlog)
-#target_link_libraries(${RUN_NAME} PRIVATE spdlog::spdlog)
-
-#-----------------------------------
-# 下面为调用 matplotlibcpp 的设置
+# matplotlib setting
 if (APPLE)
-    # 设置 Python 头文件路径
+    # python head file
     include_directories(/opt/anaconda3/include/python3.12)
-    # numpy 头文件路径
+    # numpy head file
     include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
-    # 链接所需库
     target_link_libraries(${RUN_NAME} PRIVATE
             /opt/anaconda3/lib/libpython3.12.dylib
             dl
     )
 else ()
-    FetchContent_Declare(
-            matplotlib_cpp
-            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
-            GIT_TAG master
-    )
-    FetchContent_MakeAvailable(matplotlib_cpp)
-    # Include matplotlib-cpp
-    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
-    # Link Python and NumPy
-    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
-    target_include_directories(${RUN_NAME} PRIVATE
-            ${Python3_INCLUDE_DIRS}
-            ${Python3_NumPy_INCLUDE_DIRS}
-    )
+    include_directories(C:/ProgramData/anaconda3/include/)
+    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
     target_link_libraries(${RUN_NAME} PRIVATE
-            ${Python3_LIBRARIES}
+            C:/ProgramData/anaconda3/libs/python312.lib
     )
+
+#    FetchContent_Declare(
+#            matplotlib_cpp
+#            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
+#            GIT_TAG master
+#    )
+#    FetchContent_MakeAvailable(matplotlib_cpp)
+#    # Include matplotlib-cpp
+#    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
+#    # Link Python and NumPy
+#    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+#    target_include_directories(${RUN_NAME} PRIVATE
+#            ${Python3_INCLUDE_DIRS}
+#            ${Python3_NumPy_INCLUDE_DIRS}
+#    )
+#    target_link_libraries(${RUN_NAME} PRIVATE
+#            ${Python3_LIBRARIES}
+#    )
 endif ()
 
-
+# Eigen3 setting
 if (APPLE)
     find_package(Eigen3 REQUIRED)
     target_link_libraries(${RUN_NAME} PRIVATE Eigen3::Eigen)
@@ -126,11 +126,12 @@ else ()
     target_include_directories(${RUN_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
 endif ()
 
+# spdlog setting
 if (APPLE)
     find_package(spdlog)
     target_link_libraries(${RUN_NAME} PRIVATE spdlog::spdlog)
 else ()
-    # 添加头文件路径
+    # ???????????
     target_include_directories(${RUN_NAME} PRIVATE "D:/c++Library/spdlog/include")
 endif ()
 

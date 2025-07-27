@@ -24,6 +24,7 @@ double PiecewiseWorkforce::loss_function(const int y, const int min_workers,
 double PiecewiseWorkforce::Fy(const int y, const int min_workers, const double turnover_rate) {
   const boost::math::binomial_distribution<double> dist(y, turnover_rate);
   if (y - min_workers < 0) {
+    double test = cdf(dist, y - min_workers);
     return 0;
   }
   return cdf(dist, y - min_workers);
@@ -111,7 +112,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
 double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
   try {
     // gurobi environments and model
-    GRBEnv env = GRBEnv(true); // create an empty environment
+    auto env = GRBEnv(true); // create an empty environment
     env.set(GRB_IntParam_OutputFlag, 0);
     env.start(); // necessary
     auto model = GRBModel(env);

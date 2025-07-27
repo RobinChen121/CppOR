@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     BarChartWidget window;
     window.resize(500, 400);
-    window.setWindowTitle("QPainter 柱状图");
+    window.setWindowTitle("QPainter 示例");
     window.show();
     return app.exec();
 }

@@ -1,0 +1,6 @@
+set(__QT_DEPLOY_TARGET_junior_practice_FILE D:/chenzhen/CppOR/cmake-build-release/junior_practices/junior_practice.exe)
+set(__QT_DEPLOY_TARGET_junior_practice_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_junior_practice_RUNTIME_DLLS C:/Qt/6.9.1/msvc2022_64/bin/Qt6Core.dll;C:/Qt/6.9.1/msvc2022_64/bin/Qt6Gui.dll;C:/Qt/6.9.1/msvc2022_64/bin/Qt6Widgets.dll)
+set(__QT_DEPLOY_TARGET_CppClion_FILE D:/chenzhen/CppOR/cmake-build-release/CppClion.exe)
+set(__QT_DEPLOY_TARGET_CppClion_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_CppClion_RUNTIME_DLLS )

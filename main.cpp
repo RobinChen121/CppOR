@@ -1,6 +1,6 @@
 #include <iostream>
-#include <Eigen/Dense>
 
 int main() {
+    std::cout << "Hello World!\n";
     return 0;
 }

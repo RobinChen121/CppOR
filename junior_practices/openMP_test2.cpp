@@ -17,7 +17,7 @@ using namespace std;
 using namespace std::chrono;
 
 int main() {
-    const int N = 1000000000; // 10 亿个元素，并行计算加速约 9 倍
+    const int N = 100000000; // 10 亿个元素，并行计算加速约 9 倍
     vector<int> data(N, 1); // 创建大小为 N，所有元素初始化为 1 的数组
 
     long long sum_serial = 0, sum_parallel = 0;
