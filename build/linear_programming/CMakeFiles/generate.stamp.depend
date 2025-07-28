@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake
+C:/gurobi1202/win64/FindGUROBI.cmake
+D:/chenzhen/CppOR/linear_programming/CMakeLists.txt

@@ -1,0 +1,22 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "MSVC",
+	"compiler-id" : "MSVC",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "D:/chenzhen/CppOR/cmake-build-debug/linear_programming/gurobi_examples",
+	"dir-cur-src" : "D:/chenzhen/CppOR/linear_programming/gurobi_examples",
+	"dir-top-bld" : "D:/chenzhen/CppOR/cmake-build-debug",
+	"dir-top-src" : "D:/chenzhen/CppOR",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"C:\\gurobi1202\\win64\\lib",
+		"C:\\gurobi1202\\win64\\include"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "D:/chenzhen/CppOR/cmake-build-debug/linear_programming/gurobi_examples/CMakeFiles/gurobi_example.dir"
+}

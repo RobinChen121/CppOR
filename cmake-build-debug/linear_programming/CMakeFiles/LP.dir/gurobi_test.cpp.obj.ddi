@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "linear_programming\\CMakeFiles\\LP.dir\\gurobi_test.cpp.obj",
+            "outputs": [
+                "linear_programming\\CMakeFiles\\LP.dir\\gurobi_test.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}

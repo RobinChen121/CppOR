@@ -91,30 +91,30 @@ if (APPLE)
             /opt/anaconda3/lib/libpython3.12.dylib
             dl
     )
-else ()
+elseif (MSVC)
     include_directories(C:/ProgramData/anaconda3/include/)
     include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
     target_link_libraries(${RUN_NAME} PRIVATE
             C:/ProgramData/anaconda3/libs/python312.lib
     )
-
-#    FetchContent_Declare(
-#            matplotlib_cpp
-#            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
-#            GIT_TAG master
-#    )
-#    FetchContent_MakeAvailable(matplotlib_cpp)
-#    # Include matplotlib-cpp
-#    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
-#    # Link Python and NumPy
-#    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
-#    target_include_directories(${RUN_NAME} PRIVATE
-#            ${Python3_INCLUDE_DIRS}
-#            ${Python3_NumPy_INCLUDE_DIRS}
-#    )
-#    target_link_libraries(${RUN_NAME} PRIVATE
-#            ${Python3_LIBRARIES}
-#    )
+else ()
+    FetchContent_Declare(
+            matplotlib_cpp
+            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
+            GIT_TAG master
+    )
+    FetchContent_MakeAvailable(matplotlib_cpp)
+    # Include matplotlib-cpp
+    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
+    # Link Python and NumPy
+    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+    target_include_directories(${RUN_NAME} PRIVATE
+            ${Python3_INCLUDE_DIRS}
+            ${Python3_NumPy_INCLUDE_DIRS}
+    )
+    target_link_libraries(${RUN_NAME} PRIVATE
+            ${Python3_LIBRARIES}
+    )
 endif ()
 
 # Eigen3 setting

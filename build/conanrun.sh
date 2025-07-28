@@ -1,1 +1,0 @@
-. "/Users/zhenchen/CLionProjects/CppClion/build/conanrunenv-release-armv8.sh"
