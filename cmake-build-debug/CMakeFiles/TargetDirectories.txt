@@ -1,6 +1,12 @@
 D:/chenzhen/CppOR/cmake-build-debug/CMakeFiles/CppClion.dir
 D:/chenzhen/CppOR/cmake-build-debug/CMakeFiles/edit_cache.dir
 D:/chenzhen/CppOR/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/chenzhen/CppOR/cmake-build-debug/linear_programming/CMakeFiles/LP.dir
+D:/chenzhen/CppOR/cmake-build-debug/linear_programming/CMakeFiles/edit_cache.dir
+D:/chenzhen/CppOR/cmake-build-debug/linear_programming/CMakeFiles/rebuild_cache.dir
+D:/chenzhen/CppOR/cmake-build-debug/linear_programming/gurobi_examples/CMakeFiles/gurobi_example.dir
+D:/chenzhen/CppOR/cmake-build-debug/linear_programming/gurobi_examples/CMakeFiles/edit_cache.dir
+D:/chenzhen/CppOR/cmake-build-debug/linear_programming/gurobi_examples/CMakeFiles/rebuild_cache.dir
 D:/chenzhen/CppOR/cmake-build-debug/junior_practices/CMakeFiles/junior_practice.dir
 D:/chenzhen/CppOR/cmake-build-debug/junior_practices/CMakeFiles/edit_cache.dir
 D:/chenzhen/CppOR/cmake-build-debug/junior_practices/CMakeFiles/rebuild_cache.dir

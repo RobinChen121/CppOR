@@ -34,11 +34,9 @@ else ()
 endif ()
 set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
 set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
-
 # 将路径添加到搜索地址
 include_directories(${GUROBI_LIB_DIR})
 include_directories(${GUROBI_INCLUDE_DIR})
-
 # 链接 Gurobi 库，这个静态库与动态库都需要
 if (APPLE)
     target_link_libraries(${RUN_NAME}
