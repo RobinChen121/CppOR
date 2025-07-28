@@ -3,9 +3,12 @@ set(RUN_NAME workforce) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if (MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+else()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
@@ -24,57 +27,124 @@ add_executable(${RUN_NAME}
         piecewise.cpp
 )
 
+## boost setting
+if(MSVC)
+    set(BOOST_ROOT "C:/local/boost_1_88_0")
+    set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+    set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
+    include_directories(${BOOST_INCLUDEDIR})
+    link_directories(${BOOST_LIBRARYDIR})
+    set(BOOST_LIBS
+            boost_system-vc143-mt-x64-1_88
+            boost_thread-vc143-mt-x64-1_88
+            boost_filesystem-vc143-mt-x64-1_88
+    )
+    target_link_libraries(${RUN_NAME} PRIVATE
+            "${BOOST_LIBRARYDIR}/boost_system-vc143-mt-x64-1_88.lib"
+            "${BOOST_LIBRARYDIR}/boost_thread-vc143-mt-x64-1_88.lib"
+            "${BOOST_LIBRARYDIR}/boost_filesystem-vc143-mt-x64-1_88.lib"
+    )
+else ()
+    find_package(Boost REQUIRED COMPONENTS system thread filesystem)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
+endif()
 
 ## 设置 Gurobi 路径（根据你的安装调整）
 if (APPLE)
     set(GUROBI_HOME "/Library/gurobi1201/macos_universal2") # gurobi 的安装地址
-    message("test")
-else ()
-    set(GUROBI_HOME "C:/gurobi1202/win64") # gurobi 的安装地址
-endif ()
-set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
-set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
-# 将路径添加到搜索地址
-include_directories(${GUROBI_LIB_DIR})
-include_directories(${GUROBI_INCLUDE_DIR})
-# 链接 Gurobi 库，这个静态库与动态库都需要
-if (APPLE)
+    set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
+    set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
+    # 将路径添加到搜索地址
+    include_directories(${GUROBI_INCLUDE_DIR})
+    include_directories(${GUROBI_LIB_DIR})
     target_link_libraries(${RUN_NAME}
             PRIVATE
-            "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
+            "${GUROBI_INCLUDE_DIR}/libgurobi_c++.a" # .a 是静态库
             "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
     )
 else ()
-    target_link_libraries(${RUN_NAME}
-            PRIVATE
-            "${GUROBI_INCLUDE_DIR}/gurobi_c++.h"
-            "${GUROBI_LIB_DIR}/gurobi120.lib"
-    )
+    option(CXX "enable C++ compilation" ON)  # 定义一个选项 CXX，描述为 "enable C++ compilation"，默认值为 ON（开启）
+    if(CXX)
+        enable_language(CXX)  # 如果 CXX 选项被开启，告诉 CMake 需要启用 C++ 语言支持（使用 C++ 编译器）
+    endif()
+    set(CMAKE_MODULE_PATH  "C:/gurobi1202/win64") # this is find package path
+    set(GUROBI_DIR "C:/gurobi1202/win64")
+    set(ENV{GUROBI_HOME} "${GUROBI_DIR}")
+
+    message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+    # Visual Studio compiler with static runtime libraries
+    if(MSVC AND MT)
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd")
+    endif()
+    # 通过 FindGUROBI.cmake 查找 Gurobi
+    find_package(GUROBI 120 REQUIRED)
+    include_directories(${GUROBI_INCLUDE_DIRS})
+    include_directories(${GUROBI_CXX_LIBRARY})
+    message(STATUS "Gurobi include dirs: ${GUROBI_INCLUDE_DIRS}")
+    message(STATUS "Gurobi libraries: ${GUROBI_CXX_LIBRARY}")
+
+    if(CXX)
+        set(CMAKE_CXX_STANDARD 11)
+        target_link_libraries(${RUN_NAME} optimized ${GUROBI_CXX_LIBRARY}
+                debug ${GUROBI_CXX_DEBUG_LIBRARY})
+    endif()
+
+    target_link_libraries(${RUN_NAME} ${GUROBI_LIBRARY})
+
+    if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+        include(FeatureSummary)
+        feature_summary(WHAT ALL)
+    endif()
 endif ()
 
-
-##-----------------------------------
-## fmt for format output
-#find_package(fmt REQUIRED)
-#target_link_libraries(${RUN_NAME} PRIVATE fmt::fmt)
-
 #-----------------------------------
-# Boost
-# Boost 提供了很多通用的的库，例如数值计算等
-find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
-
-#-----------------------------------
-# matplotlib
-# 设置 Python 头文件路径
+# OpenMP needs to be downloaded to the mac, parallel computing api
 if (APPLE)
+    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
+    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.0/lib") # /libomp.dylib
+    # 手动设置 OpenMP 相关的编译和链接选项
+    set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
+    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")
+    # 应用 OpenMP 选项
+    # 这两行命令使得运行当前并行计算 cpp 等同于在命令行中的设置
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}") # CMAKE_CXX_FLAGS 变量用于存储 C++ 编译器的全局编译选项（flags）
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_LIBS}") # CMAKE_EXE_LINKER_FLAGS 变量用于存储 链接时的额外选项
+    # 添加 OpenMP 头文件路径和库路径
+    include_directories(${OpenMP_INCLUDE_DIR})
+else ()
+    find_package(OpenMP REQUIRED)
+    if (MSVC)
+        target_compile_options(junior_practice PRIVATE /openmp)
+    else ()
+        target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
+        target_link_options(${RUN_NAME} PRIVATE -fopenmp)
+    endif ()
+    if (OpenMP_CXX_FOUND)
+        target_link_libraries(${RUN_NAME} PRIVATE OpenMP::OpenMP_CXX)
+    endif ()
+endif ()
+
+#-----------------------------------
+# matplotlib setting
+if (APPLE)
+    # python head file
     include_directories(/opt/anaconda3/include/python3.12)
-    # numpy 头文件路径
+    # numpy head file
     include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
-    # 链接所需库
     target_link_libraries(${RUN_NAME} PRIVATE
             /opt/anaconda3/lib/libpython3.12.dylib
             dl
+    )
+elseif (MSVC)
+    include_directories(C:/ProgramData/anaconda3/include/)
+    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
+    target_link_libraries(${RUN_NAME} PRIVATE
+            C:/ProgramData/anaconda3/libs/python312.lib
     )
 else ()
     FetchContent_Declare(
@@ -94,28 +164,4 @@ else ()
     target_link_libraries(${RUN_NAME} PRIVATE
             ${Python3_LIBRARIES}
     )
-endif ()
-
-#-----------------------------------
-# OpenMP is also too large and needs to be downloaded to the computer yourself first
-# parallel computing api
-if (APPLE)
-    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
-    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.0/lib") # /libomp.dylib
-    # 手动设置 OpenMP 相关的编译和链接选项
-    set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
-    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")
-    # 应用 OpenMP 选项
-    # 这两行命令使得运行当前并行计算 cpp 等同于在命令行中的设置
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}") # CMAKE_CXX_FLAGS 变量用于存储 C++ 编译器的全局编译选项（flags）
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_LIBS}") # CMAKE_EXE_LINKER_FLAGS 变量用于存储 链接时的额外选项
-    # 添加 OpenMP 头文件路径和库路径
-    include_directories(${OpenMP_INCLUDE_DIR})
-else ()
-    find_package(OpenMP REQUIRED)
-    target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
-    target_link_options(${RUN_NAME} PRIVATE -fopenmp)
-    if (OpenMP_CXX_FOUND)
-        target_link_libraries(${RUN_NAME} PRIVATE OpenMP::OpenMP_CXX)
-    endif ()
 endif ()
