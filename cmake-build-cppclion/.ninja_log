@@ -5,11 +5,11 @@
 6	680	1744126481170095291	stochastic_inventory/cash/overdraft/CMakeFiles/sdp-overdraft.dir/__/__/__/utils/common.cpp.o	2c86526694d6b932
 593	630	1748978539894064280	stochastic_inventory/workforce/WorkforceState	731e45511d13e815
 6	635	1744067565624899169	stochastic_inventory/cash/overdraft/CMakeFiles/sdp-overdraft.dir/__/__/states/State.cpp.o	16a8742d52eb7f5e
-1549	1591	1753451147214521343	stochastic_inventory/workforce/workforce	4098d12d041e9754
+2073	2117	1754059518442998471	stochastic_inventory/workforce/workforce	50dd215b1e0f7182
 6	922	1741610109048399382	stochastic_inventory/CMakeFiles/inventory.dir/NewsvendorParallel.cpp.o	d2e47f1c30a4e6d5
 11	681	1753295842439232482	stochastic_inventory/workforce/CMakeFiles/workforce.dir/Binomial_logconcave_test.cpp.o	329eec15f35fcc7a
 937	1038	1745295104535655314	stochastic_inventory/cash/overdraft/sdp-overdraft	861b6b63de31d372
-10	1548	1753451145675221433	stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o	5cf85760bb877505
+10	1818	1754059516379282155	stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o	8ff7fa54d501ca3
 4	417	1741550436593280647	junior_practices/CMakeFiles/junior_practice.dir/MyClass.cpp.o	ef73d523392831c2
 6	1622	1745822448246693455	linear_programming/sddp_overdraft/CMakeFiles/sddp-overdraft.dir/single_product.cpp.o	b619d645bc486f61
 871	906	1743934736811932349	stochastic_inventory/cash/cash-sdp	35029a852fb92ead
@@ -59,7 +59,7 @@
 1095	1131	1749129994080173445	utils/utils	887387ba0872e18c
 1	790	1741464632690385061	junior_practices/CMakeFiles/junior_practice.dir/eigen3_test.cpp.o	738ff89b6d56f6f5
 1	9	1742405420353261589	clean	ad90e366ad70d77b
-9	539	1753461705515245984	build.ninja	c318e317ab1ca006
+9	539	1754059938279300420	build.ninja	c318e317ab1ca006
 8	938	1745052177512978801	stochastic_inventory/cash/overdraft/CMakeFiles/sdp-overdraft.dir/leadtime_single_product_testing.cpp.o	e681298056943a5d
 7	635	1744067565625042878	stochastic_inventory/cash/overdraft/CMakeFiles/sdp-overdraft.dir/__/__/states/CashState.cpp.o	7943cdd745c5c709
 7	863	1743933430037577968	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/__/__/utils/PMF.cpp.o	630a93a435a938b2
@@ -74,7 +74,7 @@
 7	871	1743934735948335153	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/overdraftLeadtimeSingleProduct.cpp.o	cf6af18eab79545f
 7	812	1743933430038202179	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/__/states/CashState.cpp.o	a84f3083ed35ac35
 4	613	1750106384921769205	junior_practices/CMakeFiles/junior_practice.dir/draw_animation.cpp.o	356fde9cc269c765
-9	591	1753451145674866850	stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o	ebdfe923cc4b3506
+9	583	1754059516378937738	stochastic_inventory/workforce/CMakeFiles/workforce.dir/worker_state.cpp.o	8c65be0597a5bafa
 6	909	1746010060586515075	linear_programming/sddp_overdraft/CMakeFiles/sddp-overdraft.dir/double_product_testing.cpp.o	5fdc3be9e38f4e80
 9	587	1752777588469702636	stochastic_inventory/workforce/CMakeFiles/workforce.dir/Binomial_tail_test.cpp.o	584aef7dcc9be40c
 6	459	1741807818720873878	stochastic_inventory/CMakeFiles/inventory.dir/cash/CashState.cpp.o	88bef08941480f12
@@ -82,7 +82,7 @@
 5	577	1742062925843542373	stochastic_inventory/CMakeFiles/inventory.dir/PMF.cpp.o	d62615a4a06bd363
 613	777	1750106385531403077	junior_practices/junior_practice	68718430f9c95673
 3	426	1741344690174118336	linear_programming/CMakeFiles/linear_programming.dir/gurobi_test.cpp.o	91bd7b523925cfcb
-10	723	1753451145675519266	stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o	c323d497ae8994b
+10	826	1754059516379573363	stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/draw_graph.cpp.o	b09c9d8c9ee79777
 1	805	1743012140577659809	junior_practices/CMakeFiles/junior_practice.dir/qt_test.cpp.o	7fff8ae400456c39
 1	909	1741472104462596710	junior_practices/CMakeFiles/junior_practice.dir/draw_QPainter_bar.cpp.o	1af12f8c9eefa62d
 8	708	1753458782005042341	linear_programming/sddp_overdraft/CMakeFiles/sddp-overdraft.dir/__/__/utils/sampling.cpp.o	9ba6d3f554d9aa49
@@ -92,9 +92,8 @@
 4	387	1741806065185803981	junior_practices/CMakeFiles/junior_practice.dir/openMP_test.cpp.o	9da334832ce082ab
 82	1197	1752244731039497779	stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_testing_animation.cpp.o	8004f2297accd0eb
 432	469	1741806209262580435	linear_programming/LP	4a4f107bed0a9ad0
-3	432	1741806208833096751	linear_programming/CMakeFiles/LP.dir/gurobi_examples/mip1_c++.cpp.o	a437cc60d6964eb9
 12	647	1742418224718010494	linear_programming/gurobi_examples/CMakeFiles/gurobi_example.dir/mip1_c++.cpp.o	67a9d028117141e0
-10	1289	1753451145675644224	stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.o	3e2ab39c27bd83d0
+10	2073	1754059516379714322	stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.o	58462c7fdc8a401a
 8	664	1742666792432219282	linear_programming/sddp_overdraft/CMakeFiles/overdraft.dir/__/__/utils/Sampling.cpp.o	9e4c980cf4c12421
 5	810	1741565169701085044	stochastic_inventory/CMakeFiles/inventory.dir/NewsvendorParallel_async.cpp.o	2e872c6f621461f1
 7	621	1741885137805048995	linear_programming/utils/CMakeFiles/utils.dir/RemoveDuplicates.cpp.o	d84fa39a84fb7ec8
@@ -106,7 +105,7 @@
 6	703	1742075145146751804	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/strongConstraint.cpp.o	7f07a560b7f4986a
 647	755	1742418225353664770	linear_programming/gurobi_examples/gurobi_example	11d441eba09343cc
 3	592	1742062408223216449	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/__/state.cpp.o	d03e6dc22a72b95d
-10	1182	1753451145675374766	stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o	da2f0521c61e6946
+10	1360	1754059516379431780	stochastic_inventory/workforce/CMakeFiles/workforce.dir/__/__/utils/pmf.cpp.o	9f646cd5fc152dac
 7	818	1742061246011334816	linear_programming/sddp_overdraft/CMakeFiles/overdraft.dir/__/utils/sampling.cpp.o	d43bc9b75d99448d
 4	516	1743036672313419744	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/__/states/CashLeadtimeMultiState.cpp.o	b67e0e0d36677694
 5	527	1742062925843670248	stochastic_inventory/CMakeFiles/inventory.dir/State.cpp.o	a807509bd20dc23d
@@ -116,14 +115,3 @@
 7	829	1743933430038063678	stochastic_inventory/cash/CMakeFiles/cash-sdp.dir/__/states/State.cpp.o	9be564636d680fb9
 1	729	1741511917358522974	linear_programming/CMakeFiles/LP.dir/non_solver/simplex.cpp.o	1fdc157e9ef4f478
 8	1020	1753461546374746689	linear_programming/sddp_overdraft/CMakeFiles/sddp-overdraft.dir/single_product_enhancement.cpp.o	8c038b498ee13875
-10	1394	1753463310998679784	stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.o	3e2ab39c27bd83d0
-10	1659	1753463310998310284	stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o	5cf85760bb877505
-1662	1770	1753463312650843861	stochastic_inventory/workforce/workforce	4098d12d041e9754
-12	1754	1753464936983069546	stochastic_inventory/workforce/CMakeFiles/workforce.dir/workforce_plan.cpp.o	5cf85760bb877505
-1755	1865	1753464938726429164	stochastic_inventory/workforce/workforce	4098d12d041e9754
-16	1596	1753475211726791879	stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.o	3e2ab39c27bd83d0
-1597	1726	1753475213307036206	stochastic_inventory/workforce/workforce	4098d12d041e9754
-17	1663	1753476036749656651	stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.o	3e2ab39c27bd83d0
-1663	1792	1753476038395632519	stochastic_inventory/workforce/workforce	4098d12d041e9754
-24	1625	1753477552291222261	stochastic_inventory/workforce/CMakeFiles/workforce.dir/piecewise.cpp.o	3e2ab39c27bd83d0
-1625	1751	1753477553892882589	stochastic_inventory/workforce/workforce	4098d12d041e9754

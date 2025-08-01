@@ -3,26 +3,26 @@ set(RUN_NAME junior_practice) # the name of configuration target
 set(CMAKE_BUILD_TYPE Release)
 if (MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "/O2")
-else()
+else ()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-endif()
+endif ()
 
 add_executable(${RUN_NAME}
         boost_test.cpp
         #        pair_test.cpp
-#               spdlog_test.cpp
+        #               spdlog_test.cpp
         #        eigen3_test.cpp
-#        draw_animation.cpp
-#        draw_QPainter_bar.cpp
-#        draw_QPainter_line.cpp
-#                variadic-test.cpp
-#                qt_test.cpp
+        #        draw_animation.cpp
+        #        draw_QPainter_bar.cpp
+        #        draw_QPainter_line.cpp
+        #                variadic-test.cpp
+        #                qt_test.cpp
 
-#                openMP_test2.cpp
+        #                openMP_test2.cpp
 )
 
 # boost setting
-if(MSVC)
+if (MSVC)
     set(BOOST_ROOT "C:/local/boost_1_88_0")
     set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
     set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
@@ -42,11 +42,15 @@ else ()
     find_package(Boost REQUIRED COMPONENTS system thread filesystem)
     include_directories(${Boost_INCLUDE_DIRS})
     target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
-endif()
+endif ()
 
 #include(FetchContent) # it can fetch content automatically, for mingw
 
 # Qt setting
+if (APPLE)
+    set(Vulkan_INCLUDE_DIR "$ENV{HOME}/VulkanSDK/1.4.313.1/macOS/include")
+    include_directories(${Vulkan_INCLUDE_DIR})
+endif ()
 find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
 message(STATUS "Qt6 found at: ${Qt6_DIR}")
 # link Qt
@@ -131,7 +135,6 @@ if (APPLE)
     find_package(spdlog)
     target_link_libraries(${RUN_NAME} PRIVATE spdlog::spdlog)
 else ()
-    # ???????????
     target_include_directories(${RUN_NAME} PRIVATE "D:/c++Library/spdlog/include")
 endif ()
 

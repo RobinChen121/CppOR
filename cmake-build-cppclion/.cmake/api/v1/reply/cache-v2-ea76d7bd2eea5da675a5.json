@@ -983,7 +983,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "12"
+			"value" : "11"
 		},
 		{
 			"name" : "CMAKE_OBJCOPY",
@@ -1446,54 +1446,6 @@
 			"value" : "/opt/homebrew/share/eigen3/cmake"
 		},
 		{
-			"name" : "FETCHCONTENT_BASE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Directory under which to collect all populated content"
-				}
-			],
-			"type" : "PATH",
-			"value" : "/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/_deps"
-		},
-		{
-			"name" : "FETCHCONTENT_FULLY_DISCONNECTED",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Disables all attempts to download or update content and assumes source dirs already exist"
-				}
-			],
-			"type" : "BOOL",
-			"value" : "OFF"
-		},
-		{
-			"name" : "FETCHCONTENT_QUIET",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Enables QUIET option for all content population"
-				}
-			],
-			"type" : "BOOL",
-			"value" : "ON"
-		},
-		{
-			"name" : "FETCHCONTENT_UPDATES_DISCONNECTED",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Enables UPDATE_DISCONNECTED behavior for all content population"
-				}
-			],
-			"type" : "BOOL",
-			"value" : "OFF"
-		},
-		{
 			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_OpenGL",
 			"properties" : 
 			[
@@ -1540,6 +1492,18 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "[ON][v()]"
+		},
+		{
+			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_WrapVulkanHeaders",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Details about finding WrapVulkanHeaders"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "[/Users/zhenchen/VulkanSDK/1.4.313.1/macOS/include][v()]"
 		},
 		{
 			"name" : "HAVE_STDATOMIC",

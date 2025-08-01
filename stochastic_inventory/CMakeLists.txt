@@ -20,7 +20,7 @@ add_executable(${RUN_NAME}
 
 )
 
-#-----------------------------------
-# Boost
-find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES})
+##-----------------------------------
+## Boost
+#find_package(Boost REQUIRED COMPONENTS system thread filesystem)
+#target_link_libraries(${RUN_NAME} ${Boost_LIBRARIES})
