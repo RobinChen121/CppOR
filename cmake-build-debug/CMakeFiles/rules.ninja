@@ -7,7 +7,7 @@
 
 # =============================================================================
 # Project: CppClion
-# Configurations: Release
+# Configurations: Debug
 # =============================================================================
 # =============================================================================
 
@@ -20,7 +20,7 @@ msvc_deps_prefix = Note: including file:
 #############################################
 # Rule for generating CXX dependencies.
 
-rule CXX_SCAN__CppClion_Release
+rule CXX_SCAN__CppClion_Debug
   deps = msvc
   command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
   description = Scanning $in for CXX dependencies
@@ -29,7 +29,7 @@ rule CXX_SCAN__CppClion_Release
 #############################################
 # Rule to generate ninja dyndep files for CXX.
 
-rule CXX_DYNDEP__CppClion_Release
+rule CXX_DYNDEP__CppClion_Debug
   command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=CMakeFiles\CppClion.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
   description = Generating CXX dyndep file $out
   rspfile = $out.rsp
@@ -40,7 +40,7 @@ rule CXX_DYNDEP__CppClion_Release
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__CppClion_scanned_Release
+rule CXX_COMPILER__CppClion_scanned_Debug
   deps = msvc
   command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
   description = Building CXX object $out
@@ -49,7 +49,7 @@ rule CXX_COMPILER__CppClion_scanned_Release
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__CppClion_unscanned_Release
+rule CXX_COMPILER__CppClion_unscanned_Debug
   deps = msvc
   command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
   description = Building CXX object $out
@@ -58,7 +58,7 @@ rule CXX_COMPILER__CppClion_unscanned_Release
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__CppClion_Release
+rule CXX_EXECUTABLE_LINKER__CppClion_Debug
   command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -214,6 +214,335 @@ rule CXX_EXECUTABLE_LINKER__junior_practice_Release
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__sdp-inventory_Release
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__sdp-inventory_Release
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=stochastic_inventory\CMakeFiles\sdp-inventory.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__sdp-inventory_scanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__sdp-inventory_unscanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__sdp-inventory_Release
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__sdp-cash_Release
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__sdp-cash_Release
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=stochastic_inventory\cash\CMakeFiles\sdp-cash.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__sdp-cash_scanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__sdp-cash_unscanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__sdp-cash_Release
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__sdp-overdraft_Release
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__sdp-overdraft_Release
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=stochastic_inventory\cash\overdraft\CMakeFiles\sdp-overdraft.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__sdp-overdraft_scanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__sdp-overdraft_unscanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__sdp-overdraft_Release
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__states_Release
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__states_Release
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=stochastic_inventory\states\CMakeFiles\states.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__states_scanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__states_unscanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__states_Release
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__workforce_Release
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__workforce_Release
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__workforce_scanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__workforce_unscanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__workforce_Release
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__newsvendor_Release
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__newsvendor_Release
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=stochastic_inventory\newsvendor\CMakeFiles\newsvendor.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__newsvendor_scanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__newsvendor_unscanned_Release
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__newsvendor_Release
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__utils_Debug
+  deps = msvc
+  command = C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__utils_Debug
+  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=utils\CMakeFiles\utils.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__utils_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__utils_unscanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__utils_Debug
+  command = C:\Windows\system32\cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
@@ -226,7 +555,7 @@ rule RERUN_CMAKE
 # Rule for cleaning all built files.
 
 rule CLEAN
-  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\ninja\win\x64\ninja.exe" $FILE_ARG -t clean $TARGETS
+  command = "C:\PROGRA~1\JetBrains\CLion 2024.3.5\bin\ninja\win\x64\ninja.exe" $FILE_ARG -t clean $TARGETS
   description = Cleaning all built files...
 
 
@@ -234,6 +563,6 @@ rule CLEAN
 # Rule for printing all primary targets available.
 
 rule HELP
-  command = "C:\Program Files\JetBrains\CLion 2024.3.5\bin\ninja\win\x64\ninja.exe" -t targets
+  command = "C:\PROGRA~1\JetBrains\CLion 2024.3.5\bin\ninja\win\x64\ninja.exe" -t targets
   description = All primary targets available:
 

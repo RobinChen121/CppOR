@@ -13,8 +13,8 @@
 	"forward-modules-from-target-dirs" : [],
 	"include-dirs" : 
 	[
-		"C:\\gurobi1003\\win64\\include",
-		"C:\\gurobi1003\\win64\\lib\\gurobi_c++md2017.lib"
+		"C:\\gurobi1202\\win64\\include",
+		"C:\\gurobi1202\\win64\\lib\\gurobi_c++md2017.lib"
 	],
 	"language" : "CXX",
 	"linked-target-dirs" : [],

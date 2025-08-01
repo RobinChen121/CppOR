@@ -34,7 +34,7 @@ class WorkforcePlan {
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 50.0;
+  double fix_hire_cost = 150.0;
   double unit_vari_cost = 0;
   double salary = 30.0;
   double unit_penalty = 40.0;
@@ -66,11 +66,11 @@ public:
     // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rates);
   }
 
-  void set_fix_cost(const double value);
-  void set_salary(const double value);
-  void set_penalty(const double value);
-  void set_min_workers(const int value);
-  void set_turnover_rate(const double value);
+  void set_fix_cost(double value);
+  void set_salary(double value);
+  void set_penalty(double value);
+  void set_min_workers(int value);
+  void set_turnover_rate(double value);
   [[nodiscard]] std::string get_varied_parameter() { return varied_parameter; };
   [[nodiscard]] std::string getKConvexity() { return K_convexity; };
   [[nodiscard]] std::string getBinomialConvexity() { return binomial_K_convexity; };
@@ -91,10 +91,10 @@ public:
   [[nodiscard]] std::vector<std::array<int, 2>> find_sS() const;
   void simulate_sS(WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const;
   std::vector<double> compute_Gy();
-  std::vector<std::vector<double>> compute_expect_Gy(const std::vector<double> &Gy) const;
+  [[nodiscard]] std::vector<std::vector<double>> compute_expect_Gy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> get_opt_table() const;
 
-  std::pair<double, std::vector<std::array<double, 2>>> solve_mip() const;
+  [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_mip() const;
 
   bool check_K_convexity(const std::vector<double> &Gy);
   bool check_Binomial_KConvexity(const std::vector<double> &Gy,

@@ -9,10 +9,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 添加子文件夹
 add_subdirectory(linear_programming) # 告诉 CMake 在小括号那目录下查找 CMakeLists.txt
 add_subdirectory(junior_practices)
-#add_subdirectory(stochastic_inventory)
-#add_subdirectory(utils)
+add_subdirectory(stochastic_inventory)
+add_subdirectory(utils)
 
-set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
+if (MSVC)
+    # 开启 AddressSanitizer, 数组越界检查
+    # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
+    # 或将文件拷贝到当前项目 exe 所在文件夹
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -O1")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+endif ()
+
+set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 # 强制使用 -O3（你也可以改为 -O2）
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     if (MSVC)

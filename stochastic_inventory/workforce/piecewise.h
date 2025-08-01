@@ -31,8 +31,8 @@ public:
   static std::vector<std::vector<double>> piecewise(int segment_num, int min_workers, double p);
 
   [[nodiscard]] double piece_approximate(int segment_num) const;
-  [[nodiscard]] std::vector<std::array<double, 2>> get_sS(int segment) const;
-  [[nodiscard]] double find_s(int segment_num, double S_value, double GS, int tt) const;
+  [[nodiscard]] std::vector<std::array<int, 2>> get_sS(int segment_num) const;
+  [[nodiscard]] int find_s(int segment_num, int S_value, double GS, int tt) const;
 };
 
 #endif // PIECEWISE_H

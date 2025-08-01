@@ -1,0 +1,25 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "MSVC",
+	"compiler-id" : "MSVC",
+	"compiler-simulate-id" : "",
+	"config" : "Release",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/workforce",
+	"dir-cur-src" : "D:/chenzhen/CppOR/stochastic_inventory/workforce",
+	"dir-top-bld" : "D:/chenzhen/CppOR/cmake-build-debug",
+	"dir-top-src" : "D:/chenzhen/CppOR",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"C:\\local\\boost_1_88_0",
+		"C:\\gurobi1202\\win64\\include",
+		"C:\\gurobi1202\\win64\\lib\\gurobi_c++md2017.lib",
+		"C:\\ProgramData\\anaconda3\\include",
+		"C:\\ProgramData\\anaconda3\\Lib\\site-packages\\numpy\\core\\include"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "D:/chenzhen/CppOR/cmake-build-debug/stochastic_inventory/workforce/CMakeFiles/workforce.dir"
+}
