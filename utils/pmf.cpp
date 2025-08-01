@@ -78,8 +78,8 @@ int PMF::poissonQuantile(const double p, const double lambda) {
 std::vector<std::vector<std::vector<double>>>
 PMF::getPMFPoisson(const std::span<const double> demands) const {
   const size_t T = demands.size();
-  int supportLB[T];
-  int supportUB[T];
+  std::vector<int> supportLB(T);
+  std::vector<int> supportUB(T);
   for (size_t i = 0; i < T; ++i) {
     supportUB[i] = poissonQuantile(truncatedQuantile, demands[i]);
     supportLB[i] = poissonQuantile(1 - truncatedQuantile, demands[i]);
@@ -151,10 +151,10 @@ std::vector<std::vector<std::vector<double>>>
 PMF::getPMFPoissonMulti(const std::span<const double> demands1,
                         const std::span<const double> demands2) const {
   const auto T = demands1.size();
-  int supportLB1[T];
-  int supportUB1[T];
-  int supportLB2[T];
-  int supportUB2[T];
+  std::vector<int> supportLB1(T);
+  std::vector<int> supportUB1(T);
+  std::vector<int> supportLB2(T);
+  std::vector<int> supportUB2(T);
   for (size_t i = 0; i < T; ++i) {
     supportUB1[i] = poissonQuantile(truncatedQuantile, demands1[i]);
     supportLB1[i] = poissonQuantile(1 - truncatedQuantile, demands1[i]);
@@ -211,9 +211,9 @@ PMF::getPMFSelfDiscreteMulti(const std::vector<std::vector<double>> &demand1_val
   return pmf;
 }
 
-int main() {
-  constexpr double ps[] = {0.5, 0.5};
-
-  auto pmf = PMF::getPMFBinomial(10, ps);
-  std::cout << "test" << std::endl;
-}
+// int main() {
+//   constexpr double ps[] = {0.5, 0.5};
+//
+//   auto pmf = PMF::getPMFBinomial(10, ps);
+//   std::cout << "test" << std::endl;
+// }

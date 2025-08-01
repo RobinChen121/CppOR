@@ -8,20 +8,13 @@ add_executable(${RUN_NAME}
         #        my_solver/Model.cpp
 )
 
-#-----------------------------------
-# Boost
-# boost setting
-if(NOT APPLE)
-    # 假设 Boost 安装在 C:/local/boost_1_88_0
+## boost setting
+if(MSVC)
     set(BOOST_ROOT "C:/local/boost_1_88_0")
     set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
     set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
-    # 添加头文件目录
     include_directories(${BOOST_INCLUDEDIR})
-    # 添加库目录
     link_directories(${BOOST_LIBRARYDIR})
-    # 指定要链接的 Boost 静态库（或动态库）
-    # 注意：这些库名要与你 stage/lib 目录下的 .lib 文件一致（无需 .lib 后缀）
     set(BOOST_LIBS
             boost_system-vc143-mt-x64-1_88
             boost_thread-vc143-mt-x64-1_88
@@ -40,16 +33,21 @@ endif()
 
 
 #-----------------------------------
-# 下面为调用 matplotlibcpp 的设置
+# matplotlib setting
 if (APPLE)
-    # 设置 Python 头文件路径
+    # python head file
     include_directories(/opt/anaconda3/include/python3.12)
-    # numpy 头文件路径
+    # numpy head file
     include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
-    # 链接所需库
     target_link_libraries(${RUN_NAME} PRIVATE
             /opt/anaconda3/lib/libpython3.12.dylib
             dl
+    )
+elseif (MSVC)
+    include_directories(C:/ProgramData/anaconda3/include/)
+    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
+    target_link_libraries(${RUN_NAME} PRIVATE
+            C:/ProgramData/anaconda3/libs/python312.lib
     )
 else ()
     FetchContent_Declare(

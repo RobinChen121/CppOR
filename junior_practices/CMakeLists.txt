@@ -8,7 +8,7 @@ else()
 endif()
 
 add_executable(${RUN_NAME}
-        cmath_test.cpp
+        boost_test.cpp
         #        pair_test.cpp
 #               spdlog_test.cpp
         #        eigen3_test.cpp

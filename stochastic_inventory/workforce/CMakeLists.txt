@@ -3,12 +3,22 @@ set(RUN_NAME workforce) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 if (MSVC)
-    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
-else()
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-endif()
+    # 开启 AddressSanitizer, 数组越界检查
+    # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
+    # 或将文件拷贝到当前项目 exe 所在文件夹
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -Od")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+endif ()
+
+set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
+if (CMAKE_BUILD_TYPE STREQUAL Release)
+    if (MSVC)
+        set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+    else()
+        set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+    endif()
+endif ()
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
@@ -89,12 +99,12 @@ else ()
     message(STATUS "Gurobi libraries: ${GUROBI_CXX_LIBRARY}")
 
     if(CXX)
-        set(CMAKE_CXX_STANDARD 11)
-        target_link_libraries(${RUN_NAME} optimized ${GUROBI_CXX_LIBRARY}
+#        set(CMAKE_CXX_STANDARD 11)
+        target_link_libraries(${RUN_NAME} PRIVATE optimized ${GUROBI_CXX_LIBRARY}
                 debug ${GUROBI_CXX_DEBUG_LIBRARY})
     endif()
 
-    target_link_libraries(${RUN_NAME} ${GUROBI_LIBRARY})
+    target_link_libraries(${RUN_NAME} PRIVATE ${GUROBI_LIBRARY})
 
     if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
         include(FeatureSummary)
@@ -119,7 +129,7 @@ if (APPLE)
 else ()
     find_package(OpenMP REQUIRED)
     if (MSVC)
-        target_compile_options(junior_practice PRIVATE /openmp)
+        target_compile_options(${RUN_NAME} PRIVATE /openmp)
     else ()
         target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
         target_link_options(${RUN_NAME} PRIVATE -fopenmp)
@@ -145,6 +155,7 @@ elseif (MSVC)
     include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
     target_link_libraries(${RUN_NAME} PRIVATE
             C:/ProgramData/anaconda3/libs/python312.lib
+            C:/Users/Administrator/cpython/PCbuild/amd64/python312_d.lib
     )
 else ()
     FetchContent_Declare(

@@ -1,0 +1,92 @@
+"C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -G Ninja -S D:\chenzhen\CppOR\stochastic_inventory\workforce -B D:\chenzhen\CppOR\stochastic_inventory\workforce\cmake-build-debug
+CMake Warning (dev) in CMakeLists.txt:
+  No project() command is present.  The top-level CMakeLists.txt file must
+  contain a literal, direct call to the project() command.  Add a line of
+  code such as
+
+    project(ProjectName)
+
+  near the top of the file, but after cmake_minimum_required().
+
+  CMake is pretending there is a "project(Project)" command on the first
+  line.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  cmake_minimum_required() should be called prior to this top-level project()
+  call.  Please see the cmake-commands(7) manual for usage documentation of
+  both commands.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- The C compiler identification is MSVC 19.44.35213.0
+-- The CXX compiler identification is MSVC 19.44.35213.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Build type: Debug
+-- Found GUROBI: C:/gurobi1202/win64/lib/gurobi120.lib (Required is at least version "120")
+-- Gurobi include dirs: C:/gurobi1202/win64/include
+-- Gurobi libraries: C:/gurobi1202/win64/lib/gurobi_c++md2017.lib
+CMake Warning (dev) at CMakeLists.txt:93 (target_link_libraries):
+  Policy CMP0023 is not set: Plain and keyword target_link_libraries
+  signatures cannot be mixed.  Run "cmake --help-policy CMP0023" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  The keyword signature for target_link_libraries has already been used with
+  the target "workforce".  All uses of target_link_libraries with a target
+  should be either all-keyword or all-plain.
+
+  The uses of the keyword signature are here:
+
+   * CMakeLists.txt:42 (target_link_libraries)
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- The following REQUIRED packages have been found:
+
+ * GUROBI (required version >= 120)
+
+-- Found OpenMP_C: -openmp (found version "2.0")
+-- Found OpenMP_CXX: -openmp (found version "2.0")
+-- Found OpenMP: TRUE (found version "2.0")
+CMake Error at CMakeLists.txt:122 (target_compile_options):
+  Cannot specify compile options for target "junior_practice" which is not
+  built by this project.
+
+
+CMake Warning (dev) at CMakeLists.txt:128 (target_link_libraries):
+  Policy CMP0023 is not set: Plain and keyword target_link_libraries
+  signatures cannot be mixed.  Run "cmake --help-policy CMP0023" for policy
+  details.  Use the cmake_policy command to set the policy and suppress this
+  warning.
+
+  The plain signature for target_link_libraries has already been used with
+  the target "workforce".  All uses of target_link_libraries with a target
+  should be either all-keyword or all-plain.
+
+  The uses of the plain signature are here:
+
+   * CMakeLists.txt:93 (target_link_libraries)
+   * CMakeLists.txt:97 (target_link_libraries)
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  No cmake_minimum_required command is present.  A line of code such as
+
+    cmake_minimum_required(VERSION 3.30)
+
+  should be added at the top of the file.  The version specified may be lower
+  if you wish to support older CMake versions for this project.  For more
+  information run "cmake --help-policy CMP0000".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring incomplete, errors occurred!

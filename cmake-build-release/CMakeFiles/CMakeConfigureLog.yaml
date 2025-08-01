@@ -109,8 +109,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-tdxep1"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-tdxep1"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-0ptso3"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-0ptso3"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -119,11 +119,11 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-tdxep1'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-0ptso3'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_81481
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_81481.dir\\CMakeCCompilerABI.c.obj /FdCMakeFiles\\cmTC_81481.dir\\ /FS -c "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_81481.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_81481.dir\\CMakeCCompilerABI.c.obj  /out:cmTC_81481.exe /implib:cmTC_81481.lib /pdb:cmTC_81481.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_2f3d9
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_2f3d9.dir\\CMakeCCompilerABI.c.obj /FdCMakeFiles\\cmTC_2f3d9.dir\\ /FS -c "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_2f3d9.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_2f3d9.dir\\CMakeCCompilerABI.c.obj  /out:cmTC_2f3d9.exe /implib:cmTC_2f3d9.lib /pdb:cmTC_2f3d9.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -163,8 +163,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-22usox"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-22usox"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-hx3wtf"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-hx3wtf"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -174,11 +174,11 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-22usox'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-hx3wtf'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_d2756
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /EHsc  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_d2756.dir\\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\\cmTC_d2756.dir\\ /FS -c "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp"
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_d2756.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_d2756.dir\\CMakeCXXCompilerABI.cpp.obj  /out:cmTC_d2756.exe /implib:cmTC_d2756.lib /pdb:cmTC_d2756.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_7d88b
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /EHsc  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_7d88b.dir\\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\\cmTC_7d88b.dir\\ /FS -c "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp"
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_7d88b.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_7d88b.dir\\CMakeCXXCompilerABI.cpp.obj  /out:cmTC_7d88b.exe /implib:cmTC_7d88b.lib /pdb:cmTC_7d88b.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -224,8 +224,8 @@ events:
     checks:
       - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-1vf8gy"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-1vf8gy"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-ntc6t5"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-ntc6t5"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -235,13 +235,13 @@ events:
       variable: "CMAKE_HAVE_LIBC_PTHREAD"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-1vf8gy'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-ntc6t5'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_85578
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo -DCMAKE_HAVE_LIBC_PTHREAD  /DWIN32 /D_WINDOWS  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_85578.dir\\src.c.obj /FdCMakeFiles\\cmTC_85578.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-1vf8gy\\src.c
-        FAILED: CMakeFiles/cmTC_85578.dir/src.c.obj 
-        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo -DCMAKE_HAVE_LIBC_PTHREAD  /DWIN32 /D_WINDOWS  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_85578.dir\\src.c.obj /FdCMakeFiles\\cmTC_85578.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-1vf8gy\\src.c
-        D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-1vf8gy\\src.c(1): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_eeed5
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo -DCMAKE_HAVE_LIBC_PTHREAD  /DWIN32 /D_WINDOWS  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_eeed5.dir\\src.c.obj /FdCMakeFiles\\cmTC_eeed5.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-ntc6t5\\src.c
+        FAILED: CMakeFiles/cmTC_eeed5.dir/src.c.obj 
+        C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo -DCMAKE_HAVE_LIBC_PTHREAD  /DWIN32 /D_WINDOWS  /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_eeed5.dir\\src.c.obj /FdCMakeFiles\\cmTC_eeed5.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-ntc6t5\\src.c
+        D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-ntc6t5\\src.c(1): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
         ninja: build stopped: subcommand failed.
         
       exitCode: 1
@@ -259,8 +259,8 @@ events:
     checks:
       - "Looking for pthread_create in pthreads"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-do43bt"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-do43bt"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-hmoe36"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-hmoe36"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -270,14 +270,14 @@ events:
       variable: "CMAKE_HAVE_PTHREADS_CREATE"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-do43bt'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-hmoe36'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_3120d
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -DCHECK_FUNCTION_EXISTS=pthread_create /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_3120d.dir\\CheckFunctionExists.c.obj /FdCMakeFiles\\cmTC_3120d.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-do43bt\\CheckFunctionExists.c
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_3120d.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_3120d.dir\\CheckFunctionExists.c.obj  /out:cmTC_3120d.exe /implib:cmTC_3120d.lib /pdb:cmTC_3120d.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthreads.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
-        FAILED: cmTC_3120d.exe 
-        C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_3120d.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_3120d.dir\\CheckFunctionExists.c.obj  /out:cmTC_3120d.exe /implib:cmTC_3120d.lib /pdb:cmTC_3120d.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthreads.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
-        LINK Pass 1: command "C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_3120d.dir\\CheckFunctionExists.c.obj /out:cmTC_3120d.exe /implib:cmTC_3120d.lib /pdb:cmTC_3120d.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_3120d.dir/intermediate.manifest CMakeFiles\\cmTC_3120d.dir/manifest.res" failed (exit code 1104) with the following output:
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_d8755
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -DCHECK_FUNCTION_EXISTS=pthread_create /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_d8755.dir\\CheckFunctionExists.c.obj /FdCMakeFiles\\cmTC_d8755.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-hmoe36\\CheckFunctionExists.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_d8755.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_d8755.dir\\CheckFunctionExists.c.obj  /out:cmTC_d8755.exe /implib:cmTC_d8755.lib /pdb:cmTC_d8755.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthreads.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        FAILED: cmTC_d8755.exe 
+        C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_d8755.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_d8755.dir\\CheckFunctionExists.c.obj  /out:cmTC_d8755.exe /implib:cmTC_d8755.lib /pdb:cmTC_d8755.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthreads.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        LINK Pass 1: command "C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_d8755.dir\\CheckFunctionExists.c.obj /out:cmTC_d8755.exe /implib:cmTC_d8755.lib /pdb:cmTC_d8755.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_d8755.dir/intermediate.manifest CMakeFiles\\cmTC_d8755.dir/manifest.res" failed (exit code 1104) with the following output:
         LINK : fatal error LNK1104: cannot open file 'pthreads.lib'\x0d
         ninja: build stopped: subcommand failed.
         
@@ -296,8 +296,8 @@ events:
     checks:
       - "Looking for pthread_create in pthread"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-bp4823"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-bp4823"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-olvqa6"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-olvqa6"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -307,14 +307,14 @@ events:
       variable: "CMAKE_HAVE_PTHREAD_CREATE"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-bp4823'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-olvqa6'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_84841
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -DCHECK_FUNCTION_EXISTS=pthread_create /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_84841.dir\\CheckFunctionExists.c.obj /FdCMakeFiles\\cmTC_84841.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-bp4823\\CheckFunctionExists.c
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_84841.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_84841.dir\\CheckFunctionExists.c.obj  /out:cmTC_84841.exe /implib:cmTC_84841.lib /pdb:cmTC_84841.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthread.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
-        FAILED: cmTC_84841.exe 
-        C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_84841.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_84841.dir\\CheckFunctionExists.c.obj  /out:cmTC_84841.exe /implib:cmTC_84841.lib /pdb:cmTC_84841.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthread.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
-        LINK Pass 1: command "C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_84841.dir\\CheckFunctionExists.c.obj /out:cmTC_84841.exe /implib:cmTC_84841.lib /pdb:cmTC_84841.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_84841.dir/intermediate.manifest CMakeFiles\\cmTC_84841.dir/manifest.res" failed (exit code 1104) with the following output:
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_ba989
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -DCHECK_FUNCTION_EXISTS=pthread_create /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_ba989.dir\\CheckFunctionExists.c.obj /FdCMakeFiles\\cmTC_ba989.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-olvqa6\\CheckFunctionExists.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_ba989.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_ba989.dir\\CheckFunctionExists.c.obj  /out:cmTC_ba989.exe /implib:cmTC_ba989.lib /pdb:cmTC_ba989.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthread.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        FAILED: cmTC_ba989.exe 
+        C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_ba989.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_ba989.dir\\CheckFunctionExists.c.obj  /out:cmTC_ba989.exe /implib:cmTC_ba989.lib /pdb:cmTC_ba989.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  pthread.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        LINK Pass 1: command "C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_ba989.dir\\CheckFunctionExists.c.obj /out:cmTC_ba989.exe /implib:cmTC_ba989.lib /pdb:cmTC_ba989.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\cmTC_ba989.dir/intermediate.manifest CMakeFiles\\cmTC_ba989.dir/manifest.res" failed (exit code 1104) with the following output:
         LINK : fatal error LNK1104: cannot open file 'pthread.lib'\x0d
         ninja: build stopped: subcommand failed.
         
@@ -334,8 +334,8 @@ events:
     checks:
       - "Performing Test HAVE_STDATOMIC"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-63nqe8"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-63nqe8"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-p05kki"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-p05kki"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -345,11 +345,11 @@ events:
       variable: "HAVE_STDATOMIC"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-63nqe8'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-p05kki'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_c21a9
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DHAVE_STDATOMIC  /DWIN32 /D_WINDOWS /EHsc  /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_c21a9.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_c21a9.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-63nqe8\\src.cxx
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_c21a9.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_c21a9.dir\\src.cxx.obj  /out:cmTC_c21a9.exe /implib:cmTC_c21a9.lib /pdb:cmTC_c21a9.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_aa10a
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DHAVE_STDATOMIC  /DWIN32 /D_WINDOWS /EHsc  /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_aa10a.dir\\src.cxx.obj /FdCMakeFiles\\cmTC_aa10a.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-p05kki\\src.cxx
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_aa10a.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_aa10a.dir\\src.cxx.obj  /out:cmTC_aa10a.exe /implib:cmTC_aa10a.lib /pdb:cmTC_aa10a.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -360,8 +360,8 @@ events:
       - "junior_practices/CMakeLists.txt:71 (find_package)"
     description: "Detecting C OpenMP compiler info"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-gkgklu"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-gkgklu"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-n2plo7"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-n2plo7"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -371,11 +371,11 @@ events:
       variable: "OpenMP_COMPILE_RESULT_C_openmp"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-gkgklu'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-n2plo7'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_bb8b8
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -openmp /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_bb8b8.dir\\OpenMPTryFlag.c.obj /FdCMakeFiles\\cmTC_bb8b8.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-gkgklu\\OpenMPTryFlag.c
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_bb8b8.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_bb8b8.dir\\OpenMPTryFlag.c.obj  /out:cmTC_bb8b8.exe /implib:cmTC_bb8b8.lib /pdb:cmTC_bb8b8.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_98f0b
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -openmp /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_98f0b.dir\\OpenMPTryFlag.c.obj /FdCMakeFiles\\cmTC_98f0b.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-n2plo7\\OpenMPTryFlag.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_98f0b.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_98f0b.dir\\OpenMPTryFlag.c.obj  /out:cmTC_98f0b.exe /implib:cmTC_98f0b.lib /pdb:cmTC_98f0b.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -386,8 +386,8 @@ events:
       - "junior_practices/CMakeLists.txt:71 (find_package)"
     description: "Detecting CXX OpenMP compiler info"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-dsrhc6"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-dsrhc6"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-7t45vw"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-7t45vw"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -397,13 +397,13 @@ events:
       variable: "OpenMP_COMPILE_RESULT_CXX_openmp"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-dsrhc6'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-7t45vw'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_b166b
-        [1/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-dsrhc6\\OpenMPTryFlag.cpp -nologo -TP -showIncludes -scanDependencies CMakeFiles\\cmTC_b166b.dir\\OpenMPTryFlag.cpp.obj.ddi -FoCMakeFiles\\cmTC_b166b.dir\\OpenMPTryFlag.cpp.obj
-        [2/4] "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_ninja_dyndep --tdi=CMakeFiles\\cmTC_b166b.dir\\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=CMakeFiles\\cmTC_b166b.dir\\CXX.dd @CMakeFiles\\cmTC_b166b.dir\\CXX.dd.rsp
-        [3/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /showIncludes @CMakeFiles\\cmTC_b166b.dir\\OpenMPTryFlag.cpp.obj.modmap /FoCMakeFiles\\cmTC_b166b.dir\\OpenMPTryFlag.cpp.obj /FdCMakeFiles\\cmTC_b166b.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-dsrhc6\\OpenMPTryFlag.cpp
-        [4/4] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_b166b.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_b166b.dir\\OpenMPTryFlag.cpp.obj  /out:cmTC_b166b.exe /implib:cmTC_b166b.lib /pdb:cmTC_b166b.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_8a703
+        [1/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-7t45vw\\OpenMPTryFlag.cpp -nologo -TP -showIncludes -scanDependencies CMakeFiles\\cmTC_8a703.dir\\OpenMPTryFlag.cpp.obj.ddi -FoCMakeFiles\\cmTC_8a703.dir\\OpenMPTryFlag.cpp.obj
+        [2/4] "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_ninja_dyndep --tdi=CMakeFiles\\cmTC_8a703.dir\\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=CMakeFiles\\cmTC_8a703.dir\\CXX.dd @CMakeFiles\\cmTC_8a703.dir\\CXX.dd.rsp
+        [3/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /showIncludes @CMakeFiles\\cmTC_8a703.dir\\OpenMPTryFlag.cpp.obj.modmap /FoCMakeFiles\\cmTC_8a703.dir\\OpenMPTryFlag.cpp.obj /FdCMakeFiles\\cmTC_8a703.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-7t45vw\\OpenMPTryFlag.cpp
+        [4/4] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_8a703.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_8a703.dir\\OpenMPTryFlag.cpp.obj  /out:cmTC_8a703.exe /implib:cmTC_8a703.lib /pdb:cmTC_8a703.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -414,8 +414,8 @@ events:
       - "junior_practices/CMakeLists.txt:71 (find_package)"
     description: "Detecting C OpenMP version"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-exyi5u"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-exyi5u"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-l3ub80"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-l3ub80"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
       CMAKE_C_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -425,11 +425,11 @@ events:
       variable: "OpenMP_SPECTEST_C_"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-exyi5u'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-l3ub80'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_ec0ed
-        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -openmp /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_ec0ed.dir\\OpenMPCheckVersion.c.obj /FdCMakeFiles\\cmTC_ec0ed.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-exyi5u\\OpenMPCheckVersion.c
-        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_ec0ed.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_ec0ed.dir\\OpenMPCheckVersion.c.obj  /out:cmTC_ec0ed.exe /implib:cmTC_ec0ed.lib /pdb:cmTC_ec0ed.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_5b308
+        [1/2] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS -openmp /Ob0 /Od /RTC1 -MDd -Zi /showIncludes /FoCMakeFiles\\cmTC_5b308.dir\\OpenMPCheckVersion.c.obj /FdCMakeFiles\\cmTC_5b308.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-l3ub80\\OpenMPCheckVersion.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_5b308.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_5b308.dir\\OpenMPCheckVersion.c.obj  /out:cmTC_5b308.exe /implib:cmTC_5b308.lib /pdb:cmTC_5b308.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
   -
@@ -440,8 +440,8 @@ events:
       - "junior_practices/CMakeLists.txt:71 (find_package)"
     description: "Detecting CXX OpenMP version"
     directories:
-      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-esdfau"
-      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-esdfau"
+      source: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-o25y7b"
+      binary: "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-o25y7b"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -451,13 +451,13 @@ events:
       variable: "OpenMP_SPECTEST_CXX_"
       cached: true
       stdout: |
-        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-esdfau'
+        Change Dir: 'D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CMakeScratch/TryCompile-o25y7b'
         
-        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_22a6e
-        [1/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-esdfau\\OpenMPCheckVersion.cpp -nologo -TP -showIncludes -scanDependencies CMakeFiles\\cmTC_22a6e.dir\\OpenMPCheckVersion.cpp.obj.ddi -FoCMakeFiles\\cmTC_22a6e.dir\\OpenMPCheckVersion.cpp.obj
-        [2/4] "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_ninja_dyndep --tdi=CMakeFiles\\cmTC_22a6e.dir\\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=CMakeFiles\\cmTC_22a6e.dir\\CXX.dd @CMakeFiles\\cmTC_22a6e.dir\\CXX.dd.rsp
-        [3/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /showIncludes @CMakeFiles\\cmTC_22a6e.dir\\OpenMPCheckVersion.cpp.obj.modmap /FoCMakeFiles\\cmTC_22a6e.dir\\OpenMPCheckVersion.cpp.obj /FdCMakeFiles\\cmTC_22a6e.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-esdfau\\OpenMPCheckVersion.cpp
-        [4/4] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_22a6e.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_22a6e.dir\\OpenMPCheckVersion.cpp.obj  /out:cmTC_22a6e.exe /implib:cmTC_22a6e.lib /pdb:cmTC_22a6e.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        Run Build Command(s): "C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -v cmTC_9a4a2
+        [1/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-o25y7b\\OpenMPCheckVersion.cpp -nologo -TP -showIncludes -scanDependencies CMakeFiles\\cmTC_9a4a2.dir\\OpenMPCheckVersion.cpp.obj.ddi -FoCMakeFiles\\cmTC_9a4a2.dir\\OpenMPCheckVersion.cpp.obj
+        [2/4] "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_ninja_dyndep --tdi=CMakeFiles\\cmTC_9a4a2.dir\\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=CMakeFiles\\cmTC_9a4a2.dir\\CXX.dd @CMakeFiles\\cmTC_9a4a2.dir\\CXX.dd.rsp
+        [3/4] C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /EHsc -openmp /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /showIncludes @CMakeFiles\\cmTC_9a4a2.dir\\OpenMPCheckVersion.cpp.obj.modmap /FoCMakeFiles\\cmTC_9a4a2.dir\\OpenMPCheckVersion.cpp.obj /FdCMakeFiles\\cmTC_9a4a2.dir\\ /FS -c D:\\chenzhen\\CppOR\\cmake-build-release\\CMakeFiles\\CMakeScratch\\TryCompile-o25y7b\\OpenMPCheckVersion.cpp
+        [4/4] C:\\Windows\\system32\\cmd.exe /C "cd . && "C:\\Program Files\\JetBrains\\CLion 2024.3.5\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\\cmTC_9a4a2.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~4\\2022\\COMMUN~1\\VC\\Tools\\MSVC\\1444~1.352\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_9a4a2.dir\\OpenMPCheckVersion.cpp.obj  /out:cmTC_9a4a2.exe /implib:cmTC_9a4a2.lib /pdb:cmTC_9a4a2.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
         
       exitCode: 0
 ...

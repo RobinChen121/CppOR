@@ -3,6 +3,34 @@
 -- Gurobi include dirs: C:/gurobi1202/win64/include
 -- Gurobi libraries: C:/gurobi1202/win64/lib/gurobi_c++md2017.lib
 -- Qt6 found at: C:/Qt/6.9.1/msvc2022_64/lib/cmake/Qt6
--- Configuring done (1.0s)
--- Generating done (0.2s)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Build type: Debug
+-- Gurobi include dirs: C:/gurobi1202/win64/include
+-- Gurobi libraries: C:/gurobi1202/win64/lib/gurobi_c++md2017.lib
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
 -- Build files have been written to: D:/chenzhen/CppOR/cmake-build-debug

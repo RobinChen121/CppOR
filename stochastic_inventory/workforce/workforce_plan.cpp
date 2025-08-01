@@ -436,7 +436,7 @@ bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
   return arr;
 }
 
-std::pair<double, std::vector<std::array<double, 2>>> WorkforcePlan::solve_mip() const {
+std::pair<double, std::vector<std::array<int, 2>>> WorkforcePlan::solve_mip() const {
   const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
                                           unit_penalty, turnover_rates, min_workers);
   double mip_obj = mip->piece_approximate(piece_segment);
@@ -483,6 +483,7 @@ int main() {
     }
     std::cout << std::endl;
   }
+  problem.simulate_sS(problem.get_initial_state(), snd);
 
   // start_time = std::chrono::high_resolution_clock::now();
   const auto arr = problem.compute_Gy();
@@ -490,11 +491,11 @@ int main() {
   // time = end_time - start_time;
   // std::cout << "running time is " << time.count() << 's' << std::endl;
   std::cout << "*******************************" << std::endl;
-  problem.check_K_convexity(arr);
-  const auto expect_Gy = problem.compute_expect_Gy(arr);
-  problem.check_Binomial_KConvexity(arr, expect_Gy);
-  problem.check_convexity(arr);
-  drawGy(arr, arr_sS[0]);
+  // problem.check_K_convexity(arr);
+  // const auto expect_Gy = problem.compute_expect_Gy(arr);
+  // problem.check_Binomial_KConvexity(arr, expect_Gy);
+  // problem.check_convexity(arr);
+  // drawGy(arr, arr_sS[0]);
 
   return 0;
 }

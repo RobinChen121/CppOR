@@ -1,0 +1,11 @@
+ninja_dyndep_version = 1.0
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj: dyndep
+
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj: dyndep
+
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj: dyndep
+
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj: dyndep
+
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj: dyndep
+
