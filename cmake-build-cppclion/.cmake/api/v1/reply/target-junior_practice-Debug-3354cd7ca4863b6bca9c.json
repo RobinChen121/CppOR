@@ -12,23 +12,23 @@
 		[
 			"add_executable",
 			"target_link_libraries",
+			"set_property",
+			"find_package",
+			"boost_find_component",
 			"set_target_properties",
 			"include",
-			"find_package",
-			"set_property",
-			"boost_find_component",
 			"include_directories"
 		],
 		"files" : 
 		[
 			"junior_practices/CMakeLists.txt",
+			"/opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake",
+			"/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake",
 			"/opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
 			"/opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
 			"/opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake",
 			"/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
 			"/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
-			"/opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake",
-			"/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake",
 			"/opt/anaconda3/lib/cmake/spdlog/spdlogConfigTargets.cmake",
 			"/opt/anaconda3/lib/cmake/spdlog/spdlogConfig.cmake"
 		],
@@ -40,115 +40,115 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 7,
+				"line" : 10,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 33,
+				"line" : 44,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 75,
+				"line" : 57,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 96,
+				"line" : 94,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 131,
+				"line" : 136,
 				"parent" : 0
 			},
 			{
-				"command" : 4,
+				"command" : 3,
 				"file" : 0,
-				"line" : 26,
+				"line" : 42,
 				"parent" : 0
 			},
 			{
-				"file" : 3,
+				"file" : 2,
 				"parent" : 6
 			},
 			{
 				"command" : 4,
-				"file" : 3,
-				"line" : 190,
+				"file" : 2,
+				"line" : 262,
 				"parent" : 7
 			},
 			{
+				"command" : 3,
 				"file" : 2,
+				"line" : 141,
 				"parent" : 8
 			},
 			{
-				"command" : 3,
-				"file" : 2,
-				"line" : 55,
+				"file" : 1,
 				"parent" : 9
 			},
 			{
+				"command" : 2,
 				"file" : 1,
+				"line" : 103,
 				"parent" : 10
 			},
 			{
-				"command" : 2,
-				"file" : 1,
-				"line" : 62,
-				"parent" : 11
-			},
-			{
-				"command" : 4,
-				"file" : 3,
-				"line" : 190,
-				"parent" : 7
+				"command" : 3,
+				"file" : 0,
+				"line" : 54,
+				"parent" : 0
 			},
 			{
 				"file" : 5,
-				"parent" : 13
+				"parent" : 12
 			},
 			{
 				"command" : 3,
 				"file" : 5,
-				"line" : 57,
+				"line" : 190,
+				"parent" : 13
+			},
+			{
+				"file" : 4,
 				"parent" : 14
 			},
 			{
+				"command" : 6,
 				"file" : 4,
+				"line" : 55,
 				"parent" : 15
 			},
 			{
-				"command" : 2,
-				"file" : 4,
-				"line" : 62,
+				"file" : 3,
 				"parent" : 16
 			},
 			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 74,
-				"parent" : 0
+				"command" : 5,
+				"file" : 3,
+				"line" : 62,
+				"parent" : 17
+			},
+			{
+				"command" : 3,
+				"file" : 5,
+				"line" : 190,
+				"parent" : 13
 			},
 			{
 				"file" : 7,
-				"parent" : 18
+				"parent" : 19
 			},
 			{
 				"command" : 6,
 				"file" : 7,
-				"line" : 262,
-				"parent" : 19
-			},
-			{
-				"command" : 4,
-				"file" : 7,
-				"line" : 141,
+				"line" : 57,
 				"parent" : 20
 			},
 			{
@@ -158,13 +158,13 @@
 			{
 				"command" : 5,
 				"file" : 6,
-				"line" : 103,
+				"line" : 62,
 				"parent" : 22
 			},
 			{
-				"command" : 4,
+				"command" : 3,
 				"file" : 0,
-				"line" : 130,
+				"line" : 135,
 				"parent" : 0
 			},
 			{
@@ -172,7 +172,7 @@
 				"parent" : 24
 			},
 			{
-				"command" : 3,
+				"command" : 6,
 				"file" : 9,
 				"line" : 42,
 				"parent" : 25
@@ -182,7 +182,7 @@
 				"parent" : 26
 			},
 			{
-				"command" : 2,
+				"command" : 5,
 				"file" : 8,
 				"line" : 61,
 				"parent" : 27
@@ -190,25 +190,37 @@
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 49,
+				"line" : 73,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 92,
+				"line" : 91,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 94,
+				"line" : 93,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 43,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 52,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 123,
+				"line" : 127,
 				"parent" : 0
 			}
 		]
@@ -225,35 +237,35 @@
 			"defines" : 
 			[
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_ATOMIC_DYN_LINK"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_ATOMIC_NO_LIB"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_FILESYSTEM_DYN_LINK"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_FILESYSTEM_NO_LIB"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_SYSTEM_DYN_LINK"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_SYSTEM_NO_LIB"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_THREAD_DYN_LINK"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_THREAD_NO_LIB"
 				},
 				{
@@ -261,15 +273,15 @@
 					"define" : "FMT_SHARED"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "QT_CORE_LIB"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "QT_GUI_LIB"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "QT_WIDGETS_LIB"
 				},
 				{
@@ -288,17 +300,17 @@
 			"frameworks" : 
 			[
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"isSystem" : true,
 					"path" : "/opt/homebrew/lib/QtCore.framework"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"isSystem" : true,
 					"path" : "/opt/homebrew/lib/QtGui.framework"
 				},
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"isSystem" : true,
 					"path" : "/opt/homebrew/lib/QtWidgets.framework"
 				}
@@ -318,37 +330,42 @@
 					"path" : "/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include"
 				},
 				{
-					"backtrace" : 2,
-					"isSystem" : true,
-					"path" : "/opt/homebrew/lib/QtCore.framework/Headers"
-				},
-				{
-					"backtrace" : 2,
-					"isSystem" : true,
-					"path" : "/opt/homebrew/share/qt/mkspecs/macx-clang"
-				},
-				{
-					"backtrace" : 2,
-					"isSystem" : true,
-					"path" : "/opt/homebrew/include"
-				},
-				{
-					"backtrace" : 2,
-					"isSystem" : true,
-					"path" : "/opt/homebrew/lib/QtGui.framework/Headers"
-				},
-				{
-					"backtrace" : 2,
-					"isSystem" : true,
-					"path" : "/opt/homebrew/lib/QtWidgets.framework/Headers"
-				},
-				{
-					"backtrace" : 3,
+					"backtrace" : 32,
 					"isSystem" : true,
 					"path" : "/opt/anaconda3/include"
 				},
 				{
-					"backtrace" : 32,
+					"backtrace" : 33,
+					"isSystem" : true,
+					"path" : "/Users/zhenchen/VulkanSDK/1.4.313.1/macOS/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtCore.framework/Headers"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/share/qt/mkspecs/macx-clang"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtGui.framework/Headers"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/lib/QtWidgets.framework/Headers"
+				},
+				{
+					"backtrace" : 34,
 					"isSystem" : true,
 					"path" : "/opt/homebrew/include/eigen3"
 				}
@@ -358,9 +375,7 @@
 			{
 				"backtraces" : 
 				[
-					2,
-					2,
-					5
+					1
 				],
 				"standard" : "20"
 			},
@@ -393,22 +408,22 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/opt/homebrew/lib/QtWidgets.framework/Versions/A/QtWidgets",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 3,
 				"fragment" : "/opt/anaconda3/lib/libboost_system.dylib",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 3,
+				"backtrace" : 2,
 				"fragment" : "/opt/anaconda3/lib/libboost_thread.dylib",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 3,
+				"backtrace" : 2,
 				"fragment" : "/opt/anaconda3/lib/libboost_filesystem.dylib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/opt/homebrew/lib/QtWidgets.framework/Versions/A/QtWidgets",
 				"role" : "libraries"
 			},
 			{
@@ -427,7 +442,12 @@
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 2,
+				"backtrace" : 11,
+				"fragment" : "/opt/anaconda3/lib/libboost_atomic.dylib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
 				"fragment" : "/opt/homebrew/lib/QtGui.framework/Versions/A/QtGui",
 				"role" : "libraries"
 			},
@@ -436,48 +456,43 @@
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 12,
+				"backtrace" : 18,
 				"fragment" : "-framework AppKit",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 12,
+				"backtrace" : 18,
 				"fragment" : "-framework OpenGL",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 12,
+				"backtrace" : 18,
 				"fragment" : "-framework ImageIO",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 12,
+				"backtrace" : 18,
 				"fragment" : "-framework Metal",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 2,
+				"backtrace" : 3,
 				"fragment" : "/opt/homebrew/lib/QtCore.framework/Versions/A/QtCore",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 17,
+				"backtrace" : 23,
 				"fragment" : "-framework IOKit",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 17,
+				"backtrace" : 23,
 				"fragment" : "-framework DiskArbitration",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 17,
-				"fragment" : "-framework UniformTypeIdentifiers",
-				"role" : "libraries"
-			},
-			{
 				"backtrace" : 23,
-				"fragment" : "/opt/anaconda3/lib/libboost_atomic.dylib",
+				"fragment" : "-framework UniformTypeIdentifiers",
 				"role" : "libraries"
 			},
 			{
@@ -510,7 +525,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "junior_practices/draw_animation.cpp",
+			"path" : "junior_practices/boost_test.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

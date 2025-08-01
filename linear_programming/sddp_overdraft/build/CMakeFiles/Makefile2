@@ -63,11 +63,11 @@ CMAKE_BINARY_DIR = /Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_o
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/overdraft.dir/all
+all: CMakeFiles/sddp-overdraft.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
-codegen: CMakeFiles/overdraft.dir/codegen
+codegen: CMakeFiles/sddp-overdraft.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -75,40 +75,40 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/overdraft.dir/clean
+clean: CMakeFiles/sddp-overdraft.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/overdraft.dir
+# Target rules for target CMakeFiles/sddp-overdraft.dir
 
 # All Build rule for target.
-CMakeFiles/overdraft.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_overdraft/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target overdraft"
-.PHONY : CMakeFiles/overdraft.dir/all
+CMakeFiles/sddp-overdraft.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_overdraft/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target sddp-overdraft"
+.PHONY : CMakeFiles/sddp-overdraft.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/overdraft.dir/rule: cmake_check_build_system
+CMakeFiles/sddp-overdraft.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_overdraft/build/CMakeFiles 5
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/overdraft.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/sddp-overdraft.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_overdraft/build/CMakeFiles 0
-.PHONY : CMakeFiles/overdraft.dir/rule
+.PHONY : CMakeFiles/sddp-overdraft.dir/rule
 
 # Convenience name for target.
-overdraft: CMakeFiles/overdraft.dir/rule
-.PHONY : overdraft
+sddp-overdraft: CMakeFiles/sddp-overdraft.dir/rule
+.PHONY : sddp-overdraft
 
 # codegen rule for target.
-CMakeFiles/overdraft.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_overdraft/build/CMakeFiles --progress-num=1,2,3,4,5 "Finished codegen for target overdraft"
-.PHONY : CMakeFiles/overdraft.dir/codegen
+CMakeFiles/sddp-overdraft.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zhenchen/CLionProjects/CppOR/linear_programming/sddp_overdraft/build/CMakeFiles --progress-num=1,2,3,4,5 "Finished codegen for target sddp-overdraft"
+.PHONY : CMakeFiles/sddp-overdraft.dir/codegen
 
 # clean rule for target.
-CMakeFiles/overdraft.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/clean
-.PHONY : CMakeFiles/overdraft.dir/clean
+CMakeFiles/sddp-overdraft.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/clean
+.PHONY : CMakeFiles/sddp-overdraft.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

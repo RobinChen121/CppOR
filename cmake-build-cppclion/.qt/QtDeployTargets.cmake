@@ -1,5 +1,3 @@
-set(__QT_DEPLOY_TARGET_sddp-overdraft_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/linear_programming/sddp_overdraft/sddp-overdraft)
-set(__QT_DEPLOY_TARGET_sddp-overdraft_TYPE EXECUTABLE)
 set(__QT_DEPLOY_TARGET_gurobi_example_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/linear_programming/gurobi_examples/gurobi_example)
 set(__QT_DEPLOY_TARGET_gurobi_example_TYPE EXECUTABLE)
 set(__QT_DEPLOY_TARGET_LP_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/linear_programming/LP)

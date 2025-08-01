@@ -491,11 +491,11 @@ int main() {
   // time = end_time - start_time;
   // std::cout << "running time is " << time.count() << 's' << std::endl;
   std::cout << "*******************************" << std::endl;
-  // problem.check_K_convexity(arr);
-  // const auto expect_Gy = problem.compute_expect_Gy(arr);
-  // problem.check_Binomial_KConvexity(arr, expect_Gy);
-  // problem.check_convexity(arr);
-  // drawGy(arr, arr_sS[0]);
+  problem.check_K_convexity(arr);
+  const auto expect_Gy = problem.compute_expect_Gy(arr);
+  problem.check_Binomial_KConvexity(arr, expect_Gy);
+  problem.check_convexity(arr);
+  drawGy(arr, arr_sS[0]);
 
   return 0;
 }

@@ -117,77 +117,77 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named overdraft
+# Target rules for targets named sddp-overdraft
 
 # Build rule for target.
-overdraft: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 overdraft
-.PHONY : overdraft
+sddp-overdraft: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sddp-overdraft
+.PHONY : sddp-overdraft
 
 # fast build rule for target.
-overdraft/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/build
-.PHONY : overdraft/fast
+sddp-overdraft/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/build
+.PHONY : sddp-overdraft/fast
 
 # target to build an object file
-Users/zhenchen/CLionProjects/CppOR/utils/Sampling.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/Sampling.o
-.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/Sampling.o
+I_cash_status.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/I_cash_status.o
+.PHONY : I_cash_status.o
 
 # target to preprocess a source file
-Users/zhenchen/CLionProjects/CppOR/utils/Sampling.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/Sampling.i
-.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/Sampling.i
+I_cash_status.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/I_cash_status.i
+.PHONY : I_cash_status.i
 
 # target to generate assembly for a file
-Users/zhenchen/CLionProjects/CppOR/utils/Sampling.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/Sampling.s
-.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/Sampling.s
+I_cash_status.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/I_cash_status.s
+.PHONY : I_cash_status.s
 
 # target to build an object file
-Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.o
-.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.o
+Users/zhenchen/CLionProjects/CppOR/utils/common.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/common.o
+.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/common.o
 
 # target to preprocess a source file
-Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.i
-.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.i
+Users/zhenchen/CLionProjects/CppOR/utils/common.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/common.i
+.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/common.i
 
 # target to generate assembly for a file
-Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.s
-.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.s
+Users/zhenchen/CLionProjects/CppOR/utils/common.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/common.s
+.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/common.s
 
 # target to build an object file
-common.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/common.o
-.PHONY : common.o
+Users/zhenchen/CLionProjects/CppOR/utils/sampling.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/sampling.o
+.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/sampling.o
 
 # target to preprocess a source file
-common.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/common.i
-.PHONY : common.i
+Users/zhenchen/CLionProjects/CppOR/utils/sampling.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/sampling.i
+.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/sampling.i
 
 # target to generate assembly for a file
-common.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/common.s
-.PHONY : common.s
+Users/zhenchen/CLionProjects/CppOR/utils/sampling.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/Users/zhenchen/CLionProjects/CppOR/utils/sampling.s
+.PHONY : Users/zhenchen/CLionProjects/CppOR/utils/sampling.s
 
 # target to build an object file
-single_product_enhancement_further.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/single_product_enhancement_further.o
-.PHONY : single_product_enhancement_further.o
+single_product_enhancement.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/single_product_enhancement.o
+.PHONY : single_product_enhancement.o
 
 # target to preprocess a source file
-single_product_enhancement_further.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/single_product_enhancement_further.i
-.PHONY : single_product_enhancement_further.i
+single_product_enhancement.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/single_product_enhancement.i
+.PHONY : single_product_enhancement.i
 
 # target to generate assembly for a file
-single_product_enhancement_further.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/overdraft.dir/build.make CMakeFiles/overdraft.dir/single_product_enhancement_further.s
-.PHONY : single_product_enhancement_further.s
+single_product_enhancement.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sddp-overdraft.dir/build.make CMakeFiles/sddp-overdraft.dir/single_product_enhancement.s
+.PHONY : single_product_enhancement.s
 
 # Help Target
 help:
@@ -197,19 +197,19 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... overdraft"
-	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/Sampling.o"
-	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/Sampling.i"
-	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/Sampling.s"
-	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.o"
-	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.i"
-	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/removeDuplicates.s"
-	@echo "... common.o"
-	@echo "... common.i"
-	@echo "... common.s"
-	@echo "... single_product_enhancement_further.o"
-	@echo "... single_product_enhancement_further.i"
-	@echo "... single_product_enhancement_further.s"
+	@echo "... sddp-overdraft"
+	@echo "... I_cash_status.o"
+	@echo "... I_cash_status.i"
+	@echo "... I_cash_status.s"
+	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/common.o"
+	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/common.i"
+	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/common.s"
+	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/sampling.o"
+	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/sampling.i"
+	@echo "... Users/zhenchen/CLionProjects/CppOR/utils/sampling.s"
+	@echo "... single_product_enhancement.o"
+	@echo "... single_product_enhancement.i"
+	@echo "... single_product_enhancement.s"
 .PHONY : help
 
 
