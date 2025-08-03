@@ -2,5 +2,5 @@
 test
 -- Qt6 found at: /opt/homebrew/lib/cmake/Qt6
 -- Configuring done (0.2s)
--- Generating done (0.0s)
+-- Generating done (0.1s)
 -- Build files have been written to: /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion

@@ -20,10 +20,6 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
     endif ()
 endif ()
 
-set(Vulkan_INCLUDE_DIR "$ENV{HOME}/VulkanSDK/1.4.313.1/macOS/include")
-include_directories(${Vulkan_INCLUDE_DIR})
-
-
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
