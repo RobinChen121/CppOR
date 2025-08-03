@@ -31,31 +31,31 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 29,
+				"line" : 25,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 64,
+				"line" : 60,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 75,
+				"line" : 71,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 153,
+				"line" : 149,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 62,
+				"line" : 58,
 				"parent" : 0
 			},
 			{
@@ -87,43 +87,37 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 24,
+				"line" : 69,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 73,
+				"line" : 70,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 74,
+				"line" : 128,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 132,
+				"line" : 146,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 150,
+				"line" : 148,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 152,
-				"parent" : 0
-			},
-			{
-				"command" : 5,
-				"file" : 0,
-				"line" : 63,
+				"line" : 59,
 				"parent" : 0
 			}
 		]
@@ -176,30 +170,26 @@
 			[
 				{
 					"backtrace" : 11,
-					"path" : "/Users/zhenchen/VulkanSDK/1.4.313.1/macOS/include"
-				},
-				{
-					"backtrace" : 12,
 					"path" : "/Library/gurobi1201/macos_universal2/include"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 12,
 					"path" : "/Library/gurobi1201/macos_universal2/lib"
 				},
 				{
-					"backtrace" : 14,
+					"backtrace" : 13,
 					"path" : "/opt/homebrew/Cellar/libomp/20.1.0/include"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 14,
 					"path" : "/opt/anaconda3/include/python3.12"
 				},
 				{
-					"backtrace" : 16,
+					"backtrace" : 15,
 					"path" : "/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include"
 				},
 				{
-					"backtrace" : 17,
+					"backtrace" : 16,
 					"isSystem" : true,
 					"path" : "/opt/anaconda3/include"
 				}
