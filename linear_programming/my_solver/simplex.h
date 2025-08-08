@@ -25,40 +25,42 @@ class Simplex {
 private:
   std::vector<double> obj_coefs;
   bool obj_senses;
-  std::vector<std::vector<double>> conLHSs;
-  std::vector<double> conRHSs;
-  std::vector<Comparison> conComparisons;
-  std::vector<VarSign> varSigns;
+  std::vector<std::vector<double>> con_LHSs;
+  std::vector<double> con_RHSs;
+  std::vector<Comparison> con_comparisons;
+  std::vector<VarSign> var_signs;
 
-  std::vector<std::vector<double> > tableau; // 单纯形表
+  std::vector<std::vector<double>> tableau; // 单纯形表
   int rows, cols;
   std::vector<int> basicVars;
 
-    // 找到主列（进入变量）
-    int findPivotColumn() const;
+  // 找到主列（进入变量）
+  int findPivotColumn() const;
 
-    // 找到主行（离开变量）
-    int findPivotRow(int pivotCol) const;
+  // 找到主行（离开变量）
+  int findPivotRow(int pivotCol) const;
 
-    // 行变换
-    void pivot(const int pivotRow, int pivotCol);
+  // 行变换
+  void pivot(const int pivotRow, int pivotCol);
 
 public:
-    explicit Simplex(const std::vector<std::vector<double> > &initialTableau);
+  std::vector<std::vector<double>> generateTableau();
 
-    void inputObjCoef() const;
+  explicit Simplex(const std::vector<std::vector<double> > &initialTableau);
 
-    void solve();
+  void inputObjCoef() const;
 
-    int isBasicVariable(int col) const;
+  void solve();
 
-    void displaySolution() const;
+  int isBasicVariable(int col) const;
 
-    void initializeBasicVariables();
+  void displaySolution() const;
 
-    void initializeObjective();
+  void initializeBasicVariables();
 
-    void displayTableau() const;
+  void initializeObjective();
+
+  void displayTableau() const;
 };
 
 #endif //SIMPLEX_H

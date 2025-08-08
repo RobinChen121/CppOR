@@ -1,7 +1,8 @@
 set(RUN_NAME LP) # 设置运行程序的名字
 
-#add_subdirectory(sddp_overdraft)
+add_subdirectory(sddp_overdraft)
 add_subdirectory(gurobi_examples)
+add_subdirectory(my_solver)
 
 set(CMAKE_BUILD_TYPE Release)
 if (MSVC)

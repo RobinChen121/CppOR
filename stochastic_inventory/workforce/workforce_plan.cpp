@@ -3,17 +3,20 @@
  * Email: chen.zhen5526@gmail.com
  * Description: For a 3 period problem, c++ serial can solve in 0.63 seconds while java is 7s.
  * For 5 periods, c++ parallel 8 threads mac m1 time is 0.77s while serial is 1.76s.
- * dell 7740, 12 threads, time is 1.85s while serial is 3.98s
+ * dell 7740, 12 threads, time is 1.85s while serial is 3.98s.
+ *
+ * When using mip, the turnover rate in each period should be sam.
  *
  */
 
 #include "workforce_plan.h"
-
+#include "../../utils/common.h"
 #include "piecewise.h"
-
-#include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
+#include "util_binomial.h"
+#include <boost/math/distributions/binomial.hpp> // 浜岄」鍒嗗竷澶存枃浠? random 搴撴湁鍒嗗竷浣嗘病鏈塸df鍑芥暟
 #include <cmath>
-#include <omp.h>
+#include <random>
+// #include <omp.h>
 
 void WorkforcePlan::set_fix_cost(const double value) {
   fix_hire_cost = value;
@@ -86,7 +89,7 @@ void WorkforcePlan::set_turnover_rate(const double value) {
   return {ini_state.getPeriod() + 1, next_workers};
 }
 
-double WorkforcePlan::recursion_forward(const WorkerState ini_state) {
+double WorkforcePlan::recursion_forward(const WorkerState ini_state) { // NOLINT(*-no-recursion)
   int best_hire_num = 0;
   double best_cost = std::numeric_limits<double>::max();
   const int t = ini_state.getPeriod() - 1;
@@ -249,8 +252,8 @@ std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
   return arr;
 }
 
-void WorkforcePlan::simulate_sS(const WorkerState ini_state,
-                                const std::vector<std::array<int, 2>> &sS) const {
+double WorkforcePlan::simulate_sS(const WorkerState ini_state,
+                                  const std::vector<std::array<int, 2>> &sS) const {
   std::vector<int> sample_nums(T);
   int sample_num_total = 1;
   std::vector<int> sample_num_accumulate(T);
@@ -299,6 +302,7 @@ void WorkforcePlan::simulate_sS(const WorkerState ini_state,
 
   std::cout << "simulate cost in " << sample_num_total << " samples is " << simulate_cost
             << std::endl;
+  return simulate_cost;
 }
 
 // row index is y;
@@ -317,8 +321,6 @@ std::vector<double> WorkforcePlan::compute_Gy() {
 }
 
 // row index is y;
-// the first element is a;
-// the second element is the expectation value;
 std::vector<std::vector<double>>
 WorkforcePlan::compute_expect_Gy(const std::vector<double> &Gy) const {
   const int y_length = max_worker_num;
@@ -340,7 +342,7 @@ WorkforcePlan::compute_expect_Gy(const std::vector<double> &Gy) const {
 }
 
 bool WorkforcePlan::check_K_convexity(const std::vector<double> &Gy) {
-  const int y_length = Gy.size();
+  const int y_length = static_cast<int>(Gy.size());
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y <= y_plus_a; y++)
@@ -371,9 +373,9 @@ bool WorkforcePlan::check_Binomial_KConvexity(const std::vector<double> &Gy,
                                                expect_Gy[y_minus_b][y - y_minus_b] + fix_hire_cost);
         const double right = (y_plus_a - y) * (expect_Gy[y_minus_b][y - y_minus_b] - Gy[y_minus_b]);
 
-        double test1 = expect_Gy[y_minus_b][y_plus_a - y_minus_b];
-        double test2 = expect_Gy[y_minus_b][y - y_minus_b];
-        double test3 = Gy[y_minus_b];
+        // double test1 = expect_Gy[y_minus_b][y_plus_a - y_minus_b];
+        // double test2 = expect_Gy[y_minus_b][y - y_minus_b];
+        // double test3 = Gy[y_minus_b];
         if (right - left < 0.01)
           continue;
         std::cout << "**************" << std::endl;
@@ -388,14 +390,14 @@ bool WorkforcePlan::check_Binomial_KConvexity(const std::vector<double> &Gy,
 }
 
 bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
-  const int y_length = Gy.size();
+  const int y_length = static_cast<int>(Gy.size());
 
   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
     for (int y = 1; y < y_plus_a; y++)
       for (int y_minus_b = 1; y_minus_b < y; y_minus_b++) {
         const double left = (y - y_minus_b) * (Gy[y_plus_a] - Gy[y]);
         const double right = (y_plus_a - y) * (Gy[y] - Gy[y_minus_b]);
-        double test = std::abs(left - right);
+        // double test = std::abs(left - right);
         if (std::abs(left - right) < 1)
           continue;
         std::cout << "****" << std::endl;
@@ -444,6 +446,44 @@ std::pair<double, std::vector<std::array<int, 2>>> WorkforcePlan::solve_mip() co
   return {mip_obj, sS_values};
 }
 
+// computer the cumulative turnover rate for any hiring cycle
+void WorkforcePlan::compute_turnover() {
+  p_c.resize(T);
+  for (size_t t = 0; t < T; t++) {
+    p_c[t].resize(T);
+    for (size_t j = t; j < T; j++) {
+      double right_term = 1;
+      for (size_t n = t; n <= j; n++) {
+        right_term *= 1 - turnover_rates[n];
+      }
+      p_c[t][j] = 1 - right_term;
+    }
+  }
+}
+
+std::vector<double> WorkforcePlan::compute_V() const { return {}; }
+
+double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const {
+  double left_term = 0;
+  double right_term = 0;
+  for (int k = t; k <= j; k++) {
+    left_term += 1 - p_c[t][k];
+    right_term += loss_function_expect(y, min_workers[t], p_c[t][k]);
+  }
+  left_term *= salary * y;
+  right_term *= unit_penalty;
+  return {};
+}
+
+std::pair<double, std::vector<std::array<int, 2>>> WorkforcePlan::solve_tsp() const {
+  std::vector<std::vector<double>> V(T, std::vector<double>(T));
+  for (size_t j = T - 1; j-- > 0;) {
+    for (size_t t = 0; t <= j; t++) {
+    }
+  }
+  return {};
+}
+
 int main() {
   auto problem = WorkforcePlan();
   const WorkerState ini_state{1, 0};
@@ -471,11 +511,15 @@ int main() {
     std::cout << std::endl;
   }
 
+  // ReSharper disable once CppExpressionWithoutSideEffects
   problem.simulate_sS(problem.get_initial_state(), arr_sS);
 
   std::cout << "******************** " << std::endl;
   auto [fst, snd] = problem.solve_mip();
-  std::cout << "the objective by MIP is: " << fst << std::endl;
+  // std::cout << "the objective by MIP is: " << fst << std::endl;
+  const double gap1 = (fst - final_value) / final_value * 100;
+  std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 << "%"
+            << std::endl;
   std::cout << "s, S in each period by MIP are: " << std::endl;
   for (const auto row : snd) {
     for (const auto col : row) {
@@ -483,7 +527,10 @@ int main() {
     }
     std::cout << std::endl;
   }
-  problem.simulate_sS(problem.get_initial_state(), snd);
+  const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
+  const double gap2 = (mip_sS - final_value) / final_value * 100;
+  std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap2 << "%"
+            << std::endl;
 
   // start_time = std::chrono::high_resolution_clock::now();
   const auto arr = problem.compute_Gy();

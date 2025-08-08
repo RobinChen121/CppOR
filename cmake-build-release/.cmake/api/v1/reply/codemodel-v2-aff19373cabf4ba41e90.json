@@ -1,0 +1,372 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						5,
+						6,
+						12
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "linear_programming",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4
+					],
+					"jsonFile" : "directory-linear_programming-Debug-2ee2b5e9b36ff9d38cb0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "linear_programming",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "linear_programming/sddp_overdraft",
+					"jsonFile" : "directory-linear_programming.sddp_overdraft-Debug-ea451d1d27cebc437d10.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "linear_programming/sddp_overdraft",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "linear_programming/gurobi_examples",
+					"jsonFile" : "directory-linear_programming.gurobi_examples-Debug-7e7b4e5987eb354b3b8e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "linear_programming/gurobi_examples",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "linear_programming/my_solver",
+					"jsonFile" : "directory-linear_programming.my_solver-Debug-66c4f4c75d8471a42ce1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "linear_programming/my_solver",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "junior_practices",
+					"jsonFile" : "directory-junior_practices-Debug-3757f8859727908ba5c7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "junior_practices",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "stochastic_inventory",
+					"childIndexes" : 
+					[
+						7,
+						9,
+						10,
+						11
+					],
+					"jsonFile" : "directory-stochastic_inventory-Debug-b9e373abf1dfe259fc6e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "stochastic_inventory",
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"build" : "stochastic_inventory/cash",
+					"childIndexes" : 
+					[
+						8
+					],
+					"jsonFile" : "directory-stochastic_inventory.cash-Debug-7ea203cb382e31872919.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 0,
+					"source" : "stochastic_inventory/cash",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "stochastic_inventory/cash/overdraft",
+					"jsonFile" : "directory-stochastic_inventory.cash.overdraft-Debug-84d4964c7d352c715961.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 7,
+					"projectIndex" : 0,
+					"source" : "stochastic_inventory/cash/overdraft",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "stochastic_inventory/states",
+					"jsonFile" : "directory-stochastic_inventory.states-Debug-c6f0ece5a259efd44e1f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 0,
+					"source" : "stochastic_inventory/states",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "stochastic_inventory/workforce",
+					"jsonFile" : "directory-stochastic_inventory.workforce-Debug-c0637a5f3ec8638aca9b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 0,
+					"source" : "stochastic_inventory/workforce",
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"build" : "stochastic_inventory/newsvendor",
+					"jsonFile" : "directory-stochastic_inventory.newsvendor-Debug-5bd27927ede8dcedaac8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 0,
+					"source" : "stochastic_inventory/newsvendor",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "utils",
+					"jsonFile" : "directory-utils-Debug-bb33f781d987d5385f78.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "utils",
+					"targetIndexes" : 
+					[
+						11
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12
+					],
+					"name" : "CppClion",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CppClion::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CppClion-Debug-4a11f7db75b2e77e96f0.json",
+					"name" : "CppClion",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "LP::@0cf50210e3523323234e",
+					"jsonFile" : "target-LP-Debug-419e0feb0b0de1f9e3af.json",
+					"name" : "LP",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "gurobi_example::@7290f6e2dca3cafcda7e",
+					"jsonFile" : "target-gurobi_example-Debug-582d18ecc9b8dc539297.json",
+					"name" : "gurobi_example",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "junior_practice::@269e48a9846c25342454",
+					"jsonFile" : "target-junior_practice-Debug-98be33781e70820e2b98.json",
+					"name" : "junior_practice",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "my_solver::@d26ef9d8d1132f21737b",
+					"jsonFile" : "target-my_solver-Debug-3c3d405e1b7db0b7c2d6.json",
+					"name" : "my_solver",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "newsvendor::@44333d3be895461ba489",
+					"jsonFile" : "target-newsvendor-Debug-3d6d7954985e898363e2.json",
+					"name" : "newsvendor",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sddp-overdraft::@b91144f6cfd2f2b0eb77",
+					"jsonFile" : "target-sddp-overdraft-Debug-d7207a717e19c9c24652.json",
+					"name" : "sddp-overdraft",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "sdp-cash::@686179159669958344ec",
+					"jsonFile" : "target-sdp-cash-Debug-4be23d4e26b612abf159.json",
+					"name" : "sdp-cash",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "sdp-inventory::@8359d8b257de3d65d78b",
+					"jsonFile" : "target-sdp-inventory-Debug-24bd48ac1b4502ee4d2d.json",
+					"name" : "sdp-inventory",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "sdp-overdraft::@b1a2686b200ee4c0d651",
+					"jsonFile" : "target-sdp-overdraft-Debug-d0a391fa90b33e77ac3b.json",
+					"name" : "sdp-overdraft",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "states::@385b8a4d49cac343cbbd",
+					"jsonFile" : "target-states-Debug-08eb53070842ff0d3abe.json",
+					"name" : "states",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 12,
+					"id" : "utils::@c810615cce0f7acb82dc",
+					"jsonFile" : "target-utils-Debug-65a72b328128c9931fd8.json",
+					"name" : "utils",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "workforce::@89dbaeb67dd0933c275a",
+					"jsonFile" : "target-workforce-Debug-216c29157b43e2d52f8a.json",
+					"name" : "workforce",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/chenzhen/CppOR/cmake-build-release",
+		"source" : "D:/chenzhen/CppOR"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

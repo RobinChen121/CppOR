@@ -18,11 +18,11 @@
 		"C:\\ProgramData\\anaconda3\\Lib\\site-packages\\numpy\\core\\include",
 		"D:\\c++Library\\eigen-3.4.0",
 		"D:\\c++Library\\spdlog\\include",
+		"C:\\VulkanSDK\\1.4.321.1\\include",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtCore",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\include",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\mkspecs\\win32-msvc",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtGui",
-		"C:\\VulkanSDK\\1.4.321.1\\Include",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtWidgets"
 	],
 	"language" : "CXX",

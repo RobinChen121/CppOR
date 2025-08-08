@@ -3,20 +3,22 @@ set(RUN_NAME workforce) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (MSVC)
-    # 开启 AddressSanitizer, 数组越界检查
-    # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
-    # 或将文件拷贝到当前项目 exe 所在文件夹
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -Od")
-    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
-endif ()
-
 set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
-if (CMAKE_BUILD_TYPE STREQUAL Release)
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_RELEASE "/O2")
     else ()
         set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+    endif ()
+endif ()
+
+if (MSVC)
+    # 开启 AddressSanitizer, 数组越界检查
+    # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
+    # 或将文件拷贝到当前项目 exe 所在文件夹
+    if (CMAKE_BUILD_TYPE STREQUAL Debug)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -Od") # Od
+        set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
     endif ()
 endif ()
 
@@ -35,6 +37,8 @@ add_executable(${RUN_NAME}
         #        Binomial_probability_decomposition_test.cpp
         #        Binomial_logconcave_test.cpp
         piecewise.cpp
+        util_binomial.cpp
+        util_binomial.h
 )
 
 ## boost setting
