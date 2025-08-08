@@ -9,16 +9,14 @@
 #ifndef WORKFORCE_PLAN_H
 #define WORKFORCE_PLAN_H
 
-#include "../../utils/common.h"
 #include "../../utils/draw_graph.h"
 #include "../../utils/pmf.h"
 #include "worker_state.h"
 #include <chrono>
-#include <iostream>
-#include <map>
+// #include <iostream>
+// #include <map>
 #include <mutex>
-#include <random>
-#include <thread>
+// #include <thread>
 #include <unordered_map>
 
 enum class Direction { FORWARD, BACKWARD };
@@ -28,16 +26,17 @@ class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.6, 0.5, 0.4};
+  std::vector<double> turnover_rates = {0.5, 0.5, 0.5};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 150.0;
-  double unit_vari_cost = 0;
-  double salary = 30.0;
-  double unit_penalty = 40.0;
+  double fix_hire_cost = 100.0;
+  double unit_vari_cost = 10;
+  double salary = 20.0;
+  double unit_penalty = 80.0;
+  // 初始化给定默认值时就可以使用已声明变量的值
   std::vector<int> min_workers = std::vector<int>(T, 40);
 
   int piece_segment = 10;
@@ -50,6 +49,7 @@ class WorkforcePlan {
   int max_hire_num = 500;
   int max_worker_num = 600;
 
+  std::vector<std::vector<double>> p_c; // cumulative binomial probability
   std::vector<std::vector<std::vector<double>>> pmf;
   // std::vector<std::vector<std::vector<std::array<double, 2>>>> pmf2;
   std::unordered_map<WorkerState, double> cache_actions;
@@ -89,12 +89,17 @@ public:
                      std::vector<std::unordered_map<WorkerState, double>> &policies);
   std::vector<double> solve(WorkerState ini_state);
   [[nodiscard]] std::vector<std::array<int, 2>> find_sS() const;
-  void simulate_sS(WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const;
-  std::vector<double> compute_Gy();
+  double simulate_sS(WorkerState ini_state, const std::vector<std::array<int, 2>> &sS) const;
+  [[nodiscard]] std::vector<double> compute_Gy();
   [[nodiscard]] std::vector<std::vector<double>> compute_expect_Gy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> get_opt_table() const;
 
   [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_mip() const;
+  [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_tsp() const;
+
+  void compute_turnover();
+  [[nodiscard]] std::vector<double> compute_V() const;
+  [[nodiscard]] double compute_Ltj_y(int t, int j, int y) const;
 
   bool check_K_convexity(const std::vector<double> &Gy);
   bool check_Binomial_KConvexity(const std::vector<double> &Gy,

@@ -26,8 +26,6 @@ public:
         unit_vari_cost(unit_vari_cost), salary(salary), unit_penalty(unit_penalty),
         turnover_rates(turnover_rates), min_workers(min_workers) {};
 
-  static double loss_function(int y, int min_workers, double turnover_rate);
-  static double Fy(int y, int min_workers, double turnover_rate);
   static std::vector<std::vector<double>> piecewise(int segment_num, int min_workers, double p);
 
   [[nodiscard]] double piece_approximate(int segment_num) const;

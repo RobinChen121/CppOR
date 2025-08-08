@@ -5,29 +5,10 @@
 #include "piecewise.h"
 #include "../../utils/common.h"
 #include "gurobi_c++.h"
-#include <algorithm> // std::max_element
+#include "util_binomial.h"
+// #include <algorithm> // std::max_element
 #include <boost/math/distributions/binomial.hpp> // for binomial distribution cdf and pdf, random library only for generating random numbers
 #include <numeric> // for using accumulate
-// #include <cmath>
-
-double PiecewiseWorkforce::loss_function(const int y, const int min_workers,
-                                         const double turnover_rate) {
-  const boost::math::binomial_distribution<double> dist(y, turnover_rate);
-  const int i_min = std::max(y - min_workers, 0);
-  double value = 0;
-  for (int i = i_min; i <= y; i++) {
-    value += pdf(dist, i) * (i + min_workers - y);
-  }
-  return value;
-}
-
-double PiecewiseWorkforce::Fy(const int y, const int min_workers, const double turnover_rate) {
-  const boost::math::binomial_distribution<double> dist(y, turnover_rate);
-  if (y - min_workers < 0) {
-    return 0;
-  }
-  return cdf(dist, y - min_workers);
-}
 
 std::vector<std::vector<double>>
 PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, const double p) {
@@ -71,7 +52,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
         if (Fy(j, min_workers, p) - Fy(a, min_workers, p) > 1.0 / segment_num) {
           tangent_xcoord[i] = j;
           const int b = static_cast<int>(tangent_xcoord[i]);
-          tangent_ycoord[i] = loss_function(b, min_workers, p);
+          tangent_ycoord[i] = loss_function_expect(b, min_workers, p);
           slopes[i] = -(1 - p) * (1 - Fy(b, min_workers, p));
           intercepts[i] = -slopes[i] * tangent_xcoord[i] + tangent_ycoord[i];
           break;
@@ -94,7 +75,8 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
                                   : intercept_xcoord[i + 1] / (slopes[i] - slopes[i + 1]);
     intercept_ycoord[i + 1] =
         slopes[i] * (intercept_xcoord[i + 1] - tangent_xcoord[i]) + tangent_ycoord[i];
-    const double y = loss_function(static_cast<int>(intercept_xcoord[i + 1]), min_workers, p);
+    const double y =
+        loss_function_expect(static_cast<int>(intercept_xcoord[i + 1]), min_workers, p);
     intercept_gap[i + 1] = y - intercept_ycoord[i + 1];
   }
 
@@ -127,18 +109,33 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
     for (int t = 0; t < T; t++) {
       P[t].resize(T);
       var_name = "y_" + std::to_string(t);
-      y[t] = model.addVar(0, GRB_INFINITY, unit_vari_cost, GRB_CONTINUOUS, var_name);
+      y[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
       var_name = "x_" + std::to_string(t);
-      x[t] = model.addVar(0, GRB_INFINITY, salary, GRB_CONTINUOUS, var_name);
+      x[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
       var_name = "u_" + std::to_string(t);
-      u[t] = model.addVar(0, GRB_INFINITY, unit_penalty, GRB_CONTINUOUS, var_name);
+      u[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
       var_name = "z_" + std::to_string(t);
-      z[t] = model.addVar(0, 1, fix_hire_cost, GRB_BINARY, var_name);
+      z[t] = model.addVar(0, 1, 0.0, GRB_BINARY, var_name);
       for (int j = 0; j <= t; j++) {
         var_name = "P_" + std::to_string(j) + "_" + std::to_string(t);
         P[j][t] = model.addVar(0.0, 1, 0.0, GRB_BINARY, var_name);
       }
     }
+
+    // objective function, set objective
+    GRBLinExpr obj = 0;
+    for (int t = 0; t < T; t++) {
+      // using += results in errors for C++ gurobi api
+      obj = obj + fix_hire_cost * z[t];
+      if (t == 0) {
+        obj = obj + unit_vari_cost * (y[t] - initial_workers);
+      } else {
+        obj = obj + unit_vari_cost * (y[t] - x[t - 1]);
+      }
+      obj = obj + unit_penalty * u[t];
+      obj = obj + salary * x[t];
+    }
+    model.setObjective(obj, GRB_MINIMIZE);
 
     // constraints
     // M can not be too large, or else a slight difference of P[j][t] affects results
@@ -191,12 +188,12 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
       for (int j = 0; j <= t; j++) {
         double p = 1;
         for (int k = j; k <= t; k++)
-          p = p * (1 - turnover_rates[k]);
+          p = p * (1 - turnover_rates[k]); // p *
         auto result = piecewise(segment_num, min_workers[t], 1 - p);
         const auto &slopes = result[0];
         const auto &intercepts = result[1];
-        auto gaps = result[6];
-        double error = *std::ranges::max_element(gaps);
+        // auto gaps = result[6];
+        // double error = *std::ranges::max_element(gaps);
 
         for (int m = 0; m < segment_num; m++) {
           // lower bound
@@ -225,7 +222,7 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
       u_values[t] = u[t].get(GRB_DoubleAttr_X);
       z_values[t] = z[t].get(GRB_DoubleAttr_X);
     }
-    double P_value = P[0][0].get(GRB_DoubleAttr_X);
+    // double P_value = P[0][0].get(GRB_DoubleAttr_X);
     std::cout << "values of z are: " << vectorToString(z_values) << std::endl;
     std::cout << "values of x are: " << vectorToString(x_values) << std::endl;
     std::cout << "values of y are: " << vectorToString(y_values) << std::endl;
@@ -261,19 +258,33 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
       for (int t = 0; t < T - tt; t++) {
         P[t].resize(T - tt);
         var_name = "y_" + std::to_string(t);
-        y[t] = model.addVar(0, GRB_INFINITY, unit_vari_cost, GRB_CONTINUOUS, var_name);
+        y[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
         var_name = "x_" + std::to_string(t);
-        x[t] = model.addVar(0, GRB_INFINITY, salary, GRB_CONTINUOUS, var_name);
+        x[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
         var_name = "u_" + std::to_string(t);
-        u[t] = model.addVar(0, GRB_INFINITY, unit_penalty, GRB_CONTINUOUS, var_name);
+        u[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
         var_name = "z_" + std::to_string(t);
-        z[t] = model.addVar(0, 1, fix_hire_cost, GRB_BINARY, var_name);
+        z[t] = model.addVar(0, 1, 0.0, GRB_BINARY, var_name);
         for (int j = 0; j <= t; j++) {
           var_name = "P_" + std::to_string(j) + "_" + std::to_string(t);
-          P[j][t] = model.addVar(0.0, 1, 0.0, GRB_BINARY, var_name);
+          P[j][t] = model.addVar(0, 1, 0.0, GRB_BINARY, var_name);
         }
       }
       GRBVar S = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "S");
+
+      // objective function, set objective
+      GRBLinExpr obj;
+      for (int t = 0; t < T - tt; t++) {
+        // using += results in errors for C++ gurobi api
+        obj = obj + fix_hire_cost * z[t];
+        if (t == 0) {
+          obj = obj + unit_vari_cost * (y[t] - S);
+        } else {
+          obj = obj + unit_vari_cost * (y[t] - x[t - 1]);
+        }
+        obj = obj + unit_penalty * u[t] + salary * x[t];
+      }
+      model.setObjective(obj, GRB_MINIMIZE);
 
       // constraints
       // z[0] == 0
@@ -334,8 +345,8 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
           auto result = piecewise(segment_num, min_workers[t + tt], 1 - p);
           const auto &slopes = result[0];
           const auto &intercepts = result[1];
-          auto gaps = result[6];
-          double error = *std::ranges::max_element(gaps);
+          // auto gaps = result[6];
+          // double error = *std::ranges::max_element(gaps);
 
           for (int m = 0; m < segment_num; m++) {
             // lower bound
@@ -349,15 +360,17 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
 
       // Optimize model
       model.optimize();
+      // model.write("piecewise.lp");
+      // int status = model.get(GRB_IntAttr_Status);
 
       // output results
-      int S_value = static_cast<int> (S.get(GRB_DoubleAttr_X));
+      int S_value = static_cast<int>(S.get(GRB_DoubleAttr_X));
       double GS = model.get(GRB_DoubleAttr_ObjVal) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
-      sS[tt][1] = static_cast<int> (S_value);
+      sS[tt][1] = static_cast<int>(S_value);
 
       // find s
       int s = find_s(segment_num, S_value, GS, tt);
-      sS[tt][0] = static_cast<int> (s);
+      sS[tt][0] = static_cast<int>(s);
 
     } catch (GRBException &e) {
       std::cout << "Error code = " << e.getErrorCode() << std::endl;
@@ -393,19 +406,33 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
       for (int t = 0; t < T - tt; t++) {
         P[t].resize(T - tt);
         var_name = "y_" + std::to_string(t);
-        y[t] = model.addVar(0, GRB_INFINITY, unit_vari_cost, GRB_CONTINUOUS, var_name);
+        y[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
         var_name = "x_" + std::to_string(t);
-        x[t] = model.addVar(0, GRB_INFINITY, salary, GRB_CONTINUOUS, var_name);
+        x[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
         var_name = "u_" + std::to_string(t);
-        u[t] = model.addVar(0, GRB_INFINITY, unit_penalty, GRB_CONTINUOUS, var_name);
+        u[t] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, var_name);
         var_name = "z_" + std::to_string(t);
-        z[t] = model.addVar(0, 1, fix_hire_cost, GRB_BINARY, var_name);
+        z[t] = model.addVar(0, 1, 0.0, GRB_BINARY, var_name);
         for (int j = 0; j <= t; j++) {
           var_name = "P_" + std::to_string(j) + "_" + std::to_string(t);
-          P[j][t] = model.addVar(0.0, 1, 0.0, GRB_BINARY, var_name);
+          P[j][t] = model.addVar(0, 1, 0.0, GRB_BINARY, var_name);
         }
       }
       GRBVar S = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "S");
+
+      // objective function, set objective
+      GRBLinExpr obj;
+      for (int t = 0; t < T - tt; t++) {
+        // using += results in errors for C++ gurobi api
+        obj = obj + fix_hire_cost * z[t];
+        if (t == 0) {
+          obj = obj + unit_vari_cost * (y[t] - S);
+        } else {
+          obj = obj + unit_vari_cost * (y[t] - x[t - 1]);
+        }
+        obj = obj + unit_penalty * u[t] + salary * x[t];
+      }
+      model.setObjective(obj, GRB_MINIMIZE);
 
       // constraints
       // z[0] == 0
@@ -468,8 +495,8 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
           auto result = piecewise(segment_num, min_workers[t + tt], 1 - p);
           const auto &slopes = result[0];
           const auto &intercepts = result[1];
-          auto gaps = result[6];
-          double error = *std::ranges::max_element(gaps);
+          // auto gaps = result[6];
+          // double error = *std::ranges::max_element(gaps);
 
           for (int m = 0; m < segment_num; m++) {
             // lower bound
@@ -484,11 +511,13 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
 
       // Optimize model
       model.optimize();
-      model.write("piecewise.lp");
-      int status = model.get(GRB_IntAttr_Status);
-      if (double G_mid =
+      // model.write("piecewise.lp");
+      // model.write("piecewise.sol");
+      // int status = model.get(GRB_IntAttr_Status);
+
+      double G_mid =
               model.get(GRB_DoubleAttr_ObjVal) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
-          G_mid < GS + fix_hire_cost)
+      if (G_mid < GS + fix_hire_cost)
         high = mid - stepSize;
       else if (G_mid > GS + fix_hire_cost)
         low = mid + stepSize;
@@ -501,6 +530,6 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
       std::cout << "Exception during optimization" << std::endl;
     }
   }
-  int s = static_cast<int> (mid - 1);
+  int s = static_cast<int>(mid - 1);
   return s;
 }

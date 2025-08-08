@@ -49,8 +49,10 @@ endif ()
 # Qt setting
 if (APPLE)
     set(Vulkan_INCLUDE_DIR "$ENV{HOME}/VulkanSDK/1.4.313.1/macOS/include")
-    include_directories(${Vulkan_INCLUDE_DIR})
+else ()
+    set(Vulkan_INCLUDE_DIR "C:/VulkanSDK/1.4.321.1/include")
 endif ()
+include_directories(${Vulkan_INCLUDE_DIR})
 find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
 message(STATUS "Qt6 found at: ${Qt6_DIR}")
 # link Qt
