@@ -23,7 +23,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
 
   int end_x = min_workers * 50; // can affect results
   for (int k = min_workers + 1; k < end_x; k++) {
-    if (Fy(k, min_workers, p) > 0.9999) {
+    if (Fy_y_minus_w(k, min_workers, p) > 0.9999) {
       end_x = k;
       break;
     }
@@ -49,11 +49,11 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
         // double test = 1.0 / segment_num;
         // double test1 = Fy(j, min_workers, p);
         // double test2 = Fy(a, min_workers, p);
-        if (Fy(j, min_workers, p) - Fy(a, min_workers, p) > 1.0 / segment_num) {
+        if (Fy_y_minus_w(j, min_workers, p) - Fy_y_minus_w(a, min_workers, p) > 1.0 / segment_num) {
           tangent_xcoord[i] = j;
           const int b = static_cast<int>(tangent_xcoord[i]);
           tangent_ycoord[i] = loss_function_expect(b, min_workers, p);
-          slopes[i] = -(1 - p) * (1 - Fy(b, min_workers, p));
+          slopes[i] = -(1 - p) * (1 - Fy_y_minus_w(b, min_workers, p));
           intercepts[i] = -slopes[i] * tangent_xcoord[i] + tangent_ycoord[i];
           break;
         }
@@ -220,7 +220,7 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
       y_values[t] = y[t].get(GRB_DoubleAttr_X);
       x_values[t] = x[t].get(GRB_DoubleAttr_X);
       u_values[t] = u[t].get(GRB_DoubleAttr_X);
-      z_values[t] = z[t].get(GRB_DoubleAttr_X);
+      z_values[t] = static_cast<int> (z[t].get(GRB_DoubleAttr_X));
     }
     // double P_value = P[0][0].get(GRB_DoubleAttr_X);
     std::cout << "values of z are: " << vectorToString(z_values) << std::endl;

@@ -1075,17 +1075,17 @@ build stochastic_inventory\states\rebuild_cache: phony stochastic_inventory\stat
 
 build cmake_object_order_depends_target_workforce: phony || .
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi: CXX_SCAN__workforce_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\worker_state.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi: CXX_SCAN__workforce_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\worker_state.cpp || cmake_object_order_depends_target_workforce
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJ_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj
   PREPROCESSED_OUTPUT_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi.i
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj: CXX_COMPILER__workforce_scanned_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\worker_state.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj: CXX_COMPILER__workforce_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\worker_state.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
   DYNDEP_MODULE_MAP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
@@ -1093,17 +1093,17 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.o
   TARGET_PDB = stochastic_inventory\workforce\workforce.pdb
   dyndep = stochastic_inventory/workforce/CMakeFiles/workforce.dir/CXX.dd
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi: CXX_SCAN__workforce_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\workforce_plan.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi: CXX_SCAN__workforce_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\workforce_plan.cpp || cmake_object_order_depends_target_workforce
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJ_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj
   PREPROCESSED_OUTPUT_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi.i
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj: CXX_COMPILER__workforce_scanned_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\workforce_plan.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj: CXX_COMPILER__workforce_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\workforce_plan.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
   DYNDEP_MODULE_MAP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
@@ -1111,17 +1111,17 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp
   TARGET_PDB = stochastic_inventory\workforce\workforce.pdb
   dyndep = stochastic_inventory/workforce/CMakeFiles/workforce.dir/CXX.dd
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi: CXX_SCAN__workforce_Debug D$:\chenzhen\CppOR\utils\pmf.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi: CXX_SCAN__workforce_Release D$:\chenzhen\CppOR\utils\pmf.cpp || cmake_object_order_depends_target_workforce
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJ_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj
   PREPROCESSED_OUTPUT_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi.i
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj: CXX_COMPILER__workforce_scanned_Debug D$:\chenzhen\CppOR\utils\pmf.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj: CXX_COMPILER__workforce_scanned_Release D$:\chenzhen\CppOR\utils\pmf.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
   DYNDEP_MODULE_MAP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils
@@ -1129,17 +1129,17 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cp
   TARGET_PDB = stochastic_inventory\workforce\workforce.pdb
   dyndep = stochastic_inventory/workforce/CMakeFiles/workforce.dir/CXX.dd
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi: CXX_SCAN__workforce_Debug D$:\chenzhen\CppOR\utils\draw_graph.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi: CXX_SCAN__workforce_Release D$:\chenzhen\CppOR\utils\draw_graph.cpp || cmake_object_order_depends_target_workforce
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJ_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj
   PREPROCESSED_OUTPUT_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi.i
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj: CXX_COMPILER__workforce_scanned_Debug D$:\chenzhen\CppOR\utils\draw_graph.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj: CXX_COMPILER__workforce_scanned_Release D$:\chenzhen\CppOR\utils\draw_graph.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
   DYNDEP_MODULE_MAP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils
@@ -1147,17 +1147,17 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_g
   TARGET_PDB = stochastic_inventory\workforce\workforce.pdb
   dyndep = stochastic_inventory/workforce/CMakeFiles/workforce.dir/CXX.dd
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi: CXX_SCAN__workforce_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\piecewise.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi: CXX_SCAN__workforce_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\piecewise.cpp || cmake_object_order_depends_target_workforce
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJ_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj
   PREPROCESSED_OUTPUT_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi.i
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj: CXX_COMPILER__workforce_scanned_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\piecewise.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj: CXX_COMPILER__workforce_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\piecewise.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
   DYNDEP_MODULE_MAP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
@@ -1165,17 +1165,17 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj:
   TARGET_PDB = stochastic_inventory\workforce\workforce.pdb
   dyndep = stochastic_inventory/workforce/CMakeFiles/workforce.dir/CXX.dd
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi: CXX_SCAN__workforce_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\util_binomial.cpp || cmake_object_order_depends_target_workforce
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi: CXX_SCAN__workforce_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\util_binomial.cpp || cmake_object_order_depends_target_workforce
   DEP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJ_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj
   PREPROCESSED_OUTPUT_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi.i
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj: CXX_COMPILER__workforce_scanned_Debug D$:\chenzhen\CppOR\stochastic_inventory\workforce\util_binomial.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj: CXX_COMPILER__workforce_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\workforce\util_binomial.cpp | stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.modmap || cmake_object_order_depends_target_workforce stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd
   DYNDEP_MODULE_MAP_FILE = stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /openmp -openmp
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MD /openmp -openmp
   INCLUDES = -IC:\local\boost_1_88_0 -IC:\gurobi1202\win64\include -IC:\gurobi1202\win64\lib\gurobi_c++md2017.lib -IC:\ProgramData\anaconda3\include -IC:\ProgramData\anaconda3\Lib\site-packages\numpy\core\include
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   OBJECT_FILE_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
@@ -1183,7 +1183,7 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.
   TARGET_PDB = stochastic_inventory\workforce\workforce.pdb
   dyndep = stochastic_inventory/workforce/CMakeFiles/workforce.dir/CXX.dd
 
-build stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd | D$:\chenzhen\CppOR\cmake-build-release\stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXXModules.json stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.modmap: CXX_DYNDEP__workforce_Debug stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi | D$:\chenzhen\CppOR\cmake-build-release\stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXXDependInfo.json
+build stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd | D$:\chenzhen\CppOR\cmake-build-release\stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXXModules.json stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.modmap stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.modmap: CXX_DYNDEP__workforce_Release stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj.ddi stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj.ddi | D$:\chenzhen\CppOR\cmake-build-release\stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXXDependInfo.json
 
 
 # =============================================================================
@@ -1193,10 +1193,10 @@ build stochastic_inventory\workforce\CMakeFiles\workforce.dir\CXX.dd | D$:\chenz
 #############################################
 # Link the executable stochastic_inventory\workforce\workforce.exe
 
-build stochastic_inventory\workforce\workforce.exe: CXX_EXECUTABLE_LINKER__workforce_Debug stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj | C$:\local\boost_1_88_0\stage\lib\boost_system-vc143-mt-x64-1_88.lib C$:\local\boost_1_88_0\stage\lib\boost_thread-vc143-mt-x64-1_88.lib C$:\local\boost_1_88_0\stage\lib\boost_filesystem-vc143-mt-x64-1_88.lib C$:\gurobi1202\win64\lib\gurobi_c++mdd2017.lib C$:\gurobi1202\win64\lib\gurobi120.lib C$:\ProgramData\anaconda3\libs\python312.lib C$:\Users\Administrator\cpython\PCbuild\amd64\python312_d.lib
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc -fsanitize=address -Od /Ob0 /Od /RTC1 -MDd -Zi
-  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
-  LINK_LIBRARIES = C:\local\boost_1_88_0\stage\lib\boost_system-vc143-mt-x64-1_88.lib  C:\local\boost_1_88_0\stage\lib\boost_thread-vc143-mt-x64-1_88.lib  C:\local\boost_1_88_0\stage\lib\boost_filesystem-vc143-mt-x64-1_88.lib  C:\gurobi1202\win64\lib\gurobi_c++mdd2017.lib  C:\gurobi1202\win64\lib\gurobi120.lib  C:\ProgramData\anaconda3\libs\python312.lib  C:\Users\Administrator\cpython\PCbuild\amd64\python312_d.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+build stochastic_inventory\workforce\workforce.exe: CXX_EXECUTABLE_LINKER__workforce_Release stochastic_inventory\workforce\CMakeFiles\workforce.dir\worker_state.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\workforce_plan.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\pmf.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\__\__\utils\draw_graph.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\piecewise.cpp.obj stochastic_inventory\workforce\CMakeFiles\workforce.dir\util_binomial.cpp.obj | C$:\local\boost_1_88_0\stage\lib\boost_system-vc143-mt-x64-1_88.lib C$:\local\boost_1_88_0\stage\lib\boost_thread-vc143-mt-x64-1_88.lib C$:\local\boost_1_88_0\stage\lib\boost_filesystem-vc143-mt-x64-1_88.lib C$:\gurobi1202\win64\lib\gurobi_c++md2017.lib C$:\gurobi1202\win64\lib\gurobi120.lib C$:\ProgramData\anaconda3\libs\python312.lib C$:\Users\Administrator\cpython\PCbuild\amd64\python312_d.lib
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -MD
+  LINK_FLAGS = /machine:x64 /INCREMENTAL:NO /subsystem:console
+  LINK_LIBRARIES = C:\local\boost_1_88_0\stage\lib\boost_system-vc143-mt-x64-1_88.lib  C:\local\boost_1_88_0\stage\lib\boost_thread-vc143-mt-x64-1_88.lib  C:\local\boost_1_88_0\stage\lib\boost_filesystem-vc143-mt-x64-1_88.lib  C:\gurobi1202\win64\lib\gurobi_c++md2017.lib  C:\gurobi1202\win64\lib\gurobi120.lib  C:\ProgramData\anaconda3\libs\python312.lib  C:\Users\Administrator\cpython\PCbuild\amd64\python312_d.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = stochastic_inventory\workforce\CMakeFiles\workforce.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

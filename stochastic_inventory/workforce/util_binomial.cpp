@@ -20,10 +20,10 @@ double loss_function_expect(const int y, const int min_worker,
   return value;
 }
 
-double Fy(const int y, const int min_workers, const double turnover_rate) {
+double Fy_y_minus_w(const int y, const int min_worker, const double turnover_rate) {
   const boost::math::binomial_distribution<double> dist(y, turnover_rate);
-  if (y - min_workers < 0) {
+  if (y - min_worker < 0) {
     return 0;
   }
-  return cdf(dist, y - min_workers);
+  return cdf(dist, y - min_worker);
 }
