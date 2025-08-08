@@ -10,5 +10,5 @@
 #define UTIL_BINOMIAL_H
 
 double loss_function_expect(int y, int min_worker, double turnover_rate);
-double Fy(int y, int min_workers, double turnover_rate);
+double Fy_y_minus_w(int y, int min_worker, double turnover_rate);
 #endif // UTIL_BINOMIAL_H

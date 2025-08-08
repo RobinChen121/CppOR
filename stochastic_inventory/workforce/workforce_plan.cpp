@@ -392,13 +392,13 @@ bool WorkforcePlan::check_Binomial_KConvexity(const std::vector<double> &Gy,
 bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
   const int y_length = static_cast<int>(Gy.size());
 
-  for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
-    for (int y = 1; y < y_plus_a; y++)
-      for (int y_minus_b = 1; y_minus_b < y; y_minus_b++) {
+  for (int y_plus_a = 2; y_plus_a < y_length; y_plus_a++)
+    for (int y = y_plus_a - 1; y < y_plus_a; y++)
+      for (int y_minus_b = y - 1; y_minus_b < y; y_minus_b++) {
         const double left = (y - y_minus_b) * (Gy[y_plus_a] - Gy[y]);
         const double right = (y_plus_a - y) * (Gy[y] - Gy[y_minus_b]);
         // double test = std::abs(left - right);
-        if (std::abs(left - right) < 1)
+        if (left - right > -0.1)
           continue;
         std::cout << "****" << std::endl;
         std::cout << "not convex" << std::endl;
@@ -461,8 +461,44 @@ void WorkforcePlan::compute_turnover() {
   }
 }
 
-std::vector<double> WorkforcePlan::compute_V() const { return {}; }
+std::vector<double> WorkforcePlan::compute_V() const {
+  std::vector<double> V(T + 1);
+  V[T] = 0;
+  for (int t = static_cast<int>(T) - 1; t >= 0; t--) {
+    double best_V = std::numeric_limits<double>::max();
+    for (int j = t; j <= static_cast<int>(T) - 1; j++) {
+      const int y_star = find_y_star(t, j);
+      double y_star_value = fix_hire_cost + compute_Ltj_y(t, j, y_star) + V[j + 1];
+      if (y_star_value < best_V) {
+        best_V = y_star_value;
+      }
+    }
+    V[t] = best_V;
+  }
+  return V;
+}
 
+int WorkforcePlan::find_y_star(const int t, const int j) const {
+  double left_term = 0;
+  for (int k = t; k <= j; k++) {
+    left_term += 1 - p_c[t][k];
+  }
+  left_term *= salary;
+  left_term += unit_vari_cost;
+  for (int y = min_workers[t]; y < max_worker_num; y++) {
+    double right_term = 0;
+    for (int k = t; k <= j; k++) {
+      right_term += (1 - p_c[t][k]) * (1 - Fy_y_minus_w(y, min_workers[t], p_c[t][k]));
+    }
+    right_term *= unit_penalty;
+    if (left_term > right_term) {
+      return y;
+    }
+  }
+  return {};
+}
+
+// compute L(y) in the hiring cycle form period t to period j including variable hiring cost
 double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const {
   double left_term = 0;
   double right_term = 0;
@@ -472,13 +508,14 @@ double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const
   }
   left_term *= salary * y;
   right_term *= unit_penalty;
-  return {};
+  left_term += unit_vari_cost * y;
+  return left_term + right_term;
 }
 
 std::pair<double, std::vector<std::array<int, 2>>> WorkforcePlan::solve_tsp() const {
   std::vector<std::vector<double>> V(T, std::vector<double>(T));
   for (size_t j = T - 1; j-- > 0;) {
-    for (size_t t = 0; t <= j; t++) {
+    for (size_t t = j; t-- > 0;) {
     }
   }
   return {};
@@ -511,8 +548,7 @@ int main() {
     std::cout << std::endl;
   }
 
-  // ReSharper disable once CppExpressionWithoutSideEffects
-  problem.simulate_sS(problem.get_initial_state(), arr_sS);
+  (void)problem.simulate_sS(problem.get_initial_state(), arr_sS);
 
   std::cout << "******************** " << std::endl;
   auto [fst, snd] = problem.solve_mip();
@@ -531,6 +567,13 @@ int main() {
   const double gap2 = (mip_sS - final_value) / final_value * 100;
   std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap2 << "%"
             << std::endl;
+
+  (void )problem.compute_V();
+  // const int y_star = problem.find_y_star(problem.get_T() - 1, problem.get_T() - 1);
+  // std::cout << "y_star is: " << y_star << std::endl;
+  // const double minimum = problem.get_fix_hire_cost() +
+  //                        problem.compute_Ltj_y(problem.get_T() - 1, problem.get_T() - 1, y_star);
+  // std::cout << "minimum at y_star is: " << minimum << std::endl;
 
   // start_time = std::chrono::high_resolution_clock::now();
   const auto arr = problem.compute_Gy();
