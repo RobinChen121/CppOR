@@ -21,6 +21,9 @@
 /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/qt_practices/CMakeFiles/rebuild_cache.dir
 /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/qt_practices/CMakeFiles/qt_practice_autogen_timestamp_deps.dir
 /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/qt_practices/CMakeFiles/qt_practice_autogen.dir
+/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/SDL2_practices/CMakeFiles/sdl_practice.dir
+/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/SDL2_practices/CMakeFiles/edit_cache.dir
+/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/SDL2_practices/CMakeFiles/rebuild_cache.dir
 /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/stochastic_inventory/CMakeFiles/sdp-inventory.dir
 /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/stochastic_inventory/CMakeFiles/edit_cache.dir
 /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/stochastic_inventory/CMakeFiles/rebuild_cache.dir

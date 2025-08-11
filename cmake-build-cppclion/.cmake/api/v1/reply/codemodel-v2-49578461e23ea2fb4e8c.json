@@ -10,8 +10,8 @@
 					[
 						1,
 						5,
-						7,
-						13
+						8,
+						14
 					],
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
@@ -95,7 +95,8 @@
 					"build" : "junior_practices",
 					"childIndexes" : 
 					[
-						6
+						6,
+						7
 					],
 					"jsonFile" : "directory-junior_practices-Debug-b0b7f1cab58da30bdfa5.json",
 					"minimumCMakeVersion" : 
@@ -128,13 +129,28 @@
 					]
 				},
 				{
+					"build" : "junior_practices/SDL2_practices",
+					"jsonFile" : "directory-junior_practices.SDL2_practices-Debug-020663005e0d6f6e55ea.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "junior_practices/SDL2_practices",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
 					"build" : "stochastic_inventory",
 					"childIndexes" : 
 					[
-						8,
-						10,
+						9,
 						11,
-						12
+						12,
+						13
 					],
 					"jsonFile" : "directory-stochastic_inventory-Debug-e3c48947aed8bf5dab27.json",
 					"minimumCMakeVersion" : 
@@ -146,26 +162,26 @@
 					"source" : "stochastic_inventory",
 					"targetIndexes" : 
 					[
-						11
+						12
 					]
 				},
 				{
 					"build" : "stochastic_inventory/cash",
 					"childIndexes" : 
 					[
-						9
+						10
 					],
 					"jsonFile" : "directory-stochastic_inventory.cash-Debug-11e24172bc8a50ca071f.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 7,
+					"parentIndex" : 8,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/cash",
 					"targetIndexes" : 
 					[
-						10
+						11
 					]
 				},
 				{
@@ -175,12 +191,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 8,
+					"parentIndex" : 9,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/cash/overdraft",
 					"targetIndexes" : 
 					[
-						12
+						13
 					]
 				},
 				{
@@ -190,12 +206,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 7,
+					"parentIndex" : 8,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/states",
 					"targetIndexes" : 
 					[
-						13
+						14
 					]
 				},
 				{
@@ -205,12 +221,12 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 7,
+					"parentIndex" : 8,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/workforce",
 					"targetIndexes" : 
 					[
-						15
+						16
 					]
 				},
 				{
@@ -220,7 +236,7 @@
 					{
 						"string" : "3.30"
 					},
-					"parentIndex" : 7,
+					"parentIndex" : 8,
 					"projectIndex" : 0,
 					"source" : "stochastic_inventory/newsvendor",
 					"targetIndexes" : 
@@ -240,7 +256,7 @@
 					"source" : "utils",
 					"targetIndexes" : 
 					[
-						14
+						15
 					]
 				}
 			],
@@ -263,7 +279,8 @@
 						10,
 						11,
 						12,
-						13
+						13,
+						14
 					],
 					"name" : "CppClion",
 					"targetIndexes" : 
@@ -283,7 +300,8 @@
 						12,
 						13,
 						14,
-						15
+						15,
+						16
 					]
 				}
 			],
@@ -313,7 +331,7 @@
 				{
 					"directoryIndex" : 5,
 					"id" : "junior_practice::@269e48a9846c25342454",
-					"jsonFile" : "target-junior_practice-Debug-d1b0642a0b327bc65201.json",
+					"jsonFile" : "target-junior_practice-Debug-c9257c275a0e6d18d154.json",
 					"name" : "junior_practice",
 					"projectIndex" : 0
 				},
@@ -325,7 +343,7 @@
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 12,
+					"directoryIndex" : 13,
 					"id" : "newsvendor::@44333d3be895461ba489",
 					"jsonFile" : "target-newsvendor-Debug-3663877f4a4722d3f92b.json",
 					"name" : "newsvendor",
@@ -334,7 +352,7 @@
 				{
 					"directoryIndex" : 6,
 					"id" : "qt_practice::@dc679c210d2b4945485b",
-					"jsonFile" : "target-qt_practice-Debug-e5e317bd70c5ed361286.json",
+					"jsonFile" : "target-qt_practice-Debug-e54b6ce9824bf7752e78.json",
 					"name" : "qt_practice",
 					"projectIndex" : 0
 				},
@@ -360,42 +378,49 @@
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 8,
+					"directoryIndex" : 7,
+					"id" : "sdl_practice::@c3cd0a814dcca0c120f7",
+					"jsonFile" : "target-sdl_practice-Debug-dc707d1a2d379976835c.json",
+					"name" : "sdl_practice",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 9,
 					"id" : "sdp-cash::@686179159669958344ec",
 					"jsonFile" : "target-sdp-cash-Debug-2c265ebd0808e4cc4197.json",
 					"name" : "sdp-cash",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 7,
+					"directoryIndex" : 8,
 					"id" : "sdp-inventory::@8359d8b257de3d65d78b",
 					"jsonFile" : "target-sdp-inventory-Debug-4bbb96d3604597be1bea.json",
 					"name" : "sdp-inventory",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 9,
+					"directoryIndex" : 10,
 					"id" : "sdp-overdraft::@b1a2686b200ee4c0d651",
 					"jsonFile" : "target-sdp-overdraft-Debug-b153815e2ff7e1d1017e.json",
 					"name" : "sdp-overdraft",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 10,
+					"directoryIndex" : 11,
 					"id" : "states::@385b8a4d49cac343cbbd",
 					"jsonFile" : "target-states-Debug-c6c98e5e279b41e349b8.json",
 					"name" : "states",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 13,
+					"directoryIndex" : 14,
 					"id" : "utils::@c810615cce0f7acb82dc",
 					"jsonFile" : "target-utils-Debug-a6c4ecb09c4ee1247387.json",
 					"name" : "utils",
 					"projectIndex" : 0
 				},
 				{
-					"directoryIndex" : 11,
+					"directoryIndex" : 12,
 					"id" : "workforce::@89dbaeb67dd0933c275a",
 					"jsonFile" : "target-workforce-Debug-1e0427cf8b8ab250648c.json",
 					"name" : "workforce",

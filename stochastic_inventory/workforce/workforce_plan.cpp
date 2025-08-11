@@ -16,6 +16,7 @@
 #include <boost/math/distributions/binomial.hpp> // 浜岄」鍒嗗竷澶存枃浠? random 搴撴湁鍒嗗竷浣嗘病鏈塸df鍑芥暟
 #include <cmath>
 #include <random>
+#include <thread>
 // #include <omp.h>
 
 void WorkforcePlan::set_fix_cost(const double value) {
@@ -461,30 +462,49 @@ void WorkforcePlan::compute_turnover() {
   }
 }
 
-std::vector<double> WorkforcePlan::compute_V() const {
+std::pair<std::vector<double>, std::vector<std::array<double, 2>>>
+WorkforcePlan::compute_V() const {
+  std::vector<std::array<double, 2>> sS(T);
   std::vector<double> V(T + 1);
   V[T] = 0;
   for (int t = static_cast<int>(T) - 1; t >= 0; t--) {
     double best_V = std::numeric_limits<double>::max();
+    double S = 0;
     double L_1_value = 0.0;
     for (int j = t; j <= static_cast<int>(T) - 1; j++) {
       const int y_star = find_y_star(t, j);
       const double L_j_value = compute_Ltj_y(t, j, y_star);
-      const double y_star_value =
-          fix_hire_cost  + L_j_value + V[j + 1];
+      const double y_star_value = fix_hire_cost + L_j_value + V[j + 1];
       if (j == t)
         L_1_value += L_j_value;
       if (y_star_value < best_V) {
         best_V = y_star_value;
+        S = y_star;
       }
       if (compute_Ltj_y(t, t, y_star) > L_1_value)
         break;
     }
+    sS[t][1] = S;
     V[t] = best_V;
-  }
-  return V;
-}
 
+    // find s
+    int min_s = std::numeric_limits<int>::max();
+    for (int j = t; j <= static_cast<int>(T) - 1; j++) {
+      int this_s = 0;
+      for (int y = 0; y < max_hire_num; y++) {
+        if (compute_Ltj_y(t, j, y) + V[j] <= V[t]) {
+          this_s = y;
+          break;
+        }
+      }
+      if (this_s < min_s) {
+        min_s = this_s;
+      }
+    }
+    sS[t][0] = min_s;
+  }
+  return {V, sS};
+}
 
 int WorkforcePlan::find_y_star(const int t, const int j) const {
   double left_term = 0;
@@ -573,13 +593,13 @@ int main() {
   }
   const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
   const double gap2 = (mip_sS - final_value) / final_value * 100;
-  std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2 << "%"
-            << std::endl;
+  std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
+            << "%" << std::endl;
 
-  auto V = problem.compute_V();
+  auto ww_result = problem.compute_V();
   std::cout << std::endl;
-  std::cout << "V in the 1st period is: " << V[0] << std::endl;
-  const double gap3 = (V[0] - final_value) / final_value * 100;
+  std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
+  const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
   std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3 << "%"
             << std::endl;
 
