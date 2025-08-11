@@ -1,0 +1,9 @@
+# ninja log v6
+3	495	1754916936406291852	junior_practices/qt_practices/qt_practice_autogen/timestamp	90b883bbb393d156
+3	495	1754916936406291852	junior_practices/qt_practices/qt_practice_autogen/mocs_compilation.cpp	90b883bbb393d156
+3	495	1754916936406291852	/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/qt_practices/qt_practice_autogen/timestamp	90b883bbb393d156
+3	495	1754916936406291852	/Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/qt_practices/qt_practice_autogen/mocs_compilation.cpp	90b883bbb393d156
+498	1294	1754916936420741569	junior_practices/qt_practices/CMakeFiles/qt_practice.dir/qt_practice_autogen/mocs_compilation.cpp.o	fc1a50a3ce2ebd46
+498	1300	1754916936421158818	junior_practices/qt_practices/CMakeFiles/qt_practice.dir/main.cpp.o	9dbd48fdd8dc062d
+498	1492	1754916936421029610	junior_practices/qt_practices/CMakeFiles/qt_practice.dir/tetriswidget.cpp.o	cd759b4829627b15
+1492	1607	1754916937415289148	junior_practices/qt_practices/qt_practice	b8dcc520c4cf5c15
