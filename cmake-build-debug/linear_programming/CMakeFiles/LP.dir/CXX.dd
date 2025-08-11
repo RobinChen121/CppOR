@@ -1,3 +1,0 @@
-ninja_dyndep_version = 1.0
-build linear_programming\CMakeFiles\LP.dir\gurobi_test.cpp.obj: dyndep
-

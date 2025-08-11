@@ -1,0 +1,3 @@
+D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/CMakeFiles/freetype-populate.dir
+D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/CMakeFiles/edit_cache.dir
+D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/CMakeFiles/rebuild_cache.dir

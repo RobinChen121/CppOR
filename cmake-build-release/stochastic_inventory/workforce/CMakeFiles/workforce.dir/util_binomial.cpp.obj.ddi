@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "stochastic_inventory\\workforce\\CMakeFiles\\workforce.dir\\util_binomial.cpp.obj",
+            "outputs": [
+                "stochastic_inventory\\workforce\\CMakeFiles\\workforce.dir\\util_binomial.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}

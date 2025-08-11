@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.30)
+
 set(RUN_NAME junior_practice) # the name of configuration target
 
 set(CMAKE_BUILD_TYPE Release)
@@ -7,8 +9,15 @@ else ()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
+add_subdirectory(qt_practices)
+
 add_executable(${RUN_NAME}
-        boost_test.cpp
+        sdl3_points.c
+#        Qmedia_test.cpp
+#        SFML_practices/main.cpp
+
+        #        boost_test.cpp
+#        game_tetris.cpp
         #        pair_test.cpp
         #               spdlog_test.cpp
         #        eigen3_test.cpp
@@ -20,6 +29,21 @@ add_executable(${RUN_NAME}
 
         #                openMP_test2.cpp
 )
+
+# sdl3 game setting
+# set the output directory for built objects.
+# This makes sure that the dynamic library goes into the build directory automatically.
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+
+# This assumes the SDL source is available in vendored/SDL
+# 告诉 CMake SDL3 的 cmake 配置目录
+if (MSVC)
+    include_directories(C:/SDL3-3.2.20/include)
+#    link_directories(C:/SDL3-3.2.20/lib/x64)
+    target_link_libraries(${RUN_NAME} PRIVATE "C:/SDL3-3.2.20/lib/x64/SDL3.lib")
+#    target_link_libraries(${RUN_NAME} PRIVATE SDL3)
+endif ()
 
 # boost setting
 if (MSVC)
@@ -53,10 +77,10 @@ else ()
     set(Vulkan_INCLUDE_DIR "C:/VulkanSDK/1.4.321.1/include")
 endif ()
 include_directories(${Vulkan_INCLUDE_DIR})
-find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Widgets Multimedia REQUIRED)
 message(STATUS "Qt6 found at: ${Qt6_DIR}")
 # link Qt
-target_link_libraries(${RUN_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+target_link_libraries(${RUN_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Multimedia)
 
 
 #-----------------------------------

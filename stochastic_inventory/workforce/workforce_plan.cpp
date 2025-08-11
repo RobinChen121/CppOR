@@ -466,17 +466,25 @@ std::vector<double> WorkforcePlan::compute_V() const {
   V[T] = 0;
   for (int t = static_cast<int>(T) - 1; t >= 0; t--) {
     double best_V = std::numeric_limits<double>::max();
+    double L_1_value = 0.0;
     for (int j = t; j <= static_cast<int>(T) - 1; j++) {
       const int y_star = find_y_star(t, j);
-      double y_star_value = fix_hire_cost + compute_Ltj_y(t, j, y_star) + V[j + 1];
+      const double L_j_value = compute_Ltj_y(t, j, y_star);
+      const double y_star_value =
+          fix_hire_cost  + L_j_value + V[j + 1];
+      if (j == t)
+        L_1_value += L_j_value;
       if (y_star_value < best_V) {
         best_V = y_star_value;
       }
+      if (compute_Ltj_y(t, t, y_star) > L_1_value)
+        break;
     }
     V[t] = best_V;
   }
   return V;
 }
+
 
 int WorkforcePlan::find_y_star(const int t, const int j) const {
   double left_term = 0;
@@ -565,27 +573,27 @@ int main() {
   }
   const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
   const double gap2 = (mip_sS - final_value) / final_value * 100;
-  std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap2 << "%"
+  std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2 << "%"
             << std::endl;
 
-  (void )problem.compute_V();
-  // const int y_star = problem.find_y_star(problem.get_T() - 1, problem.get_T() - 1);
-  // std::cout << "y_star is: " << y_star << std::endl;
-  // const double minimum = problem.get_fix_hire_cost() +
-  //                        problem.compute_Ltj_y(problem.get_T() - 1, problem.get_T() - 1, y_star);
-  // std::cout << "minimum at y_star is: " << minimum << std::endl;
+  auto V = problem.compute_V();
+  std::cout << std::endl;
+  std::cout << "V in the 1st period is: " << V[0] << std::endl;
+  const double gap3 = (V[0] - final_value) / final_value * 100;
+  std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3 << "%"
+            << std::endl;
 
   // start_time = std::chrono::high_resolution_clock::now();
-  const auto arr = problem.compute_Gy();
+  // const auto arr = problem.compute_Gy();
   // end_time = std::chrono::high_resolution_clock::now();
   // time = end_time - start_time;
   // std::cout << "running time is " << time.count() << 's' << std::endl;
-  std::cout << "*******************************" << std::endl;
-  problem.check_K_convexity(arr);
-  const auto expect_Gy = problem.compute_expect_Gy(arr);
-  problem.check_Binomial_KConvexity(arr, expect_Gy);
-  problem.check_convexity(arr);
-  drawGy(arr, arr_sS[0]);
+  // std::cout << "*******************************" << std::endl;
+  // problem.check_K_convexity(arr);
+  // const auto expect_Gy = problem.compute_expect_Gy(arr);
+  // problem.check_Binomial_KConvexity(arr, expect_Gy);
+  // problem.check_convexity(arr);
+  // drawGy(arr, arr_sS[0]);
 
   return 0;
 }

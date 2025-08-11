@@ -1,3 +1,0 @@
-ninja_dyndep_version = 1.0
-build junior_practices\CMakeFiles\junior_practice.dir\boost_test.cpp.obj: dyndep
-

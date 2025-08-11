@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/CMakeFiles/freetype-populate"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/CMakeFiles/freetype-populate.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/CMakeFiles/freetype-populate-complete.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-build.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-configure.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-download.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-install.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-mkdir.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-patch.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-test.rule"
+		},
+		{
+			"file" : "D:/chenzhen/CppOR/cmake-build-release/_deps/freetype-subbuild/freetype-populate-prefix/src/freetype-populate-stamp/freetype-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"freetype-populate"
+		],
+		"name" : "freetype-populate"
+	}
+}

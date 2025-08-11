@@ -8,6 +8,7 @@
 -- Gurobi include dirs: C:/gurobi1202/win64/include
 -- Gurobi libraries: C:/gurobi1202/win64/lib/gurobi_c++md2017.lib
 -- Qt6 found at: C:/Qt/6.9.1/msvc2022_64/lib/cmake/Qt6
+-- Qt6 found at: C:/Qt/6.9.1/msvc2022_64/lib/cmake/Qt6
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
@@ -31,6 +32,6 @@
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
--- Configuring done (0.9s)
--- Generating done (0.2s)
+-- Configuring done (2.3s)
+-- Generating done (0.7s)
 -- Build files have been written to: D:/chenzhen/CppOR/cmake-build-release

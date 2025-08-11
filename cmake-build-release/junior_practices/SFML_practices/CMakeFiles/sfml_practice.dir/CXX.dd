@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build junior_practices\SFML_practices\CMakeFiles\sfml_practice.dir\tetris.cpp.obj: dyndep
+

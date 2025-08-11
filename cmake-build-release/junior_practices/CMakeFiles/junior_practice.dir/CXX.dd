@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build junior_practices\CMakeFiles\junior_practice.dir\Qmedia_test.cpp.obj: dyndep
+

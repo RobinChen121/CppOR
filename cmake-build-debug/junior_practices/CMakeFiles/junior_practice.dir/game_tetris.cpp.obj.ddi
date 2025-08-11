@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "junior_practices\\CMakeFiles\\junior_practice.dir\\game_tetris.cpp.obj",
+            "outputs": [
+                "junior_practices\\CMakeFiles\\junior_practice.dir\\game_tetris.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}
