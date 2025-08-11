@@ -1,0 +1,7 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/zhenchen/CLionProjects/CppOR -B /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion
+test
+-- Qt6 found at: /opt/homebrew/lib/cmake/Qt6
+-- Qt6 found at: /opt/homebrew/lib/cmake/Qt6
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion

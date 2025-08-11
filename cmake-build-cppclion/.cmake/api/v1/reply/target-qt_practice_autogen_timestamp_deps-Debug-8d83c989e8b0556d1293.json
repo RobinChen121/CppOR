@@ -1,0 +1,27 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"junior_practices/qt_practices/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "qt_practice_autogen_timestamp_deps::@dc679c210d2b4945485b",
+	"isGeneratorProvided" : true,
+	"name" : "qt_practice_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "junior_practices/qt_practices",
+		"source" : "junior_practices/qt_practices"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}
