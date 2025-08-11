@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
 
@@ -327,6 +330,24 @@ Vulkan_LIBRARY:FILEPATH=C:/VulkanSDK/1.4.321.1/Lib/vulkan-1.lib
 //Path to a program.
 WINDEPLOYQT_EXECUTABLE:FILEPATH=C:/Qt/6.9.1/msvc2022_64/bin/windeployqt.exe
 
+//The directory containing a CMake configuration file for boost_atomic.
+boost_atomic_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0
+
+//The directory containing a CMake configuration file for boost_chrono.
+boost_chrono_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0
+
+//The directory containing a CMake configuration file for boost_filesystem.
+boost_filesystem_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0
+
+//The directory containing a CMake configuration file for boost_headers.
+boost_headers_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0
+
+//The directory containing a CMake configuration file for boost_system.
+boost_system_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0
+
+//The directory containing a CMake configuration file for boost_thread.
+boost_thread_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0
+
 
 ########################
 # INTERNAL cache entries
@@ -450,7 +471,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=4
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -1326,4 +1347,16 @@ Vulkan_INCLUDE_DIR-ADVANCED:INTERNAL=1
 Vulkan_LIBRARY-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/CppClion
+//ADVANCED property for variable: boost_atomic_DIR
+boost_atomic_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_chrono_DIR
+boost_chrono_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_filesystem_DIR
+boost_filesystem_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_headers_DIR
+boost_headers_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_system_DIR
+boost_system_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_thread_DIR
+boost_thread_DIR-ADVANCED:INTERNAL=1
 

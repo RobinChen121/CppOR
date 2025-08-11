@@ -3,7 +3,7 @@ set(RUN_NAME workforce) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
+#set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_RELEASE "/O2")
@@ -17,8 +17,7 @@ if (MSVC)
     # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
     # 或将文件拷贝到当前项目 exe 所在文件夹
     if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -Od") # Od
-        set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Od") # Od
     endif ()
 endif ()
 

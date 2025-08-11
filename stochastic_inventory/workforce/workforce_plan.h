@@ -26,13 +26,13 @@ class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.5, 0.3, 0.5};
+  std::vector<double> turnover_rates = {0.5, 0.3, 0.6, 0.7, 0.2, 0.5};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 100.0;
+  double fix_hire_cost = 50.0;
   double unit_vari_cost = 0.0;
   double salary = 20.0;
   double unit_penalty = 80.0;

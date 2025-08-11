@@ -13,6 +13,7 @@
 	"forward-modules-from-target-dirs" : [],
 	"include-dirs" : 
 	[
+		"C:\\SDL3-3.2.20\\include",
 		"C:\\local\\boost_1_88_0",
 		"C:\\ProgramData\\anaconda3\\include",
 		"C:\\ProgramData\\anaconda3\\Lib\\site-packages\\numpy\\core\\include",
@@ -23,7 +24,9 @@
 		"C:\\Qt\\6.9.1\\msvc2022_64\\include",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\mkspecs\\win32-msvc",
 		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtGui",
-		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtWidgets"
+		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtWidgets",
+		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtMultimedia",
+		"C:\\Qt\\6.9.1\\msvc2022_64\\include\\QtNetwork"
 	],
 	"language" : "CXX",
 	"linked-target-dirs" : [],
