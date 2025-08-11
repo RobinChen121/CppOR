@@ -8,6 +8,8 @@ set(__QT_DEPLOY_TARGET_LP_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-c
 set(__QT_DEPLOY_TARGET_LP_TYPE EXECUTABLE)
 set(__QT_DEPLOY_TARGET_qt_practice_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/qt_practices/qt_practice)
 set(__QT_DEPLOY_TARGET_qt_practice_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_sdl_practice_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/SDL2_practices/sdl_practice)
+set(__QT_DEPLOY_TARGET_sdl_practice_TYPE EXECUTABLE)
 set(__QT_DEPLOY_TARGET_junior_practice_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/junior_practices/junior_practice)
 set(__QT_DEPLOY_TARGET_junior_practice_TYPE EXECUTABLE)
 set(__QT_DEPLOY_TARGET_sdp-overdraft_FILE /Users/zhenchen/CLionProjects/CppOR/cmake-build-cppclion/stochastic_inventory/cash/overdraft/sdp-overdraft)

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "STRING",
-			"value" : "Release"
+			"value" : ""
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
@@ -248,6 +248,18 @@
 			],
 			"type" : "STRING",
 			"value" : "-O2 -g -DNDEBUG"
+		},
+		{
+			"name" : "CMAKE_CXX_STANDARD",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "No help, variable specified on the command line."
+				}
+			],
+			"type" : "UNINITIALIZED",
+			"value" : "17"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER",
@@ -983,7 +995,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "14"
+			"value" : "15"
 		},
 		{
 			"name" : "CMAKE_OBJCOPY",
@@ -1690,42 +1702,6 @@
 			"value" : "OFF"
 		},
 		{
-			"name" : "QT_FEATURE_alloca",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Qt feature: alloca (from target Qt6::Core)"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "ON"
-		},
-		{
-			"name" : "QT_FEATURE_alloca_h",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Qt feature: alloca_h (from target Qt6::Core)"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "ON"
-		},
-		{
-			"name" : "QT_FEATURE_alloca_malloc_h",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Qt feature: alloca_malloc_h (from target Qt6::Core)"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "OFF"
-		},
-		{
 			"name" : "QT_FEATURE_alsa",
 			"properties" : 
 			[
@@ -1792,6 +1768,18 @@
 				{
 					"name" : "HELPSTRING",
 					"value" : "Qt feature: arm_crypto (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "ON"
+		},
+		{
+			"name" : "QT_FEATURE_arm_sve",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: arm_sve (from target Qt6::Core)"
 				}
 			],
 			"type" : "INTERNAL",
@@ -2086,18 +2074,6 @@
 			"value" : "OFF"
 		},
 		{
-			"name" : "QT_FEATURE_close_range",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Qt feature: close_range (from target Qt6::Core)"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "OFF"
-		},
-		{
 			"name" : "QT_FEATURE_colordialog",
 			"properties" : 
 			[
@@ -2320,6 +2296,18 @@
 				{
 					"name" : "HELPSTRING",
 					"value" : "Qt feature: cxx20 (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_cxx20_format",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: cxx20_format (from target Qt6::Core)"
 				}
 			],
 			"type" : "INTERNAL",
@@ -2578,6 +2566,18 @@
 			"value" : "OFF"
 		},
 		{
+			"name" : "QT_FEATURE_directwritecolrv1",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: directwritecolrv1 (from target Qt6::Gui)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
 			"name" : "QT_FEATURE_dladdr",
 			"properties" : 
 			[
@@ -2612,6 +2612,18 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "ON"
+		},
+		{
+			"name" : "QT_FEATURE_doc_snippets",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: doc_snippets (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
 		},
 		{
 			"name" : "QT_FEATURE_dockwidget",
@@ -2878,6 +2890,18 @@
 			"value" : "OFF"
 		},
 		{
+			"name" : "QT_FEATURE_emojisegmenter",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: emojisegmenter (from target Qt6::Gui)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "ON"
+		},
+		{
 			"name" : "QT_FEATURE_errormessage",
 			"properties" : 
 			[
@@ -2908,18 +2932,6 @@
 				{
 					"name" : "HELPSTRING",
 					"value" : "Qt feature: evdev (from target Qt6::Gui)"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "OFF"
-		},
-		{
-			"name" : "QT_FEATURE_evr",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Qt feature: evr (from target Qt6::Multimedia)"
 				}
 			],
 			"type" : "INTERNAL",
@@ -3040,6 +3052,30 @@
 				{
 					"name" : "HELPSTRING",
 					"value" : "Qt feature: force_asserts (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_force_bundled_libs",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: force_bundled_libs (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_force_system_libs",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: force_system_libs (from target Qt6::Core)"
 				}
 			],
 			"type" : "INTERNAL",
@@ -3802,6 +3838,18 @@
 			"value" : "ON"
 		},
 		{
+			"name" : "QT_FEATURE_lasx",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: lasx (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
 			"name" : "QT_FEATURE_lcdnumber",
 			"properties" : 
 			[
@@ -4054,6 +4102,18 @@
 			"value" : "OFF"
 		},
 		{
+			"name" : "QT_FEATURE_lsx",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: lsx (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
 			"name" : "QT_FEATURE_lttng",
 			"properties" : 
 			[
@@ -4256,6 +4316,18 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "ON"
+		},
+		{
+			"name" : "QT_FEATURE_native_android_backend",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: native_android_backend (from target Qt6::Multimedia)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
 		},
 		{
 			"name" : "QT_FEATURE_neon",
@@ -4558,6 +4630,18 @@
 			"value" : "OFF"
 		},
 		{
+			"name" : "QT_FEATURE_pipewire_screencapture",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: pipewire_screencapture (from target Qt6::Multimedia)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
 			"name" : "QT_FEATURE_pkg_config",
 			"properties" : 
 			[
@@ -4786,6 +4870,42 @@
 			"value" : "ON"
 		},
 		{
+			"name" : "QT_FEATURE_pthread_clockjoin",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: pthread_clockjoin (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_pthread_condattr_setclock",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: pthread_condattr_setclock (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_pthread_timedjoin",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: pthread_timedjoin (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
 			"name" : "QT_FEATURE_publicsuffix_qt",
 			"properties" : 
 			[
@@ -4864,6 +4984,18 @@
 				{
 					"name" : "HELPSTRING",
 					"value" : "Qt feature: qt_framework (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "ON"
+		},
+		{
+			"name" : "QT_FEATURE_qtgui_threadpool",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: qtgui_threadpool (from target Qt6::Gui)"
 				}
 			],
 			"type" : "INTERNAL",
@@ -5938,6 +6070,18 @@
 			"value" : "ON"
 		},
 		{
+			"name" : "QT_FEATURE_test_gui",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: test_gui (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "ON"
+		},
+		{
 			"name" : "QT_FEATURE_testlib",
 			"properties" : 
 			[
@@ -6067,7 +6211,19 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "ON"
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_timezone_tzdb",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: timezone_tzdb (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
 		},
 		{
 			"name" : "QT_FEATURE_toolbar",
@@ -6442,6 +6598,18 @@
 			"value" : "ON"
 		},
 		{
+			"name" : "QT_FEATURE_vxworksevdev",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: vxworksevdev (from target Qt6::Gui)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
 			"name" : "QT_FEATURE_wasm",
 			"properties" : 
 			[
@@ -6460,6 +6628,18 @@
 				{
 					"name" : "HELPSTRING",
 					"value" : "Qt feature: wasm_exceptions (from target Qt6::Core)"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "OFF"
+		},
+		{
+			"name" : "QT_FEATURE_wasm_jspi",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Qt feature: wasm_jspi (from target Qt6::Core)"
 				}
 			],
 			"type" : "INTERNAL",
@@ -6778,6 +6958,18 @@
 			"value" : "ON"
 		},
 		{
+			"name" : "Qt6CorePrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6CorePrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/Qt6CorePrivate"
+		},
+		{
 			"name" : "Qt6CoreTools_DIR",
 			"properties" : 
 			[
@@ -6800,6 +6992,18 @@
 			],
 			"type" : "PATH",
 			"value" : "/opt/homebrew/lib/cmake/Qt6Core"
+		},
+		{
+			"name" : "Qt6DBusPrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6DBusPrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate"
 		},
 		{
 			"name" : "Qt6DBusTools_DIR",
@@ -6826,6 +7030,18 @@
 			"value" : "/opt/homebrew/lib/cmake/Qt6DBus"
 		},
 		{
+			"name" : "Qt6GuiPrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6GuiPrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate"
+		},
+		{
 			"name" : "Qt6GuiTools_DIR",
 			"properties" : 
 			[
@@ -6850,6 +7066,18 @@
 			"value" : "/opt/homebrew/lib/cmake/Qt6Gui"
 		},
 		{
+			"name" : "Qt6MultimediaPrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6MultimediaPrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate"
+		},
+		{
 			"name" : "Qt6Multimedia_DIR",
 			"properties" : 
 			[
@@ -6862,6 +7090,18 @@
 			"value" : "/opt/homebrew/lib/cmake/Qt6Multimedia"
 		},
 		{
+			"name" : "Qt6NetworkPrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6NetworkPrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate"
+		},
+		{
 			"name" : "Qt6Network_DIR",
 			"properties" : 
 			[
@@ -6872,6 +7112,18 @@
 			],
 			"type" : "PATH",
 			"value" : "/opt/homebrew/lib/cmake/Qt6Network"
+		},
+		{
+			"name" : "Qt6WidgetsPrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6WidgetsPrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate"
 		},
 		{
 			"name" : "Qt6WidgetsTools_DIR",
@@ -6908,6 +7160,18 @@
 			],
 			"type" : "PATH",
 			"value" : "/opt/homebrew/lib/cmake/Qt6"
+		},
+		{
+			"name" : "SDL2_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for SDL2."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/SDL2"
 		},
 		{
 			"name" : "Vulkan_GLSLANG_VALIDATOR_EXECUTABLE",

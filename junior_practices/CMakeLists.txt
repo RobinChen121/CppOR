@@ -10,14 +10,14 @@ else ()
 endif ()
 
 add_subdirectory(qt_practices)
+add_subdirectory(SDL2_practices)
 
 add_executable(${RUN_NAME}
-        sdl3_points.c
-#        Qmedia_test.cpp
-#        SFML_practices/main.cpp
+        Qmedia_test.cpp
+        #        SFML_practices/main.cpp
 
         #        boost_test.cpp
-#        game_tetris.cpp
+        #        game_tetris.cpp
         #        pair_test.cpp
         #               spdlog_test.cpp
         #        eigen3_test.cpp
@@ -29,21 +29,6 @@ add_executable(${RUN_NAME}
 
         #                openMP_test2.cpp
 )
-
-# sdl3 game setting
-# set the output directory for built objects.
-# This makes sure that the dynamic library goes into the build directory automatically.
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-
-# This assumes the SDL source is available in vendored/SDL
-# 告诉 CMake SDL3 的 cmake 配置目录
-if (MSVC)
-    include_directories(C:/SDL3-3.2.20/include)
-#    link_directories(C:/SDL3-3.2.20/lib/x64)
-    target_link_libraries(${RUN_NAME} PRIVATE "C:/SDL3-3.2.20/lib/x64/SDL3.lib")
-#    target_link_libraries(${RUN_NAME} PRIVATE SDL3)
-endif ()
 
 # boost setting
 if (MSVC)
@@ -86,8 +71,8 @@ target_link_libraries(${RUN_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::M
 #-----------------------------------
 # OpenMP needs to be downloaded to the mac, parallel computing api
 if (APPLE)
-    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
-    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.0/lib") # /libomp.dylib
+    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.8/include")
+    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.8/lib") # /libomp.dylib
     # 手动设置 OpenMP 相关的编译和链接选项
     set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
     set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")

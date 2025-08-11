@@ -103,7 +103,8 @@ public:
   [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_tsp() const;
 
   void compute_turnover();
-  [[nodiscard]] std::vector<double> compute_V() const;
+  [[nodiscard]] std::pair<std::vector<double>, std::vector<std::array<double, 2>>>
+  compute_V() const;
   [[nodiscard]] double compute_Ltj_y(int t, int j, int y) const;
   [[nodiscard]] int find_y_star(int t, int j) const;
 

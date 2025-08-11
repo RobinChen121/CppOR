@@ -530,7 +530,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtFeature.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtFeature.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -539,103 +539,119 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtFeatureCommon.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtFeatureCommon.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicAppleHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicAndroidHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicAppleHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicGitHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicPluginHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicGitHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomAttributionHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicPluginHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomCpeHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicPluginHelpers_v2.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomDepHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomAttributionHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomFileHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomCpeHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomGenerationHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomDepHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomFileHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomLicenseHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomGenerationHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomOpsHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomPurlHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomLicenseHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomPythonHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomOpsHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomSystemDepHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomPurlHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicTargetHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomPythonHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicTestHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomQtEntityHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicToolHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomSystemDepHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicTargetHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicTestHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicToolHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicWindowsHelpers.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -699,7 +715,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapAtomic.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/FindWrapAtomic.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -760,6 +776,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -950,7 +999,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapOpenGL.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/FindWrapOpenGL.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -979,7 +1028,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapVulkanHeaders.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/FindWrapVulkanHeaders.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -1173,6 +1222,39 @@
 		},
 		{
 			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateVersionlessAliasTargets.cmake"
+		},
+		{
+			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6DBus/Qt6DBusMacros.cmake"
 		},
 		{
@@ -1195,6 +1277,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -1770,6 +1885,39 @@
 		},
 		{
 			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateVersionlessAliasTargets.cmake"
+		},
+		{
+			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsMacros.cmake"
 		},
 		{
@@ -1854,6 +2002,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -1979,6 +2160,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Multimedia/Qt6MultimediaAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -2133,7 +2347,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtFeature.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtFeature.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -2172,103 +2386,119 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtFeatureCommon.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtFeatureCommon.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicAppleHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicAndroidHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicAppleHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicGitHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicPluginHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicGitHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomAttributionHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicPluginHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomCpeHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicPluginHelpers_v2.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomDepHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomAttributionHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomFileHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomCpeHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomGenerationHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomDepHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomFileHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomLicenseHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomGenerationHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomOpsHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomPurlHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomLicenseHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomPythonHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomOpsHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicSbomSystemDepHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomPurlHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicTargetHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomPythonHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicTestHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomQtEntityHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicToolHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicSbomSystemDepHelpers.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicTargetHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicTestHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicToolHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/QtPublicWindowsHelpers.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -2332,7 +2562,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapAtomic.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/FindWrapAtomic.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -2397,6 +2627,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6CorePrivate/Qt6CorePrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -2592,7 +2855,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapOpenGL.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/FindWrapOpenGL.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -2621,7 +2884,7 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/qt/6.8.2/lib/cmake/Qt6/FindWrapVulkanHeaders.cmake"
+			"path" : "/opt/homebrew/Cellar/qt/6.9.1/lib/cmake/Qt6/FindWrapVulkanHeaders.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -2823,6 +3086,39 @@
 		},
 		{
 			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6DBusPrivate/Qt6DBusPrivateVersionlessAliasTargets.cmake"
+		},
+		{
+			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6DBus/Qt6DBusMacros.cmake"
 		},
 		{
@@ -2845,6 +3141,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6GuiPrivate/Qt6GuiPrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -3424,6 +3753,39 @@
 		},
 		{
 			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6WidgetsPrivate/Qt6WidgetsPrivateVersionlessAliasTargets.cmake"
+		},
+		{
+			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsMacros.cmake"
 		},
 		{
@@ -3508,6 +3870,39 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6NetworkPrivate/Qt6NetworkPrivateVersionlessAliasTargets.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -3636,6 +4031,39 @@
 		},
 		{
 			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateConfigVersionImpl.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateDependencies.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateAdditionalTargetInfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/Qt6MultimediaPrivate/Qt6MultimediaPrivateVersionlessAliasTargets.cmake"
+		},
+		{
+			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Multimedia/Qt6MultimediaMacros.cmake"
 		},
 		{
@@ -3666,6 +4094,22 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/lib/cmake/Qt6Multimedia/Qt6MultimediaVersionlessAliasTargets.cmake"
+		},
+		{
+			"path" : "junior_practices/SDL2_practices/CMakeLists.txt"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/SDL2/sdl2-config-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/SDL2/sdl2-config.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FeatureSummary.cmake"
 		},
 		{
 			"path" : "stochastic_inventory/CMakeLists.txt"

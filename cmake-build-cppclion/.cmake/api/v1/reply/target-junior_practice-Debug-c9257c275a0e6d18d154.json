@@ -42,7 +42,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 14,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 53,
 				"parent" : 0
 			},
 			{
@@ -54,25 +60,19 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 83,
+				"line" : 105,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 120,
-				"parent" : 0
-			},
-			{
-				"command" : 1,
-				"file" : 0,
-				"line" : 162,
+				"line" : 147,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 66,
+				"line" : 51,
 				"parent" : 0
 			},
 			{
@@ -104,7 +104,7 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 80,
+				"line" : 65,
 				"parent" : 0
 			},
 			{
@@ -114,7 +114,7 @@
 			{
 				"command" : 3,
 				"file" : 5,
-				"line" : 190,
+				"line" : 218,
 				"parent" : 13
 			},
 			{
@@ -140,7 +140,7 @@
 			{
 				"command" : 3,
 				"file" : 5,
-				"line" : 190,
+				"line" : 218,
 				"parent" : 13
 			},
 			{
@@ -166,7 +166,7 @@
 			{
 				"command" : 3,
 				"file" : 5,
-				"line" : 190,
+				"line" : 218,
 				"parent" : 13
 			},
 			{
@@ -192,7 +192,7 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 161,
+				"line" : 146,
 				"parent" : 0
 			},
 			{
@@ -218,37 +218,37 @@
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 99,
+				"line" : 84,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 117,
+				"line" : 102,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 119,
+				"line" : 104,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 67,
+				"line" : 52,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 79,
+				"line" : 64,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 153,
+				"line" : 138,
 				"parent" : 0
 			}
 		]
@@ -259,7 +259,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics"
+					"fragment" : " -Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.8/include -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics"
 				}
 			],
 			"defines" : 
@@ -365,7 +365,7 @@
 			[
 				{
 					"backtrace" : 34,
-					"path" : "/opt/homebrew/Cellar/libomp/20.1.0/include"
+					"path" : "/opt/homebrew/Cellar/libomp/20.1.8/include"
 				},
 				{
 					"backtrace" : 35,
@@ -426,7 +426,15 @@
 					"path" : "/opt/homebrew/include/eigen3"
 				}
 			],
-			"language" : "C",
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "20"
+			},
 			"sourceIndexes" : 
 			[
 				0
@@ -439,11 +447,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-Xpreprocessor -fopenmp -I/opt/homebrew/Cellar/libomp/20.1.8/include -g",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "-L/opt/homebrew/Cellar/libomp/20.1.0/lib -lomp",
+				"fragment" : "-L/opt/homebrew/Cellar/libomp/20.1.8/lib -lomp",
 				"role" : "flags"
 			},
 			{
@@ -559,7 +567,7 @@
 				"role" : "libraries"
 			}
 		],
-		"language" : "C"
+		"language" : "CXX"
 	},
 	"name" : "junior_practice",
 	"nameOnDisk" : "junior_practice",
@@ -583,7 +591,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "junior_practices/sdl3_points.c",
+			"path" : "junior_practices/Qmedia_test.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
