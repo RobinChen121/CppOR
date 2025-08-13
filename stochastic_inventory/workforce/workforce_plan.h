@@ -26,7 +26,7 @@ class WorkforcePlan {
   Direction direction = Direction::BACKWARD;
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.5, 0.3, 0.6, 0.7, 0.2, 0.5};
+  std::vector<double> turnover_rates = {0.5, 0.3, 0.6, 0.7, 0.2};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
@@ -103,8 +103,8 @@ public:
   [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_tsp() const;
 
   void compute_turnover();
-  [[nodiscard]] std::pair<std::vector<double>, std::vector<std::array<double, 2>>>
-  compute_V() const;
+  [[nodiscard]] std::pair<std::vector<double>, std::vector<std::array<int, 2>>>
+  compute_ww() const;
   [[nodiscard]] double compute_Ltj_y(int t, int j, int y) const;
   [[nodiscard]] int find_y_star(int t, int j) const;
 

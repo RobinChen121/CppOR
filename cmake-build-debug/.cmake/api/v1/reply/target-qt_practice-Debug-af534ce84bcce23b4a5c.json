@@ -20,6 +20,7 @@
 			"find_package",
 			"find_dependency",
 			"_qt_internal_find_qt_dependencies",
+			"add_compile_options",
 			"include_directories"
 		],
 		"files" : 
@@ -46,19 +47,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 7,
+				"line" : 8,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 21,
+				"line" : 23,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 18,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
@@ -194,7 +195,13 @@
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 17,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 19,
 				"parent" : 0
 			}
 		]
@@ -206,6 +213,10 @@
 			[
 				{
 					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi"
+				},
+				{
+					"backtrace" : 29,
+					"fragment" : "/utf-8"
 				},
 				{
 					"backtrace" : 2,
@@ -270,7 +281,7 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 29,
+					"backtrace" : 30,
 					"isSystem" : true,
 					"path" : "C:/VulkanSDK/1.4.321.1/include"
 				},
@@ -320,8 +331,7 @@
 			{
 				"backtraces" : 
 				[
-					2,
-					2
+					1
 				],
 				"standard" : "17"
 			},

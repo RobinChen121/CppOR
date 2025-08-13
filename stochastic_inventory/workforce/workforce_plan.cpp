@@ -462,15 +462,16 @@ void WorkforcePlan::compute_turnover() {
   }
 }
 
-std::pair<std::vector<double>, std::vector<std::array<double, 2>>>
-WorkforcePlan::compute_V() const {
-  std::vector<std::array<double, 2>> sS(T);
+std::pair<std::vector<double>, std::vector<std::array<int, 2>>>
+WorkforcePlan::compute_ww() const {
+  std::vector<std::array<int, 2>> sS(T);
   std::vector<double> V(T + 1);
   V[T] = 0;
   for (int t = static_cast<int>(T) - 1; t >= 0; t--) {
     double best_V = std::numeric_limits<double>::max();
-    double S = 0;
+    int S = 0;
     double L_1_value = 0.0;
+    int this_j = t;
     for (int j = t; j <= static_cast<int>(T) - 1; j++) {
       const int y_star = find_y_star(t, j);
       const double L_j_value = compute_Ltj_y(t, j, y_star);
@@ -480,6 +481,7 @@ WorkforcePlan::compute_V() const {
       if (y_star_value < best_V) {
         best_V = y_star_value;
         S = y_star;
+        this_j = j;
       }
       if (compute_Ltj_y(t, t, y_star) > L_1_value)
         break;
@@ -489,10 +491,10 @@ WorkforcePlan::compute_V() const {
 
     // find s
     int min_s = std::numeric_limits<int>::max();
-    for (int j = t; j <= static_cast<int>(T) - 1; j++) {
-      int this_s = 0;
+    for (int j = t; j <= this_j; j++) {
+      int this_s = S;
       for (int y = 0; y < max_hire_num; y++) {
-        if (compute_Ltj_y(t, j, y) + V[j] <= V[t]) {
+        if (compute_Ltj_y(t, j, y) + V[j + 1] <= V[t]) {
           this_s = y;
           break;
         }
@@ -540,14 +542,6 @@ double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const
   return left_term + right_term;
 }
 
-std::pair<double, std::vector<std::array<int, 2>>> WorkforcePlan::solve_tsp() const {
-  std::vector<std::vector<double>> V(T, std::vector<double>(T));
-  for (size_t j = T - 1; j-- > 0;) {
-    for (size_t t = j; t-- > 0;) {
-    }
-  }
-  return {};
-}
 
 int main() {
   auto problem = WorkforcePlan();
@@ -596,12 +590,24 @@ int main() {
   std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
             << "%" << std::endl;
 
-  auto ww_result = problem.compute_V();
+  const auto ww_result = problem.compute_ww();
   std::cout << std::endl;
   std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
   const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
   std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3 << "%"
             << std::endl;
+  auto sS_ww = ww_result.second;
+  for (const auto row : sS_ww) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+  const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
+  const double gap4 = (ww_sS - final_value) / final_value * 100;
+  std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) << gap4
+            << "%" << std::endl;
+
 
   // start_time = std::chrono::high_resolution_clock::now();
   // const auto arr = problem.compute_Gy();

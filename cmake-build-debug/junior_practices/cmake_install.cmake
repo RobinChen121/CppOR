@@ -37,3 +37,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("D:/chenzhen/CppOR/cmake-build-debug/junior_practices/qt_practices/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/chenzhen/CppOR/cmake-build-debug/junior_practices/SDL2_practices/cmake_install.cmake")
+endif()
+

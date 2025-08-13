@@ -35,6 +35,11 @@ D:/chenzhen/CppOR/cmake-build-release/junior_practices/qt_practices/CMakeFiles/e
 D:/chenzhen/CppOR/cmake-build-release/junior_practices/qt_practices/CMakeFiles/rebuild_cache.dir
 D:/chenzhen/CppOR/cmake-build-release/junior_practices/qt_practices/CMakeFiles/qt_practice_autogen_timestamp_deps.dir
 D:/chenzhen/CppOR/cmake-build-release/junior_practices/qt_practices/CMakeFiles/qt_practice_autogen.dir
+D:/chenzhen/CppOR/cmake-build-release/junior_practices/SDL2_practices/CMakeFiles/sdl_practice.dir
+D:/chenzhen/CppOR/cmake-build-release/junior_practices/SDL2_practices/CMakeFiles/package.dir
+D:/chenzhen/CppOR/cmake-build-release/junior_practices/SDL2_practices/CMakeFiles/package_source.dir
+D:/chenzhen/CppOR/cmake-build-release/junior_practices/SDL2_practices/CMakeFiles/edit_cache.dir
+D:/chenzhen/CppOR/cmake-build-release/junior_practices/SDL2_practices/CMakeFiles/rebuild_cache.dir
 D:/chenzhen/CppOR/cmake-build-release/stochastic_inventory/CMakeFiles/sdp-inventory.dir
 D:/chenzhen/CppOR/cmake-build-release/stochastic_inventory/CMakeFiles/package.dir
 D:/chenzhen/CppOR/cmake-build-release/stochastic_inventory/CMakeFiles/package_source.dir

@@ -76,7 +76,7 @@ private:
   void removeFullLines();
   void onBlinkTimeout();
   void actuallyRemoveLines();
-  void drawSquare(QPainter &painter, int x, int y, Tetrominoes shape);
+  static void drawSquare(QPainter &painter, int x, int y, Tetrominoes shape);
 
   static constexpr int BoardWidth = 10;
   static constexpr int BoardHeight = 20;
