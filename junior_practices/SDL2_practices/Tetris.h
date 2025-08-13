@@ -51,6 +51,7 @@ const std::vector<std::vector<std::vector<int>>> SHAPES = {
 
 class Tetris {
   std::array<std::array<bool, game_width_block_num>, game_height_block_num> position_taken = {};
+
 public:
   Tetris() = default;
   static const std::vector<std::vector<int>> &getRandomShape();
@@ -60,6 +61,7 @@ public:
   static void drawCell(SDL_Renderer *renderer, int x, int y, const SDL_Color &color);
   static void drawPiece(SDL_Renderer *renderer, const Piece &piece);
   bool validPosition(const Piece &piece) const;
+  void lockPiece(const Piece &piece);
 };
 
 #endif // TETRIS_H

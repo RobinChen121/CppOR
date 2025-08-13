@@ -9,15 +9,14 @@
 #ifndef CASHSTATE_H
 #define CASHSTATE_H
 
-#include "State.h"
+#include "state.h"
 
-class CashState : public state {
+class CashState : public State {
   double initialCash{};
 
 public:
-  CashState(const int period, const double initialInventory,
-            const double initialCash)
-      : state(period, initialInventory), initialCash(initialCash) {};
+  CashState(const int period, const double initialInventory, const double initialCash)
+      : State(period, initialInventory), initialCash(initialCash) {};
 
   double getIniCash() const;
 
@@ -30,8 +29,7 @@ public:
     // const 在函数结尾 保证当前对象(this) 不可修改
     // 不会修改成员变量的方法 都可以在函数声明的结尾添加 const
     return getPeriod() == other.getPeriod() &&
-           getInitialInventory() == other.getInitialInventory() &&
-           initialCash == other.initialCash;
+           getInitialInventory() == other.getInitialInventory() && initialCash == other.initialCash;
   }
 
   // friend std::ostream &operator<<(std::ostream &os, const CashState &other) {

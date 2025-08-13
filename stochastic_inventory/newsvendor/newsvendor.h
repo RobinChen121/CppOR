@@ -9,7 +9,7 @@
 #ifndef NEWSVENDOR_H
 #define NEWSVENDOR_H
 
-#include "states/State.h"
+#include "../states/state.h"
 #include <mutex>
 #include <unordered_map>
 #include <vector>

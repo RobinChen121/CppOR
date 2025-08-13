@@ -6,12 +6,16 @@ set(CMAKE_BUILD_TYPE Debug)
 set(RUN_NAME sdl_practice) # the name of configuration target
 
 
+if (MSVC)
+    add_compile_options(/utf-8) # 增加中文文字编码
+endif ()
 add_executable(${RUN_NAME}
         tetris_main.cpp
         Tetris.cpp
         Color.cpp
         Piece.cpp
-        Piece.h
+
+        #        array_boundary_test.cpp
 )
 
 # sdl2 game setting

@@ -1,8 +1,8 @@
-# Install script for directory: D:/chenzhen/CppOR/junior_practices
+# Install script for directory: /Users/zhenchen/CLionProjects/CppOR/junior_practices
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/CppClion")
+  set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -32,13 +32,18 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("D:/chenzhen/CppOR/cmake-build-debug/junior_practices/qt_practices/cmake_install.cmake")
+# Set path to fallback-tool for dependency-resolution.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/Library/Developer/CommandLineTools/usr/bin/objdump")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/chenzhen/CppOR/cmake-build-debug/junior_practices/SDL2_practices/cmake_install.cmake")
+  include("/Users/zhenchen/CLionProjects/CppOR/cmake-build-debug/junior_practices/qt_practices/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/Users/zhenchen/CLionProjects/CppOR/cmake-build-debug/junior_practices/SDL2_practices/cmake_install.cmake")
 endif()
 

@@ -6,7 +6,7 @@
 //
 
 #include "newsvendor.h"
-#include "../utils/PMF.h"
+#include "../../utils/PMF.h"
 #include <chrono>
 #include <iostream>
 

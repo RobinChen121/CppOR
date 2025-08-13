@@ -3,13 +3,13 @@ set(RUN_NAME utils) # 设置运行程序的名字
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${RUN_NAME}
         #        gurobi_test.cpp
-        PMF.cpp
+        pmf.cpp
         #        my_solver/Var.cpp
         #        my_solver/Model.cpp
 )
 
 ## boost setting
-if(MSVC)
+if (MSVC)
     set(BOOST_ROOT "C:/local/boost_1_88_0")
     set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
     set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
@@ -29,7 +29,7 @@ else ()
     find_package(Boost REQUIRED COMPONENTS system thread filesystem)
     include_directories(${Boost_INCLUDE_DIRS})
     target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
-endif()
+endif ()
 
 
 #-----------------------------------
