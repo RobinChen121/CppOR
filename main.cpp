@@ -1,8 +1,12 @@
 #include <iostream>
+#include <vector>
 
 int main() {
-  std::cout << "Hello World!\n";
-  int a[3] = {1, 2, 3};
-  a[5] = 42; // 越界访问
+  std::vector arr = {1, 2, 3};
+  std::cout << "This is a test" << std::endl;
+
+  arr.at(1) = 42; // 故意越界
+  std::cout << "This will not be printed if ASan catches the error" << std::endl;
+
   return 0;
 }

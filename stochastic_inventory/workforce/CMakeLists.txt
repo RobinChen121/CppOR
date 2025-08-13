@@ -118,8 +118,8 @@ endif ()
 #-----------------------------------
 # OpenMP needs to be downloaded to the mac, parallel computing api
 if (APPLE)
-    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.0/include")
-    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.0/lib") # /libomp.dylib
+    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.8/include")
+    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.8/lib") # /libomp.dylib
     # 手动设置 OpenMP 相关的编译和链接选项
     set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
     set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")

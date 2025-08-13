@@ -1,5 +1,0 @@
-ninja_dyndep_version = 1.0
-build junior_practices\qt_practices\CMakeFiles\qt_practice.dir\tetriswidget.cpp.obj: dyndep
-
-build junior_practices\qt_practices\CMakeFiles\qt_practice.dir\main.cpp.obj: dyndep
-

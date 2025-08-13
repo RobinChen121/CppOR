@@ -10,7 +10,7 @@
  *
  */
 
-#include "../utils/PMF.h"
+#include "../../utils/PMF.h"
 #include "newsvendor.h"
 #include <chrono>
 #include <iostream>

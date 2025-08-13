@@ -50,7 +50,19 @@ void Tetris::drawPiece(SDL_Renderer *renderer, const Piece &piece) {
       if (piece.shape[i][j] > 1e-1) {
         const int px = (piece.x + j) * cell_size;
         const int py = (piece.y + i) * cell_size;
+        if (piece.y > 8)
+          std::cout << " ";
         drawCell(renderer, px, py, piece.color);
+      }
+    }
+  }
+}
+
+void Tetris::lockPiece(const Piece &piece) {
+  for (int i = 0; i < piece.shape.size(); i++) {
+    for (int j = 0; j < piece.shape[i].size(); j++) {
+      if (piece.shape[i][j] > 1e-1) {
+        position_taken[i][j] = true;
       }
     }
   }

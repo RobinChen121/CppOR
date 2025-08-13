@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 
-add_compile_options(/utf-8) # 增加中文文字编码
+
 set(RUN_NAME qt_practice) # the name of configuration target
 set(CMAKE_AUTOMOC ON)
 add_executable(${RUN_NAME}

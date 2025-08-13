@@ -6,7 +6,7 @@ CXX_DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_D
 
 CXX_INCLUDES = -I/Library/gurobi1201/macos_universal2/lib -I/Library/gurobi1201/macos_universal2/include -isystem /opt/anaconda3/include
 
-CXX_FLAGSarm64 =  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
+CXX_FLAGSarm64 = -fsanitize=address -g -O1 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
 
-CXX_FLAGS =  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
+CXX_FLAGS = -fsanitize=address -g -O1 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
 
