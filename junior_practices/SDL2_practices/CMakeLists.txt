@@ -2,12 +2,16 @@ cmake_minimum_required(VERSION 3.30)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 set(RUN_NAME sdl_practice) # the name of configuration target
 
 
 add_executable(${RUN_NAME}
-        sdl2_test.cpp
+        tetris_main.cpp
+        Tetris.cpp
+        Color.cpp
+        Piece.cpp
+        Piece.h
 )
 
 # sdl2 game setting
@@ -17,4 +21,15 @@ if (APPLE)
     target_link_libraries(${RUN_NAME} PRIVATE
             ${SDL2_LIBRARIES}
     )
+else ()
+    # SDL2 路径
+    set(SDL2_PATH "C:/SDL2-2.30.10/")  # 改成你自己的路径
+    # 包含头文件
+    include_directories(${SDL2_PATH}/include)
+    # 链接库目录
+    link_directories(${SDL2_PATH}/lib/x64)
+    # 链接 SDL2
+    target_link_libraries(${RUN_NAME}
+            C:/SDL2-2.30.10/lib/x64/SDL2.lib
+            C:/SDL2-2.30.10/lib/x64/SDL2main.lib)
 endif ()

@@ -32,6 +32,6 @@
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
 -- Boost toolset is unknown (compiler MSVC 19.44.35213.0)
--- Configuring done (2.3s)
--- Generating done (0.7s)
+-- Configuring done (1.1s)
+-- Generating done (0.4s)
 -- Build files have been written to: D:/chenzhen/CppOR/cmake-build-release

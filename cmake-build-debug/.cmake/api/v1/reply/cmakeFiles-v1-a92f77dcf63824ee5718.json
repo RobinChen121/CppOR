@@ -6,7 +6,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "cmake-build-release/CMakeFiles/3.30.5/CMakeSystem.cmake"
+			"path" : "cmake-build-debug/CMakeFiles/3.30.5/CMakeSystem.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -20,11 +20,11 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "cmake-build-release/CMakeFiles/3.30.5/CMakeCCompiler.cmake"
+			"path" : "cmake-build-debug/CMakeFiles/3.30.5/CMakeCCompiler.cmake"
 		},
 		{
 			"isGenerated" : true,
-			"path" : "cmake-build-release/CMakeFiles/3.30.5/CMakeCXXCompiler.cmake"
+			"path" : "cmake-build-debug/CMakeFiles/3.30.5/CMakeCXXCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -88,7 +88,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "cmake-build-release/CMakeFiles/3.30.5/CMakeRCCompiler.cmake"
+			"path" : "cmake-build-debug/CMakeFiles/3.30.5/CMakeRCCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -3292,6 +3292,9 @@
 			"path" : "C:/Qt/6.9.1/msvc2022_64/lib/cmake/Qt6Multimedia/Qt6MultimediaVersionlessAliasTargets.cmake"
 		},
 		{
+			"path" : "junior_practices/SDL2_practices/CMakeLists.txt"
+		},
+		{
 			"path" : "stochastic_inventory/CMakeLists.txt"
 		},
 		{
@@ -4114,7 +4117,7 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "D:/chenzhen/CppOR/cmake-build-release",
+		"build" : "D:/chenzhen/CppOR/cmake-build-debug",
 		"source" : "D:/chenzhen/CppOR"
 	},
 	"version" : 
