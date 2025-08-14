@@ -8,14 +8,132 @@
 
 #include "Tetris.h"
 #include "Piece.h"
+#include <filesystem>
 #if __APPLE__
 #include <SDL2/SDL.h>
 #else
 #include <SDL.h>
+#include <SDL_mixer.h>
 #endif
 #include "Color.h"
-
+#include <fstream>
 #include <iostream>
+#include <string>
+
+void Tetris::setMusic() {
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    std::cerr << "Mix_OpenAudio Error: " << Mix_GetError() << "\n";
+    SDL_Quit();
+  } else {
+    // 调整背景音乐音量（0 ~ 128）
+    Mix_VolumeMusic(100);
+    rotate_sound = Mix_LoadWAV("../assets/rotate.wav");
+    clear_sound = Mix_LoadWAV("../assets/clear2.wav");
+    fix_sound = Mix_LoadWAV("../assets/fix.wav");
+    background_music = Mix_LoadMUS("../assets/background.mp3");
+    // 加载完音乐后才能播放
+    Mix_PlayMusic(background_music, -1) == -1; // -1 表示无限循环
+  }
+}
+
+void Tetris::setWindow() {
+  // 创建窗口
+  // SDL_CreateWindow() 返回的是一个 指向 SDL_Window 结构体的指针
+  window = SDL_CreateWindow("Dr Zhen Chen's tetris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                            total_width_accurate, game_height_accurate, SDL_WINDOW_SHOWN);
+  if (!window) {
+    std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+  }
+}
+
+void Tetris::setRender() {
+  // 创建渲染器
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  // 启用混合模式，支持透明度设置
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  if (!renderer) {
+    std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+  }
+  // 创建窗口和 renderer 后，先 present 一次背景,不然会先黑屏
+  setBackgroundColor(background_color);
+  drawGrid(board_line_color);
+  SDL_RenderPresent(renderer);
+}
+
+void Tetris::setFont() {
+  // 必须先初始化字体程序
+  if (TTF_Init() == -1) {
+    std::cerr << "TTF_Init Error: " << TTF_GetError() << std::endl;
+    return;
+  }
+  font = TTF_OpenFont("../assets/NotoSansSC-Regular.otf", 24); // 支持中文
+  font_color = WHITE;
+}
+
+// n is font size
+void Tetris::setFontSize(const int n) {
+  font = TTF_OpenFont("../assets/NotoSansSC-Regular.otf", n); // 支持中文
+}
+
+// 渲染文本到屏幕指定位置并及时销毁
+// 渲染文字并自动销毁纹理
+void Tetris::renderTextAt(const std::string &text, const int x, const int y) const {
+  SDL_Surface *surface = TTF_RenderUTF8_Blended(font, text.c_str(), font_color);
+  if (!surface) {
+    SDL_Log("TTF_RenderUTF8_Blended error: %s", TTF_GetError());
+    return;
+  }
+
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_FreeSurface(surface);
+
+  if (!texture) {
+    SDL_Log("SDL_CreateTextureFromSurface error: %s", SDL_GetError());
+    return;
+  }
+
+  int text_width, text_height;
+  SDL_QueryTexture(texture, nullptr, nullptr, &text_width, &text_height);
+  const SDL_Rect dstRect = {x, y, text_width, text_height};
+  SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+
+  SDL_DestroyTexture(texture); // 及时释放纹理
+}
+
+// 渲染一行 "标签 + 数字"
+void Tetris::renderLabelAndValue(const std::string &label, const int value, const int x,
+                                 const int y, const int padding = 5) const {
+  // 渲染标签
+  SDL_Surface *surface_label = TTF_RenderUTF8_Blended(font, label.c_str(), font_color);
+  SDL_Texture *tex_label = SDL_CreateTextureFromSurface(renderer, surface_label);
+  int label_w, label_h;
+  SDL_QueryTexture(tex_label, nullptr, nullptr, &label_w, &label_h);
+  const SDL_Rect rect_label = {x, y, label_w, label_h};
+  SDL_RenderCopy(renderer, tex_label, nullptr, &rect_label);
+  SDL_DestroyTexture(tex_label);
+  SDL_FreeSurface(surface_label);
+
+  // 渲染数值
+  const std::string value_str = std::to_string(value);
+  SDL_Surface *surface_val = TTF_RenderUTF8_Blended(font, value_str.c_str(), font_color);
+  SDL_Texture *tex_val = SDL_CreateTextureFromSurface(renderer, surface_val);
+  int value_w, value_h;
+  SDL_QueryTexture(tex_val, nullptr, nullptr, &value_w, &value_h);
+  const SDL_Rect rect_val = {x + label_w + padding, y, value_w, value_h};
+  SDL_RenderCopy(renderer, tex_val, nullptr, &rect_val);
+  SDL_DestroyTexture(tex_val);
+  SDL_FreeSurface(surface_val);
+}
+
+int Tetris::read_file() {
+  std::ifstream inFile("../assets/high_score.txt"); // 打开分数文件
+  std::string line;
+  getline(inFile, line);
+  return std::stoi(line);
+}
 
 // 随机选择一个形状
 const std::vector<std::vector<int>> &Tetris::getRandomShape() {
@@ -28,9 +146,10 @@ const std::vector<std::vector<int>> &Tetris::getRandomShape() {
   return shape;
 }
 
-void Tetris::drawCell(SDL_Renderer *renderer, const int x, const int y, const SDL_Color &color) {
+void Tetris::drawCell(const int x, const int y, const SDL_Color &color) const {
   const SDL_Rect rect = {x + 1, y + 1, cell_size - 2, cell_size - 2};
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  const auto color1 = Color::adjustColor(color, 1);
+  SDL_SetRenderDrawColor(renderer, color1.r, color1.g, color1.b, color1.a);
   SDL_RenderFillRect(renderer, &rect);
   const auto lighter = Color::adjustColor(color, 1.5);
   const auto darker = Color::adjustColor(color, 0.5);
@@ -44,28 +163,215 @@ void Tetris::drawCell(SDL_Renderer *renderer, const int x, const int y, const SD
   SDL_RenderDrawLine(renderer, x + cell_size - 1, y + cell_size - 1, x + cell_size - 1, y + 1);
 }
 
-void Tetris::drawPiece(SDL_Renderer *renderer, const Piece &piece) {
+void Tetris::drawPiece(const Piece &piece) const {
   for (int i = 0; i < piece.shape.size(); i++) {
     for (int j = 0; j < piece.shape[i].size(); j++) {
       if (piece.shape[i][j] > 1e-1) {
         const int px = (piece.x + j) * cell_size;
         const int py = (piece.y + i) * cell_size;
-        if (piece.y > 8)
-          std::cout << " ";
-        drawCell(renderer, px, py, piece.color);
+        drawCell(px, py, piece.color);
       }
     }
   }
 }
 
 void Tetris::lockPiece(const Piece &piece) {
+
   for (int i = 0; i < piece.shape.size(); i++) {
     for (int j = 0; j < piece.shape[i].size(); j++) {
       if (piece.shape[i][j] > 1e-1) {
-        position_taken[i][j] = true;
+        const int board_x = piece.x + j;
+        const int board_y = piece.y + i;
+        position_taken[board_x][board_y] = true;
+        board_colors[board_x][board_y] = piece.color;
       }
     }
   }
+  checkFullLines();
+  if (!lines_to_remove.empty())
+    removeFullLines();
+  else
+    play_chunk_sound(fix_sound);
+}
+
+void Tetris::checkFullLines() {
+  for (int y = board_height - 1; y >= 0; --y) {
+    bool lineIsFull = true;
+    for (int x = 0; x < board_width; ++x) {
+      if (!position_taken[x][y]) {
+        lineIsFull = false;
+        break;
+      }
+    }
+    if (lineIsFull) {
+      lines_to_remove.push_back(y);
+    }
+  }
+}
+
+void Tetris::flashLines() const {
+  constexpr int flash_count = 5;  // 闪烁次数
+  constexpr int flash_delay = 50; // 每次闪烁延时 (毫秒)
+
+  for (int i = 0; i < flash_count; ++i) {
+    // 绘制需要闪烁的行（偶数次隐藏，奇数次显示）
+    if (i % 2 == 1) { // 显示状态
+      for (const int line : lines_to_remove) {
+        for (int x = 0; x < board_width; ++x) {
+          drawCell(x * cell_size, line * cell_size, WHITE);
+        }
+      }
+    } else {
+      for (int line : lines_to_remove) {
+        for (int x = 0; x < board_width; ++x) {
+          drawCell(x * cell_size, line * cell_size, board_colors[x][line]);
+        }
+      }
+    }
+    SDL_RenderPresent(renderer);
+    SDL_Delay(flash_delay);
+  }
+  SDL_Delay(100); // 爆炸完延迟0.5s
+}
+
+
+void Tetris::removeFullLines() {
+  int lines_remove_num = static_cast<int>(lines_to_remove.size());
+  line_num += lines_remove_num;
+  switch (lines_remove_num) {
+  case 1:
+    score += lines_remove_num * 100;
+    break;
+  case 2:
+    score += lines_remove_num * 150;
+    break;
+  case 3:
+    score += lines_remove_num * 200;
+    break;
+  case 4:
+    score += lines_remove_num * 250;
+    break;
+  case 5:
+    score += lines_remove_num * 300;
+    break;
+  default:
+    score += lines_remove_num * 300;
+  }
+  flashLines();
+
+  // 从大到小排序，保证先处理下面的行
+  // std::sort(lines_to_remove.begin(), lines_to_remove.end(), std::greater<int>());
+  int k = 0;
+  while (lines_remove_num > 0) {
+    int max_line = lines_to_remove[k] + k;
+      for (int row = max_line; row > 0; --row) {
+        for (int col = 0; col < board_width; ++col) {
+          position_taken[col][row] = position_taken[col][row - 1];
+          board_colors[col][row] = board_colors[col][row - 1];
+        }
+    }
+    lines_remove_num--;
+    k++;
+    play_chunk_sound(clear_sound);
+  }
+  lines_to_remove.clear();
+}
+
+void Tetris::pauseAndWaitSpace() const {
+  // 绘制半透明背景
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 150); // 半透明黑
+  SDL_Rect overlay = {0, 0, total_width_accurate, game_height_accurate};
+  SDL_RenderFillRect(renderer, &overlay);
+
+  // 绘制提示框
+  SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b, 255);
+  SDL_Rect box = {cell_size * 2, game_height_accurate / 3, total_width_accurate / 2,
+                  game_height_accurate / 5};
+  SDL_RenderFillRect(renderer, &box);
+
+  // 在提示框上渲染文字
+  renderTextAt("Game Paused", box.x + cell_size * 2, box.y + cell_size);
+  renderTextAt("Press Space again to continue", box.x + 10, box.y + cell_size * 2);
+
+  // 显示暂停提示
+  SDL_RenderPresent(renderer);
+
+  // 等待空格键
+  // 第一步：清空事件队列，避免残留
+  SDL_FlushEvent(SDL_KEYUP);
+  SDL_Event e;
+  bool waiting = true;
+  while (waiting) {
+    while (SDL_PollEvent(&e)) {
+      if (e.type == SDL_QUIT) {
+        exit(0); // 退出游戏
+      }
+      if (e.type == SDL_KEYUP && e.key.keysym.sym == SDLK_SPACE) {
+        waiting = false; // 空格继续
+        // 继续播放已暂停的背景音乐
+        Mix_ResumeMusic();
+      }
+    }
+    SDL_Delay(5);
+  }
+}
+
+void Tetris::pauseAndQuit() const {
+  // 绘制半透明背景
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 150); // 半透明黑
+  SDL_Rect overlay = {0, 0, total_width_accurate, game_height_accurate};
+  SDL_RenderFillRect(renderer, &overlay);
+
+  // 绘制提示框
+  SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b, 255);
+  SDL_Rect box = {cell_size * 2, game_height_accurate / 3, total_width_accurate / 2,
+                  game_height_accurate / 5};
+  SDL_RenderFillRect(renderer, &box);
+
+  // 在提示框上渲染文字
+  renderTextAt("Game Over", box.x + cell_size * 2.5, box.y + cell_size);
+  renderTextAt("Press any key to quit", box.x + cell_size*1.5, box.y + cell_size * 2);
+
+  // 显示暂停提示
+  SDL_RenderPresent(renderer);
+  SDL_Event event;
+  bool waiting = true;
+  while (waiting) {
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN) {
+        waiting = false;
+      }
+    }
+  }
+  SDL_Delay(10);
+}
+
+void Tetris::play_chunk_sound(Mix_Chunk *sound) {
+  // -1 表示自动选择一个空闲的声道（channel）来播放音效
+  Mix_VolumeChunk(sound, 128);
+  Mix_PlayChannel(-1, sound, 0); // 播放音效
+}
+
+void Tetris::drawBoard() const {
+  for (int y = 0; y < board_height; ++y) {
+    for (int x = 0; x < board_width; ++x) {
+      if (position_taken[x][y]) {
+        auto dark_color = Color::adjustColor(board_colors[x][y], 0.8);
+        drawCell(x * cell_size, y * cell_size, dark_color);
+      }
+    }
+  }
+}
+
+Piece Tetris::generatePiece() {
+  constexpr auto colors = Color{};
+  const auto color = Color::adjustColor(colors.getRandomColor(), 0.8);
+  const auto shape = getRandomShape();
+  auto piece = Piece(board_width / 2 - 1, 0, color, shape);
+  piece.rotateRandom();
+  return piece;
 }
 
 bool Tetris::validPosition(const Piece &piece) const {
@@ -74,8 +380,8 @@ bool Tetris::validPosition(const Piece &piece) const {
       if (piece.shape[i][j] > 1e-1) {
         const int x = piece.x + j;
         const int y = piece.y + i;
-        if (x < 0 || x >= game_width_block_num || y < 0 || y >= game_height_block_num ||
-            (position_taken[x][y] == true)) {
+        if (x < 0 || x >= board_width || y < 0 || y >= board_height ||
+            (y > 0 && position_taken[x][y] == true)) {
           return false;
         }
       }
@@ -84,96 +390,153 @@ bool Tetris::validPosition(const Piece &piece) const {
   return true;
 }
 
-void Tetris::set_background_color(SDL_Renderer *renderer, const SDL_Color color) {
+void Tetris::setBackgroundColor(const SDL_Color color) const {
   // 设置背景颜色
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderClear(renderer); // SDL_RenderClear() 用来清屏，通常不支持半透明清屏。
 }
 
-void Tetris::draw_grid(SDL_Renderer *renderer, const SDL_Color color) {
+void Tetris::drawGrid(const SDL_Color color) const {
   // 画白色竖线，分隔左右两部分
-  for (int i = 0; i < game_width_block_num + 1; i++) {
+  for (int i = 0; i < board_width + 1; i++) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer, i * cell_size, 0, i * cell_size, game_height);
+    SDL_RenderDrawLine(renderer, i * cell_size, 0, i * cell_size, game_height_accurate);
   }
   // 画白色横线
-  for (int i = 0; i < game_height_block_num + 1; i++) {
+  for (int i = 0; i < board_height + 1; i++) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer, 0, i * cell_size, game_width, i * cell_size);
+    SDL_RenderDrawLine(renderer, 0, i * cell_size, game_width_accurate, i * cell_size);
   }
 }
 
 void Tetris::run() {
-  // 创建窗口
-  // SDL_CreateWindow() 返回的是一个 指向 SDL_Window 结构体的指针
-  SDL_Window *window =
-      SDL_CreateWindow("Dr Zhen Chen's tetris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       total_width, game_height, SDL_WINDOW_SHOWN);
-  if (!window) {
-    std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-    SDL_Quit();
-  }
-
-  // 创建渲染器
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  // 启用混合模式，支持透明度设置
-  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  if (!renderer) {
-    std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-  }
-
-  const auto colors = Color{};
-  const auto color = Color::adjustColor(colors.getRandomColor(), 0.8);
-  const auto next_color = Color::adjustColor(colors.getRandomColor(), 0.8);
-  const auto shape = getRandomShape();
-  auto piece = Piece(game_width_block_num / 2 - 1, 0, color, shape);
-  piece.rotateRandom();
-  const auto next_shape = getRandomShape();
-  auto next_piece = Piece(game_width_block_num / 2, 0, next_color, next_shape);
-  next_piece.rotateRandom();
-
+  // 加载音频
+  // setMusic();
+  auto piece = generatePiece();
+  // 确定下一个方块
+  auto next_piece = generatePiece();
   // 定时器
-  auto last_drop_time = SDL_GetTicks();
-  auto dropInterval = 1000; // 每 1 秒下落一格
-  // 主循环，每帧循环一次
+  last_drop_time = SDL_GetTicks();
+  auto dropInterval = 1000 / drop_speed; // 每 1 秒下落一格
+  highest_score = read_file();
+
   bool running = true;
   SDL_Event event;
+  bool paused = false; // 暂停状态
   while (running) {
     // 处理事件
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
         running = false;
       }
-    }
-
-    // 背景色，网格线
-    set_background_color(renderer, background_color);
-    draw_grid(renderer, board_line_color);
-    // 第一个方块
-    drawPiece(renderer, piece);
-
-    // 下一个方块
-    Uint32 now = SDL_GetTicks();
-    if (now - last_drop_time > dropInterval) {
-      // 创建一个新的piece对象，模拟向下移动
-      Piece piece_drop = piece;
-      piece_drop.y += 1;
-      if (validPosition(piece_drop)) {
-        // 合法，更新位置
-        piece = piece_drop;
-      } else {
-        // 不合法，方块到底了，处理下一步，比如固定方块，产生新方块等
+      // 按下键
+      if (event.type == SDL_KEYDOWN) {
+        const SDL_Keycode key = event.key.keysym.sym;
+        if (key == SDLK_LEFT) {
+          piece.x -= 1;
+          if (!validPosition(piece))
+            piece.x += 1;
+        }
+        if (key == SDLK_RIGHT) {
+          piece.x += 1;
+          if (!validPosition(piece))
+            piece.x -= 1;
+        }
+        if (key == SDLK_DOWN) {
+          piece.y += 1;
+          if (!validPosition(piece))
+            piece.y -= 1;
+          last_drop_time = SDL_GetTicks();
+        }
+        if (key == SDLK_UP) {
+          piece.rotate(1);
+          if (!validPosition(piece))
+            piece.rotate(3);
+          play_chunk_sound(rotate_sound);
+        }
+        if (key == SDLK_SPACE) {
+          paused = !paused; // 按空格切换暂停/继续
+          pauseAndWaitSpace();
+          if (paused) {
+            Mix_PauseMusic(); // 暂停背景音乐
+          } else {
+            Mix_ResumeMusic(); // 恢复背景音乐
+          }
+        }
       }
-      last_drop_time = now;
     }
 
-    // 是 SDL2 渲染流程中的一个关键函数，用来把之前所有绘制操作显示到屏幕上。
-    SDL_RenderPresent(renderer);
+    // 2. 下落逻辑
+    if (!paused) {
+      Uint32 now = SDL_GetTicks();
+      if (now - last_drop_time > static_cast<Uint32>(dropInterval)) {
+        piece.y += 1;
+        piece.first_appear = false;
+        if (!validPosition(piece)) {
+          piece.y -= 1;
+          lockPiece(piece);
+          piece = next_piece;
+          next_piece = generatePiece();
+        }
+        last_drop_time = now;
+      }
+
+      // 每帧开始
+      // 画背景色，网格线
+      setBackgroundColor(background_color);
+      drawGrid(board_line_color);
+
+      // 保证新的方块从中间出来
+      std::vector<std::vector<int>> special_shape = {{1, 1, 1, 1}};
+      if (piece.shape == special_shape && piece.first_appear)
+        piece.x = board_width / 2 - 2;
+      drawPiece(piece); // 渲染正在下落的方块
+      drawBoard();      // 渲染固定的方块
+
+      // 显示文字
+      auto font_color = WHITE;
+      std::string next_text = "NEXT";
+      renderTextAt(next_text, static_cast<int>(game_width_accurate + cell_size * 1.5), 0);
+
+      setFontSize(15);
+      renderLabelAndValue("Highest:", highest_score, game_width_accurate + cell_size / 4,
+                          cell_size * 8);
+      renderLabelAndValue("Score:", score, game_width_accurate + cell_size / 4, cell_size * 9);
+      renderLabelAndValue("Lines:", line_num, game_width_accurate + cell_size / 4, cell_size * 10);
+
+      renderTextAt(u8"↑: rotate left 90°", game_width_accurate + cell_size / 4, cell_size * 15);
+      renderTextAt("[SPACE] to pause", game_width_accurate + cell_size / 4, cell_size * 16);
+
+      if (score > highest_score) {
+        highest_score = score;
+        std::ofstream outFile("../assets/high_score.txt");
+        outFile << highest_score;
+        outFile.close();
+      }
+
+      // 提示下一个
+      auto hint_piece = next_piece;
+      hint_piece.x = board_width + 1;
+      hint_piece.y = 2;
+      drawPiece(hint_piece);
+
+      if (piece.first_appear && !validPosition(piece)) {
+        pauseAndQuit();
+        running = false;
+      }
+
+      // 是 SDL2 渲染流程中的一个关键函数，用来把之前所有绘制操作显示到屏幕上
+      SDL_RenderPresent(renderer);
+      SDL_Delay(30); // 让程序 暂停 16 毫秒，再继续执行下一行代码。
+    }
   }
 
   // 清理资源
+  Mix_FreeMusic(background_music);
+  Mix_FreeChunk(rotate_sound);
+  Mix_FreeChunk(clear_sound);
+  Mix_FreeChunk(fix_sound);
+  Mix_CloseAudio(); // 关闭音频
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
 }

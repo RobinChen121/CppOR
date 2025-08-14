@@ -1,0 +1,18 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "MSVC",
+	"compiler-id" : "MSVC",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "D:/chenzhen/CppOR/cmake-build-release",
+	"dir-cur-src" : "D:/chenzhen/CppOR",
+	"dir-top-bld" : "D:/chenzhen/CppOR/cmake-build-release",
+	"dir-top-src" : "D:/chenzhen/CppOR",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "D:/chenzhen/CppOR/cmake-build-release/CMakeFiles/CppClion.dir"
+}

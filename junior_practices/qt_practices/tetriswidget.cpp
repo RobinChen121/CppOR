@@ -214,17 +214,20 @@ void TetrisWidget::onBlinkTimeout() {
 }
 
 void TetrisWidget::actuallyRemoveLines() {
-  for (int line : linesToRemove) {
-    for (int row = line; row < BoardHeight - 1; ++row) {
+  size_t lines_remove_num = linesToRemove.size();
+  while (lines_remove_num > 0) {
+    for (const int line : linesToRemove) {
+      for (int row = line; row < BoardHeight - 1; ++row) {
+        for (int col = 0; col < BoardWidth; ++col) {
+          board[row * BoardWidth + col] = board[(row + 1) * BoardWidth + col];
+        }
+      }
       for (int col = 0; col < BoardWidth; ++col) {
-        board[row * BoardWidth + col] = board[(row + 1) * BoardWidth + col];
+        board[(BoardHeight - 1) * BoardWidth + col] = NoShape;
       }
     }
-    for (int col = 0; col < BoardWidth; ++col) {
-      board[(BoardHeight - 1) * BoardWidth + col] = NoShape;
-    }
+    lines_remove_num--;
   }
-
   linesToRemove.clear();
 
   clearSound = new QSoundEffect(this);

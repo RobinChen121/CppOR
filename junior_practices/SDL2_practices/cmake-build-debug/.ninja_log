@@ -1,0 +1,13 @@
+# ninja log v6
+26	1335	7769155237184287	CMakeFiles/sdl_practice.dir/Piece.cpp.obj	3fa7db7cba15ffbf
+19	1383	7769155237115813	CMakeFiles/sdl_practice.dir/Color.cpp.obj	c68a3198eb0b16ac
+2678	2937	7769155263701514	sdl_practice.exe	c37243b676bd0ff7
+4	1731	7769155236958908	CMakeFiles/sdl_practice.dir/tetris_main.cpp.obj	4dd77785c59bdf2
+13	2677	7769155237054212	CMakeFiles/sdl_practice.dir/Tetris.cpp.obj	10fb3295f12f2b09
+4	184	7769155387713077	build.ninja	24708b2a0743d3b7
+1	126	7769155387713077	build.ninja	24708b2a0743d3b7
+19	854	7769155388299154	CMakeFiles/sdl_practice.dir/Piece.cpp.obj	a9684e0f7b9e30e9
+11	950	7769155388219153	CMakeFiles/sdl_practice.dir/Color.cpp.obj	bd3a649dfd66a466
+1	1045	7769155388119154	CMakeFiles/sdl_practice.dir/tetris_main.cpp.obj	5e8583fa6e13a912
+6	1404	7769155388169153	CMakeFiles/sdl_practice.dir/Tetris.cpp.obj	49648e14772a570e
+1404	1656	7769155402151299	sdl_practice.exe	e8e04949f156c859

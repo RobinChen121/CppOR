@@ -3,7 +3,7 @@
 	"compiler-frontend-variant" : "MSVC",
 	"compiler-id" : "MSVC",
 	"compiler-simulate-id" : "",
-	"config" : "Release",
+	"config" : "Debug",
 	"cxx-modules" : {},
 	"dir-cur-bld" : "D:/chenzhen/CppOR/cmake-build-release/utils",
 	"dir-cur-src" : "D:/chenzhen/CppOR/utils",

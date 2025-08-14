@@ -7,14 +7,21 @@
  */
 
 #include "Color.h"
+
+#include "Tetris.h"
+
 #include <iostream>
 #include <random>
 
-const SDL_Color &Color::getRandomColor() const {
+const SDL_Color &Color::getRandomColor() {
   // 把所有颜色放进数组里
-  const SDL_Color colorArray[] = {
-      RED,  GREEN,   BLUE,  WHITE, YELLOW,
-      CYAN, MAGENTA, ORANGE
+  constexpr SDL_Color colorArray[] = {
+      RED,  GREEN,  BLUE,
+      WHITE,
+      YELLOW,
+      CYAN,  GRAY,
+     // MAGENTA,
+      // ORANGE
       // , PURPLE
   };
   // 颜色数量
@@ -31,7 +38,7 @@ const SDL_Color &Color::getRandomColor() const {
 
 // darker: factor < 1.0 (e.g., 0.7 代表暗 30%)
 // lighter: factor > 1.0 (e.g., 1.3 代表亮 30%)
-SDL_Color Color::adjustColor(const SDL_Color color, const float factor) {
+SDL_Color Color::adjustColor(const SDL_Color color, const double factor) {
   SDL_Color newColor;
   newColor.r = static_cast<Uint8>(SDL_clamp(color.r * factor, 0, 255));
   newColor.g = static_cast<Uint8>(SDL_clamp(color.g * factor, 0, 255));
