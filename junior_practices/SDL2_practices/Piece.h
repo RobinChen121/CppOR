@@ -21,9 +21,10 @@ public:
   int y; // grid y
   SDL_Color color;
   std::vector<std::vector<int>> shape;
+  bool first_appear = true;
 
   Piece(const int x, const int y, const SDL_Color color, std::vector<std::vector<int>> shape)
-      : x(x), y(y), color(color), shape(std::move(shape)) {
+      : x(x), y(y), color(color), shape(std::move(shape)), first_appear(true) {
   };
 
   void rotate(int times);
