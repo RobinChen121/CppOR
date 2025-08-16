@@ -15,7 +15,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #endif
-#include "Color.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -28,18 +27,18 @@ void Tetris::setMusic() {
     // 调整背景音乐音量（0 ~ 128）
     Mix_VolumeMusic(100);
     rotate_sound = Mix_LoadWAV("../assets/rotate.wav");
-    clear_sound = Mix_LoadWAV("../assets/clear2.wav");
+    clear_sound = Mix_LoadWAV("../assets/clear.wav");
     fix_sound = Mix_LoadWAV("../assets/fix.wav");
     background_music = Mix_LoadMUS("../assets/background.mp3");
     // 加载完音乐后才能播放
-    Mix_PlayMusic(background_music, -1) == -1; // -1 表示无限循环
+    Mix_PlayMusic(background_music, -1); // -1 表示无限循环
   }
 }
 
 void Tetris::setWindow() {
   // 创建窗口
   // SDL_CreateWindow() 返回的是一个 指向 SDL_Window 结构体的指针
-  window = SDL_CreateWindow("Dr Zhen Chen's tetris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+  window = SDL_CreateWindow("My tetris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                             total_width_accurate, game_height_accurate, SDL_WINDOW_SHOWN);
   if (!window) {
     std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
@@ -51,7 +50,10 @@ void Tetris::setRender() {
   // 创建渲染器
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   // 启用混合模式，支持透明度设置
-  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+  // SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+  // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
   if (!renderer) {
     std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
@@ -135,6 +137,30 @@ int Tetris::read_file() {
   return std::stoi(line);
 }
 
+SDL_Color Tetris::getRandomColor() {
+  // 颜色数量
+  constexpr int colorCount = std::size(colorArray);
+  // 生成随机索引
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  // 随机选形状
+  std::uniform_int_distribution<> colorDist(0, colorCount - 1);
+  const int colorIndex = colorDist(gen);
+  const auto color = colorArray[colorIndex];
+  return color;
+}
+
+// darker: factor < 1.0 (e.g., 0.7 代表暗 30%)
+// lighter: factor > 1.0 (e.g., 1.3 代表亮 30%)
+SDL_Color Tetris::adjustColor(const SDL_Color color, const double factor) {
+  SDL_Color newColor;
+  newColor.r = static_cast<Uint8>SDL_clamp(((color.r * factor)), 0, 255);
+  newColor.g = static_cast<Uint8>SDL_clamp(((color.g * factor)), 0, 255);
+  newColor.b = static_cast<Uint8>SDL_clamp(((color.b * factor)), 0, 255);
+  newColor.a = 255;
+  return newColor;
+}
+
 // 随机选择一个形状
 const std::vector<std::vector<int>> &Tetris::getRandomShape() {
   static std::random_device rd;
@@ -148,17 +174,20 @@ const std::vector<std::vector<int>> &Tetris::getRandomShape() {
 
 void Tetris::drawCell(const int x, const int y, const SDL_Color &color) const {
   const SDL_Rect rect = {x + 1, y + 1, cell_size - 2, cell_size - 2};
-  const auto color1 = Color::adjustColor(color, 1);
+  const auto color1 = adjustColor(color, 1);
   SDL_SetRenderDrawColor(renderer, color1.r, color1.g, color1.b, color1.a);
+  // std::cout<<static_cast<int>(color1.a)<<std::endl;
   SDL_RenderFillRect(renderer, &rect);
-  const auto lighter = Color::adjustColor(color, 1.5);
-  const auto darker = Color::adjustColor(color, 0.5);
+  const auto lighter = adjustColor(color, 1.5);
+  const auto darker = adjustColor(color, 0.5);
 
   // 你还可以加边框或阴影，方便视觉区分
   SDL_SetRenderDrawColor(renderer, lighter.r, lighter.g, lighter.b, lighter.a);
+  // std::cout<<static_cast<int>(lighter.a)<<std::endl;
   SDL_RenderDrawLine(renderer, x, y + cell_size, x, y);
   SDL_RenderDrawLine(renderer, x, y, x + cell_size, y);
   SDL_SetRenderDrawColor(renderer, darker.r, darker.g, darker.b, darker.a);
+  // std::cout<<static_cast<int>(darker.a)<<std::endl;
   SDL_RenderDrawLine(renderer, x + 1, y + cell_size - 1, x + cell_size - 1, y + cell_size - 1);
   SDL_RenderDrawLine(renderer, x + cell_size - 1, y + cell_size - 1, x + cell_size - 1, y + 1);
 }
@@ -222,7 +251,7 @@ void Tetris::flashLines() const {
         }
       }
     } else {
-      for (int line : lines_to_remove) {
+      for (const int line : lines_to_remove) {
         for (int x = 0; x < board_width; ++x) {
           drawCell(x * cell_size, line * cell_size, board_colors[x][line]);
         }
@@ -331,8 +360,9 @@ void Tetris::pauseAndQuit() const {
   SDL_RenderFillRect(renderer, &box);
 
   // 在提示框上渲染文字
-  renderTextAt("Game Over", box.x + cell_size * 2.5, box.y + cell_size);
-  renderTextAt("Press any key to quit", box.x + cell_size*1.5, box.y + cell_size * 2);
+  renderTextAt("Game Over", static_cast<int>(box.x + cell_size * 2.5), box.y + cell_size);
+  renderTextAt("Press any key to quit", static_cast<int>(box.x + cell_size*1.5), box.y + cell_size *
+   2);
 
   // 显示暂停提示
   SDL_RenderPresent(renderer);
@@ -358,7 +388,7 @@ void Tetris::drawBoard() const {
   for (int y = 0; y < board_height; ++y) {
     for (int x = 0; x < board_width; ++x) {
       if (position_taken[x][y]) {
-        auto dark_color = Color::adjustColor(board_colors[x][y], 0.8);
+        auto dark_color = adjustColor(board_colors[x][y], 0.8);
         drawCell(x * cell_size, y * cell_size, dark_color);
       }
     }
@@ -366,8 +396,7 @@ void Tetris::drawBoard() const {
 }
 
 Piece Tetris::generatePiece() {
-  constexpr auto colors = Color{};
-  const auto color = Color::adjustColor(colors.getRandomColor(), 0.8);
+  const auto color = getRandomColor();
   const auto shape = getRandomShape();
   auto piece = Piece(board_width / 2 - 1, 0, color, shape);
   piece.rotateRandom();
@@ -494,7 +523,7 @@ void Tetris::run() {
       drawBoard();      // 渲染固定的方块
 
       // 显示文字
-      auto font_color = WHITE;
+      // auto font_color = WHITE;
       std::string next_text = "NEXT";
       renderTextAt(next_text, static_cast<int>(game_width_accurate + cell_size * 1.5), 0);
 

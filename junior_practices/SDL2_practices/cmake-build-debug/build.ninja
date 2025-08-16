@@ -12,7 +12,7 @@
 
 # =============================================================================
 # Project: sdl_practice
-# Configurations: Debug
+# Configurations: Release
 # =============================================================================
 
 #############################################
@@ -24,7 +24,7 @@ ninja_required_version = 1.5
 #############################################
 # Set configuration variable for custom commands.
 
-CONFIGURATION = Debug
+CONFIGURATION = Release
 # =============================================================================
 # Include auxiliary files.
 
@@ -49,32 +49,24 @@ cmake_ninja_workdir = D$:\chenzhen\CppOR\junior_practices\SDL2_practices\cmake-b
 
 build cmake_object_order_depends_target_sdl_practice: phony || .
 
-build CMakeFiles\sdl_practice.dir\tetris_main.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Debug D$:\chenzhen\CppOR\junior_practices\SDL2_practices\tetris_main.cpp || cmake_object_order_depends_target_sdl_practice
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi /utf-8
+build CMakeFiles\sdl_practice.dir\tetris_main.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Release D$:\chenzhen\CppOR\junior_practices\SDL2_practices\tetris_main.cpp || cmake_object_order_depends_target_sdl_practice
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /O2 -std:c++17 -MD /utf-8
   INCLUDES = -IC:\SDL2-2.30.10\include -IC:\SDL2_mixer-2.8.1\include -IC:\SDL2_ttf-2.24.0\include
   OBJECT_DIR = CMakeFiles\sdl_practice.dir
   OBJECT_FILE_DIR = CMakeFiles\sdl_practice.dir
   TARGET_COMPILE_PDB = CMakeFiles\sdl_practice.dir\
   TARGET_PDB = sdl_practice.pdb
 
-build CMakeFiles\sdl_practice.dir\Tetris.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Debug D$:\chenzhen\CppOR\junior_practices\SDL2_practices\Tetris.cpp || cmake_object_order_depends_target_sdl_practice
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi /utf-8
+build CMakeFiles\sdl_practice.dir\Tetris.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Release D$:\chenzhen\CppOR\junior_practices\SDL2_practices\Tetris.cpp || cmake_object_order_depends_target_sdl_practice
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /O2 -std:c++17 -MD /utf-8
   INCLUDES = -IC:\SDL2-2.30.10\include -IC:\SDL2_mixer-2.8.1\include -IC:\SDL2_ttf-2.24.0\include
   OBJECT_DIR = CMakeFiles\sdl_practice.dir
   OBJECT_FILE_DIR = CMakeFiles\sdl_practice.dir
   TARGET_COMPILE_PDB = CMakeFiles\sdl_practice.dir\
   TARGET_PDB = sdl_practice.pdb
 
-build CMakeFiles\sdl_practice.dir\Color.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Debug D$:\chenzhen\CppOR\junior_practices\SDL2_practices\Color.cpp || cmake_object_order_depends_target_sdl_practice
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi /utf-8
-  INCLUDES = -IC:\SDL2-2.30.10\include -IC:\SDL2_mixer-2.8.1\include -IC:\SDL2_ttf-2.24.0\include
-  OBJECT_DIR = CMakeFiles\sdl_practice.dir
-  OBJECT_FILE_DIR = CMakeFiles\sdl_practice.dir
-  TARGET_COMPILE_PDB = CMakeFiles\sdl_practice.dir\
-  TARGET_PDB = sdl_practice.pdb
-
-build CMakeFiles\sdl_practice.dir\Piece.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Debug D$:\chenzhen\CppOR\junior_practices\SDL2_practices\Piece.cpp || cmake_object_order_depends_target_sdl_practice
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi /utf-8
+build CMakeFiles\sdl_practice.dir\Piece.cpp.obj: CXX_COMPILER__sdl_practice_unscanned_Release D$:\chenzhen\CppOR\junior_practices\SDL2_practices\Piece.cpp || cmake_object_order_depends_target_sdl_practice
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /O2 -std:c++17 -MD /utf-8
   INCLUDES = -IC:\SDL2-2.30.10\include -IC:\SDL2_mixer-2.8.1\include -IC:\SDL2_ttf-2.24.0\include
   OBJECT_DIR = CMakeFiles\sdl_practice.dir
   OBJECT_FILE_DIR = CMakeFiles\sdl_practice.dir
@@ -89,9 +81,9 @@ build CMakeFiles\sdl_practice.dir\Piece.cpp.obj: CXX_COMPILER__sdl_practice_unsc
 #############################################
 # Link the executable sdl_practice.exe
 
-build sdl_practice.exe: CXX_EXECUTABLE_LINKER__sdl_practice_Debug CMakeFiles\sdl_practice.dir\tetris_main.cpp.obj CMakeFiles\sdl_practice.dir\Tetris.cpp.obj CMakeFiles\sdl_practice.dir\Color.cpp.obj CMakeFiles\sdl_practice.dir\Piece.cpp.obj | C$:\SDL2-2.30.10\lib\x64\SDL2.lib C$:\SDL2-2.30.10\lib\x64\SDL2main.lib C$:\SDL2_mixer-2.8.1\lib\x64\SDL2_mixer.lib C$:\SDL2_ttf-2.24.0\lib\x64\SDL2_ttf.lib
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -MDd -Zi
-  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
+build sdl_practice.exe: CXX_EXECUTABLE_LINKER__sdl_practice_Release CMakeFiles\sdl_practice.dir\tetris_main.cpp.obj CMakeFiles\sdl_practice.dir\Tetris.cpp.obj CMakeFiles\sdl_practice.dir\Piece.cpp.obj | C$:\SDL2-2.30.10\lib\x64\SDL2.lib C$:\SDL2-2.30.10\lib\x64\SDL2main.lib C$:\SDL2_mixer-2.8.1\lib\x64\SDL2_mixer.lib C$:\SDL2_ttf-2.24.0\lib\x64\SDL2_ttf.lib
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /O2 -MD
+  LINK_FLAGS = /machine:x64 /INCREMENTAL:NO /subsystem:console
   LINK_LIBRARIES = C:\SDL2-2.30.10\lib\x64\SDL2.lib  C:\SDL2-2.30.10\lib\x64\SDL2main.lib  C:\SDL2_mixer-2.8.1\lib\x64\SDL2_mixer.lib  C:\SDL2_ttf-2.24.0\lib\x64\SDL2_ttf.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = CMakeFiles\sdl_practice.dir
   POST_BUILD = cd .

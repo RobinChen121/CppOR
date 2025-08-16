@@ -32,22 +32,40 @@ constexpr int game_height_accurate = board_height * cell_size;
 constexpr int score_width_accurate = cell_size * score_width;
 constexpr int total_width_accurate = game_width_accurate + score_width_accurate;
 
- constexpr SDL_Color RED    = {255, 99, 71, 255};     // 番茄红
- constexpr SDL_Color GREEN  = {124, 252, 0, 255};     // 草绿色
- constexpr SDL_Color BLUE   = {135, 206, 235, 255};   // 天蓝色
- constexpr SDL_Color WHITE  = {255, 255, 255, 255};
- constexpr SDL_Color YELLOW = {255, 215, 0, 255};     // 金黄色
- constexpr SDL_Color CYAN   = {0, 255, 255, 255};
- constexpr SDL_Color GRAY   = {128, 128, 128, 255};
- constexpr SDL_Color MAGENTA= {255, 0, 255, 255};
- constexpr SDL_Color ORANGE = {255, 165, 0, 255};
- constexpr SDL_Color PURPLE = {128, 0, 128, 255};
- constexpr SDL_Color BLACK  = {0, 0, 0, 255};
+constexpr SDL_Color RED     = {204, 79, 57, 255};    // 番茄红暗20%
+constexpr SDL_Color GREEN   = {99, 202, 0, 255};     // 草绿色暗20%
+constexpr SDL_Color BLUE    = {108, 164, 188, 255};  // 天蓝色暗20%
+constexpr SDL_Color WHITE   = {204, 204, 204, 255};  // 白色暗20%
+constexpr SDL_Color YELLOW  = {204, 172, 0, 255};    // 金黄色暗20%
+constexpr SDL_Color CYAN    = {0, 204, 204, 255};    // 青色暗20%
+constexpr SDL_Color GRAY    = {102, 102, 102, 255};  // 灰色暗20%
+constexpr SDL_Color PURPLE  = {148, 68, 169, 255};   // 紫色暗20%
+
+// constexpr SDL_Color RED = {255, 99, 71, 255};    // 番茄红
+// constexpr SDL_Color GREEN = {124, 252, 0, 255};  // 草绿色
+// constexpr SDL_Color BLUE = {135, 206, 235, 255}; // 天蓝色
+// constexpr SDL_Color WHITE = {255, 255, 255, 255};
+// constexpr SDL_Color YELLOW = {255, 215, 0, 255}; // 金黄色
+// constexpr SDL_Color CYAN = {0, 255, 255, 255};
+// constexpr SDL_Color GRAY = {128, 128, 128, 255};
+// constexpr SDL_Color PURPLE = {186, 85, 211, 255};
+constexpr SDL_Color colorArray[] = {RED, GREEN, BLUE, WHITE, YELLOW, CYAN, GRAY,
+                                    // MAGENTA,
+                                    // ORANGE
+                                    PURPLE};
+//   // RED = {255, 0, 0, 255};
+//   // GREEN = {0, 255, 0, 255};
+//   // BLUE = {0, 0, 255, 255};
+//   // YELLOW = {255, 255, 0, 255};
+// constexpr SDL_Color MAGENTA= {255, 0, 255, 255};
+// constexpr SDL_Color ORANGE = {255, 165, 0, 255};
+// constexpr SDL_Color PURPLE = {128, 0, 128, 255};
+// constexpr SDL_Color BLACK  = {0, 0, 0, 255};
 
 // 背景与线条颜色
 constexpr auto background_color = SDL_Color{30, 30, 30, 255}; // RGB 深灰色
 constexpr auto board_line_color = SDL_Color{80, 80, 80, 255}; // 浅灰色线条
-constexpr auto block_line_color = SDL_Color{10, 10, 10, 100};
+constexpr auto block_line_color = SDL_Color{158, 158, 158, 255};
 
 // 定义所有形状
 const std::vector<std::vector<std::vector<int>>> SHAPES = {
@@ -120,6 +138,8 @@ public:
   void pauseAndWaitSpace() const;
   void pauseAndQuit() const;
   static void play_chunk_sound(Mix_Chunk *sound);
+  static SDL_Color getRandomColor();
+  static SDL_Color adjustColor(SDL_Color color, double factor);
 };
 
 #endif // TETRIS_H
