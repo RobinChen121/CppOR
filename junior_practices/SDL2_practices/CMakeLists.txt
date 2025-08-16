@@ -2,9 +2,18 @@ cmake_minimum_required(VERSION 3.30)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Release)
 Project(sdl_practice) # the name of configuration target
 
+
+set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
+# 强制使用 -O3（你也可以改为 -O2）
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    if (MSVC)
+        set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+    else ()
+        set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+    endif ()
+endif ()
 
 if (MSVC)
     add_compile_options(/utf-8) # 增加中文文字编码
@@ -12,7 +21,6 @@ endif ()
 add_executable(${PROJECT_NAME}
         tetris_main.cpp
         Tetris.cpp
-        Color.cpp
         Piece.cpp
 
         #        array_boundary_test.cpp
