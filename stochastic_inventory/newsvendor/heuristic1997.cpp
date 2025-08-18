@@ -58,18 +58,18 @@ public:
       if (compute_c(s, S0) <= compute_G(s))
         break;
     }
-    auto s0 = s;
-    auto c0 = compute_c(s, S0);
+    const auto s0 = s;
+    auto c0 = compute_c(s0, S0);
     auto S = S0 + 1;
     while (compute_G(S) <= c0) {
-      if (compute_c(S, S) < c0) {
+      if (compute_c(s, S) < c0) {
         S0 = S;
         while (compute_c(s, S0) <= compute_G(s + 1)) {
           s += 1;
           c0 = compute_c(s, S0);
         }
+        S = S + 1;
       }
-      S = S + 1;
     }
     return {s, S};
   }
