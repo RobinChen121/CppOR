@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 Project(sdl_practice) # the name of configuration target
 
 
-set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
+set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 # 强制使用 -O3（你也可以改为 -O2）
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     if (MSVC)
@@ -30,16 +30,25 @@ add_executable(${PROJECT_NAME}
 if (APPLE)
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${RROJECT_NAME} PRIVATE
+
+    # SDL2_mixer 手动设置
+    include_directories(/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/include)
+
+    # SDL2_ttf 手动设置
+    include_directories(/opt/homebrew/Cellar/sdl2_ttf/2.24.0/include)
+
+    target_link_libraries(${PROJECT_NAME}
             ${SDL2_LIBRARIES}
+            /opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/lib/libSDL2_mixer.dylib
+            /opt/homebrew/Cellar/sdl2_ttf/2.24.0/lib/libSDL2_ttf.dylib
     )
 else ()
     # SDL2 路径
     set(SDL2_PATH "C:/SDL2-2.30.10/")  # 改成你自己的路径
     # 包含头文件
     include_directories(${SDL2_PATH}/include)
-#    # 链接库目录
-#    link_directories(${SDL2_PATH}/lib/x64)
+    #    # 链接库目录
+    #    link_directories(${SDL2_PATH}/lib/x64)
 
     # SDL2_mixer 手动设置
     set(SDL2_MIXER_INCLUDE_DIRS "C:/SDL2_mixer-2.8.1/include")

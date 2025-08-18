@@ -32,14 +32,14 @@ CONFIGURATION = Release
 #############################################
 # Include rules file.
 
-include CMakeFiles\rules.ninja
+include CMakeFiles/rules.ninja
 
 # =============================================================================
 
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-build-release\
+cmake_ninja_workdir = /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/cmake-build-release/
 # =============================================================================
 # Object build statements for EXECUTABLE target newsvendor
 
@@ -49,87 +49,21 @@ cmake_ninja_workdir = D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-b
 
 build cmake_object_order_depends_target_newsvendor: phony || .
 
-build CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.ddi: CXX_SCAN__newsvendor_Release D$:\chenzhen\CppOR\utils\pmf.cpp || cmake_object_order_depends_target_newsvendor
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DEP_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.ddi.d
-  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJ_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj
-  PREPROCESSED_OUTPUT_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.ddi.i
+build CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils/PMF.cpp.o: CXX_COMPILER__newsvendor_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/utils/PMF.cpp || cmake_object_order_depends_target_newsvendor
+  DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
+  DEP_FILE = CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils/PMF.cpp.o.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
+  INCLUDES = -isystem /opt/anaconda3/include
+  OBJECT_DIR = CMakeFiles/newsvendor.dir
+  OBJECT_FILE_DIR = CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils
 
-build CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj: CXX_COMPILER__newsvendor_scanned_Release D$:\chenzhen\CppOR\utils\pmf.cpp | CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.modmap || cmake_object_order_depends_target_newsvendor CMakeFiles\newsvendor.dir\CXX.dd
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DYNDEP_MODULE_MAP_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJECT_DIR = CMakeFiles\newsvendor.dir
-  OBJECT_FILE_DIR = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils
-  TARGET_COMPILE_PDB = CMakeFiles\newsvendor.dir\
-  TARGET_PDB = newsvendor.pdb
-  dyndep = CMakeFiles/newsvendor.dir/CXX.dd
-
-build CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.ddi: CXX_SCAN__newsvendor_Release D$:\chenzhen\CppOR\stochastic_inventory\states\state.cpp || cmake_object_order_depends_target_newsvendor
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DEP_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.ddi.d
-  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJ_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj
-  PREPROCESSED_OUTPUT_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.ddi.i
-
-build CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj: CXX_COMPILER__newsvendor_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\states\state.cpp | CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.modmap || cmake_object_order_depends_target_newsvendor CMakeFiles\newsvendor.dir\CXX.dd
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DYNDEP_MODULE_MAP_FILE = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJECT_DIR = CMakeFiles\newsvendor.dir
-  OBJECT_FILE_DIR = CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states
-  TARGET_COMPILE_PDB = CMakeFiles\newsvendor.dir\
-  TARGET_PDB = newsvendor.pdb
-  dyndep = CMakeFiles/newsvendor.dir/CXX.dd
-
-build CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.ddi: CXX_SCAN__newsvendor_Release D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\newsvendor_parallel.cpp || cmake_object_order_depends_target_newsvendor
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DEP_FILE = CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.ddi.d
-  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJ_FILE = CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj
-  PREPROCESSED_OUTPUT_FILE = CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.ddi.i
-
-build CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj: CXX_COMPILER__newsvendor_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\newsvendor_parallel.cpp | CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.modmap || cmake_object_order_depends_target_newsvendor CMakeFiles\newsvendor.dir\CXX.dd
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DYNDEP_MODULE_MAP_FILE = CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJECT_DIR = CMakeFiles\newsvendor.dir
-  OBJECT_FILE_DIR = CMakeFiles\newsvendor.dir
-  TARGET_COMPILE_PDB = CMakeFiles\newsvendor.dir\
-  TARGET_PDB = newsvendor.pdb
-  dyndep = CMakeFiles/newsvendor.dir/CXX.dd
-
-build CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.ddi: CXX_SCAN__newsvendor_Release D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\heuristic1997.cpp || cmake_object_order_depends_target_newsvendor
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DEP_FILE = CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.ddi.d
-  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.ddi
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJ_FILE = CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj
-  PREPROCESSED_OUTPUT_FILE = CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.ddi.i
-
-build CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj: CXX_COMPILER__newsvendor_scanned_Release D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\heuristic1997.cpp | CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.modmap || cmake_object_order_depends_target_newsvendor CMakeFiles\newsvendor.dir\CXX.dd
-  DEFINES = -DBOOST_ATOMIC_NO_LIB -DBOOST_CHRONO_NO_LIB -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_NO_LIB
-  DYNDEP_MODULE_MAP_FILE = CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.modmap
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -std:c++20 -MD
-  INCLUDES = -external:IC:\ProgramData\anaconda3\Library\include -external:W0
-  OBJECT_DIR = CMakeFiles\newsvendor.dir
-  OBJECT_FILE_DIR = CMakeFiles\newsvendor.dir
-  TARGET_COMPILE_PDB = CMakeFiles\newsvendor.dir\
-  TARGET_PDB = newsvendor.pdb
-  dyndep = CMakeFiles/newsvendor.dir/CXX.dd
-
-build CMakeFiles\newsvendor.dir\CXX.dd | D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-build-release\CMakeFiles\newsvendor.dir\CXXModules.json CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.modmap CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.modmap CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.modmap CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.modmap: CXX_DYNDEP__newsvendor_Release CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj.ddi CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj.ddi CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj.ddi CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj.ddi | D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-build-release\CMakeFiles\newsvendor.dir\CXXDependInfo.json
+build CMakeFiles/newsvendor.dir/heuristic1997.cpp.o: CXX_COMPILER__newsvendor_unscanned_Release /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/heuristic1997.cpp || cmake_object_order_depends_target_newsvendor
+  DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DBOOST_THREAD_DYN_LINK -DBOOST_THREAD_NO_LIB
+  DEP_FILE = CMakeFiles/newsvendor.dir/heuristic1997.cpp.o.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
+  INCLUDES = -isystem /opt/anaconda3/include
+  OBJECT_DIR = CMakeFiles/newsvendor.dir
+  OBJECT_FILE_DIR = CMakeFiles/newsvendor.dir
 
 
 # =============================================================================
@@ -137,47 +71,42 @@ build CMakeFiles\newsvendor.dir\CXX.dd | D$:\chenzhen\CppOR\stochastic_inventory
 
 
 #############################################
-# Link the executable newsvendor.exe
+# Link the executable newsvendor
 
-build newsvendor.exe: CXX_EXECUTABLE_LINKER__newsvendor_Release CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj CMakeFiles\newsvendor.dir\newsvendor_parallel.cpp.obj CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj | C$:\ProgramData\anaconda3\Library\lib\libboost_system.lib C$:\ProgramData\anaconda3\Library\lib\libboost_thread.lib C$:\ProgramData\anaconda3\Library\lib\libboost_filesystem.lib C$:\ProgramData\anaconda3\Library\lib\libboost_chrono.lib C$:\ProgramData\anaconda3\Library\lib\libboost_atomic.lib
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O2 /Ob2 /DNDEBUG -MD
-  LINK_FLAGS = /machine:x64 /INCREMENTAL:NO /subsystem:console
-  LINK_LIBRARIES = C:\ProgramData\anaconda3\Library\lib\libboost_system.lib  C:\ProgramData\anaconda3\Library\lib\libboost_thread.lib  C:\ProgramData\anaconda3\Library\lib\libboost_filesystem.lib  C:\ProgramData\anaconda3\Library\lib\libboost_chrono.lib  bcrypt.lib  synchronization.lib  C:\ProgramData\anaconda3\Library\lib\libboost_atomic.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  OBJECT_DIR = CMakeFiles\newsvendor.dir
-  POST_BUILD = cd .
-  PRE_LINK = cd .
-  TARGET_COMPILE_PDB = CMakeFiles\newsvendor.dir\
-  TARGET_FILE = newsvendor.exe
-  TARGET_IMPLIB = newsvendor.lib
-  TARGET_PDB = newsvendor.pdb
+build newsvendor: CXX_EXECUTABLE_LINKER__newsvendor_Release CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils/PMF.cpp.o CMakeFiles/newsvendor.dir/heuristic1997.cpp.o | /opt/anaconda3/lib/libboost_system.dylib /opt/anaconda3/lib/libboost_thread.dylib /opt/anaconda3/lib/libboost_filesystem.dylib /opt/anaconda3/lib/libboost_atomic.dylib
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
+  LINK_LIBRARIES = -Wl,-rpath,/opt/anaconda3/lib  /opt/anaconda3/lib/libboost_system.dylib  /opt/anaconda3/lib/libboost_thread.dylib  /opt/anaconda3/lib/libboost_filesystem.dylib  /opt/anaconda3/lib/libboost_atomic.dylib
+  OBJECT_DIR = CMakeFiles/newsvendor.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = newsvendor
+  TARGET_PDB = newsvendor.dbg
 
 
 #############################################
 # Utility command for edit_cache
 
-build CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D D:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-build-release && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/cmake-build-release && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build edit_cache: phony CMakeFiles\edit_cache.util
+build edit_cache: phony CMakeFiles/edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D D:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-build-release && "C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SD:\chenzhen\CppOR\stochastic_inventory\newsvendor -BD:\chenzhen\CppOR\stochastic_inventory\newsvendor\cmake-build-release"
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/cmake-build-release && /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake --regenerate-during-build -S/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor -B/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/cmake-build-release
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build rebuild_cache: phony CMakeFiles\rebuild_cache.util
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 # =============================================================================
 # Target aliases.
-
-build newsvendor: phony newsvendor.exe
 
 # =============================================================================
 # Folder targets.
@@ -185,9 +114,9 @@ build newsvendor: phony newsvendor.exe
 # =============================================================================
 
 #############################################
-# Folder: D:/chenzhen/CppOR/stochastic_inventory/newsvendor/cmake-build-release
+# Folder: /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/cmake-build-release
 
-build all: phony newsvendor.exe
+build all: phony newsvendor
 
 # =============================================================================
 # Built-in targets
@@ -196,14 +125,14 @@ build all: phony newsvendor.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeFindDependencyMacro.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeRCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CheckIncludeFile.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CheckLibraryExists.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\FindPackageMessage.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\FindThreads.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\Boost-1.82.0\BoostConfig.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\Boost-1.82.0\BoostConfigVersion.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\BoostDetectToolset-1.82.0.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\boost_atomic-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\boost_atomic-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\libboost_atomic-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\libboost_atomic-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\boost_chrono-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\boost_chrono-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\libboost_chrono-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\libboost_chrono-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\boost_filesystem-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\boost_filesystem-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\libboost_filesystem-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\libboost_filesystem-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_headers-1.82.0\boost_headers-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_headers-1.82.0\boost_headers-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\boost_system-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\boost_system-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\libboost_system-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\libboost_system-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\boost_thread-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\boost_thread-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\libboost_thread-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\libboost_thread-variant-static.cmake CMakeCache.txt CMakeFiles\3.30.5\CMakeCCompiler.cmake CMakeFiles\3.30.5\CMakeCXXCompiler.cmake CMakeFiles\3.30.5\CMakeRCCompiler.cmake CMakeFiles\3.30.5\CMakeSystem.cmake D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\CMakeLists.txt
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckIncludeFile.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckLibraryExists.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindThreads.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/UnixPaths.cmake /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/CMakeLists.txt /opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake /opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake /opt/anaconda3/lib/cmake/BoostDetectToolset-1.82.0.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/boost_atomic-config-version.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/boost_atomic-config.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-static.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config-version.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-static.cmake /opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake /opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/boost_system-config-version.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/boost_system-config.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/libboost_system-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/libboost_system-variant-static.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/boost_thread-config-version.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/boost_thread-config.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-static.cmake CMakeCache.txt CMakeFiles/3.30.5/CMakeCCompiler.cmake CMakeFiles/3.30.5/CMakeCXXCompiler.cmake CMakeFiles/3.30.5/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeFindDependencyMacro.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeRCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CheckIncludeFile.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\CheckLibraryExists.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Compiler\MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\FindPackageMessage.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\FindThreads.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\Windows.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.3.5\bin\cmake\win\x64\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\Boost-1.82.0\BoostConfig.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\Boost-1.82.0\BoostConfigVersion.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\BoostDetectToolset-1.82.0.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\boost_atomic-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\boost_atomic-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\libboost_atomic-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_atomic-1.82.0\libboost_atomic-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\boost_chrono-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\boost_chrono-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\libboost_chrono-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_chrono-1.82.0\libboost_chrono-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\boost_filesystem-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\boost_filesystem-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\libboost_filesystem-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_filesystem-1.82.0\libboost_filesystem-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_headers-1.82.0\boost_headers-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_headers-1.82.0\boost_headers-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\boost_system-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\boost_system-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\libboost_system-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_system-1.82.0\libboost_system-variant-static.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\boost_thread-config-version.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\boost_thread-config.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\libboost_thread-variant-shared.cmake C$:\ProgramData\anaconda3\Library\lib\cmake\boost_thread-1.82.0\libboost_thread-variant-static.cmake CMakeCache.txt CMakeFiles\3.30.5\CMakeCCompiler.cmake CMakeFiles\3.30.5\CMakeCXXCompiler.cmake CMakeFiles\3.30.5\CMakeRCCompiler.cmake CMakeFiles\3.30.5\CMakeSystem.cmake D$:\chenzhen\CppOR\stochastic_inventory\newsvendor\CMakeLists.txt: phony
+build /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckIncludeFile.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/CheckLibraryExists.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/FindThreads.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.30/Modules/Platform/UnixPaths.cmake /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/CMakeLists.txt /opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake /opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake /opt/anaconda3/lib/cmake/BoostDetectToolset-1.82.0.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/boost_atomic-config-version.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/boost_atomic-config.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-static.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config-version.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-static.cmake /opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake /opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/boost_system-config-version.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/boost_system-config.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/libboost_system-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_system-1.82.0/libboost_system-variant-static.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/boost_thread-config-version.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/boost_thread-config.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-shared.cmake /opt/anaconda3/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-static.cmake CMakeCache.txt CMakeFiles/3.30.5/CMakeCCompiler.cmake CMakeFiles/3.30.5/CMakeCXXCompiler.cmake CMakeFiles/3.30.5/CMakeSystem.cmake: phony
 
 
 #############################################
