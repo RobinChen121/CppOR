@@ -12,11 +12,14 @@
 #include "Tetris.h"
 #if __APPLE__
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #else
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #endif
+
 #include "Piece.h"
 #include <array>
 #include <random>
@@ -32,14 +35,14 @@ constexpr int game_height_accurate = board_height * cell_size;
 constexpr int score_width_accurate = cell_size * score_width;
 constexpr int total_width_accurate = game_width_accurate + score_width_accurate;
 
-constexpr SDL_Color RED     = {204, 79, 57, 255};    // 番茄红暗20%
-constexpr SDL_Color GREEN   = {99, 202, 0, 255};     // 草绿色暗20%
-constexpr SDL_Color BLUE    = {108, 164, 188, 255};  // 天蓝色暗20%
-constexpr SDL_Color WHITE   = {204, 204, 204, 255};  // 白色暗20%
-constexpr SDL_Color YELLOW  = {204, 172, 0, 255};    // 金黄色暗20%
-constexpr SDL_Color CYAN    = {0, 204, 204, 255};    // 青色暗20%
-constexpr SDL_Color GRAY    = {102, 102, 102, 255};  // 灰色暗20%
-constexpr SDL_Color PURPLE  = {148, 68, 169, 255};   // 紫色暗20%
+constexpr SDL_Color RED = {204, 79, 57, 255};     // 番茄红暗20%
+constexpr SDL_Color GREEN = {99, 202, 0, 255};    // 草绿色暗20%
+constexpr SDL_Color BLUE = {108, 164, 188, 255};  // 天蓝色暗20%
+constexpr SDL_Color WHITE = {204, 204, 204, 255}; // 白色暗20%
+constexpr SDL_Color YELLOW = {204, 172, 0, 255};  // 金黄色暗20%
+constexpr SDL_Color CYAN = {0, 204, 204, 255};    // 青色暗20%
+constexpr SDL_Color GRAY = {102, 102, 102, 255};  // 灰色暗20%
+constexpr SDL_Color PURPLE = {148, 68, 169, 255}; // 紫色暗20%
 
 // constexpr SDL_Color RED = {255, 99, 71, 255};    // 番茄红
 // constexpr SDL_Color GREEN = {124, 252, 0, 255};  // 草绿色

@@ -13,8 +13,8 @@ add_executable(${PROJECT_NAME}
         #        NewsvendorParallel.cpp
         #        newsvendor.cpp
         ../../utils/PMF.cpp
-        ../states/State.cpp
-        newsvendor_parallel.cpp
+        #        ../states/State.cpp
+        #        newsvendor_parallel.cpp
         heuristic1997.cpp
         #        cash/CashState.cpp
 )

@@ -25,7 +25,7 @@ void Tetris::setMusic() {
     SDL_Quit();
   } else {
     // 调整背景音乐音量（0 ~ 128）
-    Mix_VolumeMusic(100);
+    Mix_VolumeMusic(50);
     rotate_sound = Mix_LoadWAV("../assets/rotate.wav");
     clear_sound = Mix_LoadWAV("../assets/clear.wav");
     fix_sound = Mix_LoadWAV("../assets/fix.wav");
@@ -154,9 +154,9 @@ SDL_Color Tetris::getRandomColor() {
 // lighter: factor > 1.0 (e.g., 1.3 代表亮 30%)
 SDL_Color Tetris::adjustColor(const SDL_Color color, const double factor) {
   SDL_Color newColor;
-  newColor.r = static_cast<Uint8>SDL_clamp(((color.r * factor)), 0, 255);
-  newColor.g = static_cast<Uint8>SDL_clamp(((color.g * factor)), 0, 255);
-  newColor.b = static_cast<Uint8>SDL_clamp(((color.b * factor)), 0, 255);
+  newColor.r = static_cast<Uint8> SDL_clamp(((color.r * factor)), 0, 255);
+  newColor.g = static_cast<Uint8> SDL_clamp(((color.g * factor)), 0, 255);
+  newColor.b = static_cast<Uint8> SDL_clamp(((color.b * factor)), 0, 255);
   newColor.a = 255;
   return newColor;
 }
@@ -238,11 +238,17 @@ void Tetris::checkFullLines() {
   }
 }
 
+// flash is very difficult to make effect in mac
 void Tetris::flashLines() const {
   constexpr int flash_count = 5;  // 闪烁次数
   constexpr int flash_delay = 50; // 每次闪烁延时 (毫秒)
 
   for (int i = 0; i < flash_count; ++i) {
+    // 每次开始绘制前，先清屏或者重绘背景
+    SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b,
+                           255); // 黑色背景
+    SDL_RenderClear(renderer);
+
     // 绘制需要闪烁的行（偶数次隐藏，奇数次显示）
     if (i % 2 == 1) { // 显示状态
       for (const int line : lines_to_remove) {
@@ -262,7 +268,6 @@ void Tetris::flashLines() const {
   }
   SDL_Delay(100); // 爆炸完延迟0.5s
 }
-
 
 void Tetris::removeFullLines() {
   int lines_remove_num = static_cast<int>(lines_to_remove.size());
@@ -286,18 +291,24 @@ void Tetris::removeFullLines() {
   default:
     score += lines_remove_num * 300;
   }
-  flashLines();
+  // flashLines();
 
-  // 从大到小排序，保证先处理下面的行
-  // std::sort(lines_to_remove.begin(), lines_to_remove.end(), std::greater<int>());
+  // for (const auto line : lines_to_remove) {
+  //   for (int col = 0; col < board_width; ++col) {
+  //     auto color = adjustColor(board_colors[col][line], 0.8);
+  //     drawCell(col * cell_size, line * cell_size, color);
+  //   }
+  // }
+  // SDL_RenderPresent(renderer);
+
   int k = 0;
   while (lines_remove_num > 0) {
     int max_line = lines_to_remove[k] + k;
-      for (int row = max_line; row > 0; --row) {
-        for (int col = 0; col < board_width; ++col) {
-          position_taken[col][row] = position_taken[col][row - 1];
-          board_colors[col][row] = board_colors[col][row - 1];
-        }
+    for (int row = max_line; row > 0; --row) {
+      for (int col = 0; col < board_width; ++col) {
+        position_taken[col][row] = position_taken[col][row - 1];
+        board_colors[col][row] = board_colors[col][row - 1];
+      }
     }
     lines_remove_num--;
     k++;
@@ -361,8 +372,8 @@ void Tetris::pauseAndQuit() const {
 
   // 在提示框上渲染文字
   renderTextAt("Game Over", static_cast<int>(box.x + cell_size * 2.5), box.y + cell_size);
-  renderTextAt("Press any key to quit", static_cast<int>(box.x + cell_size*1.5), box.y + cell_size *
-   2);
+  renderTextAt("Press any key to quit", static_cast<int>(box.x + cell_size * 1.5),
+               box.y + cell_size * 2);
 
   // 显示暂停提示
   SDL_RenderPresent(renderer);
@@ -370,7 +381,8 @@ void Tetris::pauseAndQuit() const {
   bool waiting = true;
   while (waiting) {
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN) {
+      if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN ||
+          event.type == SDL_MOUSEBUTTONDOWN) {
         waiting = false;
       }
     }
@@ -380,7 +392,7 @@ void Tetris::pauseAndQuit() const {
 
 void Tetris::play_chunk_sound(Mix_Chunk *sound) {
   // -1 表示自动选择一个空闲的声道（channel）来播放音效
-  Mix_VolumeChunk(sound, 128);
+  Mix_VolumeChunk(sound, 50);
   Mix_PlayChannel(-1, sound, 0); // 播放音效
 }
 
@@ -453,6 +465,11 @@ void Tetris::run() {
   SDL_Event event;
   bool paused = false; // 暂停状态
   while (running) {
+
+    // 2. 清屏（每帧开始时）
+    SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); // 设置背景色，例如黑色
+    SDL_RenderClear(renderer);
+
     // 处理事件
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {

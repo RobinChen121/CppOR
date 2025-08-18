@@ -13,7 +13,7 @@
 class PMF {
   double truncatedQuantile = 1;
   double stepSize = 1;
-  std::string distributionName;
+  std::string distributionName = "poisson";
 
 public:
   PMF() = default;
@@ -23,7 +23,7 @@ public:
 
   // void checkName() const;
 
-  static double poissonPMF(int k, double lambda);
+  static double poissonPMF(int k, int lambda);
 
   // span 本身就是引用传递
   // 普通值参数前面没必要加 const

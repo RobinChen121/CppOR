@@ -29,7 +29,7 @@ PMF::PMF(const double truncatedQuantile, const double stepSize, std::string dist
 // }
 
 // get the probability mass function value of Poisson
-double PMF::poissonPMF(const int k, const double lambda) {
+double PMF::poissonPMF(const int k, const int lambda) {
   if (k < 0 || lambda < 0)
     return 0.0; // 确保参数合法
   if (k == 0 and lambda == 0)
