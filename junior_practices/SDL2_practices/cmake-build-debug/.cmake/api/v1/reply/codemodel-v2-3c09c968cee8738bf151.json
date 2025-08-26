@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.30"
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "sdl_practice::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-sdl_practice-Debug-f8786eb8eb9e63ed52f7.json",
+					"jsonFile" : "target-sdl_practice-Debug-f5297d3fb7705b837769.json",
 					"name" : "sdl_practice",
 					"projectIndex" : 0
 				}
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/chenzhen/CppOR/junior_practices/SDL2_practices/cmake-build-release",
-		"source" : "D:/chenzhen/CppOR/junior_practices/SDL2_practices"
+		"build" : "/Users/zhenchen/CLionProjects/CppOR/junior_practices/SDL2_practices/cmake-build-debug",
+		"source" : "/Users/zhenchen/CLionProjects/CppOR/junior_practices/SDL2_practices"
 	},
 	"version" : 
 	{

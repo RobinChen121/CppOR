@@ -2,7 +2,7 @@
  * Author: Zhen Chen
  * Email: chen.zhen5526@gmail.com
  * Created on: 11/08/2025, 23:42
- * Description:
+ * Description: mac does not support sdl2 very well.
  *
  */
 
@@ -49,23 +49,23 @@ void Tetris::setWindow() {
 void Tetris::setRender() {
   // 创建渲染器 - 为Mac提供更好的兼容性
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-  
+
   // 如果硬件加速失败，尝试软件渲染器
   if (!renderer) {
     std::cout << "Hardware accelerated renderer failed, trying software renderer..." << std::endl;
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
   }
-  
+
   if (!renderer) {
     std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
     SDL_Quit();
   }
-  
+
   // 设置渲染器属性，减少Mac上的闪烁问题
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-  
+
   // 创建窗口和 renderer 后，先 present 一次背景,不然会先黑屏
   setBackgroundColor(background_color);
   drawGrid(board_line_color);
@@ -256,17 +256,17 @@ void Tetris::flashLines() const {
     // 如果获取失败，currentBlendMode 保持默认值 SDL_BLENDMODE_NONE
     // 如果获取成功，currentBlendMode 将包含实际的当前混合模式
   }
-  
+
   // 设置适合闪烁的混合模式
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
   // 先绘制一次完整的背景和已锁定方块
   SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b, 255);
   SDL_RenderClear(renderer); // 这行命令的主要作用是清屏
-  
+
   // 重绘网格
   drawGrid(board_line_color);
-  
+
   // 重绘所有已放置的方块
   for (int row = 0; row < board_height; ++row) {
     for (int col = 0; col < board_width; ++col) {
@@ -291,14 +291,14 @@ void Tetris::flashLines() const {
         }
       }
     }
-    
+
     SDL_RenderPresent(renderer);
     SDL_Delay(flash_delay);
   }
-  
+
   // 恢复原始混合模式
   SDL_SetRenderDrawBlendMode(renderer, currentBlendMode);
-  
+
   SDL_Delay(100); // 爆炸完延迟0.1s
 }
 
@@ -324,7 +324,7 @@ void Tetris::removeFullLines() {
   default:
     score += lines_remove_num * 300;
   }
-   flashLines();
+  flashLines();
 
   // for (const auto line : lines_to_remove) {
   //   for (int col = 0; col < board_width; ++col) {
@@ -410,17 +410,21 @@ void Tetris::pauseAndQuit() const {
 
   // 显示暂停提示
   SDL_RenderPresent(renderer);
+
+  // 改良的等待循环
   SDL_Event event;
   bool waiting = true;
   while (waiting) {
+    SDL_PumpEvents(); // <- 关键：强制更新事件队列
+
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN ||
           event.type == SDL_MOUSEBUTTONDOWN) {
         waiting = false;
       }
     }
+    SDL_Delay(10); // 给 CPU 休息，避免占满
   }
-  SDL_Delay(10);
 }
 
 void Tetris::play_chunk_sound(Mix_Chunk *sound) {
