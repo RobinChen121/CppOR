@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "LP.dir\\Release\\gurobi_test.obj",
+            "outputs": [
+                "LP.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

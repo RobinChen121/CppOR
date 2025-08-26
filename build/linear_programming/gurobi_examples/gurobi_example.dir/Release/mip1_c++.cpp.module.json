@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "gurobi_example.dir\\Release\\mip1_c++.obj",
+            "outputs": [
+                "gurobi_example.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

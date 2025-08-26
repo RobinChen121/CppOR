@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "utils.dir\\Release\\pmf.obj",
+            "outputs": [
+                "utils.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}
