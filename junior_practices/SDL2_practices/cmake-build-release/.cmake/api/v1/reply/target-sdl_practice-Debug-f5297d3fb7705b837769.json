@@ -2,10 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "sdl_practice.exe"
-		},
-		{
-			"path" : "sdl_practice.pdb"
+			"path" : "sdl_practice"
 		}
 	],
 	"backtrace" : 1,
@@ -15,7 +12,6 @@
 		[
 			"add_executable",
 			"target_link_libraries",
-			"add_compile_options",
 			"include_directories"
 		],
 		"files" : 
@@ -36,31 +32,25 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 66,
+				"line" : 40,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 19,
+				"line" : 32,
 				"parent" : 0
 			},
 			{
-				"command" : 3,
+				"command" : 2,
 				"file" : 0,
-				"line" : 49,
+				"line" : 35,
 				"parent" : 0
 			},
 			{
-				"command" : 3,
+				"command" : 2,
 				"file" : 0,
-				"line" : 55,
-				"parent" : 0
-			},
-			{
-				"command" : 3,
-				"file" : 0,
-				"line" : 61,
+				"line" : 38,
 				"parent" : 0
 			}
 		]
@@ -71,26 +61,27 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++17 -MDd -Zi"
-				},
-				{
-					"backtrace" : 3,
-					"fragment" : "/utf-8"
+					"fragment" : "-g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics"
 				}
 			],
 			"includes" : 
 			[
 				{
+					"backtrace" : 3,
+					"path" : "/opt/homebrew/Cellar/sdl2/2.32.8/include"
+				},
+				{
 					"backtrace" : 4,
-					"path" : "C:/SDL2-2.30.10/include"
+					"path" : "/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/include"
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/SDL2_mixer-2.8.1/include"
+					"path" : "/opt/homebrew/Cellar/sdl2_ttf/2.24.0/include"
 				},
 				{
-					"backtrace" : 6,
-					"path" : "C:/SDL2_ttf-2.24.0/include"
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/opt/homebrew/Cellar/sdl2/2.32.8/include/SDL2"
 				}
 			],
 			"language" : "CXX",
@@ -116,42 +107,42 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi",
+				"fragment" : "-g",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /debug /INCREMENTAL /subsystem:console",
+				"fragment" : "",
 				"role" : "flags"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\SDL2-2.30.10\\lib\\x64\\SDL2.lib",
+				"fragment" : "-L/opt/homebrew/Cellar/sdl2/2.32.8/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/opt/homebrew/Cellar/sdl2/2.32.8/lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\SDL2-2.30.10\\lib\\x64\\SDL2main.lib",
+				"fragment" : "/opt/homebrew/Cellar/sdl2/2.32.8/lib/libSDL2.dylib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\SDL2_mixer-2.8.1\\lib\\x64\\SDL2_mixer.lib",
+				"fragment" : "/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/lib/libSDL2_mixer.dylib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\SDL2_ttf-2.24.0\\lib\\x64\\SDL2_ttf.lib",
-				"role" : "libraries"
-			},
-			{
-				"fragment" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib",
+				"fragment" : "/opt/homebrew/Cellar/sdl2_ttf/2.24.0/lib/libSDL2_ttf.dylib",
 				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
 	},
 	"name" : "sdl_practice",
-	"nameOnDisk" : "sdl_practice.exe",
+	"nameOnDisk" : "sdl_practice",
 	"paths" : 
 	{
 		"build" : ".",
