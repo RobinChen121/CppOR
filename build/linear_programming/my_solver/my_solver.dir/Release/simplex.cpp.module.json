@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "my_solver.dir\\Release\\simplex.obj",
+            "outputs": [
+                "my_solver.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

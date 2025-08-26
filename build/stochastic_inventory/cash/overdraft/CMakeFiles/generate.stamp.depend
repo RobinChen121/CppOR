@@ -1,0 +1,34 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckIncludeFile.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckLibraryExists.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake
+C:/Program Files/JetBrains/CLion 2024.3.5/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0/BoostConfig.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/BoostDetectToolset-1.82.0.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/boost_atomic-config-version.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/boost_atomic-config.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-shared.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_atomic-1.82.0/libboost_atomic-variant-static.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/boost_chrono-config-version.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/boost_chrono-config.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/libboost_chrono-variant-shared.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_chrono-1.82.0/libboost_chrono-variant-static.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config-version.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/boost_filesystem-config.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-shared.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_filesystem-1.82.0/libboost_filesystem-variant-static.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/boost_system-config-version.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/boost_system-config.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/libboost_system-variant-shared.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_system-1.82.0/libboost_system-variant-static.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/boost_thread-config-version.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/boost_thread-config.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-shared.cmake
+C:/ProgramData/anaconda3/Library/lib/cmake/boost_thread-1.82.0/libboost_thread-variant-static.cmake
+D:/chenzhen/CppOR/stochastic_inventory/cash/overdraft/CMakeLists.txt

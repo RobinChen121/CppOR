@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "junior_practice.dir\\Release\\Qmedia_test.obj",
+            "outputs": [
+                "junior_practice.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

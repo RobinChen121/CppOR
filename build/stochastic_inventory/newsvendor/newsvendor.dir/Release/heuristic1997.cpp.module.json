@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "newsvendor.dir\\Release\\heuristic1997.obj",
+            "outputs": [
+                "newsvendor.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

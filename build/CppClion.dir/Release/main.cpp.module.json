@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CppClion.dir\\Release\\main.obj",
+            "outputs": [
+                "CppClion.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

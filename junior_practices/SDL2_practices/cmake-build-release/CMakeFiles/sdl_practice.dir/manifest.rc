@@ -1,0 +1,2 @@
+#pragma code_page(65001)
+1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "D:/chenzhen/CppOR/junior_practices/SDL2_practices/cmake-build-release/CMakeFiles/sdl_practice.dir/embed.manifest"

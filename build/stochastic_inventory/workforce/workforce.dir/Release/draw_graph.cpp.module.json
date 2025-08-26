@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "workforce.dir\\Release\\draw_graph.obj",
+            "outputs": [
+                "workforce.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

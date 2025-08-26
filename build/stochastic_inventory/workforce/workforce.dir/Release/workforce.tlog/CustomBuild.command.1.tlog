@@ -1,0 +1,10 @@
+^D:\CHENZHEN\CPPOR\STOCHASTIC_INVENTORY\WORKFORCE\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -SD:/chenzhen/CppOR -BD:/chenzhen/CppOR/build --check-stamp-file D:/chenzhen/CppOR/build/stochastic_inventory/workforce/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

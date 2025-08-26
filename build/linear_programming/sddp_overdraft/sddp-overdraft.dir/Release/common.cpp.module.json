@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "sddp-overdraft.dir\\Release\\common.obj",
+            "outputs": [
+                "sddp-overdraft.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

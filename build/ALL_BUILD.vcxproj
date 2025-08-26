@@ -193,6 +193,50 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{127B4F96-46BB-3265-98D3-790B6F314B76}</Project>
       <Name>junior_practice</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\linear_programming\my_solver\my_solver.vcxproj">
+      <Project>{028AAFDC-7A32-3FA3-9102-F57C600038EE}</Project>
+      <Name>my_solver</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\stochastic_inventory\newsvendor\newsvendor.vcxproj">
+      <Project>{49C9DE84-B161-3391-BD32-E9EADFEE32CB}</Project>
+      <Name>newsvendor</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\junior_practices\qt_practices\qt_practice.vcxproj">
+      <Project>{66B11C75-3875-3C76-B3B8-5DEA3CB3914D}</Project>
+      <Name>qt_practice</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\linear_programming\sddp_overdraft\sddp-overdraft.vcxproj">
+      <Project>{D4D56C20-8762-39B6-A7B3-BDF94153B4AF}</Project>
+      <Name>sddp-overdraft</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\junior_practices\SDL2_practices\sdl_practice.vcxproj">
+      <Project>{5A04465E-7DFE-37AD-A0D9-C426477C194F}</Project>
+      <Name>sdl_practice</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\stochastic_inventory\cash\sdp-cash.vcxproj">
+      <Project>{5E366C96-00E6-3909-AC14-58FE7AB3A0AE}</Project>
+      <Name>sdp-cash</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\stochastic_inventory\sdp-inventory.vcxproj">
+      <Project>{D8EDD53A-C75D-3CC7-953A-F70F4C01B76A}</Project>
+      <Name>sdp-inventory</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\stochastic_inventory\cash\overdraft\sdp-overdraft.vcxproj">
+      <Project>{CBA90B25-4B25-31E8-8E95-CC204F9C2DDE}</Project>
+      <Name>sdp-overdraft</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\stochastic_inventory\states\states.vcxproj">
+      <Project>{2C2DCD7A-48C3-317D-90F5-EE9D4C592B81}</Project>
+      <Name>states</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\utils\utils.vcxproj">
+      <Project>{500495A1-5067-327E-90E5-47D8D336A115}</Project>
+      <Name>utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\chenzhen\CppOR\build\stochastic_inventory\workforce\workforce.vcxproj">
+      <Project>{9A5764EC-38CE-33CC-B60E-9F4FCE001203}</Project>
+      <Name>workforce</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

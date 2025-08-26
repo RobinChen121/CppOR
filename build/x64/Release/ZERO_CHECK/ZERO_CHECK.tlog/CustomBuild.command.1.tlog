@@ -1,0 +1,10 @@
+^D:\CHENZHEN\CPPOR\BUILD\CMAKEFILES\B1A9AA951E58AB7E7F2FFE8F3FA7BD8A\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -SD:/chenzhen/CppOR -BD:/chenzhen/CppOR/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/chenzhen/CppOR/build/CppClion.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

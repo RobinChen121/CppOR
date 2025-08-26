@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "states.dir\\Release\\cash_leadtime_multi_state.obj",
+            "outputs": [
+                "states.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

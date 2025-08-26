@@ -47,18 +47,25 @@ void Tetris::setWindow() {
 }
 
 void Tetris::setRender() {
-  // 创建渲染器
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  // 启用混合模式，支持透明度设置
-  // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
-  // SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-  // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+  // 创建渲染器 - 为Mac提供更好的兼容性
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  
+  // 如果硬件加速失败，尝试软件渲染器
+  if (!renderer) {
+    std::cout << "Hardware accelerated renderer failed, trying software renderer..." << std::endl;
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+  }
+  
   if (!renderer) {
     std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
     SDL_Quit();
   }
+  
+  // 设置渲染器属性，减少Mac上的闪烁问题
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+  
   // 创建窗口和 renderer 后，先 present 一次背景,不然会先黑屏
   setBackgroundColor(background_color);
   drawGrid(board_line_color);
@@ -241,15 +248,36 @@ void Tetris::checkFullLines() {
 // flash is very difficult to make effect in mac
 void Tetris::flashLines() const {
   constexpr int flash_count = 5;  // 闪烁次数
-  constexpr int flash_delay = 50; // 每次闪烁延时 (毫秒)
+  constexpr int flash_delay = 80; // 增加延时，减少Mac上的雪花问题
+
+  // 保存当前混合模式
+  SDL_BlendMode currentBlendMode = SDL_BLENDMODE_NONE; // 设置默认值
+  if (SDL_GetRenderDrawBlendMode(renderer, &currentBlendMode) != 0) {
+    // 如果获取失败，currentBlendMode 保持默认值 SDL_BLENDMODE_NONE
+    // 如果获取成功，currentBlendMode 将包含实际的当前混合模式
+  }
+  
+  // 设置适合闪烁的混合模式
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+  // 先绘制一次完整的背景和已锁定方块
+  SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b, 255);
+  SDL_RenderClear(renderer); // 这行命令的主要作用是清屏
+  
+  // 重绘网格
+  drawGrid(board_line_color);
+  
+  // 重绘所有已放置的方块
+  for (int row = 0; row < board_height; ++row) {
+    for (int col = 0; col < board_width; ++col) {
+      if (position_taken[col][row]) {
+        drawCell(col * cell_size, row * cell_size, board_colors[col][row]);
+      }
+    }
+  }
 
   for (int i = 0; i < flash_count; ++i) {
-    // 每次开始绘制前，先清屏或者重绘背景
-    SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b,
-                           255); // 黑色背景
-    SDL_RenderClear(renderer);
-
-    // 绘制需要闪烁的行（偶数次隐藏，奇数次显示）
+    // 只更新需要闪烁的行，而不是重绘整个屏幕
     if (i % 2 == 1) { // 显示状态
       for (const int line : lines_to_remove) {
         for (int x = 0; x < board_width; ++x) {
@@ -263,10 +291,15 @@ void Tetris::flashLines() const {
         }
       }
     }
+    
     SDL_RenderPresent(renderer);
     SDL_Delay(flash_delay);
   }
-  SDL_Delay(100); // 爆炸完延迟0.5s
+  
+  // 恢复原始混合模式
+  SDL_SetRenderDrawBlendMode(renderer, currentBlendMode);
+  
+  SDL_Delay(100); // 爆炸完延迟0.1s
 }
 
 void Tetris::removeFullLines() {
@@ -291,7 +324,7 @@ void Tetris::removeFullLines() {
   default:
     score += lines_remove_num * 300;
   }
-  // flashLines();
+   flashLines();
 
   // for (const auto line : lines_to_remove) {
   //   for (int col = 0; col < board_width; ++col) {
