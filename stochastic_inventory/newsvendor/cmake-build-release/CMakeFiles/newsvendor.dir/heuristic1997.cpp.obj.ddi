@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CMakeFiles\\newsvendor.dir\\heuristic1997.cpp.obj",
+            "outputs": [
+                "CMakeFiles\\newsvendor.dir\\heuristic1997.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}

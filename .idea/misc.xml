@@ -7,7 +7,7 @@
   <component name="CMakePythonSetting">
     <option name="pythonIntegrationState" value="NO" />
   </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/junior_practices/SDL2_practices">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/stochastic_inventory/newsvendor">
     <contentRoot DIR="$PROJECT_DIR$" />
   </component>
 </project>
