@@ -161,8 +161,7 @@ void WorkforcePlan::recursion_backward_parallel() {
 
       // std::thread 构造函数参数始终默认按值传递, 即使参数前用 & 也是，此时 & 表示指针，不是引用
       // & 在声明变量或函数构造时中跟参数表示引用，调用函数时跟参数表示指针
-      threads.emplace_back(&WorkforcePlan::compute_stage, this, t, start_workers, end_workers,
-                           std::ref(values), std::ref(policies));
+      threads.emplace_back(&WorkforcePlan::compute_stage, this, t, start_workers, end_workers);
     }
     for (auto &thread : threads) {
       // 不要忘了关闭线程
@@ -171,9 +170,7 @@ void WorkforcePlan::recursion_backward_parallel() {
   }
 }
 
-void WorkforcePlan::compute_stage(const int t, const int start_inventory, const int end_inventory,
-                                  std::vector<std::unordered_map<WorkerState, double>> &values,
-                                  std::vector<std::unordered_map<WorkerState, double>> &policies) {
+void WorkforcePlan::compute_stage(const int t, const int start_inventory, const int end_inventory) {
   for (int i = start_inventory; i <= end_inventory; i++) {
     double bestQ = 0.0;
     double best_value = std::numeric_limits<double>::max();
@@ -222,6 +219,7 @@ std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
   std::vector<std::array<int, 2>> arr(T);
 
   if (direction == Direction::FORWARD) {
+    // 把无序 cache_actions 里的所有元素拷贝到有序容器 ordered_cache_actions
     std::map<WorkerState, int> ordered_cache_actions(cache_actions.begin(), cache_actions.end());
     int t_index = 1;
     for (const auto &[fst, snd] : ordered_cache_actions) {

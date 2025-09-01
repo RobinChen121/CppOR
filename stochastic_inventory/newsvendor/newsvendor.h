@@ -28,9 +28,6 @@ class NewsvendorDP {
   std::vector<std::vector<std::vector<double>>> pmf;
   std::mutex mtx; // 互斥锁保护共享数据写入
 
-  std::unordered_map<State, double> cacheActions;
-  std::unordered_map<State, double> cacheValues;
-
 public:
   NewsvendorDP(size_t T, int capacity, double stepSize, double fixOrderCost,
                double unitVariOrderCost, double unitHoldCost, double unitPenaltyCost,
@@ -53,19 +50,21 @@ public:
 
   double recursion_parallel(const State &state);
 
-  void computeStage(int t, int start_inventory, int end_inventory,
-                    std::vector<std::unordered_map<State, double>> &value,
-                    std::vector<std::unordered_map<State, double>> &policy);
+  void computeStage(int t, int start_inventory, int end_inventory);
 
-  struct DpResult {
-    std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
-    std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
-  };
+  // struct DpResult {
+  //   std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
+  //   std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
+  // };
 
+  std::unordered_map<State, double> cache_actions;
+  std::unordered_map<State, double> cache_values;
+
+  // for parallel
   std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
   std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
 
-  std::vector<std::array<int, 2>> find_sS();
+  std::vector<std::array<int, 2>> findsS();
 
   void backward_parallel(const int thread_num);
 };

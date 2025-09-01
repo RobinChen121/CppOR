@@ -1,10 +1,11 @@
+cmake_minimum_required(VERSION 3.30)
 Project(workforce) # 设置运行程序的名字
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
-if (CMAKE_BUILD_TYPE STREQUAL Debug)
+if (CMAKE_BUILD_TYPE STREQUAL Release)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_RELEASE "/O3")
     else ()
@@ -23,7 +24,7 @@ endif ()
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
-add_executable(${RUN_NAME}
+add_executable(${PROJECT_NAME}
         worker_state.cpp
         workforce_plan.cpp
 
@@ -52,7 +53,7 @@ if (MSVC)
             boost_thread-vc143-mt-x64-1_88
             boost_filesystem-vc143-mt-x64-1_88
     )
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             "${BOOST_LIBRARYDIR}/boost_system-vc143-mt-x64-1_88.lib"
             "${BOOST_LIBRARYDIR}/boost_thread-vc143-mt-x64-1_88.lib"
             "${BOOST_LIBRARYDIR}/boost_filesystem-vc143-mt-x64-1_88.lib"
@@ -60,7 +61,7 @@ if (MSVC)
 else ()
     find_package(Boost REQUIRED COMPONENTS system thread filesystem)
     include_directories(${Boost_INCLUDE_DIRS})
-    target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 endif ()
 
 ## 设置 Gurobi 路径（根据你的安装调整）
@@ -71,8 +72,7 @@ if (APPLE)
     # 将路径添加到搜索地址
     include_directories(${GUROBI_INCLUDE_DIR})
     include_directories(${GUROBI_LIB_DIR})
-    target_link_libraries(${RUN_NAME}
-            PRIVATE
+    target_link_libraries(${PROJECT_NAME}
             "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
             "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
     )
@@ -103,11 +103,11 @@ else ()
 
     if (CXX)
         #        set(CMAKE_CXX_STANDARD 11)
-        target_link_libraries(${RUN_NAME} PRIVATE optimized ${GUROBI_CXX_LIBRARY}
+        target_link_libraries(${PROJECT_NAME} PRIVATE optimized ${GUROBI_CXX_LIBRARY}
                 debug ${GUROBI_CXX_DEBUG_LIBRARY})
     endif ()
 
-    target_link_libraries(${RUN_NAME} PRIVATE ${GUROBI_LIBRARY})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${GUROBI_LIBRARY})
 
     if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
         include(FeatureSummary)
@@ -132,13 +132,13 @@ if (APPLE)
 else ()
     find_package(OpenMP REQUIRED)
     if (MSVC)
-        target_compile_options(${RUN_NAME} PRIVATE /openmp)
+        target_compile_options(${PROJECT_NAME} /openmp)
     else ()
-        target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
-        target_link_options(${RUN_NAME} PRIVATE -fopenmp)
+        target_compile_options(${PROJECT_NAME} -fopenmp)
+        target_link_options(${PROJECT_NAME} -fopenmp)
     endif ()
     if (OpenMP_CXX_FOUND)
-        target_link_libraries(${RUN_NAME} PRIVATE OpenMP::OpenMP_CXX)
+        target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
     endif ()
 endif ()
 
@@ -149,14 +149,14 @@ if (APPLE)
     include_directories(/opt/anaconda3/include/python3.12)
     # numpy head file
     include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME}
             /opt/anaconda3/lib/libpython3.12.dylib
             dl
     )
 elseif (MSVC)
     include_directories(C:/ProgramData/anaconda3/include/)
     include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME}
             C:/ProgramData/anaconda3/libs/python312.lib
             C:/Users/Administrator/cpython/PCbuild/amd64/python312_d.lib
     )
@@ -168,14 +168,14 @@ else ()
     )
     FetchContent_MakeAvailable(matplotlib_cpp)
     # Include matplotlib-cpp
-    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
+    target_include_directories(${PROJECT_NAME} ${matplotlib_cpp_SOURCE_DIR})
     # Link Python and NumPy
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
-    target_include_directories(${RUN_NAME} PRIVATE
+    target_include_directories(${PROJECT_NAME}
             ${Python3_INCLUDE_DIRS}
             ${Python3_NumPy_INCLUDE_DIRS}
     )
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             ${Python3_LIBRARIES}
     )
 endif ()
