@@ -58,7 +58,7 @@ class WorkforcePlan {
   std::mutex mtx; // 互斥锁保护共享数据写入
 
 public:
-  std::vector<std::unordered_map<WorkerState, double>> values;
+  std::vector<std::unordered_map<WorkerState, double>> values; // for parallel
   std::vector<std::unordered_map<WorkerState, double>> policies;
 
   WorkforcePlan() {
@@ -87,9 +87,7 @@ public:
                                              int overturn_num) const;
   double recursion_forward(WorkerState ini_state);
   void recursion_backward_parallel();
-  void compute_stage(int t, int start_inventory, int end_inventory,
-                     std::vector<std::unordered_map<WorkerState, double>> &values,
-                     std::vector<std::unordered_map<WorkerState, double>> &policies);
+  void compute_stage(int t, int start_inventory, int end_inventory);
   std::vector<double> solve(WorkerState ini_state);
   [[nodiscard]] std::vector<std::array<int, 2>> find_sS() const;
   [[nodiscard]] double simulate_sS(WorkerState ini_state,
@@ -103,8 +101,7 @@ public:
   [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_tsp() const;
 
   void compute_turnover();
-  [[nodiscard]] std::pair<std::vector<double>, std::vector<std::array<int, 2>>>
-  compute_ww() const;
+  [[nodiscard]] std::pair<std::vector<double>, std::vector<std::array<int, 2>>> compute_ww() const;
   [[nodiscard]] double compute_Ltj_y(int t, int j, int y) const;
   [[nodiscard]] int find_y_star(int t, int j) const;
 

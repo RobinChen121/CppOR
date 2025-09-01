@@ -1,0 +1,6 @@
+# ninja log v6
+10	1447	1756755097200577969	CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils/pmf.cpp.o	abe3694a9f795c90
+1447	1497	1756755098637491741	newsvendor	8fcafa5c80be778d
+11	937	1756755097201211178	CMakeFiles/newsvendor.dir/newsvendor.cpp.o	8513e2cc19fa74f7
+11	695	1756755097200933844	CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/states/State.cpp.o	20d642b80db02495
+3	71	1756757314937746030	build.ninja	23819342690bbfe8

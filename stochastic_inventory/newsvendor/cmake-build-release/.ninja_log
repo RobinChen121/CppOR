@@ -1,18 +1,6 @@
 # ninja log v6
-476	503	7784252433403070	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj.modmap	2c28c18cb759a8ba
-587	622	1755541301254685315	newsvendor	2c41e7c1f3e6155d
-503	2566	7784252433673138	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj	897783a3312bb97a
-476	503	7784252433403070	D:/chenzhen/CppOR/stochastic_inventory/newsvendor/cmake-build-release/CMakeFiles/newsvendor.dir/CXXModules.json	2c28c18cb759a8ba
-13	146	7784252428770137	CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj.ddi	d3e819a27a971f40
-8	476	7784252428710363	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj.ddi	ba4ee8843fc7e164
-476	503	7784252433403070	CMakeFiles/newsvendor.dir/CXX.dd	2c28c18cb759a8ba
-476	503	7784252433403070	CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj.modmap	2c28c18cb759a8ba
-508	1234	7784252433722992	CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj	4ce59834dce06cf
-2566	2680	7784252454306850	newsvendor.exe	248390a49e05e5c8
-4	221	7784293478815199	build.ninja	4109a4b0f2bc9da5
-9	372	7784293479434363	CMakeFiles/newsvendor.dir/newsvendor.cpp.obj.ddi	c7b20d03c745d666
-374	417	7784293483076405	CMakeFiles/newsvendor.dir/CXX.dd	71b9f1030cab0c86
-374	417	7784293483076405	D:/chenzhen/CppOR/stochastic_inventory/newsvendor/cmake-build-release/CMakeFiles/newsvendor.dir/CXXModules.json	71b9f1030cab0c86
-374	417	7784293483076405	CMakeFiles/newsvendor.dir/newsvendor.cpp.obj.modmap	71b9f1030cab0c86
-374	417	7784293483076405	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj.modmap	71b9f1030cab0c86
-417	1982	7784293483513950	CMakeFiles/newsvendor.dir/newsvendor.cpp.obj	62afd8cc4e0e6d41
+871	921	1756748639640388559	newsvendor	e0328eb1a4442d26
+4	221	1756757314938147738	build.ninja	4109a4b0f2bc9da5
+9	870	1756748638778749554	CMakeFiles/newsvendor.dir/newsvendor.cpp.o	a28e329f84912ce4
+9	1465	1756748480270744449	CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils/pmf.cpp.o	3e54cdb1f34113c3
+9	757	1756748480271134200	CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/states/State.cpp.o	6feeca6f175424ac

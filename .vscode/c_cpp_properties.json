@@ -18,6 +18,17 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64"
+        },
+        {
+            "name": "mac",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "intelliSenseMode": "macos-clang-arm64",
+            "cppStandard": "c++17",
+            "compilerPath": "/opt/homebrew/opt/llvm/bin/clang++"
         }
     ],
     "version": 4
