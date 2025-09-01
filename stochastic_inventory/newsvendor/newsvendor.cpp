@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by Zhen Chen on 2025/2/26.
 // 40 periods, maxQ 150, value is 1359, time is 4.61s
 // 40 periods, maxQ 100, value is 1351, time is 3.03s
@@ -77,6 +77,10 @@ auto NewsvendorDP::getTable() const {
   }
   return table;
 }
+
+//std::vector<std::array<int, 2>> NewsvendorDP::find_sS() const {
+//  return {};
+//}
 
 double NewsvendorDP::recursion(const State &state) {
   double bestQ = 0.0;

@@ -11,11 +11,11 @@ set(CMAKE_BUILD_TYPE Release) # 运行 Debug 还是 Release
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         #        NewsvendorParallel.cpp
-        #        newsvendor.cpp
-        ../../utils/PMF.cpp
+                newsvendor.cpp
+        ../../utils/pmf.cpp
         #        ../states/State.cpp
         #        newsvendor_parallel.cpp
-        heuristic1997.cpp
+#        heuristic1997.cpp
         #        cash/CashState.cpp
 )
 

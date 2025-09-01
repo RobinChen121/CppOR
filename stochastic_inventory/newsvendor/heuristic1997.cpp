@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Author: Zhen Chen
  * Email: chen.zhen5526@gmail.com
  * Created on: 15/08/2025, 17:58
@@ -9,6 +9,7 @@
  */
 #include "../../utils/pmf.h"
 
+#include <array>
 #include <cmath> // for NAN
 #include <iostream>
 #include <vector>
@@ -54,7 +55,7 @@ public:
     const int y_star = PMF::poissonQuantile(critical_ratio, mean_demand);
     int S0 = y_star;
     int s;
-    for (int s = y_star; s >= 0; s--) {
+    for (s = y_star; s >= 0; s--) {
       if (compute_c(s, S0) <= compute_G(s))
         break;
     }
@@ -155,9 +156,9 @@ public:
 
 int main() {
   constexpr int max_demand = 100;
-  const double h = 1;
-  const double pi = 2;
-  const double K = 10;
+  constexpr double h = 1;
+  constexpr double pi = 2;
+  constexpr double K = 10;
   constexpr int mean_demand = 10;
   std::vector<double> probs(max_demand, 0.0);
   for (int i = 0; i < max_demand; i++) {
@@ -165,8 +166,10 @@ int main() {
   }
 
   InfiniteStationary problem(mean_demand, max_demand, h, pi, K);
+  const auto sS = problem.compute_sS();
 
-  problem.print(max_demand);
+  std::cout << "The values of sS are: " << std::endl;
+  std::cout << "s is " << sS[0] << ", S is " << sS[1] << std::endl;
 
   return 0;
 }

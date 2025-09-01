@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/9.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -64,6 +64,8 @@ public:
 
   std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
   std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
+
+  std::vector<std::array<int, 2>> find_sS();
 
   void backward_parallel(const int thread_num);
 };
