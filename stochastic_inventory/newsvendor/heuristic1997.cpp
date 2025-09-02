@@ -71,6 +71,8 @@ public:
         }
         S = S + 1;
       }
+      else
+        break;
     }
     return {s, S};
   }
@@ -99,7 +101,7 @@ public:
 
   // 计算 k(s, y)
   double compute_k(const int s, const int y) {
-    double mG = 0;
+    double mG = K;
     for (int j = 0; j <= y - s - 1; ++j) {
       mG += compute_G(y - j) * compute_m(j);
     }
@@ -107,6 +109,7 @@ public:
   }
 
   // 按需计算 m[j]
+  // NOLINTNEXTLINE(misc-no-recursion)
   double compute_m(const int j) {
     if (j < m.size() && !std::isnan(m[j]))
       return m[j];
@@ -129,6 +132,7 @@ public:
   }
 
   // 按需计算 M[j]
+  // NOLINTNEXTLINE(misc-no-recursion)
   double compute_M(const int j) {
     if (j < M.size() && !std::isnan(M[j]))
       return M[j];
@@ -155,11 +159,12 @@ public:
 };
 
 int main() {
-  constexpr int max_demand = 100;
+  // optimal s, S should be 15, 66
+  constexpr int max_demand = 150;
   constexpr double h = 1;
-  constexpr double pi = 2;
-  constexpr double K = 10;
-  constexpr int mean_demand = 10;
+  constexpr double pi = 10;
+  constexpr double K = 100;
+  constexpr int mean_demand = 20;
   std::vector<double> probs(max_demand, 0.0);
   for (int i = 0; i < max_demand; i++) {
     probs[i] = PMF::poissonPMF(i, mean_demand);
@@ -170,6 +175,8 @@ int main() {
 
   std::cout << "The values of sS are: " << std::endl;
   std::cout << "s is " << sS[0] << ", S is " << sS[1] << std::endl;
+  std::cout << "M(S-s) is " << std::endl;
+  std::cout << problem.compute_M(sS[1] - sS[0]) << std::endl;
 
   return 0;
 }

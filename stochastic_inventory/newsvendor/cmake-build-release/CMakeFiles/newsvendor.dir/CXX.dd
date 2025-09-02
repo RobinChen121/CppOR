@@ -1,0 +1,7 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\utils\pmf.cpp.obj: dyndep
+
+build CMakeFiles\newsvendor.dir\D_\chenzhen\CppOR\stochastic_inventory\states\state.cpp.obj: dyndep
+
+build CMakeFiles\newsvendor.dir\heuristic1997.cpp.obj: dyndep
+

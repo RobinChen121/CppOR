@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CMakeFiles\\newsvendor.dir\\D_\\chenzhen\\CppOR\\stochastic_inventory\\states\\state.cpp.obj",
+            "outputs": [
+                "CMakeFiles\\newsvendor.dir\\D_\\chenzhen\\CppOR\\stochastic_inventory\\states\\state.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}

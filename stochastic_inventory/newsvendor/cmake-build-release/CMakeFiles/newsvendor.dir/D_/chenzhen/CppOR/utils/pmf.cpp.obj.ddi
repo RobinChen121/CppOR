@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CMakeFiles\\newsvendor.dir\\D_\\chenzhen\\CppOR\\utils\\pmf.cpp.obj",
+            "outputs": [
+                "CMakeFiles\\newsvendor.dir\\D_\\chenzhen\\CppOR\\utils\\pmf.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}
