@@ -1,6 +1,21 @@
 # ninja log v6
-10	1447	1756755097200577969	CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/utils/pmf.cpp.o	abe3694a9f795c90
+134	159	7785523402776125	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj.modmap	b16671086ef99d8f
 1447	1497	1756755098637491741	newsvendor	8fcafa5c80be778d
-11	937	1756755097201211178	CMakeFiles/newsvendor.dir/newsvendor.cpp.o	8513e2cc19fa74f7
-11	695	1756755097200933844	CMakeFiles/newsvendor.dir/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/states/State.cpp.o	20d642b80db02495
-3	71	1756757314937746030	build.ninja	23819342690bbfe8
+134	159	7785523402776125	D:/chenzhen/CppOR/stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/CXXModules.json	b16671086ef99d8f
+3	133	7785536027237225	build.ninja	dc04b87f8b4504a2
+7	551	7785310193871865	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj.ddi	b62b786cee79c97e
+18	229	7785310193983603	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/stochastic_inventory/states/state.cpp.obj.ddi	d9727316f3c0e069
+9	367	7785498924848410	CMakeFiles/newsvendor.dir/newsvendor.cpp.obj.ddi	facbc9c0dfa58c2e
+134	159	7785523402776125	CMakeFiles/newsvendor.dir/CXX.dd	b16671086ef99d8f
+134	159	7785523402776125	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/stochastic_inventory/states/state.cpp.obj.modmap	b16671086ef99d8f
+368	411	7785498928446084	CMakeFiles/newsvendor.dir/newsvendor.cpp.obj.modmap	1b32be7f4e9a8e05
+591	1634	7785310199711266	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/stochastic_inventory/states/state.cpp.obj	57a45ee9fa41f26e
+412	2127	7785498928883100	CMakeFiles/newsvendor.dir/newsvendor.cpp.obj	641e08a0df820d9c
+582	2607	7785310199621271	CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj	9be44c07f82599e8
+1055	1202	7785523411995168	newsvendor.exe	d4785af5217cf080
+8	186	7785352823811814	CMakeFiles/newsvendor.dir/main.cpp.obj.ddi	f97a74e6a68d7f4a
+186	207	7785352825590397	CMakeFiles/newsvendor.dir/main.cpp.obj.modmap	698acac2c1e575b2
+208	1517	7785352825813240	CMakeFiles/newsvendor.dir/main.cpp.obj	8ed3a643cb7e986b
+8	134	7785523401508055	CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj.ddi	a0073ee8e3f3b426
+134	159	7785523402776125	CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj.modmap	b16671086ef99d8f
+160	1055	7785523403040861	CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj	40f8450dd41434ca

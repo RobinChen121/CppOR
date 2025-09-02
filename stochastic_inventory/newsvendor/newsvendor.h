@@ -46,7 +46,7 @@ public:
 
   auto getTable() const;
 
-  double recursion(const State &state);
+  double recursion_serial(const State &state);
 
   double recursion_parallel(const State &state);
 
@@ -64,9 +64,9 @@ public:
   std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
   std::vector<std::unordered_map<State, double>> policy; // policy[t][inventory]
 
-  std::vector<std::array<int, 2>> findsS();
+  [[nodiscard]] std::vector<std::array<int, 2>> findsS(bool parallel) const;
 
-  void backward_parallel(const int thread_num);
+  void backward_parallel(int thread_num);
 };
 
 #endif // NEWSVENDOR_H
