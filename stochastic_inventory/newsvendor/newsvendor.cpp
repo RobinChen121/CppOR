@@ -8,7 +8,7 @@
  * running time of C++ in parallel is 1.01151s (8 threads, mac)
  *
  * planning horizon 70 periods, capacity 100, parallel computing time is 1.3s (mac), 1.9s(dell),
- * 3.47s for normal distribution.
+ * 3.47s(dell), 2.44s(mac) for normal distribution.
  * serial is 9.47s (dell)
  *
  */
@@ -28,11 +28,12 @@ NewsvendorDP::NewsvendorDP(const size_t T, const int capacity, const double step
                            const double fixOrderCost, const double unitVariOrderCost,
                            const double unitHoldCost, const double unitPenaltyCost,
                            const double truncatedQuantile, const double max_I, const double min_I,
-                           std::vector<std::vector<std::vector<double>>> pmf)
-    : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize), fixOrderCost(fixOrderCost),
-      unitVariOrderCost(unitVariOrderCost), unitHoldCost(unitHoldCost),
-      unitPenaltyCost(unitPenaltyCost), truncatedQuantile(truncatedQuantile), max_I(max_I),
-      min_I(min_I), pmf(std::move(pmf)) {};
+                           std::vector<std::vector<std::vector<double> > > pmf)
+  : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize), fixOrderCost(fixOrderCost),
+    unitVariOrderCost(unitVariOrderCost), unitHoldCost(unitHoldCost),
+    unitPenaltyCost(unitPenaltyCost), truncatedQuantile(truncatedQuantile), max_I(max_I),
+    min_I(min_I), pmf(std::move(pmf)) {
+};
 
 std::vector<double> NewsvendorDP::feasibleActions() const {
   const int QNum = static_cast<int>(capacity / stepSize);
@@ -191,8 +192,8 @@ void NewsvendorDP::backward_parallel(const int thread_num) {
   }
 }
 
-std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
-  std::vector<std::array<int, 2>> arr(T);
+std::vector<std::array<int, 2> > NewsvendorDP::findsS(bool parallel) const {
+  std::vector<std::array<int, 2> > arr(T);
 
   if (!parallel) {
     const auto opt_table = getTable();
@@ -232,7 +233,7 @@ std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
 int main() {
   // 22.4775
   constexpr double mean_demand = 20;
-  constexpr int T = 100;
+  constexpr int T = 70;
   std::vector<double> demands(T, mean_demand);
   constexpr int capacity = 100; // maximum ordering quantity
   constexpr double stepSize = 1.0;
@@ -241,8 +242,8 @@ int main() {
   constexpr double unitHoldCost = 1;
   constexpr double unitPenaltyCost = 5;
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
-  constexpr double maxI = 500;             // maximum possible inventory
-  constexpr double minI = -300;            // minimum possible inventory
+  constexpr double maxI = 500; // maximum possible inventory
+  constexpr double minI = -300; // minimum possible inventory
   constexpr bool parallel = true;
 
   // const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
@@ -273,7 +274,7 @@ int main() {
   std::cout << std::string(30, '*') << std::endl;
   std::cout << "planning horizon is " << T << " periods" << std::endl;
   std::cout << "running time of C++ in parallel with " << thread_num << " threads is " << duration2
-            << std::endl;
+      << std::endl;
   std::cout << "Final optimal value is: " << model.value[0][initialState] << std::endl;
   const auto optQ = model.policy[0][initialState];
   std::cout << "Optimal Q is: " << optQ << std::endl;
