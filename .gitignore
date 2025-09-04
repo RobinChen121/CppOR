@@ -7,3 +7,5 @@ stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/heur
 stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/newsvendor.cpp.obj
 *.obj
 stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj
+*.obj
+*.pdb
