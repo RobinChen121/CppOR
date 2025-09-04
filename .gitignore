@@ -83,3 +83,4 @@ DerivedData/
 # -----------------------
 .DS_Store
 Thumbs.db
+*.json
