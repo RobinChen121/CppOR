@@ -1,11 +1,85 @@
-*.json
+# -----------------------
+# C++ build artifacts
+# -----------------------
+*.obj
+*.o
+*.lo
+*.la
+*.al
+*.libs
+*.dll
+*.so
+*.so.*
+*.dylib
 *.exe
-*.json
-*.json
-*.obj
-stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj
-stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/newsvendor.cpp.obj
-*.obj
-stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj
-*.obj
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# -----------------------
+# Debug / Release files
+# -----------------------
 *.pdb
+*.idb
+*.ilk
+*.dbg
+*.dSYM/
+*.su
+*.ncb
+*.sdf
+*.opendb
+*.VC.db
+
+# -----------------------
+# Static / Dynamic libs
+# -----------------------
+*.lib
+*.a
+*.la
+*.lo
+
+# -----------------------
+# Build folders
+# -----------------------
+/build/
+/bin/
+/lib/
+/dist/
+/Debug/
+/Release/
+/out/
+
+# -----------------------
+# IDE / Editor files
+# -----------------------
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# CLion / JetBrains
+.idea/
+
+# Visual Studio
+*.sln.docstates
+*.user
+*.userosscache
+*.suo
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Xcode
+*.xcworkspace
+*.xcuserstate
+*.xcuserdata/
+DerivedData/
+
+# -----------------------
+# OS files
+# -----------------------
+.DS_Store
+Thumbs.db
