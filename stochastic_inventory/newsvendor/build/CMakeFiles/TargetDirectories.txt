@@ -1,3 +1,0 @@
-/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/build/CMakeFiles/newsvendor.dir
-/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/build/CMakeFiles/ALL_BUILD.dir
-/Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/newsvendor/build/CMakeFiles/ZERO_CHECK.dir

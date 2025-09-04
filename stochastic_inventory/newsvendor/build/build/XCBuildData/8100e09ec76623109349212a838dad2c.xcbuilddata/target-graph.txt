@@ -1,4 +1,0 @@
-Target dependency graph (2 targets)
-Target 'newsvendor' in project 'newsvendor'
-➜ Explicit dependency on target 'ZERO_CHECK' in project 'newsvendor'
-Target 'ZERO_CHECK' in project 'newsvendor' (no dependencies)
