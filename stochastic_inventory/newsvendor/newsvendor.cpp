@@ -7,21 +7,22 @@
  * Final optimal value is: 1359.28
  * running time of C++ in parallel is 1.01151s (8 threads, mac)
  *
- * planning horizon 70 periods, capacity 100, parallel computing time is 1.3s (mac), 1.9s(dell)
+ * planning horizon 70 periods, capacity 100, parallel computing time is 1.3s (mac), 1.9s(dell),
+ * 3.47s for normal distribution.
  * serial is 9.47s (dell)
  *
  */
 
 #include "newsvendor.h"
 #include "../../utils/pmf.h"
+#include <algorithm> // std::max
 #include <array>
+#include <chrono>
+#include <iostream>
 #include <limits>
 #include <map>
 #include <mutex>
 #include <thread>
-#include <chrono>
-#include <iostream>
-#include <algorithm>  // std::max
 
 NewsvendorDP::NewsvendorDP(const size_t T, const int capacity, const double stepSize,
                            const double fixOrderCost, const double unitVariOrderCost,
@@ -212,7 +213,7 @@ std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
     return arr;
   }
   for (size_t t = 0; t < policy.size(); ++t) {
-    std::map<State, int> ordered_cache_actions(policy[t].begin(), policy[t].end());
+    std::map ordered_cache_actions(policy[t].begin(), policy[t].end());
     // 把无序 cache_actions 里的所有元素拷贝到有序容器 ordered_cache_actions
     for (const auto &[fst, snd] : ordered_cache_actions) {
       if (fst.getPeriod() == t + 1) {
@@ -229,21 +230,28 @@ std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
 }
 
 int main() {
-  std::vector<double> demands(40, 20);
-  const std::string distribution_type = "poisson";
+  // 22.4775
+  constexpr double mean_demand = 20;
+  constexpr int T = 100;
+  std::vector<double> demands(T, mean_demand);
   constexpr int capacity = 100; // maximum ordering quantity
   constexpr double stepSize = 1.0;
-  constexpr double fixOrderCost = 100;
+  constexpr double fixOrderCost = 80;
   constexpr double unitVariOderCost = 0;
   constexpr double unitHoldCost = 1;
-  constexpr double unitPenaltyCost = 10;
+  constexpr double unitPenaltyCost = 5;
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
   constexpr double maxI = 500;             // maximum possible inventory
   constexpr double minI = -300;            // minimum possible inventory
-  constexpr bool parallel  = true;
+  constexpr bool parallel = true;
 
-  const auto pmf = PMF(truncQuantile, stepSize, distribution_type).getPMFPoisson(demands);
-  const size_t T = demands.size();
+  // const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
+  std::vector<double> sigma(demands.size());
+  for (int i = 0; i < demands.size(); ++i) {
+    sigma[i] = 0.4 * demands[i];
+  }
+  const auto pmf = PMF(truncQuantile, stepSize).getPMFNormal(demands, sigma);
+
   const State initialState(1, 0);
   auto model = NewsvendorDP(T, capacity, stepSize, fixOrderCost, unitVariOderCost, unitHoldCost,
                             unitPenaltyCost, truncQuantile, maxI, minI, pmf);

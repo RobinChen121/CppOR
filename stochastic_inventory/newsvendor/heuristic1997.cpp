@@ -19,9 +19,8 @@ class InfiniteStationary {
   std::vector<double> M;     // M[j]
   std::vector<double> probs; // 概率序列
   std::vector<double> G;     // G[y]
-  int mean_demand;
+  std::vector<double> demands;
   int max_demand;
-  double m0; // m(0) 初值
   double M0; // M(0) 初值
   double h;
   double pi;
@@ -29,32 +28,23 @@ class InfiniteStationary {
 
 public:
   // 构造函数
-  explicit InfiniteStationary(const int mean_demand, const int max_demand, const double h,
+  explicit InfiniteStationary(const std::vector<double>& probs, const std::vector<double>& demands, const int max_demand, const double h,
                               const double pi, const double K)
-      : mean_demand(mean_demand), max_demand(max_demand), h(h), pi(pi), K(K) {
-    compute_probs();
+      : probs(probs), demands(demands), max_demand(max_demand), h(h), pi(pi), K(K) {
 
-    m0 = 1.0 / (1.0 - probs[0]); // m(0) = 1/(1-p0)
     M0 = 0.0;                    // M(0) = 0
 
-    // 初始化数组为 NAN，表示未计算
     m.resize(max_demand, NAN);
     M.resize(max_demand, NAN);
     G.resize(max_demand, NAN);
   }
 
-  void compute_probs() {
-    probs.resize(max_demand);
-    for (int i = 0; i < max_demand; i++) {
-      probs[i] = PMF::poissonPMF(i, mean_demand);
-    }
-  }
-
-  std::array<int, 2> compute_sS() {
+  std::array<int, 2> computeSinglesS(const double mean_demand) {
     const double critical_ratio = pi / (pi + h);
     const int y_star = PMF::poissonQuantile(critical_ratio, mean_demand);
     int S0 = y_star;
     int s;
+    // 首先算出 y* 对应的 s, 这个 s 是 s* 的下界
     for (s = y_star; s >= 0; s--) {
       if (compute_c(s, S0) <= compute_G(s))
         break;
@@ -63,16 +53,20 @@ public:
     auto c0 = compute_c(s0, S0);
     auto S = S0 + 1;
     while (compute_G(S) <= c0) {
-      if (compute_c(s, S) < c0) {
+      // G(S*) 一定小于等于 c0
+      if (compute_c(s, S) < c0) { // 此时更新 S，因为成本在改善
         S0 = S;
+        // 计算更新后 S 对应的 s
         while (compute_c(s, S0) <= compute_G(s + 1)) {
           s += 1;
-          c0 = compute_c(s, S0);
         }
+        c0 = compute_c(s, S0);
         S = S + 1;
       }
-      else
+      else{
+        S--;
         break;
+    }
     }
     return {s, S};
   }
@@ -109,6 +103,7 @@ public:
   }
 
   // 按需计算 m[j]
+  // 有问题
   // NOLINTNEXTLINE(misc-no-recursion)
   double compute_m(const int j) {
     if (j < m.size() && !std::isnan(m[j]))
@@ -118,7 +113,7 @@ public:
       m.resize(j + 1, NAN);
 
     if (j == 0) {
-      m[0] = m0;
+      m[0] =  1.0 / (1.0 - probs[0]); // m(0) = 1/(1-p0);
       return m[0];
     }
 
@@ -134,19 +129,19 @@ public:
   // 按需计算 M[j]
   // NOLINTNEXTLINE(misc-no-recursion)
   double compute_M(const int j) {
-    if (j < M.size() && !std::isnan(M[j]))
-      return M[j];
-
-    if (j >= M.size())
-      M.resize(j + 1, NAN);
-
-    if (j == 0) {
-      M[0] = M0;
-      return M[0];
+    M.resize(j + 1, NAN);
+    M[j] = 0.0;
+    if (j > 1) {
+      for (int i = 0; i < j; i++)
+        M[j] += compute_m(i);
     }
-
-    M[j] = compute_M(j - 1) + compute_m(j - 1);
     return M[j];
+  }
+
+  std::array<double, 2> computesS() {
+    size_t T = demands.size();
+    size_t sS(T);
+    return {};
   }
 
   // 可选：打印前 N 个值
@@ -160,23 +155,30 @@ public:
 
 int main() {
   // optimal s, S should be 15, 66
-  constexpr int max_demand = 150;
+  constexpr int max_demand = 50;
   constexpr double h = 1;
-  constexpr double pi = 10;
-  constexpr double K = 100;
-  constexpr int mean_demand = 20;
-  std::vector<double> probs(max_demand, 0.0);
+  constexpr double pi = 9;
+  constexpr double K = 64;
+  constexpr int mean_demand = 15;
+  constexpr double rho = 0.4;
+  constexpr double truncate_quantile = 0.9999;
+  std::vector<double> probs(max_demand);
   for (int i = 0; i < max_demand; i++) {
     probs[i] = PMF::poissonPMF(i, mean_demand);
+    // probs[i] = PMF::normalPMF(i, mean_demand, rho*mean_demand, truncate_quantile);
   }
 
-  InfiniteStationary problem(mean_demand, max_demand, h, pi, K);
-  const auto sS = problem.compute_sS();
+  constexpr int T = 10;
+  const std:: vector<double> demands(T, mean_demand);
 
+  InfiniteStationary problem(probs, demands, max_demand, h, pi, K);
+  const auto sS = problem.computeSinglesS(demands[0]);
+
+  std::cout << "c* is: " << problem.compute_c(sS[0], sS[1]) << std::endl;
   std::cout << "The values of sS are: " << std::endl;
   std::cout << "s is " << sS[0] << ", S is " << sS[1] << std::endl;
   std::cout << "M(S-s) is " << std::endl;
-  std::cout << problem.compute_M(sS[1] - sS[0]) << std::endl;
+  std::cout << problem.compute_M(sS[1] - sS[0]-1) << std::endl;
 
   return 0;
 }

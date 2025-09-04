@@ -9,12 +9,11 @@
 #include <cmath>
 // #include <csignal>
 #include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
-#include <iostream>
+#include <boost/math/distributions/normal.hpp>
 
 // initializing the class
-PMF::PMF(const double truncatedQuantile, const double stepSize, std::string distributionName)
-    : truncatedQuantile(truncatedQuantile), stepSize(stepSize),
-      distributionName(std::move(distributionName)) {
+PMF::PMF(const double truncatedQuantile, const double stepSize)
+    : truncatedQuantile(truncatedQuantile), stepSize(stepSize) {
   // checkName();
 } // std::move for efficiency passing in string and vector
 
@@ -36,6 +35,14 @@ double PMF::poissonPMF(const int k, const int lambda) {
     return 1.0;
   return (std::pow(lambda, k) * std::exp(-lambda)) / std::tgamma(k + 1);
   // tgamma(k+1) is a gamma function, 等同于factorial(k)
+}
+
+// get the probability mass function value of Poisson
+double PMF::normalPMF(const int k, const double mean, const double sigma,
+                      const double truncate_quantile) {
+  const auto dist = boost::math::normal_distribution<>(mean, sigma);
+  const double pmf = cdf(dist, k + 0.5) - cdf(dist, k - 0.5);
+  return pmf / (2 * truncate_quantile - 1);
 }
 
 // get cumulative distribution function value of Poisson
@@ -92,7 +99,37 @@ PMF::getPMFPoisson(const std::span<const double> demands) const {
       pmf[t][j] = std::vector<double>(2);
       pmf[t][j][0] = supportLB[t] + j * stepSize;
       const int demand = static_cast<int>(pmf[t][j][0]);
-      pmf[t][j][1] = poissonPMF(demand, demands[t]) / (2 * truncatedQuantile - 1);
+      pmf[t][j][1] = poissonPMF(demand, static_cast<int>(demands[t])) / (2 * truncatedQuantile - 1);
+    }
+  }
+  return pmf;
+}
+
+// get probability mass function values for each period of Normal distribution
+std::vector<std::vector<std::vector<double>>>
+PMF::getPMFNormal(const std::span<const double> mean, const std::span<const double> sigma) const {
+  const size_t T = mean.size();
+
+  std::vector<boost::math::normal_distribution<double>> normals(T);
+  std::vector<double> supportLB(T);
+  std::vector<double> supportUB(T);
+  for (size_t t = 0; t < T; ++t) {
+    // emplace_back在容器末尾直接构造对象，无需先创建临时对象
+    // push_back 把一个已经存在的对象 拷贝或移动 到容器末尾
+    normals[t] = boost::math::normal_distribution<>(mean[t], sigma[t]);
+    supportUB[t] = quantile(normals[t], truncatedQuantile);
+    supportLB[t] = quantile(normals[t], 1 - truncatedQuantile);
+  }
+  std::vector pmf(T, std::vector<std::vector<double>>());
+  for (int t = 0; t < T; ++t) {
+    const int demandLength = static_cast<int>((supportUB[t] - supportLB[t] + 1) / stepSize);
+    pmf[t] = std::vector(demandLength, std::vector<double>());
+    for (int j = 0; j < demandLength; ++j) {
+      pmf[t][j] = std::vector<double>(2);
+      pmf[t][j][0] = static_cast<int>(supportLB[t] + j * stepSize);
+      const auto demand = pmf[t][j][0];
+      pmf[t][j][1] = (cdf(normals[t], demand + 0.5) - cdf(normals[t], demand - 0.5)) /
+                     (2 * truncatedQuantile - 1);
     }
   }
   return pmf;
