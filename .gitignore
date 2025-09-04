@@ -84,3 +84,4 @@ DerivedData/
 .DS_Store
 Thumbs.db
 *.json
+stochastic_inventory/newsvendor/cmake-build-debug/.ninja_deps

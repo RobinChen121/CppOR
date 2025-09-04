@@ -17,6 +17,15 @@
 //The directory containing a CMake configuration file for Boost.
 Boost_DIR:PATH=C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0
 
+Boost_FILESYSTEM_LIBRARY_RELEASE:STRING=C:/ProgramData/anaconda3/Library/lib/libboost_filesystem.lib
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=C:/ProgramData/anaconda3/Library/include
+
+Boost_SYSTEM_LIBRARY_RELEASE:STRING=C:/ProgramData/anaconda3/Library/lib/libboost_system.lib
+
+Boost_THREAD_LIBRARY_RELEASE:STRING=C:/ProgramData/anaconda3/Library/lib/libboost_thread.lib
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
 
@@ -234,6 +243,8 @@ newsvendor_SOURCE_DIR:STATIC=D:/chenzhen/CppOR/stochastic_inventory/newsvendor
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: Boost_DIR
+Boost_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
@@ -372,6 +383,8 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding Boost
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[C:/ProgramData/anaconda3/Library/lib/cmake/Boost-1.82.0/BoostConfig.cmake][cfound components: system thread filesystem ][v1.82.0()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: boost_atomic_DIR
