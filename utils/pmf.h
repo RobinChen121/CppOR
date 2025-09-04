@@ -17,13 +17,14 @@ class PMF {
 
 public:
   PMF() = default;
-  PMF(double truncatedQuantile, double stepSize, std::string distributionName);
+  PMF(double truncatedQuantile, double stepSize);
 
   // std::string getName();
 
   // void checkName() const;
 
   static double poissonPMF(int k, int lambda);
+  static double normalPMF(int k, double mean, double sigma, double truncate_quantile);
 
   // span 本身就是引用传递
   // 普通值参数前面没必要加 const
@@ -35,6 +36,9 @@ public:
 
   [[nodiscard]] std::vector<std::vector<std::vector<double>>>
   getPMFPoisson(std::span<const double> demands) const;
+
+  [[nodiscard]] std::vector<std::vector<std::vector<double>>>
+  getPMFNormal(std::span<const double> mean, std::span<const double> sigma) const;
 
   // 函数声明为 static 表示不需要对象初始化就能调用该函数, 不能与 函数的const 同时用
   [[nodiscard]] static std::vector<std::vector<std::vector<double>>>

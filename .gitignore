@@ -2,3 +2,8 @@
 *.exe
 *.json
 *.json
+*.obj
+stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/heuristic1997.cpp.obj
+stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/newsvendor.cpp.obj
+*.obj
+stochastic_inventory/newsvendor/cmake-build-debug/CMakeFiles/newsvendor.dir/D_/chenzhen/CppOR/utils/pmf.cpp.obj
