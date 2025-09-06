@@ -20,14 +20,16 @@ else ()
 endif ()
 
 
+
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         ../../utils/pmf.cpp
         ../states/State.cpp
 
         heuristic1997.cpp
-        #        newsvendor.cpp
+#                newsvendor.cpp
 )
+
 
 #-----------------------------------
 # Boost

@@ -86,3 +86,12 @@ Thumbs.db
 *.json
 stochastic_inventory/newsvendor/cmake-build-debug/.ninja_deps
 *.bin
+*.cmake
+*.ddi
+*.ninja
+*.modmap
+*.manifest
+*.dd
+*.ninja
+*.rc
+*.res
