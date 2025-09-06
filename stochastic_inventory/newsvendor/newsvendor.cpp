@@ -231,16 +231,15 @@ std::vector<std::array<int, 2> > NewsvendorDP::findsS(bool parallel) const {
 }
 
 int main() {
-  // 22.4775
-  constexpr double mean_demand = 20;
-  constexpr int T = 70;
+  constexpr double mean_demand = 70;
+  constexpr int T = 100;
   std::vector<double> demands(T, mean_demand);
   constexpr int capacity = 100; // maximum ordering quantity
   constexpr double stepSize = 1.0;
-  constexpr double fixOrderCost = 80;
+  constexpr double fixOrderCost = 64;
   constexpr double unitVariOderCost = 0;
   constexpr double unitHoldCost = 1;
-  constexpr double unitPenaltyCost = 5;
+  constexpr double unitPenaltyCost = 9;
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
   constexpr double maxI = 500; // maximum possible inventory
   constexpr double minI = -300; // minimum possible inventory
@@ -251,7 +250,7 @@ int main() {
   for (int i = 0; i < demands.size(); ++i) {
     sigma[i] = 0.4 * demands[i];
   }
-  const auto pmf = PMF(truncQuantile, stepSize).getPMFNormal(demands, sigma);
+  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
 
   const State initialState(1, 0);
   auto model = NewsvendorDP(T, capacity, stepSize, fixOrderCost, unitVariOderCost, unitHoldCost,

@@ -111,15 +111,18 @@ PMF::getPMFNormal(const std::span<const double> mean, const std::span<const doub
   const size_t T = mean.size();
 
   std::vector<boost::math::normal_distribution<double> > normals(T);
-  std::vector<double> supportLB(T);
-  std::vector<double> supportUB(T);
+  std::vector<int> supportLB(T);
+  std::vector<int> supportUB(T);
+  std::vector<double> zero_quantile(T);
   for (size_t t = 0; t < T; ++t) {
     // emplace_back在容器末尾直接构造对象，无需先创建临时对象
     // push_back 把一个已经存在的对象 拷贝或移动 到容器末尾
     normals[t] = boost::math::normal_distribution<>(mean[t], sigma[t]);
-    supportUB[t] = quantile(normals[t], truncatedQuantile);
-    supportLB[t] = quantile(normals[t], 1 - truncatedQuantile);
+    supportUB[t] = static_cast<int>(quantile(normals[t], truncatedQuantile));
+    supportLB[t] = 0; //static_cast<int>(quantile(normals[t], 1 - truncatedQuantile));
+    zero_quantile[t] = cdf(normals[t], 0.0);
   }
+
   std::vector pmf(T, std::vector<std::vector<double> >());
   for (int t = 0; t < T; ++t) {
     const int demandLength = static_cast<int>((supportUB[t] - supportLB[t] + 1) / stepSize);
@@ -129,7 +132,7 @@ PMF::getPMFNormal(const std::span<const double> mean, const std::span<const doub
       pmf[t][j][0] = static_cast<int>(supportLB[t] + j * stepSize);
       const auto demand = pmf[t][j][0];
       pmf[t][j][1] = (cdf(normals[t], demand + 0.5) - cdf(normals[t], demand - 0.5)) /
-                     (2 * truncatedQuantile - 1);
+                     (truncatedQuantile - zero_quantile[t]);
     }
   }
   return pmf;
