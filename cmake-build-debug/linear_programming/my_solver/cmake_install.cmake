@@ -1,4 +1,4 @@
-# Install script for directory: /Users/zhenchen/CLionProjects/CppOR/linear_programming/my_solver
+# Install script for directory: /Users/zhenchen/CLionProjects/CppOR/linear_programming/chen_solver
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

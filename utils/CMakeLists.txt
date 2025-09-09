@@ -4,8 +4,8 @@ set(RUN_NAME utils) # 设置运行程序的名字
 add_executable(${RUN_NAME}
         #        gurobi_test.cpp
         pmf.cpp
-        #        my_solver/Var.cpp
-        #        my_solver/Model.cpp
+        #        chen_solver/Var.cpp
+        #        chen_solver/Model.cpp
 )
 
 ## boost setting

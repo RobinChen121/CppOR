@@ -1,0 +1,8 @@
+# ninja log v6
+4	121	7791529133486233	build.ninja	388e233d20c00a9c
+1	122	7791529133758611	CMakeFiles/chen_solver.dir/simplex.cpp.obj.ddi	1ce5fe9327bc1613
+122	153	7791529135241597	CMakeFiles/chen_solver.dir/CXX.dd	51370876d9339989
+122	153	7791529135241597	D:/chenzhen/CppOR/linear_programming/chen_solver/cmake-build-debug/CMakeFiles/chen_solver.dir/CXXModules.json	51370876d9339989
+122	153	7791529135241597	CMakeFiles/chen_solver.dir/simplex.cpp.obj.modmap	51370876d9339989
+154	992	7791529135282413	CMakeFiles/chen_solver.dir/simplex.cpp.obj	6646e228cba89ac3
+992	1126	7791529143668598	chen_solver.exe	51987b4a58b33ca5
