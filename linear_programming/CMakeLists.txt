@@ -2,7 +2,6 @@ set(RUN_NAME LP) # 设置运行程序的名字
 
 add_subdirectory(sddp_overdraft)
 add_subdirectory(gurobi_examples)
-add_subdirectory(my_solver)
 
 set(CMAKE_BUILD_TYPE Release)
 if (MSVC)
@@ -14,8 +13,8 @@ endif ()
 add_executable(${RUN_NAME}
         gurobi_test.cpp
         #        gurobi_examples/mip1_c++.cpp
-        #        my_solver/Var.cpp
-        #        my_solver/Model.cpp
+        #        chen_solver/Var.cpp
+        #        chen_solver/Model.cpp
 )
 
 ### 设置 Gurobi 路径（根据你的安装调整）

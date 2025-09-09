@@ -95,3 +95,7 @@ stochastic_inventory/newsvendor/cmake-build-debug/.ninja_deps
 *.ninja
 *.rc
 *.res
+*.cmake
+*.check_cache
+*.yaml
+*.log
