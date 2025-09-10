@@ -17,7 +17,7 @@ constexpr double M = 10000;
 // Bland 必须同时应用到换入和换出
 int Simplex::findPivotColumn() const {
   int pivotCol = -1;
-  for (int j = 0; j < col_num - 1; j++) {
+  for (int j = 0; j < var_num - 1; j++) {
     // 从索引 0 开始检查
     if (tableau[0][j] < 0) {
       if (pivotCol == -1 || j < pivotCol) {
@@ -32,10 +32,10 @@ int Simplex::findPivotColumn() const {
 int Simplex::findPivotRow(const int pivotCol) const {
   int pivotRow = -1;
   double minRatio = std::numeric_limits<double>::max();
-  for (int i = 1; i < row_num; i++) {
+  for (int i = 1; i < con_num; i++) {
     if (tableau[i][pivotCol] > 1e-6) {
       // 避免数值误差
-      const double ratio = tableau[i][col_num - 1] / tableau[i][pivotCol];
+      const double ratio = tableau[i][var_num - 1] / tableau[i][pivotCol];
       if (ratio < minRatio) {
         // 严格小于，确保唯一性
         minRatio = ratio;
@@ -53,13 +53,13 @@ int Simplex::findPivotRow(const int pivotCol) const {
 
 void Simplex::pivot(const int pivotRow, int pivotCol) {
   const double pivotValue = tableau[pivotRow][pivotCol];
-  for (int j = 0; j < col_num; j++) {
+  for (int j = 0; j < var_num; j++) {
     tableau[pivotRow][j] /= pivotValue;
   }
-  for (int i = 0; i < row_num; i++) {
+  for (int i = 0; i < con_num; i++) {
     if (i != pivotRow) {
       const double factor = tableau[i][pivotCol];
-      for (int j = 0; j < col_num; j++) {
+      for (int j = 0; j < var_num; j++) {
         tableau[i][j] -= factor * tableau[pivotRow][j];
       }
     }
@@ -70,8 +70,8 @@ void Simplex::pivot(const int pivotRow, int pivotCol) {
 
 Simplex::Simplex(const std::vector<std::vector<double>> &initialTableau) {
   tableau = initialTableau;
-  row_num = static_cast<int>(tableau.size());
-  col_num = static_cast<int>(tableau[0].size());
+  con_num = static_cast<int>(tableau.size());
+  var_num = static_cast<int>(tableau[0].size());
   initializeBasicVariables(); // 初始化基变量
 }
 
@@ -93,17 +93,17 @@ void Simplex::solve() {
 }
 
 // 判断某列是否为基变量，并返回对应的行（如果不是基变量，返回 -1）
-int Simplex::isBasicVariable(const int col_num) const {
+int Simplex::isBasicVariable(const int var_num) const {
   int basicRow = -1;
-  for (int i = 1; i < row_num; i++) {
-    if (abs(tableau[i][col_num] - 1.0) < 1e-6) {
+  for (int i = 1; i < con_num; i++) {
+    if (abs(tableau[i][var_num] - 1.0) < 1e-6) {
       // 检查是否为 1
       if (basicRow == -1) {
         basicRow = i;
       } else {
         return -1; // 出现多个 1，非基变量
       }
-    } else if (abs(tableau[i][col_num]) > 1e-6) {
+    } else if (abs(tableau[i][var_num]) > 1e-6) {
       // 检查是否有非 0 值
       return -1; // 非 0 非 1，非基变量
     }
@@ -112,13 +112,13 @@ int Simplex::isBasicVariable(const int col_num) const {
 }
 
 void Simplex::displaySolution() const {
-  std::cout << "最优值: " << -tableau[0][col_num - 1] << std::endl;
+  std::cout << "最优值: " << -tableau[0][var_num - 1] << std::endl;
   std::cout << "最终基变量及其值:\n";
   for (int i = 0; i < basicVars.size(); i++) {
-    const int col_num = basicVars[i];
-    std::cout << "x" << (col_num + 1) << " = " << tableau[i + 1][col_num - 1] << std::endl;
+    const int var_num = basicVars[i];
+    std::cout << "x" << (var_num + 1) << " = " << tableau[i + 1][var_num - 1] << std::endl;
   }
-  for (int j = 0; j < col_num - 1; j++) {
+  for (int j = 0; j < var_num - 1; j++) {
     if (find(basicVars.begin(), basicVars.end(), j) == basicVars.end()) {
       std::cout << "x" << (j + 1) << " = 0" << std::endl;
     }
@@ -127,9 +127,9 @@ void Simplex::displaySolution() const {
 
 // 初始化基变量
 void Simplex::initializeBasicVariables() {
-  basicVars.resize(row_num - 1, -1);
-  for (int i = 1; i < row_num; i++) {
-    for (int j = 0; j < col_num - 1; j++) {
+  basicVars.resize(con_num - 1, -1);
+  for (int i = 1; i < con_num; i++) {
+    for (int j = 0; j < var_num - 1; j++) {
       if (isBasicVariable(j) == i) {
         basicVars[i - 1] = j;
         break;
@@ -140,14 +140,14 @@ void Simplex::initializeBasicVariables() {
 
 // 初始化目标函数（消除人工变量的M项）
 void Simplex::initializeObjective() {
-  for (int j = 0; j < col_num - 1; j++) {
+  for (int j = 0; j < var_num - 1; j++) {
     if (tableau[0][j] == -M) {
       // 识别人工变量列
-      for (int i = 1; i < row_num; i++) {
+      for (int i = 1; i < con_num; i++) {
         if (tableau[i][j] == 1) {
           // 该人工变量是基变量
           constexpr double factor = M;
-          for (int k = 0; k < col_num; k++) {
+          for (int k = 0; k < var_num; k++) {
             // 大M 法第一行通过行变换将人工变量的系数转化为0
             tableau[0][k] += factor * tableau[i][k];
           }
@@ -159,8 +159,8 @@ void Simplex::initializeObjective() {
 
 void Simplex::displayTableau() const {
   std::cout << "当前单纯形表:\n";
-  for (int i = 0; i < row_num; i++) {
-    for (int j = 0; j < col_num; j++) {
+  for (int i = 0; i < con_num; i++) {
+    for (int j = 0; j < var_num; j++) {
       std::cout << std::setw(8) << std::fixed << std::setprecision(2) << tableau[i][j];
     }
     std::cout << std::endl;
@@ -173,21 +173,42 @@ void Simplex::displayTableau() const {
 }
 
 void Simplex::standardize() {
-  const size_t n = var_sign.size();
-  const size_t m = con_lhs.size();
-  for (size_t i = 0; i < n; i++) {
+
+  for (size_t i = 0; i < var_num; i++) {
     switch (var_sign[i]) {
     case 1: // <= 0
       obj_coe[i] = -obj_coe[i];
-      for (int j = 0; j < m; j++)
+      for (int j = 0; j < con_num; j++)
         con_lhs[j][i] = -con_lhs[j][i];
       break;
-    case 2: // = 0
-      auto it = obj_coe.begin();
-      std::advance(it, i); // 免去对 i 的类型转换
-      obj_coe.insert(it, -obj_coe[i]);
-      for (int j = 0; j < m; j++)
-        con_lhs[j].insert(it, -con_lhs[j][i]);
+    case 2: {
+      // unsigned
+      auto it1 = obj_coe.begin();
+      std::advance(it1, i); // 免去对 i 的类型转换
+      obj_coe.insert(it1, -obj_coe[i]);
+      for (int j = 0; j < con_num; j++) {
+        auto it2 = con_lhs[j].begin();
+        std::advance(it2, i); // 免去对 i 的类型转换
+        con_lhs[j].insert(it2, -con_lhs[j][i]);
+      }
+      var_num++;
+      break;
+    }
+    default:
+      break;
+    }
+  }
+
+  if (obj_sense != 0)
+    for (size_t i = 0; i < var_num; i++) {
+      obj_coe[i] = -obj_coe[i];
+    }
+
+  for (size_t j = 0; j < con_num; j++) {
+    switch (con_sense[j]) {
+    case 0: // >= 0
+
+      break;
     default:
       break;
     }
