@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/8.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -27,14 +27,15 @@ private:
   std::vector<int> var_sign;  // 0: >=, 1: <=, 2: unsigned
 
   std::vector<std::vector<double>> tableau; // 单纯形表
-  int row_num{}, col_num{};
+  int con_num{};                            // number of constraints
+  int var_num{};
   std::vector<int> basicVars;
 
   // 找到主列（进入变量）
-  int findPivotColumn() const;
+  [[nodiscard]] int findPivotColumn() const;
 
   // 找到主行（离开变量）
-  int findPivotRow(int pivotCol) const;
+  [[nodiscard]] int findPivotRow(int pivotCol) const;
 
   // 行变换
   void pivot(int pivotRow, int pivotCol);
@@ -54,7 +55,7 @@ public:
 
   void solve();
 
-  int isBasicVariable(int col) const;
+  [[nodiscard]] int isBasicVariable(int col) const;
 
   void displaySolution() const;
 

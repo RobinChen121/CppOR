@@ -99,3 +99,5 @@ stochastic_inventory/newsvendor/cmake-build-debug/.ninja_deps
 *.check_cache
 *.yaml
 *.log
+linear_programming/chen_solver/cmake-build-debug/CMakeFiles/clion-Debug-log.txt
+linear_programming/chen_solver/cmake-build-release/CMakeFiles/clion-Release-log.txt
