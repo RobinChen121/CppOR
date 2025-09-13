@@ -207,7 +207,10 @@ void Simplex::standardize() {
   for (size_t j = 0; j < con_num; j++) {
     switch (con_sense[j]) {
     case 0: // >= 0
-
+      auto it2 = con_lhs[j].begin();
+      std::advance(it2, con_lhs[j].size() - 1); // 免去对 i 的类型转换
+      con_lhs[j].insert(it2, -1);
+      con_lhs[j].insert(it2 + 1, 1);
       break;
     default:
       break;
