@@ -29,6 +29,8 @@ private:
   std::vector<std::vector<double>> tableau; // 单纯形表
   int con_num{};                            // number of constraints
   int var_num{};
+  std::vector<bool> con_has_slack; // whether the constraint has a slack variable
+  std::vector<bool> con_has_artificial;
   std::vector<int> basicVars;
 
   // 找到主列（进入变量）
