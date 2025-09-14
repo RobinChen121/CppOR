@@ -23,14 +23,15 @@ private:
   int obj_sense{}; // 0:min, 1: max
   std::vector<std::vector<double>> con_lhs;
   std::vector<double> con_rhs;
-  std::vector<int> con_sense; // 0:>=, 1: <=, 2: =
+  std::vector<int> con_sense; // 0:<=, 1: >=, 2: =
   std::vector<int> var_sign;  // 0: >=, 1: <=, 2: unsigned
 
   std::vector<std::vector<double>> tableau; // 单纯形表
   int con_num{};                            // number of constraints
   int var_num{};
-  std::vector<bool> con_has_slack; // whether the constraint has a slack variable
-  std::vector<bool> con_has_artificial;
+  std::vector<int> con_slack_coe; // the coefficient of the slack variable in the constraint
+  std::vector<int>
+      con_artificial_coe; // the coefficient of the artificial variable in the constraint
   std::vector<int> basicVars;
 
   // 找到主列（进入变量）
@@ -43,15 +44,19 @@ private:
   void pivot(int pivotRow, int pivotCol);
 
 public:
-  Simplex(const std::vector<double> &obj_coe, const std::vector<std::vector<double>> &con_lhs,
-          const std::vector<double> &con_rhs, const std::vector<int> &con_sense,
-          const std::vector<int> &var_sign)
-      : obj_coe(obj_coe), con_lhs(con_lhs), con_rhs(con_rhs), con_sense(con_sense),
-        var_sign(var_sign) {};
+  Simplex(const int obj_sense, const std::vector<double> &obj_coe,
+          const std::vector<std::vector<double>> &con_lhs, const std::vector<double> &con_rhs,
+          const std::vector<int> &con_sense, const std::vector<int> &var_sign)
+      : obj_coe(obj_coe), obj_sense(obj_sense), con_lhs(con_lhs), con_rhs(con_rhs),
+        con_sense(con_sense), var_sign(var_sign) {
+    con_num = static_cast<int>(con_lhs.size());
+    var_num = static_cast<int>(var_sign.size());
+  };
 
   explicit Simplex(const std::vector<std::vector<double>> &initialTableau);
 
   void standardize();
+  void print() const;
 
   void inputObjCoef() const;
 

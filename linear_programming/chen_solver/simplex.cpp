@@ -173,6 +173,11 @@ void Simplex::displayTableau() const {
 }
 
 void Simplex::standardize() {
+  // if objective is maximizing
+  if (obj_sense != 0)
+    for (size_t i = 0; i < var_num; i++) {
+      obj_coe[i] = -obj_coe[i];
+    }
 
   for (size_t i = 0; i < var_num; i++) {
     switch (var_sign[i]) {
@@ -199,23 +204,101 @@ void Simplex::standardize() {
     }
   }
 
-  if (obj_sense != 0)
-    for (size_t i = 0; i < var_num; i++) {
-      obj_coe[i] = -obj_coe[i];
+  for (size_t j = 0; j < con_num; j++) {
+    if (con_rhs[j] < 0) {
+      con_rhs[j] = -con_rhs[j];
+      for (auto &item : con_lhs[j]) {
+        item = -item; // 注意要用引用才能修改原数组
+      }
+      if (con_sense[j] != 0)
+        con_sense[j] = -con_sense[j];
     }
 
-  for (size_t j = 0; j < con_num; j++) {
     switch (con_sense[j]) {
-    case 0: // >= 0
-      auto it2 = con_lhs[j].begin();
-      std::advance(it2, con_lhs[j].size() - 1); // 免去对 i 的类型转换
-      con_lhs[j].insert(it2, -1);
-      con_lhs[j].insert(it2 + 1, 1);
+    case 0: // <= 0
+      con_slack_coe.push_back(1);
+      con_artificial_coe.push_back(0);
+      break;
+    case 1: // >= 0
+      con_slack_coe.push_back(-1);
+      con_artificial_coe.push_back(1);
       break;
     default:
+      con_slack_coe.push_back(0);
+      con_artificial_coe.push_back(1);
       break;
     }
+
+    con_sense[j] = 0;
   }
+
+  for (size_t i = 0; i < con_slack_coe.size(); i++) {
+    if (con_slack_coe[i] != 0) {
+      obj_coe.push_back(0);
+      for (size_t j = 0; j < con_num; j++) {
+        if (j == i)
+          con_lhs[j].push_back(con_slack_coe[i]);
+        else
+          con_lhs[j].push_back(0);
+      }
+    }
+  }
+
+  for (size_t i = 0; i < con_artificial_coe.size(); i++) {
+    if (con_artificial_coe[i] != 0) {
+      obj_coe.push_back(0);
+      for (size_t j = 0; j < con_num; j++) {
+        if (j == i)
+          con_lhs[j].push_back(con_artificial_coe[i]);
+        else
+          con_lhs[j].push_back(0);
+      }
+    }
+  }
+}
+
+void Simplex::print() const {
+  if (obj_sense == 0)
+    std::cout << "min    ";
+  else
+    std::cout << "max    ";
+  for (int i = 0; i < var_num; i++) {
+    std::cout << "x_" << (i + 1) << " ";
+    if (i != var_num - 1)
+      std::cout << "+ ";
+  }
+  std::cout << std::endl;
+  std::cout << "s.t." << std::endl;
+  for (int j = 0; j < con_num; j++) {
+    for (size_t i = 0; i < con_lhs[j].size(); i++) {
+      if (con_lhs[j][i] != 1)
+        std::cout << con_lhs[j][i];
+      std::cout << "x_" << (i + 1);
+      if (i != con_lhs[j].size() - 1 && con_lhs[j][i] > 0)
+        std::cout << " + ";
+    }
+    switch (con_sense[j]) {
+    case 0:
+      std::cout << " <= ";
+      break;
+    case 1:
+      std::cout << " >= ";
+      break;
+    default:
+      std::cout << " == ";
+      break;
+    }
+    std::cout << con_rhs[j] << std::endl;
+  }
+  for (int i = 0; i < var_num; i++) {
+    if (var_sign[i] == 0)
+      std::cout << "x_" << (i + 1) << " >= 0";
+    if (var_sign[i] == 1)
+      std::cout << "x_" << (i + 1) << " <= 0";
+    if (i != var_num - 1 && var_sign[i] != 2)
+      std::cout << ", ";
+  }
+  std::cout << std::endl;
 }
 
 int main() {
@@ -224,43 +307,54 @@ int main() {
   // 目标函数: max z = 2x1 + 3x2 转换为 z -2x1 - 3x2
   // 约束: 2x1 + x2 + s1 = 4
   //       x1 + 2x2 + s2 = 5
-  const std::vector<std::vector<double>> tableau = {
-      {-2, -3, 0, 0, 0}, // 目标函数 z -2x1 - 3x2
-      {2, 1, 1, 0, 4},   // 约束1
-      {1, 2, 0, 1, 5}    // 约束2
-  };
 
-  Simplex simplex(tableau);
-  simplex.solve();
-  std::cout << "****************************" << std::endl;
+  constexpr int obj_sense = 1;
+  const std::vector obj_coe = {2.0, 3.0};
+  const std::vector<std::vector<double>> con_lhs = {{2.0, 1.0}, {1.0, 2.0}};
+  const std::vector con_rhs = {4.0, 5.0};
+  const std::vector con_sense = {0, 0}; // 0:<=, 1: >=, 2: =
+  const std::vector var_sign = {0, 0};  // 0: >=, 1: <=, 2: unsigned
 
-  // 初始化单纯形表
-  //  目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + M*a1 + M*a2 + z = 0
-  //  约束: x1+x2 >= 2, i.e.,  x1 + x2 - s1 + a1 = 2
-  //       2x1+x2 = 4, i.e., 2x1 + x2 + a2 = 4
-  const std::vector<std::vector<double>> tableau2 = {
-      {-2, -3, 1, -M, -M, 0}, // 目标函数 (x1, x2, s1, a1, a2, z)
-      {1, 1, -1, 1, 0, 2},    // 约束1
-      {2, 1, 0, 0, 1, 4}      // 约束2
-  };
-  Simplex simplex2(tableau2);
-  simplex2.solve();
+  const auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, con_sense, var_sign);
+  model.print();
 
-  std::cout << "****************************" << std::endl;
-  // test recycling
-  // maximize z = (3/4)x1 -20x2 + (1/2)x3 -6x4 subject to
-  // (1 / 4)x1 - 8x2 - x3 + 9x4 <= 0
-  // (1 / 2)x1 - 12x2 - (1 / 2)x3 + 3x4 <= 0
-  // x3 <= 1
-  const std::vector<std::vector<double>> tableau3 = {
-      {-3.0 / 4, 20, -1.0 / 2, 6, 0, 0, 0, 0}, // 目标函数
-      {1.0 / 4, -8, -1, 9, 1, 0, 0, 0},        // 约束1
-      {1.0 / 2, -12, -1.0 / 2, 3, 0, 1, 0, 0}, // 约束2
-      {0, 0, 1, 0, 0, 0, 1, 1}                 // 约束3
-  };
+  // const std::vector<std::vector<double>> tableau = {
+  //     {-2, -3, 0, 0, 0}, // 目标函数 z -2x1 - 3x2
+  //     {2, 1, 1, 0, 4},   // 约束1
+  //     {1, 2, 0, 1, 5}    // 约束2
+  // };
+  //
+  // Simplex simplex(tableau);
+  // simplex.solve();
+  // std::cout << "****************************" << std::endl;
 
-  Simplex simplex3(tableau3);
-  simplex3.solve();
+  // // 初始化单纯形表
+  // //  目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + M*a1 + M*a2 + z = 0
+  // //  约束: x1+x2 >= 2, i.e.,  x1 + x2 - s1 + a1 = 2
+  // //       2x1+x2 = 4, i.e., 2x1 + x2 + a2 = 4
+  // const std::vector<std::vector<double>> tableau2 = {
+  //     {-2, -3, 1, -M, -M, 0}, // 目标函数 (x1, x2, s1, a1, a2, z)
+  //     {1, 1, -1, 1, 0, 2},    // 约束1
+  //     {2, 1, 0, 0, 1, 4}      // 约束2
+  // };
+  // Simplex simplex2(tableau2);
+  // simplex2.solve();
+  //
+  // std::cout << "****************************" << std::endl;
+  // // test recycling
+  // // maximize z = (3/4)x1 -20x2 + (1/2)x3 -6x4 subject to
+  // // (1 / 4)x1 - 8x2 - x3 + 9x4 <= 0
+  // // (1 / 2)x1 - 12x2 - (1 / 2)x3 + 3x4 <= 0
+  // // x3 <= 1
+  // const std::vector<std::vector<double>> tableau3 = {
+  //     {-3.0 / 4, 20, -1.0 / 2, 6, 0, 0, 0, 0}, // 目标函数
+  //     {1.0 / 4, -8, -1, 9, 1, 0, 0, 0},        // 约束1
+  //     {1.0 / 2, -12, -1.0 / 2, 3, 0, 1, 0, 0}, // 约束2
+  //     {0, 0, 1, 0, 0, 0, 1, 1}                 // 约束3
+  // };
+  //
+  // Simplex simplex3(tableau3);
+  // simplex3.solve();
 
   return 0;
 }
