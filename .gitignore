@@ -5,7 +5,6 @@
 *.o
 *.lo
 *.la
-*.al
 *.libs
 *.dll
 *.so
@@ -37,8 +36,6 @@
 # -----------------------
 *.lib
 *.a
-*.la
-*.lo
 
 # -----------------------
 # Build folders
@@ -50,6 +47,19 @@
 /Debug/
 /Release/
 /out/
+**/cmake-build-*/
+**/CMakeFiles/
+
+# -----------------------
+# CMake generated files
+# -----------------------
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+*.cmake
+*.ninja
+*.check_cache
 
 # -----------------------
 # IDE / Editor files
@@ -83,21 +93,21 @@ DerivedData/
 # -----------------------
 .DS_Store
 Thumbs.db
+
+# -----------------------
+# Misc
+# -----------------------
 *.json
-stochastic_inventory/newsvendor/cmake-build-debug/.ninja_deps
 *.bin
-*.cmake
 *.ddi
-*.ninja
 *.modmap
 *.manifest
-*.dd
-*.ninja
 *.rc
 *.res
-*.cmake
-*.check_cache
 *.yaml
 *.log
-linear_programming/chen_solver/cmake-build-debug/CMakeFiles/clion-Debug-log.txt
-linear_programming/chen_solver/cmake-build-release/CMakeFiles/clion-Release-log.txt
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo

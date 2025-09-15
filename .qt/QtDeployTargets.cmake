@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_CppClion_FILE /Users/zhenchen/CLionProjects/CppClion/CppClion)
-set(__QT_DEPLOY_TARGET_CppClion_TYPE EXECUTABLE)
