@@ -60,6 +60,7 @@ compile_commands.json
 *.cmake
 *.ninja
 *.check_cache
+*.make
 
 # -----------------------
 # IDE / Editor files
