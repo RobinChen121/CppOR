@@ -119,10 +119,7 @@ Thumbs.db
 *.ninja
 *.bin
 *.bin
-*.ninja
-cmake-build-debug/.ninja_deps
-cmake-build-debug/.ninja_log
-*.ninja
+*.ninja_deps
+*.ninja_log
 *.log
-*.log
-cmake-build-debug/.ninja_deps
+

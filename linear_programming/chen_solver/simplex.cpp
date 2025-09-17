@@ -192,6 +192,10 @@ void Simplex::standardize() {
       auto it1 = obj_coe.begin();
       std::advance(it1, i + 1); // 免去对 i 的类型转换
       obj_coe.insert(it1, -obj_coe[i]);
+      var_sign[i] = 0;
+      auto it3 = var_sign.begin();
+      std::advance(it3, i + 1); // 免去对 i 的类型转换
+      var_sign.insert(it3, 0);
       for (int j = 0; j < con_num; j++) {
         auto it2 = con_lhs[j].begin();
         std::advance(it2, i + 1); // 免去对 i 的类型转换
@@ -313,10 +317,24 @@ void Simplex::print() const {
     std::cout << con_rhs[j] << std::endl;
   }
   for (int i = 0; i < var_num; i++) {
+    if (var_sign[i] != 2 && i != 0)
+      std::cout << ", ";
     if (var_sign[i] == 0)
-      std::cout << "x_" << (i + 1) << " >= 0, ";
+      std::cout << "x_" << (i + 1) << " >= 0";
     if (var_sign[i] == 1)
-      std::cout << "x_" << (i + 1) << " <= 0, ";
+      std::cout << "x_" << (i + 1) << " <= 0";
+  }
+  for (size_t i = 0; i < con_slack_coe.size(); i++) {
+    if (con_slack_coe[i] != 0) {
+      std::cout << ", ";
+      std::cout << "s_" << (i + 1) << " >= 0";
+    }
+  }
+  for (size_t i = 0; i < con_artificial_coe.size(); i++) {
+    if (con_artificial_coe[i] != 0) {
+      std::cout << ", ";
+      std::cout << "a_" << (i + 1) << " >= 0";
+    }
   }
   std::cout << std::endl;
 }
