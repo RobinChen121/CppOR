@@ -1,4 +1,15 @@
 # ninja log v6
-4	963	1756752291097617694	CMakeFiles/CppClion.dir/main.cpp.o	20c720c74e89fe48
-8	1166	1756990627444878844	build.ninja	d12cca16dfa539e
+8	1166	7798433164435905	build.ninja	d12cca16dfa539e
 965	1036	1756752292058644182	CppClion	3adb0d9c0ca7fbfb
+23	216	7798433356384627	CMakeFiles/CppClion.dir/main.cpp.obj.ddi	f38fc4afbff0123f
+217	253	7798433358625134	CMakeFiles/CppClion.dir/CXX.dd	d7b2b557565d4584
+217	253	7798433358625134	D:/chenzhen/CppOR/cmake-build-debug/CMakeFiles/CppClion.dir/CXXModules.json	d7b2b557565d4584
+217	253	7798433358625134	CMakeFiles/CppClion.dir/main.cpp.obj.modmap	d7b2b557565d4584
+254	1054	7798433358681439	CMakeFiles/CppClion.dir/main.cpp.obj	ad6ba9464ed962b2
+1055	1445	7798433366697169	CppClion.exe	87e51150f8c9b3ab
+38	291	7798433498681412	CMakeFiles/CppClion.dir/main.cpp.obj.ddi	f38fc4afbff0123f
+291	347	7798433501213965	CMakeFiles/CppClion.dir/CXX.dd	d7b2b557565d4584
+291	347	7798433501213965	D:/chenzhen/CppOR/cmake-build-debug/CMakeFiles/CppClion.dir/CXXModules.json	d7b2b557565d4584
+291	347	7798433501213965	CMakeFiles/CppClion.dir/main.cpp.obj.modmap	d7b2b557565d4584
+347	1253	7798433501773002	CMakeFiles/CppClion.dir/main.cpp.obj	ad6ba9464ed962b2
+1253	1562	7798433510832617	CppClion.exe	87e51150f8c9b3ab

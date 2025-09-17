@@ -132,13 +132,13 @@ if (APPLE)
 else ()
     find_package(OpenMP REQUIRED)
     if (MSVC)
-        target_compile_options(${PROJECT_NAME} /openmp)
+        target_compile_options(${PROJECT_NAME} PRIVATE /openmp)
     else ()
         target_compile_options(${PROJECT_NAME} -fopenmp)
         target_link_options(${PROJECT_NAME} -fopenmp)
     endif ()
     if (OpenMP_CXX_FOUND)
-        target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+        target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
     endif ()
 endif ()
 
@@ -156,7 +156,7 @@ if (APPLE)
 elseif (MSVC)
     include_directories(C:/ProgramData/anaconda3/include/)
     include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
-    target_link_libraries(${PROJECT_NAME}
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             C:/ProgramData/anaconda3/libs/python312.lib
             C:/Users/Administrator/cpython/PCbuild/amd64/python312_d.lib
     )

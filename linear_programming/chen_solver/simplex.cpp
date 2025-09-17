@@ -179,6 +179,7 @@ void Simplex::standardize() {
       obj_coe[i] = -obj_coe[i];
     }
 
+  int unsigned_count = 0;
   for (size_t i = 0; i < var_num; i++) {
     switch (var_sign[i]) {
     case 1: // <= 0
@@ -189,20 +190,21 @@ void Simplex::standardize() {
     case 2: {
       // unsigned
       auto it1 = obj_coe.begin();
-      std::advance(it1, i); // 免去对 i 的类型转换
+      std::advance(it1, i + 1); // 免去对 i 的类型转换
       obj_coe.insert(it1, -obj_coe[i]);
       for (int j = 0; j < con_num; j++) {
         auto it2 = con_lhs[j].begin();
-        std::advance(it2, i); // 免去对 i 的类型转换
+        std::advance(it2, i + 1); // 免去对 i 的类型转换
         con_lhs[j].insert(it2, -con_lhs[j][i]);
       }
-      var_num++;
+      unsigned_count++;
       break;
     }
     default:
       break;
     }
   }
+  var_num += unsigned_count;
 
   for (size_t j = 0; j < con_num; j++) {
     if (con_rhs[j] < 0) {
@@ -229,7 +231,7 @@ void Simplex::standardize() {
       break;
     }
 
-    con_sense[j] = 0;
+    con_sense[j] = 2; // making all the constraints equal
   }
 
   for (size_t i = 0; i < con_slack_coe.size(); i++) {
@@ -263,19 +265,39 @@ void Simplex::print() const {
   else
     std::cout << "max    ";
   for (int i = 0; i < var_num; i++) {
+    std::cout << obj_coe[i];
     std::cout << "x_" << (i + 1) << " ";
-    if (i != var_num - 1)
+    if (i != var_num - 1 && obj_coe[i] >= 0)
       std::cout << "+ ";
+  }
+  for (size_t i = 0; i < con_slack_coe.size(); i++) {
+    if (con_slack_coe[i] != 0) {
+      std::cout << " + ";
+      std::cout << "0s_" << (i + 1) << " ";
+    }
+  }
+  for (size_t i = 0; i < con_artificial_coe.size(); i++) {
+    if (con_artificial_coe[i] != 0) {
+      std::cout << " + ";
+      std::cout << "0a_" << (i + 1) << " ";
+    }
   }
   std::cout << std::endl;
   std::cout << "s.t." << std::endl;
   for (int j = 0; j < con_num; j++) {
-    for (size_t i = 0; i < con_lhs[j].size(); i++) {
+    for (size_t i = 0; i < var_num; i++) {
       if (con_lhs[j][i] != 1)
         std::cout << con_lhs[j][i];
       std::cout << "x_" << (i + 1);
-      if (i != con_lhs[j].size() - 1 && con_lhs[j][i] > 0)
+      if (i != var_num - 1 && con_lhs[j][i] >= 0)
         std::cout << " + ";
+    }
+    if (!con_slack_coe.empty()) {
+      for (size_t k = 0; k < con_slack_coe.size(); k++)
+        if (k == j)
+          std::cout << " + s_" << (k + 1);
+        else
+          std::cout << " + 0s_" << (k + 1);
     }
     switch (con_sense[j]) {
     case 0:
@@ -285,18 +307,16 @@ void Simplex::print() const {
       std::cout << " >= ";
       break;
     default:
-      std::cout << " == ";
+      std::cout << " = ";
       break;
     }
     std::cout << con_rhs[j] << std::endl;
   }
   for (int i = 0; i < var_num; i++) {
     if (var_sign[i] == 0)
-      std::cout << "x_" << (i + 1) << " >= 0";
+      std::cout << "x_" << (i + 1) << " >= 0, ";
     if (var_sign[i] == 1)
-      std::cout << "x_" << (i + 1) << " <= 0";
-    if (i != var_num - 1 && var_sign[i] != 2)
-      std::cout << ", ";
+      std::cout << "x_" << (i + 1) << " <= 0, ";
   }
   std::cout << std::endl;
 }
@@ -308,14 +328,18 @@ int main() {
   // 约束: 2x1 + x2 + s1 = 4
   //       x1 + 2x2 + s2 = 5
 
-  constexpr int obj_sense = 1;
+  constexpr int obj_sense = 0;
   const std::vector obj_coe = {2.0, 3.0};
   const std::vector<std::vector<double>> con_lhs = {{2.0, 1.0}, {1.0, 2.0}};
   const std::vector con_rhs = {4.0, 5.0};
   const std::vector con_sense = {0, 0}; // 0:<=, 1: >=, 2: =
-  const std::vector var_sign = {0, 0};  // 0: >=, 1: <=, 2: unsigned
+  const std::vector var_sign = {0, 2};  // 0: >=, 1: <=, 2: unsigned
 
-  const auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, con_sense, var_sign);
+  auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, con_sense, var_sign);
+  model.print();
+
+  model.standardize();
+  std::cout << "***************************************" << std::endl;
   model.print();
 
   // const std::vector<std::vector<double>> tableau = {
