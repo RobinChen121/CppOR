@@ -1,4 +1,42 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/workforce -B /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/workforce/cmake-build-debug
--- Configuring done (0.0s)
--- Generating done (0.0s)
--- Build files have been written to: /Users/zhenchen/CLionProjects/CppOR/stochastic_inventory/workforce/cmake-build-debug
+"C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -G Ninja -S D:\chenzhen\CppOR\stochastic_inventory\workforce -B D:\chenzhen\CppOR\stochastic_inventory\workforce\cmake-build-debug
+-- The C compiler identification is MSVC 19.44.35213.0
+-- The CXX compiler identification is MSVC 19.44.35213.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Build type: Debug
+-- Found GUROBI: C:/gurobi1202/win64/lib/gurobi120.lib (Required is at least version "120")
+-- Gurobi include dirs: C:/gurobi1202/win64/include
+-- Gurobi libraries: C:/gurobi1202/win64/lib/gurobi_c++md2017.lib
+-- The following REQUIRED packages have been found:
+
+ * GUROBI (required version >= 120)
+
+-- Found OpenMP_C: -openmp (found version "2.0")
+-- Found OpenMP_CXX: -openmp (found version "2.0")
+-- Found OpenMP: TRUE (found version "2.0")
+CMake Error at CMakeLists.txt:135 (target_compile_options):
+  target_compile_options called with invalid arguments
+
+
+CMake Error at CMakeLists.txt:141 (target_link_libraries):
+  The keyword signature for target_link_libraries has already been used with
+  the target "workforce".  All uses of target_link_libraries with a target
+  must be either all-keyword or all-plain.
+
+  The uses of the keyword signature are here:
+
+   * CMakeLists.txt:56 (target_link_libraries)
+   * CMakeLists.txt:106 (target_link_libraries)
+   * CMakeLists.txt:110 (target_link_libraries)
+
+
+
+-- Configuring incomplete, errors occurred!
