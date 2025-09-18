@@ -57,6 +57,7 @@ public:
 
   void standardize();
   void print() const;
+  void printConLHS() const;
 
   void inputObjCoef() const;
 

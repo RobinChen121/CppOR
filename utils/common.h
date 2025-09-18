@@ -87,6 +87,14 @@ void appendRowToCSV(const std::string &filename, const std::vector<T> &rowData) 
   file.close();
 }
 
+template <typename T> void print2D(std::vector<std::vector<T>> arr) {
+  for (const auto &row : arr) {
+    for (const auto &col : row)
+      std::cout << col << " ";
+    std::cout << std::endl;
+  }
+}
+
 void appendHeadToCSV(const std::string &file_name, const std::string &head);
 
 #endif // COMMON_H

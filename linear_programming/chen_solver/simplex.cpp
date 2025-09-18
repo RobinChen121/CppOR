@@ -280,10 +280,12 @@ void Simplex::print() const {
       std::cout << "0s_" << (i + 1);
     }
   }
-  for (size_t i = 0; i < con_artificial_coe.size(); i++) {
-    if (con_artificial_coe[i] != 0) {
+  int artificial_count = 0;
+  for (const int i : con_artificial_coe) {
+    if (i != 0) {
       std::cout << " + ";
-      std::cout << "0a_" << (i + 1) << " ";
+      std::cout << "0a_" << (artificial_count + 1) << " ";
+      artificial_count++;
     }
   }
   std::cout << std::endl;
@@ -299,15 +301,31 @@ void Simplex::print() const {
       std::cout << "x_" << (i + 1);
       if (i != var_num - 1 && con_lhs[j][i + 1] >= 0)
         std::cout << " + ";
-      if (con_lhs[j][i + 1] < 0)
+      if (i != var_num - 1 && con_lhs[j][i + 1] < 0)
         std::cout << " ";
     }
     if (!con_slack_coe.empty()) {
       for (size_t k = 0; k < con_slack_coe.size(); k++)
-        if (k == j)
-          std::cout << " + s_" << (k + 1);
-        else
+        if (k == j) {
+          if (con_slack_coe[k] == 1)
+            std::cout << " + s_" << (k + 1);
+          if (con_slack_coe[k] == -1)
+            std::cout << " - s_" << (k + 1);
+        } else
           std::cout << " + 0s_" << (k + 1);
+    }
+    if (!con_artificial_coe.empty()) {
+      artificial_count = 0;
+      for (size_t k = 0; k < con_artificial_coe.size(); k++) {
+        if (k == j) {
+          if (con_artificial_coe[k] == 0)
+            std::cout << " + 0a_" << (artificial_count + 1);
+          else {
+            std::cout << " + a_" << (artificial_count + 1);
+            artificial_count++;
+          }
+        }
+      }
     }
     switch (con_sense[j]) {
     case 0:
@@ -336,13 +354,23 @@ void Simplex::print() const {
       std::cout << "s_" << (i + 1) << " >= 0";
     }
   }
-  for (size_t i = 0; i < con_artificial_coe.size(); i++) {
-    if (con_artificial_coe[i] != 0) {
+  for (const int i : con_artificial_coe) {
+    artificial_count = 0;
+    if (i != 0) {
       std::cout << ", ";
-      std::cout << "a_" << (i + 1) << " >= 0";
+      std::cout << "a_" << (artificial_count + 1) << " >= 0";
+      artificial_count++;
     }
   }
   std::cout << std::endl;
+}
+
+void Simplex::printConLHS() const {
+  for (auto &row : con_lhs) {
+    for (auto &col : row)
+      std::cout << col << " ";
+    std::cout << std::endl;
+  }
 }
 
 int main() {
@@ -365,6 +393,8 @@ int main() {
   model.standardize();
   std::cout << "***************************************" << std::endl;
   model.print();
+  std::cout << "***************************************" << std::endl;
+  model.printConLHS();
 
   // const std::vector<std::vector<double>> tableau = {
   //     {-2, -3, 0, 0, 0}, // 目标函数 z -2x1 - 3x2
