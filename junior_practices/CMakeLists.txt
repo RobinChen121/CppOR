@@ -57,7 +57,7 @@ endif ()
 
 # Qt setting
 if (APPLE)
-    set(Vulkan_INCLUDE_DIR "$ENV{HOME}/VulkanSDK/1.4.313.1/macOS/include")
+    set(Vulkan_INCLUDE_DIR "$ENV{HOME}/VulkanSDK/1.4.321.0/macOS/include")
 else ()
     set(Vulkan_INCLUDE_DIR "C:/VulkanSDK/1.4.321.1/include")
 endif ()

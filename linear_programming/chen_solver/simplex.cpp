@@ -178,8 +178,8 @@ void Simplex::standardize() {
     for (size_t i = 0; i < var_num; i++) {
       obj_coe[i] = -obj_coe[i];
     }
+  obj_sense = 0;
 
-  int unsigned_count = 0;
   for (size_t i = 0; i < var_num; i++) {
     switch (var_sign[i]) {
     case 1: // <= 0
@@ -201,14 +201,14 @@ void Simplex::standardize() {
         std::advance(it2, i + 1); // 免去对 i 的类型转换
         con_lhs[j].insert(it2, -con_lhs[j][i]);
       }
-      unsigned_count++;
+      i++;
+      var_num++;
       break;
     }
     default:
       break;
     }
   }
-  var_num += unsigned_count;
 
   for (size_t j = 0; j < con_num; j++) {
     if (con_rhs[j] < 0) {
@@ -271,13 +271,13 @@ void Simplex::print() const {
   for (int i = 0; i < var_num; i++) {
     std::cout << obj_coe[i];
     std::cout << "x_" << (i + 1) << " ";
-    if (i != var_num - 1 && obj_coe[i] >= 0)
+    if (i != obj_coe.size() - 1 && obj_coe[i + 1] > 0)
       std::cout << "+ ";
   }
   for (size_t i = 0; i < con_slack_coe.size(); i++) {
     if (con_slack_coe[i] != 0) {
-      std::cout << " + ";
-      std::cout << "0s_" << (i + 1) << " ";
+      std::cout << "+ ";
+      std::cout << "0s_" << (i + 1);
     }
   }
   for (size_t i = 0; i < con_artificial_coe.size(); i++) {
@@ -290,11 +290,17 @@ void Simplex::print() const {
   std::cout << "s.t." << std::endl;
   for (int j = 0; j < con_num; j++) {
     for (size_t i = 0; i < var_num; i++) {
-      if (con_lhs[j][i] != 1)
+      if (con_lhs[j][i] == -1)
+        std::cout << "- ";
+      else if (con_lhs[j][i] != 1 && con_lhs[j][i] > 0)
         std::cout << con_lhs[j][i];
+      else if (con_lhs[j][i] != 1 && con_lhs[j][i] < 0)
+        std::cout << "- " << -con_lhs[j][i];
       std::cout << "x_" << (i + 1);
-      if (i != var_num - 1 && con_lhs[j][i] >= 0)
+      if (i != var_num - 1 && con_lhs[j][i + 1] >= 0)
         std::cout << " + ";
+      if (con_lhs[j][i + 1] < 0)
+        std::cout << " ";
     }
     if (!con_slack_coe.empty()) {
       for (size_t k = 0; k < con_slack_coe.size(); k++)
@@ -350,8 +356,8 @@ int main() {
   const std::vector obj_coe = {2.0, 3.0};
   const std::vector<std::vector<double>> con_lhs = {{2.0, 1.0}, {1.0, 2.0}};
   const std::vector con_rhs = {4.0, 5.0};
-  const std::vector con_sense = {0, 0}; // 0:<=, 1: >=, 2: =
-  const std::vector var_sign = {2, 2};  // 0: >=, 1: <=, 2: unsigned
+  const std::vector con_sense = {0, 1}; // 0:<=, 1: >=, 2: =
+  const std::vector var_sign = {0, 1};  // 0: >=, 1: <=, 2: unsigned
 
   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, con_sense, var_sign);
   model.print();

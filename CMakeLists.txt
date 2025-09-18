@@ -7,7 +7,6 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-
 # 添加子文件夹
 add_subdirectory(linear_programming) # 告诉 CMake 在小括号那目录下查找 CMakeLists.txt
 add_subdirectory(junior_practices)

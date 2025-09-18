@@ -125,3 +125,5 @@ Thumbs.db
 
 /linear_programming/chen_solver/cmake-build-debug
 /linear_programming/chen_solver/cmake-build-debug
+*.bin
+*.ninja
