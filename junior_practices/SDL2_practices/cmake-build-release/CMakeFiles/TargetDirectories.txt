@@ -1,3 +1,0 @@
-/Users/zhenchen/CLionProjects/CppOR/junior_practices/SDL2_practices/cmake-build-release/CMakeFiles/sdl_practice.dir
-/Users/zhenchen/CLionProjects/CppOR/junior_practices/SDL2_practices/cmake-build-release/CMakeFiles/edit_cache.dir
-/Users/zhenchen/CLionProjects/CppOR/junior_practices/SDL2_practices/cmake-build-release/CMakeFiles/rebuild_cache.dir
