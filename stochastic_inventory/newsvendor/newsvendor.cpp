@@ -28,17 +28,16 @@ NewsvendorDP::NewsvendorDP(const size_t T, const int capacity, const double step
                            const double fixOrderCost, const double unitVariOrderCost,
                            const double unitHoldCost, const double unitPenaltyCost,
                            const double truncatedQuantile, const double max_I, const double min_I,
-                           std::vector<std::vector<std::vector<double> > > pmf)
-  : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize), fixOrderCost(fixOrderCost),
-    unitVariOrderCost(unitVariOrderCost), unitHoldCost(unitHoldCost),
-    unitPenaltyCost(unitPenaltyCost), truncatedQuantile(truncatedQuantile), max_I(max_I),
-    min_I(min_I), pmf(std::move(pmf)) {
-};
+                           std::vector<std::vector<std::vector<double>>> pmf)
+    : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize), fixOrderCost(fixOrderCost),
+      unitVariOrderCost(unitVariOrderCost), unitHoldCost(unitHoldCost),
+      unitPenaltyCost(unitPenaltyCost), truncatedQuantile(truncatedQuantile), max_I(max_I),
+      min_I(min_I), pmf(std::move(pmf)) {};
 
 std::vector<double> NewsvendorDP::feasibleActions() const {
   const int QNum = static_cast<int>(capacity / stepSize);
-  std::vector<double> actions(QNum);
-  for (int i = 0; i < QNum; i = i + 1) {
+  std::vector<double> actions(QNum + 1);
+  for (int i = 0; i <= QNum; i = i + 1) {
     actions[i] = i * stepSize;
   }
   return actions;
@@ -151,6 +150,8 @@ void NewsvendorDP::computeStage(const int t, const int start_inventory, const in
     std::lock_guard<std::mutex> lock(mtx); // 保护共享数据写入
     value[t][state] = bestValue;
     policy[t][state] = bestQ;
+    cache_actions[state] = bestQ;
+    cache_values[state] = bestValue;
   }
 }
 
@@ -170,7 +171,7 @@ void NewsvendorDP::backward_parallel(const int thread_num) {
     std::vector<std::thread> threads;
     const int chunk_size = static_cast<int>((max_I - min_I) / thread_num);
     for (int threadIdx = 0; threadIdx < thread_num; ++threadIdx) {
-      const int startInv = static_cast<int>(min_I) + threadIdx * chunk_size;
+      const int startInv = static_cast<int>(min_I * 0.5) + threadIdx * chunk_size;
       const int endInv =
           (threadIdx == thread_num - 1) ? static_cast<int>(max_I) : startInv + chunk_size;
       // emplace_back 是 std::vector 提供的一个成员函数，用于在向量末尾直接构造一个新对象
@@ -192,8 +193,8 @@ void NewsvendorDP::backward_parallel(const int thread_num) {
   }
 }
 
-std::vector<std::array<int, 2> > NewsvendorDP::findsS(bool parallel) const {
-  std::vector<std::array<int, 2> > arr(T);
+std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
+  std::vector<std::array<int, 2>> arr(T);
 
   if (!parallel) {
     const auto opt_table = getTable();
@@ -231,26 +232,32 @@ std::vector<std::array<int, 2> > NewsvendorDP::findsS(bool parallel) const {
 }
 
 int main() {
-  constexpr double mean_demand = 70;
-  constexpr int T = 100;
-  std::vector<double> demands(T, mean_demand);
-  constexpr int capacity = 100; // maximum ordering quantity
+  constexpr int T = 1;
+  constexpr double demands[] = {10.0, 20.0, 30.0, 40.0, 50.0};
+  constexpr double probs[] = {0.2, 0.2, 0.2, 0.2, 0.2};
+
+  //  constexpr double mean_demand = 30;
+  //  std::vector<double> demands(T, mean_demand);
+
+  constexpr int capacity = 20; // maximum ordering quantity
   constexpr double stepSize = 1.0;
-  constexpr double fixOrderCost = 64;
+  constexpr double fixOrderCost = 100;
   constexpr double unitVariOderCost = 0;
   constexpr double unitHoldCost = 1;
-  constexpr double unitPenaltyCost = 9;
+  constexpr double unitPenaltyCost = 10;
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
-  constexpr double maxI = 500; // maximum possible inventory
-  constexpr double minI = -300; // minimum possible inventory
+  constexpr double maxI = 500;             // maximum possible inventory
+  constexpr double minI = -300;            // minimum possible inventory
+                                           // initial inventory when parallel is half of the minI
   constexpr bool parallel = true;
 
   // const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
-  std::vector<double> sigma(demands.size());
-  for (int i = 0; i < demands.size(); ++i) {
-    sigma[i] = 0.4 * demands[i];
-  }
-  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
+  //  std::vector<double> sigma(demands.size());
+  //  for (int i = 0; i < demands.size(); ++i) {
+  //    sigma[i] = 0.4 * demands[i];
+  //  }
+  //  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
+  const auto pmf = PMF(truncQuantile, stepSize).getPMFSelfDefine(demands, probs, T);
 
   const State initialState(1, 0);
   auto model = NewsvendorDP(T, capacity, stepSize, fixOrderCost, unitVariOderCost, unitHoldCost,
@@ -266,20 +273,32 @@ int main() {
   // std::endl;
 
   constexpr int thread_num = 8;
+  double opt_value = 0.0;
   const auto start_time2 = std::chrono::high_resolution_clock::now();
-  model.backward_parallel(thread_num);
+  if (parallel)
+    model.backward_parallel(thread_num);
+  else
+    opt_value = model.recursion_serial(initialState);
   const auto end_time2 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> duration2 = end_time2 - start_time2;
   std::cout << std::string(30, '*') << std::endl;
   std::cout << "planning horizon is " << T << " periods" << std::endl;
-  std::cout << "running time of C++ in parallel with " << thread_num << " threads is " << duration2
-      << std::endl;
-  std::cout << "Final optimal value is: " << model.value[0][initialState] << std::endl;
-  const auto optQ = model.policy[0][initialState];
-  std::cout << "Optimal Q is: " << optQ << std::endl;
+  if (parallel) {
+    std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
+              << duration2 << std::endl;
+    opt_value = model.value[0][initialState];
+    std::cout << "Final optimal value is: " << opt_value << std::endl;
+    const auto optQ = model.policy[0][initialState];
+    std::cout << "Optimal Q is: " << optQ << std::endl;
+  } else {
+    std::cout << "running time of C++ in serial is " << duration2 << std::endl;
+    std::cout << "Final optimal value is: " << opt_value << std::endl;
+    const auto optQ = model.cache_actions[initialState];
+    std::cout << "Optimal Q is: " << optQ << std::endl;
+  }
 
   std::cout << "s, S in each period are: " << std::endl;
-  auto arr_sS = model.findsS(parallel);
+  const auto arr_sS = model.findsS(parallel);
   for (const auto row : arr_sS) {
     for (const auto col : row) {
       std::cout << col << ' ';

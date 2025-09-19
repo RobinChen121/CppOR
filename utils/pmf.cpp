@@ -13,7 +13,7 @@
 
 // initializing the class
 PMF::PMF(const double truncatedQuantile, const double stepSize)
-  : truncatedQuantile(truncatedQuantile), stepSize(stepSize) {
+    : truncatedQuantile(truncatedQuantile), stepSize(stepSize) {
   // checkName();
 } // std::move for efficiency passing in string and vector
 
@@ -71,18 +71,25 @@ int PMF::poissonQuantile(const double p, const double lambda) {
   return low;
 }
 
-// get probability mass function values for each period of Poisson
-// may be not necessary
-// std::vector<std::vector<std::vector<double>>>
-// PMF::getPMF(const std::span<const double> demands) const {
-//   if (distributionName == "poisson") {
-//     return getPMFPoisson(demands);
-//   }
-//   return {};
-// }
+// get probability mass function values for each period of self defined distribution
+std::vector<std::vector<std::vector<double>>>
+PMF::getPMFSelfDefine(const std::span<const double> demands, const std::span<const double> probs,
+                      const int T) {
+  std::vector pmf(T, std::vector<std::vector<double>>());
+  for (int t = 0; t < T; ++t) {
+    const int demand_length = demands.size();
+    pmf[t].resize(demand_length);
+    for (int j = 0; j < demand_length; ++j) {
+      pmf[t][j] = std::vector<double>(2);
+      pmf[t][j][0] = demands[j];
+      pmf[t][j][1] = probs[j];
+    }
+  }
+  return pmf;
+}
 
 // get probability mass function values for each period of Poisson
-std::vector<std::vector<std::vector<double> > >
+std::vector<std::vector<std::vector<double>>>
 PMF::getPMFPoisson(const std::span<const double> demands) const {
   const size_t T = demands.size();
   std::vector<int> supportLB(T);
@@ -91,12 +98,12 @@ PMF::getPMFPoisson(const std::span<const double> demands) const {
     supportUB[i] = poissonQuantile(truncatedQuantile, demands[i]);
     supportLB[i] = poissonQuantile(1 - truncatedQuantile, demands[i]);
   }
-  std::vector<std::vector<std::vector<double> > > pmf(T, std::vector<std::vector<double> >());
+  std::vector pmf(T, std::vector<std::vector<double>>());
   for (int t = 0; t < T; ++t) {
-    const int demandLength = static_cast<int>((supportUB[t] - supportLB[t] + 1) / stepSize);
-    pmf[t] = std::vector(demandLength, std::vector<double>());
-    for (int j = 0; j < demandLength; ++j) {
-      pmf[t][j] = std::vector<double>(2);
+    const int demand_length = static_cast<int>((supportUB[t] - supportLB[t] + 1) / stepSize);
+    pmf[t].resize(demand_length, std::vector<double>());
+    for (int j = 0; j < demand_length; ++j) {
+      pmf[t][j].resize(2);
       pmf[t][j][0] = supportLB[t] + j * stepSize;
       const int demand = static_cast<int>(pmf[t][j][0]);
       pmf[t][j][1] = poissonPMF(demand, static_cast<int>(demands[t])) / (2 * truncatedQuantile - 1);
@@ -106,11 +113,11 @@ PMF::getPMFPoisson(const std::span<const double> demands) const {
 }
 
 // get probability mass function values for each period of Normal distribution
-std::vector<std::vector<std::vector<double> > >
+std::vector<std::vector<std::vector<double>>>
 PMF::getPMFNormal(const std::span<const double> mean, const std::span<const double> sigma) const {
   const size_t T = mean.size();
 
-  std::vector<boost::math::normal_distribution<double> > normals(T);
+  std::vector<boost::math::normal_distribution<double>> normals(T);
   std::vector<int> supportLB(T);
   std::vector<int> supportUB(T);
   std::vector<double> zero_quantile(T);
@@ -119,15 +126,15 @@ PMF::getPMFNormal(const std::span<const double> mean, const std::span<const doub
     // push_back 把一个已经存在的对象 拷贝或移动 到容器末尾
     normals[t] = boost::math::normal_distribution<>(mean[t], sigma[t]);
     supportUB[t] = static_cast<int>(quantile(normals[t], truncatedQuantile));
-    supportLB[t] = 0; //static_cast<int>(quantile(normals[t], 1 - truncatedQuantile));
+    supportLB[t] = 0; // static_cast<int>(quantile(normals[t], 1 - truncatedQuantile));
     zero_quantile[t] = cdf(normals[t], 0.0);
   }
 
-  std::vector pmf(T, std::vector<std::vector<double> >());
+  std::vector pmf(T, std::vector<std::vector<double>>());
   for (int t = 0; t < T; ++t) {
-    const int demandLength = static_cast<int>((supportUB[t] - supportLB[t] + 1) / stepSize);
-    pmf[t] = std::vector(demandLength, std::vector<double>());
-    for (int j = 0; j < demandLength; ++j) {
+    const int demand_length = static_cast<int>((supportUB[t] - supportLB[t] + 1) / stepSize);
+    pmf[t] = std::vector(demand_length, std::vector<double>());
+    for (int j = 0; j < demand_length; ++j) {
       pmf[t][j] = std::vector<double>(2);
       pmf[t][j][0] = static_cast<int>(supportLB[t] + j * stepSize);
       const auto demand = pmf[t][j][0];
@@ -141,10 +148,10 @@ PMF::getPMFNormal(const std::span<const double> mean, const std::span<const doub
 // get probability mass function values for each period of Binomial
 // 头文件避免多余 const，保持清晰
 // cpp 中加 const 限制修改，提升安全性
-std::vector<std::vector<std::vector<double> > >
+std::vector<std::vector<std::vector<double>>>
 PMF::getPMFBinomial(const int max_staff, const std::span<const double> ps) {
   const auto T = ps.size();
-  std::vector pmf(T, std::vector<std::vector<double> >());
+  std::vector pmf(T, std::vector<std::vector<double>>());
   for (size_t t = 0; t < T; ++t) {
     pmf[t] = std::vector(max_staff + 1, std::vector<double>());
     for (int i = 0; i <= max_staff; ++i) {
@@ -162,14 +169,14 @@ PMF::getPMFBinomial(const int max_staff, const std::span<const double> ps) {
   return pmf;
 }
 
-std::vector<std::vector<std::vector<std::array<double, 2> > > >
+std::vector<std::vector<std::vector<std::array<double, 2>>>>
 PMF::getPMFBinomial2(const int max_staff, const std::span<const double> ps) {
   const auto T = ps.size();
-  std::vector pmf(T, std::vector<std::vector<std::array<double, 2> > >());
+  std::vector pmf(T, std::vector<std::vector<std::array<double, 2>>>());
   for (size_t t = 0; t < T; ++t) {
-    pmf[t] = std::vector(max_staff + 1, std::vector<std::array<double, 2> >());
+    pmf[t] = std::vector(max_staff + 1, std::vector<std::array<double, 2>>());
     for (int i = 0; i <= max_staff; ++i) {
-      pmf[t][i] = std::vector<std::array<double, 2> >(i + 1);
+      pmf[t][i] = std::vector<std::array<double, 2>>(i + 1);
       if (i == 0) {
         pmf[t][i][0][0] = 0;
         pmf[t][i][0][1] = 1;
@@ -187,7 +194,7 @@ PMF::getPMFBinomial2(const int max_staff, const std::span<const double> ps) {
 
 // get probability mass function values for each period of Poisson of two
 // products
-std::vector<std::vector<std::vector<double> > >
+std::vector<std::vector<std::vector<double>>>
 PMF::getPMFPoissonMulti(const std::span<const double> demands1,
                         const std::span<const double> demands2) const {
   const auto T = demands1.size();
@@ -201,12 +208,12 @@ PMF::getPMFPoissonMulti(const std::span<const double> demands1,
     supportUB2[i] = poissonQuantile(truncatedQuantile, demands2[i]);
     supportLB2[i] = poissonQuantile(1 - truncatedQuantile, demands2[i]);
   }
-  std::vector pmf(T, std::vector<std::vector<double> >());
+  std::vector pmf(T, std::vector<std::vector<double>>());
   for (size_t t = 0; t < T; ++t) {
     const auto demandLength1 = static_cast<int>((supportUB1[t] - supportLB1[t] + 1) / stepSize);
     const auto demandLength2 = static_cast<int>((supportUB2[t] - supportLB2[t] + 1) / stepSize);
-    const auto demandLength = demandLength1 * demandLength2;
-    pmf[t] = std::vector(demandLength, std::vector<double>());
+    const auto demand_length = demandLength1 * demandLength2;
+    pmf[t] = std::vector(demand_length, std::vector<double>());
     int index = 0;
     for (int i = 0; i < demandLength1; ++i) {
       for (int j = 0; j < demandLength2; ++j) {
@@ -225,19 +232,19 @@ PMF::getPMFPoissonMulti(const std::span<const double> demands1,
   return pmf;
 }
 
-std::vector<std::vector<std::vector<double> > >
-PMF::getPMFSelfDiscreteMulti(const std::vector<std::vector<double> > &demand1_values,
-                             const std::vector<std::vector<double> > &demand1_weights,
-                             const std::vector<std::vector<double> > &demand2_values,
-                             const std::vector<std::vector<double> > &demand2_weights) {
+std::vector<std::vector<std::vector<double>>>
+PMF::getPMFSelfDiscreteMulti(const std::vector<std::vector<double>> &demand1_values,
+                             const std::vector<std::vector<double>> &demand1_weights,
+                             const std::vector<std::vector<double>> &demand2_values,
+                             const std::vector<std::vector<double>> &demand2_weights) {
   const auto T = demand1_values.size();
-  std::vector pmf(T, std::vector<std::vector<double> >());
+  std::vector pmf(T, std::vector<std::vector<double>>());
 
   for (int t = 0; t < T; ++t) {
     const auto demandLength1 = demand1_values[t].size();
     const auto demandLength2 = demand1_weights[t].size();
-    const auto demandLength = demandLength1 * demandLength2;
-    pmf[t] = std::vector<std::vector<double> >(demandLength, std::vector<double>(3));
+    const auto demand_length = demandLength1 * demandLength2;
+    pmf[t] = std::vector<std::vector<double>>(demand_length, std::vector<double>(3));
     int index = 0;
     for (int i = 0; i < demandLength1; ++i) {
       for (int j = 0; j < demandLength2; ++j) {

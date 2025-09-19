@@ -37,6 +37,9 @@ public:
   [[nodiscard]] std::vector<std::vector<std::vector<double>>>
   getPMFPoisson(std::span<const double> demands) const;
 
+  [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
+  getPMFSelfDefine(std::span<const double> demands, std::span<const double> probs, int T);
+
   [[nodiscard]] std::vector<std::vector<std::vector<double>>>
   getPMFNormal(std::span<const double> mean, std::span<const double> sigma) const;
 

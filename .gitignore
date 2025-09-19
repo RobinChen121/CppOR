@@ -123,10 +123,6 @@ Thumbs.db
 *.ninja_log
 *.log
 
-/linear_programming/chen_solver/cmake-build-debug
-/linear_programming/chen_solver/cmake-build-debug
-*.bin
-*.ninja
-*.ninja
-*.bin
-*.log
+# CLion / CMake build directories
+**/cmake-build-debug/
+**/cmake-build-release/

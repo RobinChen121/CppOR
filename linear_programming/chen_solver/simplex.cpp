@@ -384,8 +384,8 @@ int main() {
   const std::vector obj_coe = {2.0, 3.0};
   const std::vector<std::vector<double>> con_lhs = {{2.0, 1.0}, {1.0, 2.0}};
   const std::vector con_rhs = {4.0, 5.0};
-  const std::vector con_sense = {0, 1}; // 0:<=, 1: >=, 2: =
-  const std::vector var_sign = {0, 1};  // 0: >=, 1: <=, 2: unsigned
+  const std::vector con_sense = {0, 0}; // 0:<=, 1: >=, 2: =
+  const std::vector var_sign = {0, 0};  // 0: >=, 1: <=, 2: unsigned
 
   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, con_sense, var_sign);
   model.print();
