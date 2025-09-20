@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/6/3.
  * Email: chen.zhen5526@gmail.com
  * Description: For a 3 period problem, c++ serial can solve in 0.63 seconds while java is 7s.
@@ -311,6 +311,7 @@ std::vector<double> WorkforcePlan::compute_Gy() {
   to_compute_gy = ToComputeGy::True;
   policies.clear();
   values.clear();
+
   solve(ini_state);
   for (int y = 0; y < y_length; ++y) {
     const WorkerState ini_state{1, y};
@@ -460,8 +461,8 @@ void WorkforcePlan::compute_turnover() {
   }
 }
 
-std::pair<std::vector<double>, std::vector<std::array<int, 2>>>
-WorkforcePlan::compute_ww() const {
+// wager-whitin approximatino computation
+std::pair<std::vector<double>, std::vector<std::array<int, 2>>> WorkforcePlan::compute_ww() const {
   std::vector<std::array<int, 2>> sS(T);
   std::vector<double> V(T + 1);
   V[T] = 0;
@@ -540,87 +541,89 @@ double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const
   return left_term + right_term;
 }
 
-
-int main() {
-  auto problem = WorkforcePlan();
-  const WorkerState ini_state{1, 0};
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  const auto final_value = problem.solve(ini_state)[0];
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> time = end_time - start_time;
-  if (problem.get_direction() == Direction::FORWARD)
-    std::cout << "running time is " << time.count() << 's' << std::endl;
-  else {
-    const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
-    std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
-              << time.count() << 's' << std::endl;
-  }
-  std::cout << "Final optimal cost is " << final_value << std::endl;
-  std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
-            << std::endl;
-
-  const auto arr_sS = problem.find_sS();
-  std::cout << "s, S in each period are: " << std::endl;
-  for (const auto row : arr_sS) {
-    for (const auto col : row) {
-      std::cout << col << ' ';
-    }
-    std::cout << std::endl;
-  }
-
-  (void)problem.simulate_sS(problem.get_initial_state(), arr_sS);
-
-  std::cout << "******************** " << std::endl;
-  auto [fst, snd] = problem.solve_mip();
-  // std::cout << "the objective by MIP is: " << fst << std::endl;
-  const double gap1 = (fst - final_value) / final_value * 100;
-  std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 << "%"
-            << std::endl;
-  std::cout << "s, S in each period by MIP are: " << std::endl;
-  for (const auto row : snd) {
-    for (const auto col : row) {
-      std::cout << col << ' ';
-    }
-    std::cout << std::endl;
-  }
-  const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
-  const double gap2 = (mip_sS - final_value) / final_value * 100;
-  std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
-            << "%" << std::endl;
-
-  const auto ww_result = problem.compute_ww();
-  std::cout << std::endl;
-  std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
-  const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
-  std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3 << "%"
-            << std::endl;
-  auto sS_ww = ww_result.second;
-  for (const auto row : sS_ww) {
-    for (const auto col : row) {
-      std::cout << col << ' ';
-    }
-    std::cout << std::endl;
-  }
-  const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
-  const double gap4 = (ww_sS - final_value) / final_value * 100;
-  std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) << gap4
-            << "%" << std::endl;
-
-
-  // start_time = std::chrono::high_resolution_clock::now();
-  // const auto arr = problem.compute_Gy();
-  // end_time = std::chrono::high_resolution_clock::now();
-  // time = end_time - start_time;
-  // std::cout << "running time is " << time.count() << 's' << std::endl;
-  // std::cout << "*******************************" << std::endl;
-  // problem.check_K_convexity(arr);
-  // const auto expect_Gy = problem.compute_expect_Gy(arr);
-  // problem.check_Binomial_KConvexity(arr, expect_Gy);
-  // problem.check_convexity(arr);
-  // drawGy(arr, arr_sS[0]);
-
-  return 0;
-}
+// int main() {
+//   auto problem = WorkforcePlan();
+//   const WorkerState ini_state{1, 0};
+//   auto start_time = std::chrono::high_resolution_clock::now();
+//   auto final_value = problem.solve(ini_state)[0];
+//   auto end_time = std::chrono::high_resolution_clock::now();
+//   std::chrono::duration<double> time = end_time - start_time;
+//   if (problem.get_direction() == Direction::FORWARD)
+//     std::cout << "running time is " << time.count() << 's' << std::endl;
+//   else {
+//     const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
+//     std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
+//               << time.count() << 's' << std::endl;
+//   }
+//   std::cout << "Final optimal cost is " << final_value << std::endl;
+//   std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
+//             << std::endl;
+//
+//   const auto arr_sS = problem.find_sS();
+//   std::cout << "s, S in each period are: " << std::endl;
+//   for (const auto row : arr_sS) {
+//     for (const auto col : row) {
+//       std::cout << col << ' ';
+//     }
+//     std::cout << std::endl;
+//   }
+//
+//   (void)problem.simulate_sS(problem.get_initial_state(), arr_sS);
+//
+//   std::cout << "******************** " << std::endl;
+//   auto [fst, snd] = problem.solve_mip();
+//   // std::cout << "the objective by MIP is: " << fst << std::endl;
+//   const double gap1 = (fst - final_value) / final_value * 100;
+//   std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 <<
+//   "%"
+//             << std::endl;
+//   std::cout << "s, S in each period by MIP are: " << std::endl;
+//   for (const auto row : snd) {
+//     for (const auto col : row) {
+//       std::cout << col << ' ';
+//     }
+//     std::cout << std::endl;
+//   }
+//   const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
+//   const double gap2 = (mip_sS - final_value) / final_value * 100;
+//   std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
+//             << "%" << std::endl;
+//
+//   // const auto ww_result = problem.compute_ww();
+//   // std::cout << std::endl;
+//   // std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
+//   // const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
+//   // std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3
+//   <<
+//   // "%"
+//   //           << std::endl;
+//   // auto sS_ww = ww_result.second;
+//   // for (const auto row : sS_ww) {
+//   //   for (const auto col : row) {
+//   //     std::cout << col << ' ';
+//   //   }
+//   //   std::cout << std::endl;
+//   // }
+//   // const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
+//   // const double gap4 = (ww_sS - final_value) / final_value * 100;
+//   // std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) <<
+//   gap4
+//   //           << "%" << std::endl;
+//
+//   start_time = std::chrono::high_resolution_clock::now();
+//   const auto arr = problem.compute_Gy();
+//   end_time = std::chrono::high_resolution_clock::now();
+//   time = end_time - start_time;
+//   std::cout << "running time is " << time.count() << 's' << std::endl;
+//   std::cout << "*******************************" << std::endl;
+//   problem.check_K_convexity(arr);
+//   const auto expect_Gy = problem.compute_expect_Gy(arr);
+//   problem.check_Binomial_KConvexity(arr, expect_Gy);
+//   problem.check_convexity(arr);
+//   drawGy(arr, arr_sS[0]);
+//
+//   return 0;
+// }
 
 // double recursion2(const WorkerState ini_state) {
 //   const auto actions = feasible_actions();

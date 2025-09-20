@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/6/17.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -23,7 +23,7 @@ enum class Direction { FORWARD, BACKWARD };
 enum class ToComputeGy { True, False };
 
 class WorkforcePlan {
-  Direction direction = Direction::BACKWARD;
+  Direction direction = Direction::BACKWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
   std::vector<double> turnover_rates = {0.5, 0.3, 0.6, 0.7, 0.2};

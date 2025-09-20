@@ -11,7 +11,20 @@
 
 #include <boost/container/container_fwd.hpp>
 
+void drawGy(const std::vector<double> &arr, const double min_y) {
+  plt::backend("TkAgg");
+  std::vector<double> x, y;
+  for (int i = 0; i < arr.size(); ++i) {
+    x.push_back(i + min_y);
+    y.push_back(arr[i]);
+  }
+  plt::plot(x, y);
+  plt::grid(true);
+  plt::show();
+}
+
 void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS) {
+  plt::backend("TkAgg");
   std::vector<double> x, y;
   for (int i = 0; i < arr.size() - 200; ++i) {
     x.push_back(i);
@@ -43,6 +56,7 @@ void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &kconvexity,
                      const std::vector<std::string> &binomial_kconvexity,
                      const std::vector<std::string> &convexity) {
+  plt::backend("TkAgg");
   int repeat = 3;
   while (repeat > 0) {
     for (int i = 0; i < arr.size(); i++) {

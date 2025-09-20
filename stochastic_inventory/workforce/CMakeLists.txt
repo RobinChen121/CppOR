@@ -7,20 +7,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 if (CMAKE_BUILD_TYPE STREQUAL Release)
     if (MSVC)
-        set(CMAKE_CXX_FLAGS_RELEASE "/O3")
+        set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
     else ()
         set(CMAKE_CXX_FLAGS_RELEASE "-O3")
     endif ()
 endif ()
 
-if (MSVC)
-    # 开启 AddressSanitizer, 数组越界检查
-    # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
-    # 或将文件拷贝到当前项目 exe 所在文件夹
-    if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Od") # Od
-    endif ()
-endif ()
+#if (MSVC)
+#    # 开启 AddressSanitizer, 数组越界检查
+#    # 需要将 clang_rt.asan_dynamic-x86_64.dll 这个文件地址添加到系统 path
+#    # 或将文件拷贝到当前项目 exe 所在文件夹
+#    if (CMAKE_BUILD_TYPE STREQUAL Debug)
+#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Od") # Od
+#    endif ()
+#endif ()
 
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
@@ -28,7 +28,7 @@ add_executable(${PROJECT_NAME}
         worker_state.cpp
         workforce_plan.cpp
 
-        #        workforce_testing_animation.cpp
+        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
         ../../utils/draw_graph.cpp
         #        binomial_product_test.cpp
@@ -38,7 +38,6 @@ add_executable(${PROJECT_NAME}
         #        Binomial_logconcave_test.cpp
         piecewise.cpp
         util_binomial.cpp
-        util_binomial.h
 )
 
 ## boost setting

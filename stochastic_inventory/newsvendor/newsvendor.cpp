@@ -5,15 +5,26 @@
  * planning horizon is 40 periods, capacity 150
  * running time of C++ in serial is 4.57606s(mac)
  * Final optimal value is: 1359.28
- * running time of C++ in parallel is 1.01151s (8 threads, mac)
+ * running time of C++ in parallel is 1.01151s (8 threads, mac).
  *
  * planning horizon 70 periods, capacity 100, parallel computing time is 1.3s (mac), 1.9s(dell),
  * 3.47s(dell), 2.44s(mac) for normal distribution.
- * serial is 9.47s (dell)
+ * serial is 9.47s (dell).
+ *
+ * when finding s, S, parallel computing is not encouraged because of truncated state.
+ *
+ * a good example for draw k convex of poisson demands:
+ * double fixedOrderingCost = 500; double
+ * variOrderingCost = 0; double penaltyCost = 10; double[]
+ * meanDemand = {9, 23, 53, 29}; double holdingCost = 2; int
+ * C = 100;
+ * when C = 50, it is not K-convex;
  *
  */
 
 #include "newsvendor.h"
+#include "../../utils/Kconvexity.h"
+#include "../../utils/draw_graph.h"
 #include "../../utils/pmf.h"
 #include <algorithm> // std::max
 #include <array>
@@ -23,16 +34,6 @@
 #include <map>
 #include <mutex>
 #include <thread>
-
-NewsvendorDP::NewsvendorDP(const size_t T, const int capacity, const double stepSize,
-                           const double fixOrderCost, const double unitVariOrderCost,
-                           const double unitHoldCost, const double unitPenaltyCost,
-                           const double truncatedQuantile, const double max_I, const double min_I,
-                           std::vector<std::vector<std::vector<double>>> pmf)
-    : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize), fixOrderCost(fixOrderCost),
-      unitVariOrderCost(unitVariOrderCost), unitHoldCost(unitHoldCost),
-      unitPenaltyCost(unitPenaltyCost), truncatedQuantile(truncatedQuantile), max_I(max_I),
-      min_I(min_I), pmf(std::move(pmf)) {};
 
 std::vector<double> NewsvendorDP::feasibleActions() const {
   const int QNum = static_cast<int>(capacity / stepSize);
@@ -45,35 +46,41 @@ std::vector<double> NewsvendorDP::feasibleActions() const {
 
 State NewsvendorDP::stateTransitionFunction(const State &state, const double action,
                                             const double demand) const {
-  double nextInventory = state.getInitialInventory() + action - demand;
-  if (state.getPeriod() == 1) {
-    (void)nextInventory;
-  }
-  if (nextInventory > 0) {
-    (void)nextInventory;
-  }
-  nextInventory = nextInventory > max_I ? max_I : nextInventory;
-  nextInventory = nextInventory < min_I ? min_I : nextInventory;
+  double next_inventory = state.getInitialInventory() + action - demand;
+  if (compute_Gy == true and state.getPeriod() == 1)
+    next_inventory = state.getInitialInventory() - demand;
+  // if (!parallel) {
+  //   next_inventory = next_inventory > max_I ? max_I : next_inventory;
+  //   next_inventory = next_inventory < min_I ? min_I : next_inventory;
+  // }
 
   const int nextPeriod = state.getPeriod() + 1;
   // C++11 引入了统一的列表初始化（Uniform Initialization），鼓励使用大括号 {} 初始化类
-  const auto newState = State{nextPeriod, nextInventory};
+  const auto newState = State{nextPeriod, next_inventory};
 
   return newState;
 }
 
 double NewsvendorDP::immediateValueFunction(const State &state, const double action,
                                             const double demand) const {
-  const double fixCost = action > 0 ? fixOrderCost : 0;
-  const double variCost = action * unitVariOrderCost;
-  double nextInventory = state.getInitialInventory() + action - demand;
-  nextInventory = nextInventory > max_I ? max_I : nextInventory;
-  nextInventory = nextInventory < min_I ? min_I : nextInventory;
-  const double holdCost = std::max(unitHoldCost * nextInventory, 0.0);
-  const double penaltyCost = std::max(-unitPenaltyCost * nextInventory, 0.0);
+  double fix_cost = action > 0 ? fix_order_cost : 0;
+  double vari_cost = action * unit_vari_order_cost;
+  double next_inventory = state.getInitialInventory() + action - demand;
+  if (compute_Gy == true and state.getPeriod() == 1) {
+    fix_cost = 0;
+    vari_cost = unit_vari_order_cost * state.getInitialInventory();
+    next_inventory = state.getInitialInventory() - demand;
+  }
+  // it is better to not truncate the state if looking for the values of s and S
+  // if (!parallel) {
+  //   next_inventory = next_inventory > max_I ? max_I : next_inventory;
+  //   next_inventory = next_inventory < min_I ? min_I : next_inventory;
+  // }
+  const double hold_cost = std::max(unit_hold_cost * next_inventory, 0.0);
+  const double penalty_cost = std::max(-unit_penalty_cost * next_inventory, 0.0);
 
-  const double totalCost = fixCost + variCost + holdCost + penaltyCost;
-  return totalCost;
+  const double total_cost = fix_cost + vari_cost + hold_cost + penalty_cost;
+  return total_cost;
 }
 
 auto NewsvendorDP::getTable() const {
@@ -129,16 +136,22 @@ void NewsvendorDP::computeStage(const int t, const int start_inventory, const in
     double bestQ = 0.0;
     double bestValue = std::numeric_limits<double>::max();
     State state(t + 1, i);
-    for (const std::vector<double> actions = feasibleActions(); const double action : actions) {
+    const std::vector<double> actions = feasibleActions();
+    for (const double action : actions) {
       double thisValue = 0;
-      // if (state.getInitialInventory() < 14.0 && state.getPeriod() < 35) {
-      //   action = std::max(69.0 - state.getInitialInventory(), 0.0);
-      // }
       for (auto demandAndProb : pmf[t]) {
         thisValue += demandAndProb[1] * immediateValueFunction(state, action, demandAndProb[0]);
         if (t < T - 1) {
           auto newState = stateTransitionFunction(state, action, demandAndProb[0]);
-          thisValue += demandAndProb[1] * value[t + 1][newState];
+          // if there is no key, the map  will build the key and set the map value to
+          // be 0.0
+          if (value[t + 1].contains(newState))
+            thisValue += demandAndProb[1] * value[t + 1][newState];
+          else {
+            // some issues here
+            thisValue += demandAndProb[1] * value[t + 1].begin()->second;
+          }
+          // thisValue += demandAndProb[1] * value[t + 1][newState];
         }
       }
       if (thisValue < bestValue) {
@@ -171,7 +184,7 @@ void NewsvendorDP::backward_parallel(const int thread_num) {
     std::vector<std::thread> threads;
     const int chunk_size = static_cast<int>((max_I - min_I) / thread_num);
     for (int threadIdx = 0; threadIdx < thread_num; ++threadIdx) {
-      const int startInv = static_cast<int>(min_I * 0.5) + threadIdx * chunk_size;
+      const int startInv = static_cast<int>(min_I) + threadIdx * chunk_size;
       const int endInv =
           (threadIdx == thread_num - 1) ? static_cast<int>(max_I) : startInv + chunk_size;
       // emplace_back 是 std::vector 提供的一个成员函数，用于在向量末尾直接构造一个新对象
@@ -193,7 +206,7 @@ void NewsvendorDP::backward_parallel(const int thread_num) {
   }
 }
 
-std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
+std::vector<std::array<int, 2>> NewsvendorDP::findsS(const bool parallel) const {
   std::vector<std::array<int, 2>> arr(T);
 
   if (!parallel) {
@@ -231,40 +244,59 @@ std::vector<std::array<int, 2>> NewsvendorDP::findsS(bool parallel) const {
   return arr;
 }
 
+std::vector<double> NewsvendorDP::computeGy() {
+  if (parallel) {
+    std::cout << "parallel computing may cause truncated state issues" << std::endl;
+    std::exit(EXIT_FAILURE); // 退出程序，返回非零状态
+  }
+
+  const int y_length = static_cast<int>(max_I - min_I + 1);
+  std::vector<double> Gy(y_length);
+  compute_Gy = true;
+
+  int index = 0;
+  for (int y = static_cast<int>(min_I); y <= max_I; ++y) {
+    const State ini_state{1, static_cast<double>(y)};
+    Gy[index] = recursion_serial(ini_state);
+    index++;
+  }
+  return Gy;
+}
+
 int main() {
-  constexpr int T = 1;
-  constexpr double demands[] = {10.0, 20.0, 30.0, 40.0, 50.0};
-  constexpr double probs[] = {0.2, 0.2, 0.2, 0.2, 0.2};
+  constexpr int T = 4;
+  std::vector demands = {9.0, 23.0, 53.0, 29.0};
+
+  // std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
 
   //  constexpr double mean_demand = 30;
   //  std::vector<double> demands(T, mean_demand);
 
-  constexpr int capacity = 20; // maximum ordering quantity
+  constexpr int capacity = 50; // maximum ordering quantity
   constexpr double stepSize = 1.0;
-  constexpr double fixOrderCost = 100;
+  constexpr double fix_order_cost = 500;
   constexpr double unitVariOderCost = 0;
-  constexpr double unitHoldCost = 1;
-  constexpr double unitPenaltyCost = 10;
+  constexpr double unit_hold_cost = 2;
+  constexpr double unit_penalty_cost = 10;
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
-  constexpr double maxI = 500;             // maximum possible inventory
-  constexpr double minI = -300;            // minimum possible inventory
-                                           // initial inventory when parallel is half of the minI
-  constexpr bool parallel = true;
+  constexpr double maxI = 300;             // maximum possible inventory
+  constexpr double minI = -100;            // minimum possible inventory
+  constexpr bool parallel =
+      false; // when looking for values of s, S or computing Gy, parallel is better to be false
 
-  // const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
   //  std::vector<double> sigma(demands.size());
   //  for (int i = 0; i < demands.size(); ++i) {
   //    sigma[i] = 0.4 * demands[i];
   //  }
-  //  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
-  const auto pmf = PMF(truncQuantile, stepSize).getPMFSelfDefine(demands, probs, T);
+  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
+  // const auto pmf = PMF::getPMFSelfDefine(demands, probs, T);
 
-  const State initialState(1, 0);
-  auto model = NewsvendorDP(T, capacity, stepSize, fixOrderCost, unitVariOderCost, unitHoldCost,
-                            unitPenaltyCost, truncQuantile, maxI, minI, pmf);
+  const State ini_state(1, 0);
+  auto model = NewsvendorDP(T, capacity, stepSize, fix_order_cost, unitVariOderCost, unit_hold_cost,
+                            unit_penalty_cost, truncQuantile, maxI, minI, pmf, parallel, ini_state);
 
   // const auto start_time = std::chrono::high_resolution_clock::now();
-  // const auto optValue = model.recursion_serial(initialState);
+  // const auto optValue = model.recursion_serial(ini_state);
   // const auto end_time = std::chrono::high_resolution_clock::now();
   // const std::chrono::duration<double> duration = end_time - start_time;
   // std::cout << "planning horizon is " << T << " periods" << std::endl;
@@ -278,7 +310,7 @@ int main() {
   if (parallel)
     model.backward_parallel(thread_num);
   else
-    opt_value = model.recursion_serial(initialState);
+    opt_value = model.recursion_serial(ini_state);
   const auto end_time2 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> duration2 = end_time2 - start_time2;
   std::cout << std::string(30, '*') << std::endl;
@@ -286,14 +318,14 @@ int main() {
   if (parallel) {
     std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
               << duration2 << std::endl;
-    opt_value = model.value[0][initialState];
+    opt_value = model.value[0][ini_state];
     std::cout << "Final optimal value is: " << opt_value << std::endl;
-    const auto optQ = model.policy[0][initialState];
+    const auto optQ = model.policy[0][ini_state];
     std::cout << "Optimal Q is: " << optQ << std::endl;
   } else {
     std::cout << "running time of C++ in serial is " << duration2 << std::endl;
     std::cout << "Final optimal value is: " << opt_value << std::endl;
-    const auto optQ = model.cache_actions[initialState];
+    const auto optQ = model.cache_actions[ini_state];
     std::cout << "Optimal Q is: " << optQ << std::endl;
   }
 
@@ -305,6 +337,10 @@ int main() {
     }
     std::cout << std::endl;
   }
+
+  const auto arr = model.computeGy();
+  check_K_convexity(arr, fix_order_cost, minI, maxI);
+  drawGy(arr, minI);
 
   return 0;
 }

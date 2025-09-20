@@ -18,21 +18,31 @@ class NewsvendorDP {
   size_t T;
   int capacity;
   double stepSize;
-  double fixOrderCost;
-  double unitVariOrderCost;
-  double unitHoldCost;
-  double unitPenaltyCost;
-  double truncatedQuantile;
+  double fix_order_cost;
+  double unit_vari_order_cost;
+  double unit_hold_cost;
+  double unit_penalty_cost;
+  double truncated_quantile;
   double max_I;
   double min_I;
   std::vector<std::vector<std::vector<double>>> pmf;
+  bool parallel;
+  bool compute_Gy = false;
+  State ini_state;
   std::mutex mtx; // 互斥锁保护共享数据写入
 
 public:
-  NewsvendorDP(size_t T, int capacity, double stepSize, double fixOrderCost,
-               double unitVariOrderCost, double unitHoldCost, double unitPenaltyCost,
-               double truncatedQuantile, double max_I, double min_I,
-               std::vector<std::vector<std::vector<double>>> pmf);
+  NewsvendorDP(const size_t T, const int capacity, const double stepSize,
+               const double fix_order_cost, const double unit_vari_order_cost,
+               const double unit_hold_cost, const double unit_penalty_cost,
+               const double truncated_quantile, const double max_I, const double min_I,
+               std::vector<std::vector<std::vector<double>>> pmf, const bool parallel,
+               const State ini_state)
+      : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize),
+        fix_order_cost(fix_order_cost), unit_vari_order_cost(unit_vari_order_cost),
+        unit_hold_cost(unit_hold_cost), unit_penalty_cost(unit_penalty_cost),
+        truncated_quantile(truncated_quantile), max_I(max_I), min_I(min_I), pmf(std::move(pmf)),
+        parallel(parallel), ini_state(ini_state) {};
 
   [[nodiscard]] std::vector<double> feasibleActions() const;
 
@@ -67,6 +77,7 @@ public:
   [[nodiscard]] std::vector<std::array<int, 2>> findsS(bool parallel) const;
 
   void backward_parallel(int thread_num);
+  std::vector<double> computeGy();
 };
 
 #endif // NEWSVENDOR_H

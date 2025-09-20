@@ -15,6 +15,7 @@
 namespace plt = matplotlibcpp;
 
 void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS);
+void drawGy(const std::vector<double> &arr, double min_y);
 
 void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &parameter,

@@ -50,13 +50,13 @@ int main() {
     // problem.set_min_workers(min_workers[i]);
     // problem.set_turnover_rate(turnover_rate[i]);
 
-    Gys[i] = problem.computeGy();
+    Gys[i] = problem.compute_Gy();
     // arr_ss[i] = problem.findsS()[0];
     parameter[i] = problem.get_varied_parameter();
-    problem.checkKConvexity(Gys[i]);
-    auto expect_Gy = problem.computeExpectGy(Gys[i]);
-    problem.checkBinomialKConvexity(Gys[i], expect_Gy);
-    problem.checkConvexity(Gys[i]);
+    problem.check_K_convexity(Gys[i]);
+    auto expect_Gy = problem.compute_expect_Gy(Gys[i]);
+    problem.check_Binomial_KConvexity(Gys[i], expect_Gy);
+    problem.check_convexity(Gys[i]);
     kconvexity[i] = problem.getKConvexity();
     binomial_kconvexity[i] = problem.getBinomialConvexity();
     convexity[i] = problem.getConvexity();

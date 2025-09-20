@@ -1,27 +1,38 @@
 cmake_minimum_required(VERSION 3.30)
+project(practice)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(RUN_NAME junior_practice) # the name of configuration target
 
-set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Release)
 if (MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "/O2")
 else ()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
-add_subdirectory(qt_practices)
-add_subdirectory(SDL2_practices)
+#add_subdirectory(qt_practices)
+#add_subdirectory(SDL2_practices)
 
 add_executable(${RUN_NAME}
-        Qmedia_test.cpp
+        #        Qmedia_test.cpp
         #        SFML_practices/main.cpp
+
+        #        ../utils/matplotlibcpp.h
+        #        draw_python.cpp
+        #        draw_python_API.cpp
+        #        draw_pythonAPI_animation.cpp
+        #                draw_python2.cpp
+        draw_animation.cpp
 
         #        boost_test.cpp
         #        game_tetris.cpp
         #        pair_test.cpp
         #               spdlog_test.cpp
         #        eigen3_test.cpp
-        #        draw_animation.cpp
+
         #        draw_QPainter_bar.cpp
         #        draw_QPainter_line.cpp
         #                variadic-test.cpp
@@ -113,9 +124,10 @@ elseif (MSVC)
             C:/ProgramData/anaconda3/libs/python312.lib
     )
 else ()
+    include(FetchContent)
     FetchContent_Declare(
             matplotlib_cpp
-            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
+            GIT_REPOSITORY git@github.com:lava/matplotlib-cpp.git
             GIT_TAG master
     )
     FetchContent_MakeAvailable(matplotlib_cpp)
