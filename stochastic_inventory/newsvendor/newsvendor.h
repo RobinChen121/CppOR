@@ -17,7 +17,7 @@
 
 class NewsvendorDP {
   size_t T;
-  int capacity;
+  double capacity;
   double stepSize;
   double fix_order_cost;
   double unit_vari_order_cost;
@@ -33,7 +33,7 @@ class NewsvendorDP {
   std::mutex mtx; // 互斥锁保护共享数据写入
 
 public:
-  NewsvendorDP(const size_t T, const int capacity, const double stepSize,
+  NewsvendorDP(const size_t T, const double capacity, const double stepSize,
                const double fix_order_cost, const double unit_vari_order_cost,
                const double unit_hold_cost, const double unit_penalty_cost,
                const double truncated_quantile, const double max_I, const double min_I,
@@ -63,7 +63,7 @@ public:
 
   void computeStage(int t, int start_inventory, int end_inventory);
 
-  void setFixCost(const double fix_order_cost) { this->fix_order_cost = fix_order_cost; };
+  void setCapacity(const double capacity) { this->capacity = static_cast<int>(capacity); };
 
   // struct DpResult {
   //   std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]

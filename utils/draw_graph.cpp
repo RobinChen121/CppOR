@@ -34,6 +34,7 @@ void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
     }
   }
 
+  plt::clf();
   constexpr double y_max = 3000; // may set according to problem
   constexpr double y_min = -1;   // may set according to problem
   constexpr double y_scale = y_max - y_min;
@@ -78,7 +79,90 @@ void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
 
   plt::legend(); // 显示图例
   plt::grid(true);
+  plt::pause(1);
   plt::show();
+}
+
+void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int min_x,
+                     const int max_x, const double fix_cost,
+                     const std::vector<double> &capacities) {
+  plt::backend("TkAgg");
+
+  int repeat = 3;
+  while (repeat > 0) {
+    for (int n = 0; n < arr.size(); n++) {
+      std::vector<double> x, y;
+      for (int i = min_x; i <= max_x; ++i) {
+        x.push_back(i);
+        y.push_back(arr[n].at(
+            i)); // at 只读访问或保证 key 存在时安全使用,而直接用[]则在没有key时自动插入value 0
+      }
+      int S = 0;
+      double GS = std::numeric_limits<int>::max();
+      for (auto [fst, snd] : arr[n]) {
+        if (snd < GS) {
+          GS = snd;
+          S = fst;
+        }
+      }
+      int s = 0;
+      for (int i = min_x; i < S; ++i) {
+        if (arr[n].at(i) < GS + fix_cost) {
+          s = i;
+          break;
+        }
+      }
+
+      plt::clf();
+      constexpr double y_max = 3000; // may set according to problem
+      constexpr double y_min = -1;   // may set according to problem
+      constexpr double y_scale = y_max - y_min;
+      plt::ylim(y_min, y_max);
+
+      const std::vector scatter_x = {s, S};
+      const std::vector scatter_y = {arr[n].at(s), GS};
+      plt::scatter(scatter_x, scatter_y, 5.0, {{"color", "red"}});
+      plt::plot(x, y);
+      const std::string title = "s = " + std::to_string(s) + ", S = " + std::to_string(S) +
+                                ", C = " + std::to_string(static_cast<int>(capacities[n])) +
+                                ", G(S) = " + std::to_string(GS);
+      plt::title(title);
+
+      std::vector<double> x2, y2;
+      for (int i = s; i <= s + capacities[n]; ++i) {
+        x2.push_back(i);
+        double value = arr[n].at(s);
+        y2.push_back(value);
+      }
+      plt::plot(x2, y2, {{"color", "red"}, {"label", "capacity length"}});
+
+      auto [fst, snd] = check_K_convexity(arr[n], fix_cost);
+      const std::string Kconvexity = fst ? "K-convex" : "not K-convex";
+      const int x_scale = max_x + min_x;
+      // auto y_lim = plt::ylim(); // 这个ylim()函数会有越界错误,应该是 matplotlibcpp 本身的错误
+      plt::text(0.3 * x_scale, 0.9 * y_scale, Kconvexity);
+
+      if (!fst) {
+        auto [yb, yy, ya] = snd;
+        std::vector<double> x1, y1;
+        for (int i = yb; i <= ya; ++i) {
+          x1.push_back(i);
+          double value = arr[n].at(yb) + (i - yb) * (arr[n].at(yy) - arr[n].at(yb)) / (yy - yb);
+          y1.push_back(value);
+        }
+        plt::plot(x1, y1, {{"color", "green"}, {"label", "not K-convex line"}});
+
+        const std::vector scatter1_x = {ya};
+        const std::vector scatter1_y = {arr[n].at(ya) + fix_cost};
+        plt::scatter(scatter1_x, scatter1_y, 10.0, {{"color", "red"}});
+      }
+
+      plt::legend(); // 显示图例
+      plt::grid(true);
+      plt::pause(0.5);
+    }
+    repeat--;
+  }
 }
 
 void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS) {
@@ -124,11 +208,11 @@ void drawGyAnimation(const std::vector<std::vector<double>> &arr,
         y.push_back(arr[i][j]);
       }
       plt::plot(x, y);
-      const double x_min = 0;
+      constexpr double x_min = 0;
       const double x_max = x.back();
-      const double y_max = 8000; // y.back();
-      const double y_min = 1000; // y[arr_sS[i][1]];
-      const double y_scale = y_max - y_min;
+      constexpr double y_max = 8000; // y.back();
+      constexpr double y_min = 1000; // y[arr_sS[i][1]];
+      constexpr double y_scale = y_max - y_min;
       const double x_scale = x_max - x_min;
       plt::ylim(y_min, y_max);
       plt::xlim(x_min, x_max);

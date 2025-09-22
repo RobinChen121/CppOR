@@ -273,7 +273,7 @@ NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
   const size_t N = parameter.size();
   std::vector<std::map<int, double>> result(N);
   for (size_t n = 0; n < N; n++) {
-    setFixCost(parameter[n]);
+    setCapacity(parameter[n]);
     cache_values.clear();
     result[n] = computeGy();
   }
@@ -282,14 +282,16 @@ NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
 
 int main() {
 
-  std::vector<double> demands = {9, 23, 53, 29};
-  const int T = static_cast<int>(demands.size());
+  // std::vector<double> demands = {9, 23, 53, 29};
+  // const int T = static_cast<int>(demands.size());
 
-  // std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
+  std::vector<double> demands = {10, 20, 30, 40, 50};
+  constexpr int T = 4;
+  std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
 
   //  constexpr double mean_demand = 30;
   //  std::vector<double> demands(T, mean_demand);
-  constexpr int capacity = 50; // maximum ordering quantity
+  constexpr double capacity = 50; // maximum ordering quantity
   constexpr double fix_order_cost = 500;
   constexpr double unitVariOderCost = 0;
   constexpr double unit_hold_cost = 2;
@@ -305,8 +307,8 @@ int main() {
   //  for (int i = 0; i < demands.size(); ++i) {
   //    sigma[i] = 0.4 * demands[i];
   //  }
-  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
-  // const auto pmf = PMF::getPMFSelfDefine(demands, probs, T);
+  // const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
+  const auto pmf = PMF::getPMFSelfDefine(demands, probs, T);
 
   const State ini_state(1, 0);
   auto model = NewsvendorDP(T, capacity, stepSize, fix_order_cost, unitVariOderCost, unit_hold_cost,
@@ -337,6 +339,17 @@ int main() {
     std::cout << "Optimal Q in period 1 is: " << optQ << std::endl;
   }
 
+  // const auto arr1 = model.computeGy();
+  // // // (void)check_K_convexity(arr1, fix_order_cost);
+  // drawGy(arr1, -100, maxI, fix_order_cost, capacity);
+
+  std::vector<double> capacities;
+  for (int i = 0; i < 20; i++) {
+    capacities.push_back(i * 10);
+  }
+  const auto arr = model.varyParameter(capacities);
+  drawGyAnimation(arr, -100, maxI, fix_order_cost, capacities);
+
   // std::cout << "s, S in each period are: " << std::endl;
   // const auto arr_sS = model.findsS(parallel);
   // for (const auto row : arr_sS) {
@@ -345,10 +358,6 @@ int main() {
   //   }
   //   std::cout << std::endl;
   // }
-
-  const auto arr = model.computeGy();
-  // (void)check_K_convexity(arr, fix_order_cost);
-  drawGy(arr, -100, maxI, fix_order_cost, capacity);
 
   return 0;
 }
