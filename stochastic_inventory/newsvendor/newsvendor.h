@@ -10,6 +10,7 @@
 #define NEWSVENDOR_H
 
 #include "../states/state.h"
+#include <map>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
@@ -54,13 +55,15 @@ public:
 
   double getOptAction(const State &state);
 
-  auto getTable() const;
+  [[nodiscard]] auto getTable() const;
 
   double recursion_serial(const State &state);
 
   double recursion_parallel(const State &state);
 
   void computeStage(int t, int start_inventory, int end_inventory);
+
+  void setFixCost(const double fix_order_cost) { this->fix_order_cost = fix_order_cost; };
 
   // struct DpResult {
   //   std::vector<std::unordered_map<State, double>> value;  // V[t][inventory]
@@ -77,7 +80,8 @@ public:
   [[nodiscard]] std::vector<std::array<int, 2>> findsS(bool parallel) const;
 
   void backward_parallel(int thread_num);
-  std::vector<double> computeGy();
+  std::map<int, double> computeGy();
+  std::vector<std::map<int, double>> varyParameter(const std::vector<double> &parameter);
 };
 
 #endif // NEWSVENDOR_H

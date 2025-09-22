@@ -49,10 +49,10 @@ State NewsvendorDP::stateTransitionFunction(const State &state, const double act
   double next_inventory = state.getInitialInventory() + action - demand;
   if (compute_Gy == true and state.getPeriod() == 1)
     next_inventory = state.getInitialInventory() - demand;
-  // if (!parallel) {
-  //   next_inventory = next_inventory > max_I ? max_I : next_inventory;
-  //   next_inventory = next_inventory < min_I ? min_I : next_inventory;
-  // }
+  if (!compute_Gy and parallel) {
+    next_inventory = next_inventory > max_I ? max_I : next_inventory;
+    next_inventory = next_inventory < min_I ? min_I : next_inventory;
+  }
 
   const int nextPeriod = state.getPeriod() + 1;
   // C++11 引入了统一的列表初始化（Uniform Initialization），鼓励使用大括号 {} 初始化类
@@ -72,10 +72,10 @@ double NewsvendorDP::immediateValueFunction(const State &state, const double act
     next_inventory = state.getInitialInventory() - demand;
   }
   // it is better to not truncate the state if looking for the values of s and S
-  // if (!parallel) {
-  //   next_inventory = next_inventory > max_I ? max_I : next_inventory;
-  //   next_inventory = next_inventory < min_I ? min_I : next_inventory;
-  // }
+  if (!compute_Gy and parallel) {
+    next_inventory = next_inventory > max_I ? max_I : next_inventory;
+    next_inventory = next_inventory < min_I ? min_I : next_inventory;
+  }
   const double hold_cost = std::max(unit_hold_cost * next_inventory, 0.0);
   const double penalty_cost = std::max(-unit_penalty_cost * next_inventory, 0.0);
 
@@ -244,45 +244,62 @@ std::vector<std::array<int, 2>> NewsvendorDP::findsS(const bool parallel) const 
   return arr;
 }
 
-std::vector<double> NewsvendorDP::computeGy() {
+std::map<int, double> NewsvendorDP::computeGy() {
+  std::map<int, double> Gy;
+  compute_Gy = true;
+
   if (parallel) {
     std::cout << "parallel computing may cause truncated state issues" << std::endl;
     std::exit(EXIT_FAILURE); // 退出程序，返回非零状态
+    // const int thread_num = 8;
+    // value.clear();
+    // backward_parallel(thread_num);
+    // for (int y = static_cast<int>(min_I); y <= max_I; ++y) {
+    //   const State ini_state{1, static_cast<double>(y)};
+    //   Gy[y] = value[0].at(ini_state);
+    // }
+    // return Gy;
   }
 
-  const int y_length = static_cast<int>(max_I - min_I + 1);
-  std::vector<double> Gy(y_length);
-  compute_Gy = true;
-
-  int index = 0;
   for (int y = static_cast<int>(min_I); y <= max_I; ++y) {
     const State ini_state{1, static_cast<double>(y)};
-    Gy[index] = recursion_serial(ini_state);
-    index++;
+    Gy[y] = recursion_serial(ini_state);
   }
   return Gy;
 }
 
+std::vector<std::map<int, double>>
+NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
+  const size_t N = parameter.size();
+  std::vector<std::map<int, double>> result(N);
+  for (size_t n = 0; n < N; n++) {
+    setFixCost(parameter[n]);
+    cache_values.clear();
+    result[n] = computeGy();
+  }
+  return result;
+}
+
 int main() {
-  constexpr int T = 4;
-  std::vector demands = {9.0, 23.0, 53.0, 29.0};
+
+  std::vector<double> demands = {9, 23, 53, 29};
+  const int T = static_cast<int>(demands.size());
 
   // std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
 
   //  constexpr double mean_demand = 30;
   //  std::vector<double> demands(T, mean_demand);
-
   constexpr int capacity = 50; // maximum ordering quantity
-  constexpr double stepSize = 1.0;
   constexpr double fix_order_cost = 500;
   constexpr double unitVariOderCost = 0;
   constexpr double unit_hold_cost = 2;
   constexpr double unit_penalty_cost = 10;
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
   constexpr double maxI = 300;             // maximum possible inventory
-  constexpr double minI = -100;            // minimum possible inventory
+  constexpr double minI = -300;            // minimum possible inventory
   constexpr bool parallel =
       false; // when looking for values of s, S or computing Gy, parallel is better to be false
+  constexpr double stepSize = 1.0;
 
   //  std::vector<double> sigma(demands.size());
   //  for (int i = 0; i < demands.size(); ++i) {
@@ -294,15 +311,6 @@ int main() {
   const State ini_state(1, 0);
   auto model = NewsvendorDP(T, capacity, stepSize, fix_order_cost, unitVariOderCost, unit_hold_cost,
                             unit_penalty_cost, truncQuantile, maxI, minI, pmf, parallel, ini_state);
-
-  // const auto start_time = std::chrono::high_resolution_clock::now();
-  // const auto optValue = model.recursion_serial(ini_state);
-  // const auto end_time = std::chrono::high_resolution_clock::now();
-  // const std::chrono::duration<double> duration = end_time - start_time;
-  // std::cout << "planning horizon is " << T << " periods" << std::endl;
-  // std::cout << "running time of C++ in serial is " << duration <<
-  // std::endl; std::cout << "Final optimal value is: " << optValue <<
-  // std::endl;
 
   constexpr int thread_num = 8;
   double opt_value = 0.0;
@@ -326,21 +334,21 @@ int main() {
     std::cout << "running time of C++ in serial is " << duration2 << std::endl;
     std::cout << "Final optimal value is: " << opt_value << std::endl;
     const auto optQ = model.cache_actions[ini_state];
-    std::cout << "Optimal Q is: " << optQ << std::endl;
+    std::cout << "Optimal Q in period 1 is: " << optQ << std::endl;
   }
 
-  std::cout << "s, S in each period are: " << std::endl;
-  const auto arr_sS = model.findsS(parallel);
-  for (const auto row : arr_sS) {
-    for (const auto col : row) {
-      std::cout << col << ' ';
-    }
-    std::cout << std::endl;
-  }
+  // std::cout << "s, S in each period are: " << std::endl;
+  // const auto arr_sS = model.findsS(parallel);
+  // for (const auto row : arr_sS) {
+  //   for (const auto col : row) {
+  //     std::cout << col << ' ';
+  //   }
+  //   std::cout << std::endl;
+  // }
 
   const auto arr = model.computeGy();
-  check_K_convexity(arr, fix_order_cost, minI, maxI);
-  drawGy(arr, minI);
+  // (void)check_K_convexity(arr, fix_order_cost);
+  drawGy(arr, -100, maxI, fix_order_cost, capacity);
 
   return 0;
 }

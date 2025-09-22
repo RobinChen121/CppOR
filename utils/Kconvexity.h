@@ -8,8 +8,9 @@
 
 #ifndef KCONVEXITY_H
 #define KCONVEXITY_H
+#include <map>
 #include <vector>
 
-bool check_K_convexity(const std::vector<double> &Gy, double fix_hire_cost, double min_y,
-                       double max_y);
+std::pair<bool, std::array<int, 3>> check_K_convexity(const std::map<int, double> &Gy,
+                                                      double fix_hire_cost);
 #endif // KCONVEXITY_H

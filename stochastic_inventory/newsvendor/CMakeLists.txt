@@ -4,7 +4,7 @@ project(newsvendor) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Debug)
 if (CMAKE_BUILD_TYPE STREQUAL Release)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
@@ -30,7 +30,6 @@ add_executable(${PROJECT_NAME}
 
         ../../utils/draw_graph.cpp
         ../../utils/Kconvexity.cpp
-        ../../utils/Kconvexity.h
 )
 
 
@@ -39,8 +38,12 @@ add_executable(${PROJECT_NAME}
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
+
 #-----------------------------------
 # matplotlib setting
+if (MSVC)
+    add_definitions(-U_DEBUG)  # 取消 _DEBUG 宏,这样jiuneg
+endif ()
 if (APPLE)
     # python head file
     include_directories(/opt/anaconda3/include/python3.12)
@@ -54,7 +57,8 @@ elseif (MSVC)
     include_directories(C:/ProgramData/anaconda3/include/)
     include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
     target_link_libraries(${PROJECT_NAME}
-            C:/ProgramData/anaconda3/libs/python312.lib
+            optimized C:/ProgramData/anaconda3/libs/python312.lib # Release 模式用 python312.lib
+            debug C:/ProgramData/anaconda3/libs/python312.lib # Debug 模式也强制用 python312.lib
     )
 else ()
     FetchContent_Declare(

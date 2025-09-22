@@ -10,12 +10,12 @@
 #define DRAW_GRAPH_H
 
 #include "../utils/matplotlibcpp.h"
-#include <cmath>
+#include "Kconvexity.h"
 #include <vector>
 namespace plt = matplotlibcpp;
 
 void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS);
-void drawGy(const std::vector<double> &arr, double min_y);
+void drawGy(const std::map<int, double> &arr, int min_x, int max_x, double fix_cost, int capacity);
 
 void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &parameter,

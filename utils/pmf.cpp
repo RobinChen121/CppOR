@@ -33,8 +33,12 @@ double PMF::poissonPMF(const int k, const int lambda) {
     return 0.0; // 确保参数合法
   if (k == 0 and lambda == 0)
     return 1.0;
-  return (std::pow(lambda, k) * std::exp(-lambda)) / std::tgamma(k + 1);
-  // tgamma(k+1) is a gamma function, 等同于factorial(k)
+  // lgamma 对 tgamma 取 ln
+  const double logP = -lambda + k * std::log(lambda) - std::lgamma(k + 1);
+  return std::exp(logP); // 使用对数形式避免 std::tgamma(k + 1) 太大溢出
+
+  // return (std::pow(lambda, k) * std::exp(-lambda)) / std::tgamma(k + 1);
+  // // tgamma(k+1) is a gamma function, 等同于 factorial(k)
 }
 
 // get the probability mass function value of Poisson

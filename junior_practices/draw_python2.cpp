@@ -14,6 +14,7 @@ namespace plt = matplotlibcpp;
 int main() {
   int n = 1000;
   std::vector<double> x(n), y(n), z(n);
+  plt::backend("TkAgg");
 
   // 准备数据
   for (int i = 0; i < n; ++i) {

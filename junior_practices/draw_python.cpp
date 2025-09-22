@@ -27,6 +27,7 @@ int main() {
   plt::xlabel("x");
   plt::ylabel("y");
   plt::grid(true);
+  plt::text(0.0, 0.0, "test");
   plt::show();
 
   return 0;
