@@ -145,11 +145,11 @@ endif ()
 # matplotlib setting
 if (APPLE)
     # python head file
-    include_directories(/opt/anaconda3/include/python3.12)
+    include_directories(/opt/anaconda3/envs/py312/include/python3.12)
     # numpy head file
-    include_directories(/opt/anaconda3/lib/python3.12/site-packages/numpy/core/include)
+    include_directories(/opt/anaconda3/envs/py312/lib/python3.12/site-packages/numpy/_core/include)
     target_link_libraries(${PROJECT_NAME}
-            /opt/anaconda3/lib/libpython3.12.dylib
+            /opt/anaconda3/envs/py312/lib/libpython3.12.dylib
             dl
     )
 elseif (MSVC)

@@ -533,7 +533,7 @@ double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const
   double right_term = 0;
   for (int k = t; k <= j; k++) {
     left_term += 1 - p_c[t][k];
-    right_term += loss_function_expect(y, min_workers[t], p_c[t][k]);
+    right_term += loss_function_expect(y, min_workers[k], p_c[t][k]); // min_workers[t]
   }
   left_term *= salary * y;
   right_term *= unit_penalty;

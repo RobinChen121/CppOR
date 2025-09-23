@@ -121,7 +121,7 @@ void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int mi
 
       const std::vector scatter_x = {s, S};
       const std::vector scatter_y = {arr[n].at(s), GS};
-      plt::scatter(scatter_x, scatter_y, 5.0, {{"color", "red"}});
+      plt::scatter(scatter_x, scatter_y, 10.0, {{"color", "red"}, {"label", "s, S"}});
       plt::plot(x, y);
       const std::string title = "s = " + std::to_string(s) + ", S = " + std::to_string(S) +
                                 ", C = " + std::to_string(static_cast<int>(capacities[n])) +
