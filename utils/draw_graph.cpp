@@ -42,7 +42,36 @@ void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
 
   const std::vector scatter_x = {s, S};
   const std::vector scatter_y = {arr.at(s), GS};
-  plt::scatter(scatter_x, scatter_y, 5.0, {{"color", "red"}});
+  plt::scatter(scatter_x, scatter_y, 10.0, {{"color", "red"}, {"label", "s1, S1"}});
+
+  int S2 = min_x;
+  for (int i = min_x + 1; i < S; ++i) {
+    if (arr.at(i) < arr.at(i + 1) and arr.at(i) < arr.at(i - 1)) {
+      S2 = i;
+
+      int s2 = min_x;
+      for (int k = min_x; k < S; ++k) {
+        if (arr.at(k) < arr.at(S2) + fix_cost) {
+          s2 = k;
+          break;
+        }
+      }
+
+      const std::vector scatter_x2 = {s2, S2};
+      const std::vector scatter_y2 = {arr.at(s2), arr.at(S2)};
+      plt::scatter(scatter_x2, scatter_y2, 10.0, {{"color", "black"}, {"label", "s2, S2"}});
+
+      std::vector<double> x2, y2;
+      for (int k = s2; k <= s2 + capacity; ++k) {
+        x2.push_back(k);
+        double value = arr.at(s2);
+        y2.push_back(value);
+      }
+      plt::plot(x2, y2, {{"color", "red"}, {"label", "capacity length"}});
+      break;
+    }
+  }
+
   plt::plot(x, y);
   const std::string title = "G(y): s = " + std::to_string(s) + ", S = " + std::to_string(S) +
                             ", C = " + std::to_string(capacity);
@@ -113,7 +142,34 @@ void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int mi
         }
       }
 
-      plt::clf();
+      int S2 = min_x;
+      for (int i = min_x + 1; i < S; ++i) {
+        if (arr[n].at(i) < arr[n].at(i + 1) and arr[n].at(i) < arr[n].at(i - 1)) {
+          S2 = i;
+
+          int s2 = min_x;
+          for (int k = min_x; k < S; ++k) {
+            if (arr[n].at(k) < arr[n].at(S2) + fix_cost) {
+              s2 = k;
+              break;
+            }
+          }
+
+          const std::vector scatter_x2 = {s2, S2};
+          const std::vector scatter_y2 = {arr[n].at(s2), arr[n].at(S2)};
+          plt::scatter(scatter_x2, scatter_y2, 10.0, {{"color", "black"}, {"label", "s2, S2"}});
+
+          std::vector<double> x2, y2;
+          for (int k = s2; k <= s2 + capacities[n]; ++k) {
+            x2.push_back(k);
+            double value = arr[n].at(s2);
+            y2.push_back(value);
+          }
+          plt::plot(x2, y2, {{"color", "red"}, {"label", "capacity length"}});
+          break;
+        }
+      }
+
       constexpr double y_max = 3000; // may set according to problem
       constexpr double y_min = -1;   // may set according to problem
       constexpr double y_scale = y_max - y_min;
@@ -121,7 +177,8 @@ void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int mi
 
       const std::vector scatter_x = {s, S};
       const std::vector scatter_y = {arr[n].at(s), GS};
-      plt::scatter(scatter_x, scatter_y, 10.0, {{"color", "red"}, {"label", "s, S"}});
+      plt::scatter(scatter_x, scatter_y, 10.0, {{"color", "red"}, {"label", "s1, S1"}});
+
       plt::plot(x, y);
       const std::string title = "s = " + std::to_string(s) + ", S = " + std::to_string(S) +
                                 ", C = " + std::to_string(static_cast<int>(capacities[n])) +
@@ -160,6 +217,7 @@ void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int mi
       plt::legend(); // 显示图例
       plt::grid(true);
       plt::pause(0.5);
+      plt::clf();
     }
     repeat--;
   }

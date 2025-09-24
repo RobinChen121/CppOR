@@ -19,6 +19,8 @@
  * meanDemand = {9, 23, 53, 29}; double holdingCost = 2; int
  * C = 100;
  * when C = 50, it is not K-convex;
+ * when C = 60, it is a counter example of the optimality of multi-level (s, S) policy:
+ * when initial inventory falls between s1 and s2, it is optimal to not order.
  *
  */
 
@@ -282,16 +284,16 @@ NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
 
 int main() {
 
-  // std::vector<double> demands = {9, 23, 53, 29};
-  // const int T = static_cast<int>(demands.size());
+  std::vector<double> demands = {9, 23, 53, 29};
+  const int T = static_cast<int>(demands.size());
 
-  std::vector<double> demands = {10, 20, 30, 40, 50};
-  constexpr int T = 4;
-  std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
+  // std::vector<double> demands = {10, 20, 30, 40, 50};
+  // constexpr int T = 4;
+  // std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
 
   //  constexpr double mean_demand = 30;
   //  std::vector<double> demands(T, mean_demand);
-  constexpr double capacity = 50; // maximum ordering quantity
+  constexpr double capacity = 60; // maximum ordering quantity
   constexpr double fix_order_cost = 500;
   constexpr double unitVariOderCost = 0;
   constexpr double unit_hold_cost = 2;
@@ -307,10 +309,10 @@ int main() {
   //  for (int i = 0; i < demands.size(); ++i) {
   //    sigma[i] = 0.4 * demands[i];
   //  }
-  // const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
-  const auto pmf = PMF::getPMFSelfDefine(demands, probs, T);
+  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
+  // const auto pmf = PMF::getPMFSelfDefine(demands, probs, T);
 
-  const State ini_state(1, 0);
+  const State ini_state(1, 20);
   auto model = NewsvendorDP(T, capacity, stepSize, fix_order_cost, unitVariOderCost, unit_hold_cost,
                             unit_penalty_cost, truncQuantile, maxI, minI, pmf, parallel, ini_state);
 
@@ -339,16 +341,16 @@ int main() {
     std::cout << "Optimal Q in period 1 is: " << optQ << std::endl;
   }
 
-  // const auto arr1 = model.computeGy();
-  // // // (void)check_K_convexity(arr1, fix_order_cost);
-  // drawGy(arr1, -100, maxI, fix_order_cost, capacity);
+  const auto arr1 = model.computeGy();
+  // // (void)check_K_convexity(arr1, fix_order_cost);
+  drawGy(arr1, -100, maxI, fix_order_cost, capacity);
 
-  std::vector<double> capacities;
-  for (int i = 0; i < 20; i++) {
-    capacities.push_back(i * 10);
-  }
-  const auto arr = model.varyParameter(capacities);
-  drawGyAnimation(arr, -100, maxI, fix_order_cost, capacities);
+  // std::vector<double> capacities;
+  // for (int i = 0; i < 20; i++) {
+  //   capacities.push_back(i * 10);
+  // }
+  // const auto arr = model.varyParameter(capacities);
+  // drawGyAnimation(arr, -100, maxI, fix_order_cost, capacities);
 
   // std::cout << "s, S in each period are: " << std::endl;
   // const auto arr_sS = model.findsS(parallel);
