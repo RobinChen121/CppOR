@@ -22,6 +22,12 @@
  * when C = 60, it is a counter example of the optimality of multi-level (s, S) policy:
  * when initial inventory falls between s1 and s2, it is optimal to not order.
  *
+ * a counter example of always ordering property from Roberto is:
+ * 4 period demand in each period follows the given uncertainties below:
+ * values = {{34, 159, 281, 286}, {14, 223, 225, 232}, {5, 64, 115, 171}, {35, 48, 145, 210}}
+ * probs = {{0.018, 0.888, 0.046, 0.048}, {0.028, 0.271, 0.17, 0.531}, {0.041, 0.027, 0.889, 0.043},
+ * {0.069, 0.008, 0.019, 0.904}} K = 250, B = 41, h = 1 and p = 26 and v = 0.
+ *
  */
 
 #include "newsvendor.h"
@@ -284,16 +290,16 @@ NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
 
 int main() {
 
-  std::vector<double> demands = {9, 23, 53, 29};
-  const int T = static_cast<int>(demands.size());
+  // std::vector<double> demands = {9, 23, 53, 29};
+  // const int T = static_cast<int>(demands.size());
 
-  // std::vector<double> demands = {10, 20, 30, 40, 50};
-  // constexpr int T = 4;
-  // std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
+  std::vector<double> demands = {40, 80};
+  constexpr int T = 2;
+  std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
 
   //  constexpr double mean_demand = 30;
   //  std::vector<double> demands(T, mean_demand);
-  constexpr double capacity = 60; // maximum ordering quantity
+  constexpr double capacity = 50; // maximum ordering quantity
   constexpr double fix_order_cost = 500;
   constexpr double unitVariOderCost = 0;
   constexpr double unit_hold_cost = 2;
@@ -312,7 +318,7 @@ int main() {
   const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
   // const auto pmf = PMF::getPMFSelfDefine(demands, probs, T);
 
-  const State ini_state(1, 20);
+  const State ini_state(1, 27);
   auto model = NewsvendorDP(T, capacity, stepSize, fix_order_cost, unitVariOderCost, unit_hold_cost,
                             unit_penalty_cost, truncQuantile, maxI, minI, pmf, parallel, ini_state);
 

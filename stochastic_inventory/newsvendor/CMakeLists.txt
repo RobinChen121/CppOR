@@ -30,6 +30,8 @@ add_executable(${PROJECT_NAME}
 
         ../../utils/draw_graph.cpp
         ../../utils/Kconvexity.cpp
+        ../../tsp/tsp.h
+        ../../tsp/DP.cpp
 )
 
 
