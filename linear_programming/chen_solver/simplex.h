@@ -12,10 +12,14 @@
 
 enum class Comparison { LessOrEqual, Equal, GreaterOrEqual };
 
-enum class VarSign {
-  NonNegative, // ≥ 0
-  NonPositive  // ≤ 0
-};
+enum class AntiCycle { None, Bland, Lexicography };
+
+enum class SolutionStatue {
+  Zero = 0,
+  One = 1,
+  Two = 2,
+  Three = 3
+}; // 0 optimal, 1 unbounded, 2 infeasible, 3 unsolved
 
 class Simplex {
 private:
@@ -23,55 +27,66 @@ private:
   int obj_sense{}; // 0:min, 1: max
   std::vector<std::vector<double>> con_lhs;
   std::vector<double> con_rhs;
-  std::vector<int> con_sense; // 0:<=, 1: >=, 2: =
-  std::vector<int> var_sign;  // 0: >=, 1: <=, 2: unsigned
+  std::vector<int> constraint_sense; // 0:<=, 1: >=, 2: =
+  std::vector<int> var_sign;         // 0: >=, 1: <=, 2: unsigned
+
+  AntiCycle anti_cycle{AntiCycle::None};
+  SolutionStatue solution_statue{SolutionStatue::Three};
+  bool obj_sense_changed{};
 
   std::vector<std::vector<double>> tableau; // 单纯形表
-  int con_num{};                            // number of constraints
+  int constraint_num{};                     // number of constraints
   int var_num{};
+  int var_slack_num{};
+  int var_artificial_num{};
   std::vector<int> con_slack_coe; // the coefficient of the slack variable in the constraint
   std::vector<int>
       con_artificial_coe; // the coefficient of the artificial variable in the constraint
-  std::vector<int> basicVars;
+  std::vector<int> basic_vars;
 
   // 找到主列（进入变量）
   [[nodiscard]] int findPivotColumn() const;
 
   // 找到主行（离开变量）
-  [[nodiscard]] int findPivotRow(int pivotCol) const;
+  [[nodiscard]] int findPivotRow(int pivot_column) const;
 
   // 行变换
-  void pivot(int pivotRow, int pivotCol);
+  void pivot(int pivot_row, int pivot_column);
 
 public:
   Simplex(const int obj_sense, const std::vector<double> &obj_coe,
           const std::vector<std::vector<double>> &con_lhs, const std::vector<double> &con_rhs,
-          const std::vector<int> &con_sense, const std::vector<int> &var_sign)
+          const std::vector<int> &constraint_sense, const std::vector<int> &var_sign)
       : obj_coe(obj_coe), obj_sense(obj_sense), con_lhs(con_lhs), con_rhs(con_rhs),
-        con_sense(con_sense), var_sign(var_sign) {
-    con_num = static_cast<int>(con_lhs.size());
+        constraint_sense(constraint_sense), var_sign(var_sign) {
+    constraint_num = static_cast<int>(con_lhs.size());
     var_num = static_cast<int>(var_sign.size());
   };
 
-  explicit Simplex(const std::vector<std::vector<double>> &initialTableau);
-
+  // single argument constructor must be explicit
+  explicit Simplex(const std::vector<std::vector<double>> &initialTableau) {
+    tableau = initialTableau;
+    constraint_num = static_cast<int>(tableau.size()) - 1;
+    var_num = static_cast<int>(tableau[0].size()) - 1;
+    initializeBasicVariables(); // 初始化基变量
+  }
   void standardize();
   void print() const;
   void printConLHS() const;
+
+  void setAntiCycle(AntiCycle rule);
 
   void inputObjCoef() const;
 
   void solve();
 
-  [[nodiscard]] int isBasicVariable(int col) const;
+  [[nodiscard]] int isBasicVariable(int column_index) const;
 
   void displaySolution() const;
 
   void initializeBasicVariables();
 
   void initializeObjective();
-
-  void displayTableau() const;
 
   std::vector<std::vector<double>> generateTableau();
 };

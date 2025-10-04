@@ -8,5 +8,6 @@ add_executable(${PROJECT_NAME}
         tsp.h
         #        DP.cpp
         branch_and_bound2.cpp
+        branch_and_bound1.cpp
         #        branch_and_bound1.cpp
 )

@@ -8,8 +8,6 @@
 #include "tsp.h"
 #include <iostream>
 #include <queue>
-
-#include <limits>
 #include <vector>
 using namespace std;
 
@@ -81,7 +79,7 @@ Node *createChild(const Node &parent, const int i, const int j,
   child->vertex = j;
 
   child->currentMatrix = parent.currentMatrix;
-  for (int k = 0; k < n; k++) {
+  for (int k = 0; k < n; k++) { // 因为选择了路径ij，从i出发的，到达j的所有其他路径都设置为无穷不通
     child->currentMatrix[i][k] = INF;
     child->currentMatrix[k][j] = INF;
   }
@@ -89,18 +87,20 @@ Node *createChild(const Node &parent, const int i, const int j,
 
   const int extraReduction = reduceMatrix(child->currentMatrix);
   child->costSoFar = parent.costSoFar + originalMatrix[i][j];
-  child->lowerBound = child->costSoFar + extraReduction;
+  child->lowerBound = child->costSoFar + extraReduction; // 更新下界
 
   return child;
 }
 
-struct comp {
-  bool operator()(const Node *lhs, const Node *rhs) { return lhs->lowerBound > rhs->lowerBound; }
+struct comparator { // 总让下界比较小的排在前面
+  bool operator()(const Node *lhs, const Node *rhs) const {
+    return lhs->lowerBound > rhs->lowerBound;
+  }
 };
 
-void solveTSP(const vector<vector<int>> &C) {
-  const int n = static_cast<int>(C.size());
-  vector<vector<int>> reduced = C;
+void solveTSP(const vector<vector<int>> &CM) {
+  const int n = static_cast<int>(CM.size());
+  vector<vector<int>> reduced = CM;
   const int rootReduction = reduceMatrix(reduced);
 
   Node *root = new Node;
@@ -111,18 +111,22 @@ void solveTSP(const vector<vector<int>> &C) {
   root->costSoFar = 0;
   root->lowerBound = rootReduction;
 
-  priority_queue<Node *, vector<Node *>, comp> pq;
+  // 优先队列
+  // 它存放 Node* 的元素类型
+  // 内部用 vector<Node*> 来存储元素，并通过自定义的 comparator 来决定优先级（谁先出队）
+  priority_queue<Node *, vector<Node *>, comparator> pq;
   pq.push(root);
 
   int bestCost = INF;
   vector<int> bestPath;
 
-  while (!pq.empty()) {
-    Node *minNode = pq.top();
-    pq.pop();
-    int i = minNode->vertex;
+  // 只要优先队列里还有候选节点，就继续循环
+  while (!pq.empty()) {             // 这个循环最关键
+    const Node *minNode = pq.top(); // 当前 lower bound 最低的
+    pq.pop();                       // pop() 只会取出一个“最有希望”的结点继续扩展
+    const int i = minNode->vertex;
 
-    if (minNode->level == n - 1) {
+    if (minNode->level == n - 1) { // 如果到达了最后一层
       int finalCost = minNode->costSoFar + C[i][0];
       if (finalCost < bestCost) {
         bestCost = finalCost;
@@ -133,7 +137,8 @@ void solveTSP(const vector<vector<int>> &C) {
       continue;
     }
 
-    for (int j = 0; j < n; j++) {
+    // 有可能把多个节点压入队列
+    for (int j = 0; j < n; j++) { // 这个是关键
       if (minNode->currentMatrix[i][j] != INF) {
         Node *child = createChild(*minNode, i, j, C);
         if (child->lowerBound < bestCost) {
@@ -147,9 +152,10 @@ void solveTSP(const vector<vector<int>> &C) {
   }
 
   cout << "最优路径: ";
-  for (int v : bestPath)
+  for (const int v : bestPath)
     cout << v << " ";
   cout << "\n最小花费: " << bestCost << endl;
+  delete root;
 }
 
 int main() {
