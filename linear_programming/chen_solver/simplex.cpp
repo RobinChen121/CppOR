@@ -80,6 +80,10 @@ void Simplex::pivot(const int pivot_row, const int pivot_column) {
 
 void Simplex::solve() {
   // initializeObjective(); // change the big M variables
+
+  if (var_artificial_num > 0) {
+
+  }
   while (true) {
     const int pivot_column = findPivotColumn();
     if (pivot_column == -1) {
