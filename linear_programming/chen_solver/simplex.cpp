@@ -289,14 +289,18 @@ void Simplex::print() const {
   else
     std::cout << "max    ";
   for (int i = 0; i < var_original_num; i++) {
-    std::cout << obj_coe[i];
+    if (obj_coe[i] == -1)
+      std::cout << "-";
+    else if (obj_coe[i] != 1)
+      std::cout << obj_coe[i];
     std::cout << "x_" << (i + 1) << " ";
-    if (i != obj_coe.size() - 1 && obj_coe[i + 1] > 0)
+    if (i != obj_coe.size() - 1 && obj_coe[i + 1] >= 0)
       std::cout << "+ ";
   }
   for (size_t i = 0; i < con_slack_coe.size(); i++) {
     if (con_slack_coe[i] != 0) {
-      std::cout << "+ ";
+      if (i != 0)
+        std::cout << "+ ";
       std::cout << "0s_" << (i + 1);
     }
   }
@@ -304,7 +308,7 @@ void Simplex::print() const {
   for (const int i : con_artificial_coe) {
     if (i != 0) {
       std::cout << " + ";
-      std::cout << "0a_" << (artificial_count + 1) << " ";
+      std::cout << "0a_" << (artificial_count + 1) << "";
       artificial_count++;
     }
   }
@@ -314,10 +318,10 @@ void Simplex::print() const {
     for (size_t i = 0; i < var_original_num; i++) {
       if (con_lhs[j][i] == -1)
         std::cout << "-";
-      else if (con_lhs[j][i] != 1 && con_lhs[j][i] > 0)
+      else if (con_lhs[j][i] != 1 && con_lhs[j][i] >= 0)
         std::cout << con_lhs[j][i];
       else if (con_lhs[j][i] != 1 && con_lhs[j][i] < 0)
-        std::cout << "- " << -con_lhs[j][i];
+        std::cout << "-" << -con_lhs[j][i];
       std::cout << "x_" << (i + 1);
       if (i != var_original_num - 1 && con_lhs[j][i + 1] >= 0)
         std::cout << " + ";
@@ -325,26 +329,40 @@ void Simplex::print() const {
         std::cout << " ";
     }
     if (var_slack_num > 1e-1) {
-      for (size_t k = 0; k < con_slack_coe.size(); k++)
-        if (k == j) {
-          if (con_slack_coe[k] == 1)
-            std::cout << " + s_" << (k + 1);
-          if (con_slack_coe[k] == -1)
-            std::cout << " - s_" << (k + 1);
-        } else
-          std::cout << " + 0s_" << (k + 1);
+      int slack_count = 0;
+      for (size_t k = 0; k <= j; k++) {
+        if (con_slack_coe[k] != 0)
+          slack_count++;
+      }
+      if (con_slack_coe[j] != 0) {
+        for (int m = 0; m < slack_count - 1; m++)
+          std::cout << " + 0s_" << (m + 1);
+        if (con_slack_coe[j] == 1)
+          std::cout << " + s_" << (slack_count);
+        else if (con_slack_coe[j] == -1)
+          std::cout << " -s_" << (slack_count);
+        for (int m = slack_count + 1; m <= var_slack_num; m++)
+          std::cout << " + 0s_" << (m);
+      } else {
+        for (int m = 0; m < var_slack_num; m++)
+          std::cout << " + 0s_" << (m + 1);
+      }
     }
     if (var_artificial_num > 1e-1) {
       artificial_count = 0;
-      for (size_t k = 0; k < con_artificial_coe.size(); k++) {
-        if (k == j) {
-          if (con_artificial_coe[k] == 0)
-            std::cout << " + 0a_" << (artificial_count + 1);
-          else {
-            std::cout << " + a_" << (artificial_count + 1);
-            artificial_count++;
-          }
-        }
+      for (size_t k = 0; k <= j; k++) {
+        if (con_artificial_coe[k] != 0)
+          artificial_count++;
+      }
+      if (con_artificial_coe[j] == 1) {
+        for (int m = 0; m < artificial_count - 1; m++)
+          std::cout << " + 0a_" << (m + 1);
+        std::cout << " + a_" << (artificial_count);
+        for (int m = artificial_count + 1; m <= var_artificial_num; m++)
+          std::cout << " + 0a_" << (m);
+      } else {
+        for (int m = 0; m < var_artificial_num; m++)
+          std::cout << " + 0a_" << (m + 1);
       }
     }
     switch (constraint_sense[j]) {
@@ -374,8 +392,8 @@ void Simplex::print() const {
       std::cout << "s_" << (i + 1) << " >= 0";
     }
   }
+  artificial_count = 0;
   for (const int i : con_artificial_coe) {
-    artificial_count = 0;
     if (i != 0) {
       std::cout << ", ";
       std::cout << "a_" << (artificial_count + 1) << " >= 0";
@@ -407,11 +425,12 @@ int main() {
   // const std::vector<std::vector<double>> con_lhs = {{2.0, 1.0}, {1.0, 2.0}};
   // const std::vector con_rhs = {4.0, 5.0};
   constexpr int obj_sense = 1;
-  const std::vector obj_coe = {2.0, 1.0};
-  const std::vector<std::vector<double>> con_lhs = {{0.0, 5.0}, {6.0, 2.0}, {1.0, 1.0}};
-  const std::vector con_rhs = {15.0, 24.0, 5.0};
-  const std::vector constraint_sense = {0, 0, 0}; // 0:<=, 1: >=, 2: =
-  const std::vector var_sign = {0, 0};            // 0: >=, 1: <=, 2: unsigned
+  const std::vector obj_coe = {-3.0, 0.0, 1.0};
+  const std::vector<std::vector<double>> con_lhs = {
+      {1.0, 1.0, 1.0}, {-2.0, 1.0, -1}, {0.0, 3.0, 1.0}};
+  const std::vector con_rhs = {4.0, 1.0, 9.0};
+  const std::vector constraint_sense = {0, 1, 2}; // 0:<=, 1: >=, 2: =
+  const std::vector var_sign = {0, 0, 0};         // 0: >=, 1: <=, 2: unsigned
 
   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign);
   std::cout << "original model is:" << std::endl;
