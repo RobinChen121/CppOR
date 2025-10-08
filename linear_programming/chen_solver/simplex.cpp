@@ -19,7 +19,7 @@ constexpr double M = 10000;
 int Simplex::findPivotColumn() const {
   int pivot_column = -1;
   double min_value = std::numeric_limits<double>::max();
-  for (int j = 0; j < var_num; j++) {
+  for (int j = 0; j < var_total_num; j++) {
     if (anti_cycle == AntiCycle::Bland) {
       // 从索引 0 开始检查
       if (tableau[0][j] < 0) {
@@ -45,7 +45,7 @@ int Simplex::findPivotRow(const int pivot_column) const {
   for (int i = 1; i < constraint_num + 1; i++) {
     if (tableau[i][pivot_column] > 1e-6) {
       // 避免数值误差
-      const double ratio = tableau[i][var_num] / tableau[i][pivot_column];
+      const double ratio = tableau[i][var_total_num] / tableau[i][pivot_column];
       if (ratio < minRatio) {
         // 严格小于，确保唯一性
         minRatio = ratio;
@@ -63,13 +63,13 @@ int Simplex::findPivotRow(const int pivot_column) const {
 
 void Simplex::pivot(const int pivot_row, const int pivot_column) {
   const double pivot_value = tableau[pivot_row][pivot_column];
-  for (int j = 0; j < var_num + 1; j++) {
+  for (int j = 0; j < var_total_num + 1; j++) {
     tableau[pivot_row][j] /= pivot_value; // 除以 pivot_value
   }
   for (int i = 0; i < constraint_num + 1; i++) {
     if (i != pivot_row) {
       const double factor = tableau[i][pivot_column];
-      for (int j = 0; j < var_num + 1; j++) {
+      for (int j = 0; j < var_total_num + 1; j++) {
         tableau[i][j] -= factor * tableau[pivot_row][j];
       }
     }
@@ -78,27 +78,100 @@ void Simplex::pivot(const int pivot_row, const int pivot_column) {
   basic_vars[pivot_row - 1] = pivot_column;
 }
 
+double Simplex::computeReduceCost(const std::vector<double> &cB, const int Ai_index) const {
+  double product = 0.0;
+  for (size_t i = 0; i < cB.size(); i++) {
+    product += -cB[i] * tableau[i + 1][Ai_index];
+  }
+  return product;
+}
+
 void Simplex::solve() {
   // initializeObjective(); // change the big M variables
 
-  if (var_artificial_num > 0) {
+  // two-stage
+  if (var_artificial_num > 1e-6) {
+    // fist-stage
+    std::vector<double> new_obj_coe1(var_total_num);
+    for (int i = var_total_num - var_artificial_num - 1; i < var_total_num - 1; i++)
+      new_obj_coe1[i] = 1.0;
 
+    // get CB and compute the new reduced cost
+    std::vector<double> CB1;
+    for (const int basic_var : basic_vars)
+      CB1.push_back(new_obj_coe1[basic_var]);
+    std::vector<double> reduced_costs1;
+    for (int i = 0; i < var_total_num; i++)
+      reduced_costs1.push_back(new_obj_coe1[i] + computeReduceCost(CB1, i));
+    reduced_costs1.push_back(computeReduceCost(CB1, var_total_num));
+
+    auto original_reduced_costs = tableau[0];
+    tableau[0] = reduced_costs1;
+    Simplex simplex1(tableau);
+
+    simplex1.solve();
+    // auto solution = simplex1.getOptSolution();
+    auto value = simplex1.getOptValue();
+    simplex1.printTableau();
+    if (!value.has_value() or value.value() > 1e-6) {
+      solution_statue = SolutionStatue::infeasible;
+      return;
+    }
+    while (true) {
+      basic_vars = simplex1.basic_vars;
+      const int row_index = artificialIndexInBasicVars();
+      if (row_index == -1)
+        break;
+      for (int i = 0; i < var_total_num - var_artificial_num - 1; i++) {
+        if (std::abs(simplex1.tableau[row_index][i]) > 1e-6) {
+          simplex1.pivot(row_index, i);
+          simplex1.printTableau();
+          break;
+        }
+      }
+    }
+    std::vector<double> new_obj_coe2(var_total_num - var_artificial_num);
+    for (int i = 0; i < var_total_num - var_artificial_num; i++)
+      new_obj_coe2[i] = obj_coe[i];
+
+    // second-stage
+    // get CB and compute the new reduced cost
+    tableau = simplex1.tableau;
+    std::vector<double> CB2;
+    for (const int basic_var : basic_vars)
+      CB2.push_back(new_obj_coe2[basic_var]);
+    std::vector<double> reduced_costs2;
+    for (int i = 0; i < var_total_num - var_artificial_num; i++)
+      reduced_costs2.push_back(new_obj_coe2[i] + computeReduceCost(CB2, i));
+    reduced_costs2.push_back(computeReduceCost(CB2, var_total_num));
+    std::vector<int> artificial_column(var_artificial_num);
+    for (int i = 0; i < var_artificial_num; i++)
+      artificial_column[i] = var_original_num + var_slack_num + i;
+
+    eraseColumns(tableau, artificial_column);
+    tableau[0] = reduced_costs2;
+    Simplex simplex2(tableau);
+    simplex2.solve();
+    tableau = simplex2.tableau;
+    var_total_num -= var_artificial_num;
+    var_artificial_num = 0;
+    displaySolution();
   }
+
   while (true) {
     const int pivot_column = findPivotColumn();
     if (pivot_column == -1) {
-      solution_statue = SolutionStatue::Zero;
+      solution_statue = SolutionStatue::optimal;
       break; // 已达到最优解
     }
     const int pivot_row = findPivotRow(pivot_column);
     if (pivot_row == -1) {
       std::cout << "unbounded" << std::endl;
-      solution_statue = SolutionStatue::One;
+      solution_statue = SolutionStatue::unbounded;
     }
     // pivot row and pivot column are the index in the tableau
     pivot(pivot_row, pivot_column);
   }
-
   // displaySolution();
 }
 
@@ -121,23 +194,45 @@ int Simplex::isBasicVariable(const int column_index) const {
   return basicRow; // 返回对应的基行
 }
 
+std::optional<double> Simplex::getOptValue() const {
+  if (solution_statue == SolutionStatue::optimal) {
+    const double opt_value =
+        obj_sense_changed ? tableau[0][var_total_num] : -tableau[0][var_total_num];
+    return opt_value;
+  }
+  return std::nullopt;
+}
+
+std::optional<std::vector<double>> Simplex::getOptSolution() const {
+  if (solution_statue == SolutionStatue::optimal) {
+    std::vector<double> solution(var_total_num);
+    for (int i = 0; i < basic_vars.size(); i++) {
+      const int var_index = basic_vars[i];
+      solution[var_index] = tableau[i + 1][var_total_num];
+    }
+    return solution;
+  }
+  return std::nullopt;
+}
+
 void Simplex::displaySolution() const {
-  if (solution_statue == SolutionStatue::Zero) {
-    const double opt_value = obj_sense_changed ? tableau[0][var_num] : -tableau[0][var_num];
-    const int var_original_num = var_num - var_slack_num - var_artificial_num;
+  if (solution_statue == SolutionStatue::optimal) {
+    const double opt_value =
+        obj_sense_changed ? tableau[0][var_total_num] : -tableau[0][var_total_num];
+    std::cout << std::string(50, '*') << std::endl;
     std::cout << "The optimal value is: " << opt_value << std::endl;
-    ;
+    std::cout << std::endl;
     std::cout << "The final basic variables and the corresponding values:\n";
     for (int i = 0; i < basic_vars.size(); i++) {
       const int var_index = basic_vars[i];
       if (var_index <= var_original_num - 1)
-        std::cout << "x" << (var_index + 1) << " = " << tableau[i + 1][var_num] << std::endl;
+        std::cout << "x" << (var_index + 1) << " = " << tableau[i + 1][var_total_num] << std::endl;
       else if (var_index <= var_original_num + var_slack_num - 1)
-        std::cout << "s" << (var_index - var_original_num + 1) << " = " << tableau[i + 1][var_num]
-                  << std::endl;
+        std::cout << "s" << (var_index - var_original_num + 1) << " = "
+                  << tableau[i + 1][var_total_num] << std::endl;
       else
         std::cout << "a" << (var_index - var_original_num - var_artificial_num + 1) << " = "
-                  << tableau[i + 1][var_num] << std::endl;
+                  << tableau[i + 1][var_total_num] << std::endl;
     }
   }
 }
@@ -146,7 +241,7 @@ void Simplex::displaySolution() const {
 void Simplex::initializeBasicVariables() {
   basic_vars.resize(constraint_num, -1);
   for (int i = 0; i < constraint_num; i++) {
-    for (int j = 0; j < var_num; j++) {
+    for (int j = 0; j < var_total_num; j++) {
       if (isBasicVariable(j) == i) {
         basic_vars[i] = j;
         break;
@@ -157,14 +252,14 @@ void Simplex::initializeBasicVariables() {
 
 // 初始化目标函数（消除人工变量的M项）
 void Simplex::initializeObjective() {
-  for (int j = 0; j < var_num - 1; j++) {
+  for (int j = 0; j < var_total_num - 1; j++) {
     if (tableau[0][j] == -M) {
       // 识别人工变量列
       for (int i = 1; i < constraint_num; i++) {
         if (tableau[i][j] == 1) {
           // 该人工变量是基变量
           constexpr double factor = M;
-          for (int k = 0; k < var_num; k++) {
+          for (int k = 0; k < var_total_num; k++) {
             // 大M 法第一行通过行变换将人工变量的系数转化为0
             tableau[0][k] += factor * tableau[i][k];
           }
@@ -177,14 +272,14 @@ void Simplex::initializeObjective() {
 void Simplex::standardize() {
   // if objective is maximizing
   if (obj_sense != 0) {
-    for (size_t i = 0; i < var_num; i++) {
+    for (size_t i = 0; i < var_total_num; i++) {
       obj_coe[i] = -obj_coe[i];
     }
     obj_sense = 0;
     obj_sense_changed = true;
   }
 
-  for (size_t i = 0; i < var_num; i++) {
+  for (size_t i = 0; i < var_total_num; i++) {
     switch (var_sign[i]) {
     case 1: // <= 0
       obj_coe[i] = -obj_coe[i];
@@ -206,7 +301,7 @@ void Simplex::standardize() {
         con_lhs[j].insert(it2, -con_lhs[j][i]);
       }
       i++;
-      var_num++;
+      var_total_num++;
       break;
     }
     default:
@@ -269,25 +364,25 @@ void Simplex::standardize() {
   }
 
   // initialize tableau
-  var_num += var_artificial_num + var_slack_num;
+  var_total_num += var_artificial_num + var_slack_num;
   tableau.resize(constraint_num + 1);
   for (size_t i = 0; i <= constraint_num; i++) {
-    tableau[i].resize(var_num + 1);
+    tableau[i].resize(var_total_num + 1);
     if (i == 0) {
-      for (size_t j = 0; j < var_num; j++)
+      for (size_t j = 0; j < var_total_num; j++)
         tableau[i][j] = obj_coe[j];
-      tableau[i][var_num] = 0;
+      tableau[i][var_total_num] = 0;
     } else {
-      for (size_t j = 0; j < var_num; j++)
+      for (size_t j = 0; j < var_total_num; j++)
         tableau[i][j] = con_lhs[i - 1][j];
-      tableau[i][var_num] = con_rhs[i - 1];
+      tableau[i][var_total_num] = con_rhs[i - 1];
     }
   }
   initializeBasicVariables();
 }
 
 void Simplex::print() const {
-  const int var_original_num = var_num - var_slack_num - var_artificial_num;
+  const int var_original_num = var_total_num - var_slack_num - var_artificial_num;
   if (obj_sense == 0)
     std::cout << "min    ";
   else
@@ -407,12 +502,34 @@ void Simplex::print() const {
   std::cout << std::endl;
 }
 
+// return -1 if no artificial variable in the basic variables, else return the row index of the
+// first artificial variable in the tableau
+int Simplex::artificialIndexInBasicVars() {
+  for (int i = var_total_num - var_artificial_num - 1; i < var_total_num; i++) {
+    if (auto it = std::ranges::find(basic_vars, i); it != basic_vars.end()) {
+      const size_t index = std::distance(basic_vars.begin(), it);
+      return static_cast<int>(index + 1);
+    }
+  }
+  return -1;
+}
+
 void Simplex::setAntiCycle(const AntiCycle rule) { anti_cycle = rule; }
 
 void Simplex::printConLHS() const {
   for (auto &row : con_lhs) {
     for (auto &col : row)
       std::cout << col << " ";
+    std::cout << std::endl;
+  }
+}
+
+void Simplex::printTableau() const {
+  std::cout << std::string(50, '*') << std::endl;
+  std::cout << "The tableau is:" << std::endl;
+  for (const auto &row : tableau) {
+    for (const auto column : row)
+      std::cout << std::fixed << std::setprecision(2) << column << "   ";
     std::cout << std::endl;
   }
 }
@@ -441,10 +558,9 @@ int main() {
   model.print();
 
   model.standardize();
-  std::cout << "***************************************" << std::endl;
+  std::cout << std::string(50, '*') << std::endl;
   std::cout << "the standardized model is:" << std::endl;
   model.print();
-  std::cout << "***************************************" << std::endl;
   // model.setAntiCycle(AntiCycle::Bland);
   model.solve();
   model.displaySolution();
@@ -456,6 +572,7 @@ int main() {
   // };
   //
   // Simplex simplex(tableau);
+  // simplex.initializeBasicVariables();
   // simplex.solve();
   // std::cout << "****************************" << std::endl;
 
