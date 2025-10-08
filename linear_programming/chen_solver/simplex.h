@@ -100,6 +100,8 @@ public:
   void print() const;
   void printConLHS() const;
 
+  void checkInput() const;
+
   void printTableau() const;
 
   void setAntiCycle(AntiCycle rule);

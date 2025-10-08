@@ -7,6 +7,7 @@
  */
 
 #include "simplex.h"
+#include <emscripten/bind.h>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
@@ -22,7 +23,7 @@ int Simplex::findPivotColumn() const {
   for (int j = 0; j < var_total_num; j++) {
     if (anti_cycle == AntiCycle::Bland) {
       // 从索引 0 开始检查
-      if (tableau[0][j] < 0) {
+      if (tableau[0][j] < -1e-6) {
         if (pivot_column == -1 || j < pivot_column) {
           pivot_column = j; // 选择索引最小的负检验数
         }
@@ -112,29 +113,32 @@ void Simplex::solve() {
     simplex1.solve();
     // auto solution = simplex1.getOptSolution();
     auto value = simplex1.getOptValue();
-    simplex1.printTableau();
+    // simplex1.printTableau();
     if (!value.has_value() or value.value() > 1e-6) {
       solution_statue = SolutionStatue::infeasible;
       return;
     }
+    bool all_zeros = false;
+    int row_index = -1;
     while (true) {
       basic_vars = simplex1.basic_vars;
-      const int row_index = artificialIndexInBasicVars();
-      if (row_index == -1)
+      row_index = artificialIndexInBasicVars();
+      if (row_index == -1 or all_zeros)
         break;
+      all_zeros = true;
       for (int i = 0; i < var_total_num - var_artificial_num - 1; i++) {
         if (std::abs(simplex1.tableau[row_index][i]) > 1e-6) {
           simplex1.pivot(row_index, i);
-          simplex1.printTableau();
+          all_zeros = false;
           break;
         }
       }
     }
+    simplex1.printTableau();
     std::vector<double> new_obj_coe2(var_total_num - var_artificial_num);
     for (int i = 0; i < var_total_num - var_artificial_num; i++)
       new_obj_coe2[i] = obj_coe[i];
 
-    // second-stage
     // get CB and compute the new reduced cost
     tableau = simplex1.tableau;
     std::vector<double> CB2;
@@ -150,6 +154,13 @@ void Simplex::solve() {
 
     eraseColumns(tableau, artificial_column);
     tableau[0] = reduced_costs2;
+    if (all_zeros) {
+      tableau.erase(tableau.begin() + row_index);
+      basic_vars.erase(basic_vars.begin() + row_index - 1);
+    }
+    // second-stage computation
+
+    printTableau();
     Simplex simplex2(tableau);
     simplex2.solve();
     tableau = simplex2.tableau;
@@ -534,6 +545,22 @@ void Simplex::printTableau() const {
   }
 }
 
+void Simplex::checkInput() const {
+  const int obj_coe_num = obj_coe.size();
+  const int con_row_num = con_lhs.size();
+  const int con_column_num = con_lhs[0].size();
+  const int con_sense_num = constraint_sense.size();
+  const int var_num = var_sign.size();
+  if (!(obj_coe_num == var_num && var_num == con_column_num)) {
+    std::cerr << "wrong input!" << std::endl;
+    exit(-1);
+  }
+  if (con_row_num != con_sense_num) {
+    std::cerr << "wrong input!" << std::endl;
+    exit(-1);
+  }
+}
+
 int main() {
   // 初始化单纯形表
   // 标准化的单纯性表，目标函数为 max
@@ -545,15 +572,19 @@ int main() {
   // const std::vector obj_coe = {2.0, 3.0};
   // const std::vector<std::vector<double>> con_lhs = {{2.0, 1.0}, {1.0, 2.0}};
   // const std::vector con_rhs = {4.0, 5.0};
-  constexpr int obj_sense = 1;
-  const std::vector obj_coe = {-3.0, 0.0, 1.0};
+  // const std::vector constraint_sense = {0, 0};
+  // const std::vector var_sign = {0, 0};
+
+  constexpr int obj_sense = 0;
+  const std::vector obj_coe = {-10.0, -12.0, -12.0};
   const std::vector<std::vector<double>> con_lhs = {
-      {1.0, 1.0, 1.0}, {-2.0, 1.0, -1}, {0.0, 3.0, 1.0}};
-  const std::vector con_rhs = {4.0, 1.0, 9.0};
-  const std::vector constraint_sense = {0, 1, 2}; // 0:<=, 1: >=, 2: =
+      {1.0, 2.0, 2.0}, {2.0, 1.0, 2.0}, {2.0, 2.0, 1.0}};
+  const std::vector con_rhs = {20.0, 20.0, 20.0};
+  const std::vector constraint_sense = {0, 0, 0}; // 0:<=, 1: >=, 2: =
   const std::vector var_sign = {0, 0, 0};         // 0: >=, 1: <=, 2: unsigned
 
   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign);
+  model.checkInput();
   std::cout << "original model is:" << std::endl;
   model.print();
 
