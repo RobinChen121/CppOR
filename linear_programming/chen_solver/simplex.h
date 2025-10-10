@@ -16,13 +16,6 @@ enum class Comparison { LessOrEqual, Equal, GreaterOrEqual };
 
 enum class AntiCycle { None, Bland, Lexicography };
 
-enum class SolutionStatue {
-  optimal = 0,
-  unbounded = 1,
-  infeasible = 2,
-  unsolved = 3
-}; // 0 optimal, 1 unbounded, 2 infeasible, 3 unsolved
-
 // 删除一个矩阵指定的多个列
 template <typename T>
 void eraseColumns(std::vector<std::vector<T>> &matrix, std::vector<int> columns) {
@@ -50,8 +43,8 @@ private:
   std::vector<int> var_sign;         // 0: >=, 1: <=, 2: unsigned
 
   AntiCycle anti_cycle{AntiCycle::None};
-  SolutionStatue solution_statue{SolutionStatue::unsolved};
   bool obj_sense_changed{};
+  int solution_status = {3}; // 0 optimal, 1 unbounded, 2 infeasible, 3 unsolved
 
   std::vector<std::vector<double>> tableau; // 单纯形表
   int constraint_num{};                     // number of constraints
@@ -96,6 +89,9 @@ public:
     var_total_num = static_cast<int>(tableau[0].size()) - 1;
     initializeBasicVariables(); // 初始化基变量
   }
+
+  int getStatus() const { return solution_status; }
+
   void standardize();
   void print() const;
   void printConLHS() const;
