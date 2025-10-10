@@ -102,6 +102,8 @@ public:
 
   void checkInput() const;
 
+  [[nodiscard]] double testWeb() const;
+
   void printTableau() const;
 
   void setAntiCycle(AntiCycle rule);
