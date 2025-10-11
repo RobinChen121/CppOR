@@ -50,6 +50,8 @@ private:
   int constraint_num{};                     // number of constraints
   int var_total_num{};
   int var_original_num{};
+  int var_unsigned_num{};
+  std::vector<int> front_unsigned_num; // unsigned var number before a var
   int var_slack_num{};
   int var_artificial_num{};
   std::vector<int> con_slack_coe; // the coefficient of the slack variable in the constraint
@@ -111,13 +113,16 @@ public:
   [[nodiscard]] int isBasicVariable(int column_index) const;
 
   void displaySolution() const;
+  void displayBasicSolution() const;
 
   void initializeBasicVariables();
 
   void initializeObjective();
 
   [[nodiscard]] std::optional<double> getOptValue() const;
-  [[nodiscard]] std::optional<std::vector<double>> getOptSolution() const;
+  [[nodiscard]] std::vector<double> getOptSolution() const;
+  [[nodiscard]] std::vector<int> getBasicVarsIndices() const { return basic_vars; };
+  [[nodiscard]] std::vector<std::vector<double>> getTableau() const { return tableau; };
 };
 
 #endif // SIMPLEX_H
