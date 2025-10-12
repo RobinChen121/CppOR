@@ -420,15 +420,18 @@ void Simplex::standardize() {
       con_slack_coe.push_back(0);
       bool only_one = true; // 判断是否存在已有的变量可以作为初始基变量
       for (size_t i = 0; i < var_total_num; i++) {
-        if (i == j) {
-          if (std::abs(con_lhs[j][i] - 1.0) > 1e-6) {
-            only_one = false;
-            break;
-          }
-        } else if (std::abs(con_lhs[j][i]) > 1e-6) {
+        only_one = true;
+        if (std::abs(con_lhs[j][i] - 1.0) > 1e-6) {
           only_one = false;
-          break;
+        } else {
+          for (size_t k = 0; k < constraint_num; k++)
+            if (k != j and std::abs(con_lhs[k][i]) > 1e-6) {
+              only_one = false;
+              break;
+            }
         }
+        if (only_one)
+          break;
       }
       if (!only_one)
         con_artificial_coe.push_back(1);
@@ -672,15 +675,16 @@ double Simplex::testWeb() const { // NOLINT(*-convert-member-functions-to-static
 //   // const std::vector constraint_sense = {0, 0};
 //   // const std::vector var_sign = {0, 0};
 //
-//   constexpr int obj_sense = 0; // 0: min, 1: max
-//   const std::vector obj_coe = {2.0, -2.0, 3.0};
+//   constexpr int obj_sense = 1; // 0: min, 1: max
+//   const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
 //   const std::vector<std::vector<double>> con_lhs = {
-//       {-1.0, 1.0, 1.0},
-//       {-2.0, 1.0, -1.0},
+//       {1.0, 0.0, 1.0, 0, 0},
+//       {0, 2.0, 0, 1.0, 0.0},
+//       {3, 2.0, 0, 0.0, 1.0},
 //   };
-//   const std::vector con_rhs = {4.0, 6.0};
-//   const std::vector constraint_sense = {2, 0}; // 0:<=, 1: >=, 2: =
-//   const std::vector var_sign = {1, 0, 2};      // 0: >=, 1: <=, 2: unsigned
+//   const std::vector con_rhs = {4.0, 12.0, 18.0};
+//   const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
+//   const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
 //
 //   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign);
 //   model.checkInput();
@@ -733,6 +737,5 @@ double Simplex::testWeb() const { // NOLINT(*-convert-member-functions-to-static
 //   //
 //   // Simplex simplex3(tableau3);
 //   // simplex3.solve();
-//
-//   return 0;
+// return 0;
 // }
