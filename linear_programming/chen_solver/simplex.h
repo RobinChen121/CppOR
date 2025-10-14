@@ -12,8 +12,12 @@
 #include <optional>
 #include <vector>
 
-enum class Comparison { LessOrEqual, Equal, GreaterOrEqual };
+constexpr double M = 10000;
+constexpr double threshold = 1e-6;
+constexpr bool bool_record_tableau = true;
+std::vector<std::vector<std::vector<double>>> recorded_tableau;
 
+// enum class Comparison { LessOrEqual, Equal, GreaterOrEqual };
 enum class AntiCycle { None, Bland, Lexicography };
 
 // 删除一个矩阵指定的多个列
@@ -34,7 +38,6 @@ void eraseColumns(std::vector<std::vector<T>> &matrix, std::vector<int> columns)
 }
 
 class Simplex {
-private:
   std::vector<double> obj_coe;
   int obj_sense{}; // 0:min, 1: max
   std::vector<std::vector<double>> con_lhs;
@@ -46,8 +49,8 @@ private:
   bool obj_sense_changed{};
   int solution_status = {3}; // 0 optimal, 1 unbounded, 2 infeasible, 3 unsolved
 
-  std::vector<std::vector<double>> tableau; // 单纯形表
-  int constraint_num{};                     // number of constraints
+  std::vector<std::vector<double>> tableau;
+  int constraint_num{}; // number of constraints
   int var_total_num{};
   int var_original_num{};
   int var_unsigned_num{};
@@ -103,6 +106,7 @@ public:
   [[nodiscard]] double testWeb() const;
 
   void printTableau() const;
+  static void printAllTableau();
 
   void setAntiCycle(AntiCycle rule);
 
