@@ -21,7 +21,7 @@ graph LR
     H2 -->|" $$w_{22}$$ "| Y
     H3 -->|" $$w_{23}$$ "| Y
 %% 输出层标注
-%% ŷ = Σ(w2j * aj) + b2
+%% ŷ = Σ(w2j * oj) + b2
 ```
 
 最终的输出层是否需要激活函数取决于问题，
@@ -33,10 +33,10 @@ graph LR
 ```mermaid
 graph LR
     X(["x"])
-    H1(["h1<br>z1 = w11 * x + b1<br>a1 = sigmoid(z1)"])
-    H2(["h2<br>z2 = w12 * x + b2<br>a2 = sigmoid(z2)"])
-    H3(["h3<br>z3 = w13 * x + b3<br>a3 = sigmoid(z3)"])
-    Y(["ŷ = w21*a1 + w22*a2 + w23*a3 + b2"])
+    H1(["h1<br>a1 = w11 * x + b1<br>o1 = sigmoid(a1)"])
+    H2(["h2<br>a2 = w12 * x + b2<br>o2 = sigmoid(a2)"])
+    H3(["h3<br>a3 = w13 * x + b3<br>o3 = sigmoid(a3)"])
+    Y(["ŷ = w21*o1 + w22*o2 + w23*o3 + b"])
     X --> H1
     X --> H2
     X --> H3
