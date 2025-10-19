@@ -2,7 +2,8 @@
  * Author: Zhen Chen
  * Email: chen.zhen5526@gmail.com
  * Created on: 14/10/2025, 20:39
- * Description: single input, 10 hiddlen layer, single output; no activation between hidden layer and output.
+ * Description: single input, 10 hidden layer, single output; no activation between hidden layer and
+ * output.
  *
  */
 #include <cmath>

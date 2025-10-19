@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.30)
 project(machine_learning) # 设置运行程序的名字
 
+## 假设 data 文件夹和 CMakeLists.txt 在同一层级
+#file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -12,7 +15,8 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        simple_nn.cpp
+        back_propagation.cpp
+        activation.h
 
 )
 

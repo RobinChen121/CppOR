@@ -3,7 +3,7 @@
  * Email: chen.zhen5526@gmail.com
  * Created on: 14/10/2025, 20:39
  * Description: single input, 0 hidden layer, single output; no activation between hidden layer and
- * output. This
+ * output. This is perceptron.
  *
  */
 #include <cmath>
