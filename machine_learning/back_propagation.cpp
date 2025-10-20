@@ -25,8 +25,8 @@ struct Sample {
 // double dSigmoid(const double y) { return y * (1.0 - y); } // derivative wrt output
 
 double randd() {
-  static std::random_device rd; // 真随机种子
-  static std::mt19937 gen(42);  // rd()                           // 梅森旋转算法引擎
+  static std::random_device rd;  // 真随机种子
+  static std::mt19937 gen(rd()); // rd()                           // 梅森旋转算法引擎
   static std::uniform_real_distribution<double> dist(-1.0, 1.0); // 区间 [-1,1]
   return dist(gen);
 }
@@ -83,7 +83,7 @@ int main() {
   }
 
   std::random_device rd;
-  std::mt19937 g(42); // rd(),  随机数生成器
+  std::mt19937 g(rd()); // rd(),  随机数生成器
   std::ranges::shuffle(data, g);
   int train_size = static_cast<int>(static_cast<double>(data.size()) * 0.8);
   std::vector train(data.begin(), data.begin() + train_size);

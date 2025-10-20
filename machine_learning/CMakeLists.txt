@@ -15,8 +15,16 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        back_propagation.cpp
+        #        back_propagation.cpp
         activation.h
+        simple_rnn.cpp
 
+        #        rnn_libtorch.cpp
 )
+
+set(CMAKE_PREFIX_PATH "/Users/zhenchen/libtorch")  # LibTorch 解压路径
+find_package(Torch REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+target_link_libraries(${PROJECT_NAME} "${TORCH_LIBRARIES}")
+
 
