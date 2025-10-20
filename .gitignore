@@ -51,6 +51,7 @@
 /out/
 **/cmake-build-*/
 **/CMakeFiles/
+!/build/*.csv
 
 # -----------------------
 # CMake generated files
