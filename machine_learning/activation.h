@@ -32,6 +32,18 @@ struct Sigmoid {
   }
 };
 
+struct Swish {
+  static double activate(const double x) {
+    const double s = 1.0 / (1.0 + std::exp(-x)); // sigmoid(x)
+    return x * s;
+  }
+
+  static double derivative(const double x) {
+    const double s = 1.0 / (1.0 + std::exp(-x)); // sigmoid(x)
+    return s + x * s * (1.0 - s);                // d/dx [x * sigmoid(x)]
+  }
+};
+
 struct Tanh {
   static double activate(const double x) { return std::tanh(x); }
   static double derivative(const double x) {
@@ -41,6 +53,7 @@ struct Tanh {
 };
 
 // ---------- Softmax 定义（针对向量输入） ----------
+// Softmax 的梯度有点复杂
 struct Softmax {
   static std::vector<double> activate(const std::vector<double> &input) {
     std::vector<double> output(input.size());
@@ -61,7 +74,7 @@ struct Softmax {
   }
 };
 
-enum class ActivationType { ReLU, Sigmoid, Tanh, Identity };
+enum class ActivationType { ReLU, Sigmoid, Tanh, Swish, Identity };
 
 inline double activate(const double x, const ActivationType type) {
   switch (type) {
@@ -71,6 +84,8 @@ inline double activate(const double x, const ActivationType type) {
     return Sigmoid::activate(x);
   case ActivationType::Tanh:
     return Tanh::activate(x);
+  case ActivationType::Swish:
+    return Swish::activate(x);
   default:
     return x; // identity fallback
   }
@@ -84,6 +99,8 @@ inline double derivative(const double x, const ActivationType type) {
     return Sigmoid::derivative(x);
   case ActivationType::Tanh:
     return Tanh::derivative(x);
+  case ActivationType::Swish:
+    return Swish::derivative(x);
   default:
     return 1.0;
   }

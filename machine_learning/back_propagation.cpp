@@ -3,6 +3,7 @@
  * Email: chen.zhen5526@gmail.com
  * Created on: 18/10/2025, 16:59
  * Description: ReLu performs best, about 97% or 100% accuracy.
+ * Softmax can be uses in the lat output, about same performance with ReLU.
  *
  */
 
@@ -29,17 +30,11 @@ double randd() {
   return dist(gen);
 }
 
-int main() {
-  // srand(42); // seed
-
-  // put the file in the current cmake-build-debug folder
-  // or put one lion of codes in the CMakeLists.txt file:
-  // file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
-  std::string file = "iris.csv";
-  std::ifstream fin(file);
+std::vector<Sample> read_data(const std::string &file_name) {
+  std::ifstream fin(file_name);
   if (!fin) {
     std::cerr << "Cannot open iris.csv\n";
-    return 1;
+    std::exit(EXIT_FAILURE); // 直接终止程序, EXIT_FAILURE 的值为1
   }
 
   std::string line;
@@ -63,6 +58,17 @@ int main() {
       y[2] = 1;
     data.push_back({x, y});
   }
+  return data;
+}
+
+int main() {
+  // srand(42); // seed
+
+  // put the file in the current cmake-build-debug folder
+  // or put one lion of codes in the CMakeLists.txt file:
+  // file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+  std::string file_name = "iris.csv";
+  auto data = read_data(file_name);
 
   // normalize
   for (int j = 0; j < 4; j++) {
@@ -84,7 +90,7 @@ int main() {
 
   // network: 4 -> 20 -> 10 -> 3
   int input_num = 4, hidden1_num = 20, hidden2_num = 10, output_num = 3;
-  double lr = 0.1;
+  double lr = 0.1; // swish need low learning rate such as 0.001
   int epochs = 6000;
   auto activation_type = ActivationType::ReLU;
 
@@ -130,6 +136,7 @@ int main() {
         for (int j = 0; j < hidden2_num; j++)
           net += hidden2_output[j] * w3[j][k];
         final_output[k] = activate(net, activation_type);
+        // final_output[k] = net;
       }
       // final_output = Softmax::activate(final_output);
 
@@ -207,8 +214,10 @@ int main() {
       for (int j = 0; j < hidden2_num; j++)
         net += h2[j] * w3[j][k];
       output_test[k] = activate(net, activation_type);
+      // output_test[k] = net;
     }
     // output_test = Softmax::activate(output_test);
+
     // get the index of the max element
     auto pred = std::ranges::max_element(output_test) - output_test.begin();
     if (auto truth = std::ranges::max_element(y) - y.begin(); pred == truth)
