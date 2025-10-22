@@ -1,7 +1,37 @@
 The structure of the simple neural network is as following:
 
 ```mermaid
-%% LR 表示箭头从左到右
+%% graph 是早期语法，
+%% flowchart 是新版语法（推荐使用）。
+%% 两者几乎功能一样，但 flowchart 支持更多新特性、更好的布局和语义
+%% LR 表示图形整体从左到右
+%% TD/TB 表示图形整体从上到下
+%% 
+%% --> 表示箭头相连
+%% --- 表示直线相连
+%% -.> 表示虚线箭头相连
+%% ==> 表示粗箭头相连
+%% ~~~ 表示不透明的线相连
+%% A & B--> C & D 可以用 & 表示多个节点同时满足一些连接关系
+%% |""| 在连线中间显示文字
+%% 文字可以放在连线中间，但是文字左边要多点连线符号
+%% subgraph title
+%%    graph definition
+%% end
+%% () 圆角矩形
+%% ([]) 广圆角矩形
+%% (()) 圆
+%% [] 矩形
+%% [[]] 两边带竖线矩形
+%% [()] 圆柱形
+%% >] 凹箭头矩形
+%% {} 菱形
+%% {{}} 凸箭头矩形
+%% [/ /] 右平行四边形
+%% [\ \] 左平行四边形
+%% [/\] 梯形
+%% [\/] 倒梯形
+%% ((())) 双层圆
 %% mermaid 对 latex 支持的目前并不是太好
 graph LR
 %% 输入层
@@ -13,13 +43,13 @@ graph LR
 %% 输出层
     Y((ŷ))
 %% 输入到隐藏层连接
-    X -->|" $$w_{11}$$ "| H1
-    X -->|" $$w_{12}$$ "| H2
-    X -->|" $$w_{13}$$ "| H3
+    X -- " w11 " ---> H1
+    X -->|" w12 "| H2
+    X -->|" w13 "| H3
 %% 隐藏层到输出层连接
-    H1 -->|" $$w_{21}$$ "| Y
-    H2 -->|" $$w_{22}$$ "| Y
-    H3 -->|" $$w_{23}$$ "| Y
+    H1 --->|" w21 "| Y
+    H2 --->|" w22 "| Y
+    H3 --->|" w23 "| Y
 %% 输出层标注
 %% ŷ = Σ(w2j * oj) + b2
 ```
@@ -43,6 +73,50 @@ graph LR
     H1 --> Y
     H2 --> Y
     H3 --> Y
+```
+
+```mermaid
+---
+config:
+  layout: fixed
+  theme: default
+  look: classic
+---
+flowchart LR
+    subgraph t1["Time step t=1"]
+        RNN1["RNN cell"]
+        x1["Input x1"]
+        h1["Hidden state h1"]
+        y1["Output y1"]
+    end
+    subgraph t2["Time step t=2"]
+        RNN2["RNN cell"]
+        x2["Input x2"]
+        h2["Hidden state h2"]
+        y2["Output y2"]
+    end
+    subgraph t3["Time step t=3"]
+        RNN3["RNN cell"]
+        x3["Input x3"]
+        h3["Hidden state h3"]
+        y3["Output ŷ3"]
+    end
+    x1 --> RNN1
+    RNN1 --> h1
+    h1 --> y1
+    x2 --> RNN2
+    RNN2 --> h2
+    h2 --> y2
+    x3 --> RNN3
+    RNN3 --> h3
+    h3 --> y3
+    h1 -.-> RNN2
+    h2 -.-> RNN3
+    RNN1:::cell
+    RNN2:::cell
+    RNN3:::cell
+    classDef cell fill: #d0ebff, stroke: #1c7ed6, stroke-width: 2px, color: #000
+
 ```
 
 ```mermaid
