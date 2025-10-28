@@ -125,7 +125,7 @@ struct RNN {
         double s = bh[i];
         s += Wxh[i][0] * x_seq[t]; // input_dim == 1
         for (int j = 0; j < hidden_dim; ++j)
-          s += Whh[i][j] * h_prev[j];
+          s += Whh[i][j] * h_prev[j]; // j is the hidden state in the last time step
         z_h[t][i] = s;
         h[t][i] = tanh_act(s);
       }
