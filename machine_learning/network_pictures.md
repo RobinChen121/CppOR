@@ -120,6 +120,67 @@ flowchart LR
 ```
 
 ```mermaid
+---
+config:
+  layout: fixed
+  theme: default
+  look: classic
+---
+flowchart LR
+    subgraph t1["Time step t=1"]
+        RNN11["RNN cell"]
+        x1["Input x1"]
+        h11["Hidden state h11"]
+        RNN12["RNN cell"]
+        h12["Hidden state h12"]
+        y1["Output y1"]
+    end
+    subgraph t2["Time step t=2"]
+        RNN21["RNN cell"]
+        RNN22["RNN cell"]
+        x2["Input x2"]
+        h21["Hidden state h21"]
+        h22["Hidden state h22"]
+        y2["Output y2"]
+    end
+    subgraph t3["Time step t=3"]
+        RNN31["RNN cell"]
+        RNN32["RNN cell"]
+        x3["Input x3"]
+        h31["Hidden state h31"]
+        h32["Hidden state h32"]
+        y3["Output ŷ3"]
+    end
+    x1 --> RNN11
+    RNN11 --> h11
+    h11 --> RNN12
+    RNN12 --> h12
+    h12 --> y1
+    x2 --> RNN21
+    RNN21 --> h21
+    h21 --> RNN22
+    RNN22 --> h22
+    h22 --> y2
+    h11 -.-> RNN21
+    x3 --> RNN31
+    RNN31 --> h31
+    h31 --> RNN32
+    RNN32 --> h32
+    h32 --> y3
+    h12 -.-> RNN22
+    h21 -.-> RNN31
+    h22 -.-> RNN32
+    RNN11:::cell
+    RNN12:::cell
+    RNN21:::cell
+    RNN22:::cell
+    RNN31:::cell
+    RNN32:::cell
+    classDef cell fill: #d0ebff, stroke: #1c7ed6, stroke-width: 2px, color: #000
+
+```
+
+```mermaid
 graph LR
     X[广告吸引力] --> M[品牌信任]
     M --> Y[购买意愿]
