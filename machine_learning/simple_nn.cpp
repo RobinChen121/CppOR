@@ -2,7 +2,7 @@
  * Author: Zhen Chen
  * Email: chen.zhen5526@gmail.com
  * Created on: 14/10/2025, 20:39
- * Description: single input, 10 hidden layer, single output; no activation between hidden layer and
+ * Description: single input, 1 hidden layer, single output; no activation between hidden layer and
  * output.
  *
  */
@@ -67,15 +67,15 @@ int main() {
       double y = y_train[i];
 
       // ====== 前向传播 ======
-      vector<double> z1(n_hidden), a1(n_hidden);
+      vector<double> z1(n_hidden), o(n_hidden);
       for (int j = 0; j < n_hidden; ++j) {
         z1[j] = w1[j] * x + b1[j];
-        a1[j] = sigmoid(z1[j]);
+        o[j] = sigmoid(z1[j]);
       }
 
       double z2 = 0;
       for (int j = 0; j < n_hidden; ++j)
-        z2 += w2[j] * a1[j]; // 有一个累加
+        z2 += w2[j] * o[j]; // 有一个累加
       z2 += b2;
       double y_pred = z2;
 
@@ -89,15 +89,15 @@ int main() {
       // 输出层梯度
       vector<double> dL_dw2(n_hidden);
       for (int j = 0; j < n_hidden; ++j)
-        dL_dw2[j] = dL_dy * a1[j];
+        dL_dw2[j] = dL_dy * o[j];
       double dL_db2 = dL_dy;
 
       // 隐藏层梯度
       vector<double> dL_dw1(n_hidden);
       vector<double> dL_db1(n_hidden);
       for (int j = 0; j < n_hidden; ++j) {
-        double d_a1 = dL_dy * w2[j];
-        double d_z1 = d_a1 * sigmoid_derivative(z1[j]);
+        double d_o = dL_dy * w2[j];
+        double d_z1 = d_o * sigmoid_derivative(z1[j]);
         dL_dw1[j] = d_z1 * x;
         dL_db1[j] = d_z1;
       }
@@ -118,14 +118,14 @@ int main() {
   // 预测测试
   cout << "\n=== Prediction ===" << endl;
   for (double x = -2; x <= 2; x += 1.0) {
-    vector<double> z1(n_hidden), a1(n_hidden);
+    vector<double> z1(n_hidden), o(n_hidden);
     for (int j = 0; j < n_hidden; ++j) {
       z1[j] = w1[j] * x + b1[j];
-      a1[j] = sigmoid(z1[j]);
+      o[j] = sigmoid(z1[j]);
     }
     double z2 = 0;
     for (int j = 0; j < n_hidden; ++j)
-      z2 += w2[j] * a1[j];
+      z2 += w2[j] * o[j];
     z2 += b2;
     cout << "x=" << x << "  y_pred=" << z2 << endl;
   }

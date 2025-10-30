@@ -18,8 +18,8 @@ add_executable(${PROJECT_NAME}
         #        back_propagation.cpp
         activation.h
         #        simple_rnn.cpp
-        rnn.cpp
-
+        #        rnn.cpp
+        simple_nn.cpp
         #        rnn_libtorch.cpp
 )
 

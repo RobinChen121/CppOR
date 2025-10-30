@@ -25,7 +25,8 @@ int main() {
   // 一些超参数
   const int n_hidden = 0;
   const double lr = 0.1; // 学习率
-  const int epochs = 2000;
+  const int epochs = 1000;
+  const int train_size = 50;
 
   // 初始化参数
   double w = rand_weight();
@@ -33,8 +34,8 @@ int main() {
 
   // 训练数据：y = 2x + 1
   vector<double> x_train, y_train;
-  for (int i = 0; i < 50; ++i) {
-    double x = -2.0 + 4.0 * i / 49.0;
+  for (int i = 0; i < train_size; ++i) {
+    double x = -2.0 + 4.0 * i / train_size;
     x_train.push_back(x);
     y_train.push_back(2 * x + 1);
   }

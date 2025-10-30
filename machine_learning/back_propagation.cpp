@@ -34,7 +34,7 @@ double randd() {
 std::vector<Sample> read_data(const std::string &file_name) {
   std::ifstream fin(file_name);
   if (!fin) {
-    std::cerr << "Cannot open iris.csv\n";
+    std::cerr << "Cannot open this file\n";
     std::exit(EXIT_FAILURE); // 直接终止程序, EXIT_FAILURE 的值为1
   }
 
@@ -65,9 +65,6 @@ std::vector<Sample> read_data(const std::string &file_name) {
 int main() {
   // srand(42); // seed
 
-  // put the file in the current cmake-build-debug folder
-  // or put one lion of codes in the CMakeLists.txt file:
-  // file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
   std::string file_name = "iris.csv";
   auto data = read_data(file_name);
 
@@ -93,7 +90,7 @@ int main() {
   int input_num = 4, hidden1_num = 20, hidden2_num = 10, output_num = 3;
   double lr = 0.1; // swish need low learning rate such as 0.001
   int epochs = 6000;
-  auto activation_type = ActivationType::ReLU;
+  auto activation_type = ActivationType::Sigmoid;
 
   std::vector w1(input_num, std::vector<double>(hidden1_num));
   std::vector w2(hidden1_num, std::vector<double>(hidden2_num));
