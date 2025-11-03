@@ -1,7 +1,7 @@
 /*
  * Created by Zhen Chen on 2025/10/20.
  * Email: chen.zhen5526@gmail.com
- * Description:
+ * Description: structure----this is single layer, 10 parallel rnn cells in each time step
  *
  *
  */
@@ -157,6 +157,7 @@ struct RNN {
 
     const int T = static_cast<int>(x_seq.size());
     // zero gradients
+    // 梯度在每次循环时清零
     for (int i = 0; i < hidden_dim; ++i) {
       for (int j = 0; j < input_dim; ++j)
         dWxh[i][j] = 0.0;
@@ -357,11 +358,15 @@ int main() {
 
   auto normalize = [&](const double x) -> double { // lambda function
     // scale to [-1,1]
-    return -1.0 + 2.0 * (x - min_data) / (max_data - min_data);
+//    return -1.0 + 2.0 * (x - min_data) / (max_data - min_data);
+    // scale to [0,1]
+    return (x - min_data) / (max_data - min_data);
   };
   auto denormalize = [&](const double y) -> double { // lambda function
     // inverse map from [-1,1] back to original
-    return min_data + (y + 1.0) * (max_data - min_data) / 2.0;
+//    return min_data + (y + 1.0) * (max_data - min_data) / 2.0;
+    // inverse map from [0,1] back to original
+    return min_data + y * (max_data - min_data);
   };
 
   std::vector<double> series(N);
@@ -431,10 +436,10 @@ int main() {
       double lr = 0.001;
 
       // apply SGD update
-      // rnn.SDG(dWxh, dWhh, dWhy, dbh, dby, lr);
+       rnn.SDG(dWxh, dWhh, dWhy, dbh, dby, lr);
 
       // apply ADAM update
-      rnn.ADAM(dWxh, dWhh, dWhy, dbh, dby, lr);
+//      rnn.ADAM(dWxh, dWhh, dWhy, dbh, dby, lr);
     }
 
     epoch_loss /= std::max(1, train_samples);
@@ -477,7 +482,7 @@ int main() {
   }
   if (test_num > 0) {
     std::cout << "RMSE (denorm) = " << sqrt(mse_test / test_num) << "\n";
-    std::cout << "MAE (denorm) = " << mae_test / test_num << "\n";
+    std::cout << "MAD (denorm) = " << mae_test / test_num << "\n";
     std::cout << "Total absolute error (denorm) = " << mae_test << "\n";
     draw_pic(predictions, true_values);
   } else {

@@ -21,7 +21,7 @@ add_executable(${RUN_NAME}
         #        SFML_practices/main.cpp
 
         #        ../utils/matplotlibcpp.h
-        draw_python.cpp
+        #        draw_python.cpp
         #        draw_python_API.cpp
         #        draw_pythonAPI_animation.cpp
         #        draw_python2.cpp
@@ -31,7 +31,7 @@ add_executable(${RUN_NAME}
         #        game_tetris.cpp
         #        pair_test.cpp
         #               spdlog_test.cpp
-        #        eigen3_test.cpp
+        eigen3_test.cpp
 
         #        draw_QPainter_bar.cpp
         #        draw_QPainter_line.cpp

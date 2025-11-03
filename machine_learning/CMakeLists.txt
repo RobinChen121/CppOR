@@ -16,12 +16,27 @@ endif ()
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         #        back_propagation.cpp
-        activation.h
+        #        activation.h
         #        simple_rnn.cpp
+<<<<<<< Updated upstream
         #        rnn.cpp
         simple_nn.cpp
         #        rnn_libtorch.cpp
+=======
+        lstm.cpp
+
+        #        rnn.cpp
+>>>>>>> Stashed changes
 )
+
+# Eigen3 setting
+if (APPLE)
+    find_package(Eigen3 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+else ()
+    set(EIGEN3_INCLUDE_DIR "D:/c++Library/eigen-3.4.0")
+    target_include_directories(${PROJECT_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
+endif ()
 
 if (apple)
     set(CMAKE_PREFIX_PATH "/Users/zhenchen/libtorch")  # LibTorch 解压路径
