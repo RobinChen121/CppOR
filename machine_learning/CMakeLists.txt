@@ -18,15 +18,12 @@ add_executable(${PROJECT_NAME}
         #        back_propagation.cpp
         #        activation.h
         #        simple_rnn.cpp
-<<<<<<< Updated upstream
         #        rnn.cpp
-        simple_nn.cpp
+        #        simple_nn.cpp
         #        rnn_libtorch.cpp
-=======
         lstm.cpp
 
         #        rnn.cpp
->>>>>>> Stashed changes
 )
 
 # Eigen3 setting
