@@ -12,6 +12,8 @@
 #include <fstream>
 #include <iomanip> // for std::fixed and std::setprecision
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <type_traits> // for std::is_floating_point
 #include <vector>
 
@@ -63,6 +65,13 @@ std::string vectorToString(const std::vector<T> &vec, const std::string &delimit
       oss << delimiter;
   }
 
+  return oss.str();
+}
+
+// 通用 toString, 支持任意类型转换为字符串
+template <typename T> std::string toString(const T &value) {
+  std::ostringstream oss;
+  oss << value;
   return oss.str();
 }
 

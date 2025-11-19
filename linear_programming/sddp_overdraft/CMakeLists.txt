@@ -13,8 +13,8 @@ add_executable(${RUN_NAME}
         #        double_product_testing.cpp
         #        double_product_enhancement_further.cpp
 
-        #        single_product_testing_iteratonNum.cpp
-        single_product_enhancement.cpp
+        single_product_testing_ScenarioNum.cpp
+        #        single_product_enhancement.cpp
         I_cash_status.cpp
         ../../utils/common.cpp
         ../../utils/sampling.cpp
