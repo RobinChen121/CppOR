@@ -14,38 +14,62 @@ add_executable(${RUN_NAME}
         #        double_product_enhancement_further.cpp
 
         single_product_testing_ScenarioNum.cpp
-        #        single_product_enhancement.cpp
+        single_product_enhancement.cpp
         I_cash_status.cpp
         ../../utils/common.cpp
         ../../utils/sampling.cpp
 )
 
-# 设置 Gurobi 路径（根据你的安装调整）
+### 设置 Gurobi 路径（根据你的安装调整）
 if (APPLE)
     set(GUROBI_HOME "/Library/gurobi1201/macos_universal2") # gurobi 的安装地址
-else ()
-    set(GUROBI_HOME "C:/gurobi1202/win64") # gurobi 的安装地址
-endif ()
-set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
-set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
-
-# 将路径添加到搜索地址
-include_directories(${GUROBI_LIB_DIR})
-include_directories(${GUROBI_INCLUDE_DIR})
-
-# 链接 Gurobi 库，这个静态库与动态库都需要
-if (APPLE)
+    set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
+    set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
+    # 将路径添加到搜索地址
+    include_directories(${GUROBI_INCLUDE_DIR})
+    include_directories(${GUROBI_LIB_DIR})
     target_link_libraries(${RUN_NAME}
             PRIVATE
             "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
             "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
     )
 else ()
-    target_link_libraries(${RUN_NAME}
-            PRIVATE
-            "${GUROBI_INCLUDE_DIR}/gurobi_c++.h"
-            "${GUROBI_LIB_DIR}/gurobi120.lib" #
-    )
+    option(CXX "enable C++ compilation" ON)  # 定义一个选项 CXX，描述为 "enable C++ compilation"，默认值为 ON（开启）
+    if (CXX)
+        enable_language(CXX)  # 如果 CXX 选项被开启，告诉 CMake 需要启用 C++ 语言支持（使用 C++ 编译器）
+    endif ()
+    set(CMAKE_MODULE_PATH "C:/gurobi1202/win64") # this is find package path
+    set(GUROBI_DIR "C:/gurobi1202/win64")
+    set(ENV{GUROBI_HOME} "${GUROBI_DIR}")
+
+    message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+    # Visual Studio compiler with static runtime libraries
+    if (MSVC AND MT)
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd")
+    endif ()
+    # 通过 FindGUROBI.cmake 查找 Gurobi
+    find_package(GUROBI 120 REQUIRED)
+    include_directories(${GUROBI_INCLUDE_DIRS})
+    include_directories(${GUROBI_CXX_LIBRARY})
+    message(STATUS "Gurobi include dirs: ${GUROBI_INCLUDE_DIRS}")
+    message(STATUS "Gurobi libraries: ${GUROBI_CXX_LIBRARY}")
+
+    if (CXX)
+        set(CMAKE_CXX_STANDARD 11)
+        target_link_libraries(${RUN_NAME} PRIVATE optimized ${GUROBI_CXX_LIBRARY}
+                debug ${GUROBI_CXX_DEBUG_LIBRARY})
+    endif ()
+
+    target_link_libraries(${RUN_NAME} PRIVATE ${GUROBI_LIBRARY})
+
+    if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+        include(FeatureSummary)
+        feature_summary(WHAT ALL)
+    endif ()
 endif ()
 
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/13.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -10,6 +10,7 @@
 #define SAMPLING_H
 
 #include <iostream>
+#include <vector>
 
 // 在 C++ 中，static 成员函数是属于类本身，而不是类的对象的。
 // 这意味着它们可以在不创建类实例的情况下被调用，

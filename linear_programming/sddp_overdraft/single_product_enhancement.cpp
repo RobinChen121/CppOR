@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/13.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -75,22 +75,54 @@ std::array<double, 2> SingleProduct::solve() const {
     models[t].update();
   }
 
-  double intercepts[iterNum][T][forwardNum];
-  double slopes3[iterNum][T][forwardNum];
-  double slopes2[iterNum][T][forwardNum];
-  double slopes1[iterNum][T][forwardNum];
-  double qpreValues[iterNum][T][forwardNum];
-  double qValues[iterNum][T][forwardNum];
+//  double intercepts[iterNum][T][forwardNum];
+//  double slopes3[iterNum][T][forwardNum];
+//  double slopes2[iterNum][T][forwardNum];
+//  double slopes1[iterNum][T][forwardNum];
+//  double qpreValues[iterNum][T][forwardNum];
+//  double qValues[iterNum][T][forwardNum];
+
+  std::vector<std::vector<std::vector<double>>> intercepts(
+    iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> slopes3(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> slopes2(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> slopes1(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> qpreValues(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> qValues(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
 
   // no duplicate cuts during iteration
   std::vector<std::unordered_set<std::vector<double>, VectorHash>> cut_coefficients_cache(T);
 
-  double IForwardValues[iterNum][T][forwardNum];
   //  double BForwardValues[iterNum][T][forwardNum];
   //  double cashForwardValues[iterNum][T][forwardNum];
-  double W0ForwardValues[iterNum][T][forwardNum];
-  double W1ForwardValues[iterNum][T][forwardNum];
-  double W2ForwardValues[iterNum][T][forwardNum];
+
+//  double IForwardValues[iterNum][T][forwardNum];
+//  double W0ForwardValues[iterNum][T][forwardNum];
+//  double W1ForwardValues[iterNum][T][forwardNum];
+//  double W2ForwardValues[iterNum][T][forwardNum];
+  std::vector<std::vector<std::vector<double>>> IForwardValues(
+    iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> W0ForwardValues(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> W1ForwardValues(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
+  std::vector<std::vector<std::vector<double>>> W2ForwardValues(
+      iterNum, std::vector<std::vector<double>>(T, std::vector<double>(forwardNum))
+  );
 
   int iter = 0;
   while (iter < iterNum) {
@@ -300,8 +332,8 @@ std::array<double, 2> SingleProduct::solve() const {
           // }
 
           int piNum = models[t].get(GRB_IntAttr_NumConstrs);
-          double pi[piNum];
-          double rhs[piNum];
+          std::vector<double>pi(piNum);
+          std::vector<double> rhs(piNum);
           for (int p = 0; p < piNum; p++) {
             GRBConstr constraint = models[t].getConstr(p);
             pi[p] = constraint.get(GRB_DoubleAttr_Pi);
@@ -361,15 +393,15 @@ std::array<double, 2> SingleProduct::solve() const {
   return {finalValue, Q1};
 }
 
-int main() {
-  auto singleProduct = SingleProduct();
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  double finalValue = singleProduct.solve()[0];
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> diff = end_time - start_time;
-  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-  double optimal_value = 167.31;
-  double gap = (finalValue - optimal_value) / optimal_value;
-  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
-  return 0;
-}
+//int main() {
+//  auto singleProduct = SingleProduct();
+//  const auto start_time = std::chrono::high_resolution_clock::now();
+//  double finalValue = singleProduct.solve()[0];
+//  const auto end_time = std::chrono::high_resolution_clock::now();
+//  const std::chrono::duration<double> diff = end_time - start_time;
+//  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+//  double optimal_value = 167.31;
+//  double gap = (finalValue - optimal_value) / optimal_value;
+//  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+//  return 0;
+//}

@@ -8,8 +8,8 @@
  */
 
 #include "single_product_enhancement.h"
-#include <vector>
 #include <chrono>
+#include <vector>
 
 int main() {
   std::vector<double> demands = {15, 15, 15, 15};
@@ -22,9 +22,15 @@ int main() {
   int iter_num = 50;
   std::vector<int> forward_nums = {1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
-  int runs = 20;
+  int runs = 10;
+  // mac file path
+  // const std::string file_name =
+  //     "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
+  //     "Numerical-tests/overdraft/c++/sddp_singleproduct_scenarioNum_testing.csv";
+
+  // windows file path
   const std::string file_name =
-      "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
+      "C:/Users/Administrator/OneDrive - Brunel University London/"
       "Numerical-tests/overdraft/c++/sddp_singleproduct_scenarioNum_testing.csv";
   const std::string head = "run,final value, "
                            "time,Q,sample number,forward number,iter number,gap\n";

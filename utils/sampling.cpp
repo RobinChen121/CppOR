@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/13.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -10,7 +10,6 @@
 #include <csignal>
 #include <random>
 #include <ranges>
-#include <vector>
 
 // get cumulative distribution function value of Poisson
 double poissonCDF(const int k, const double lambda) {
