@@ -63,6 +63,7 @@ struct Softmax {
 
     std::vector<double> exp_vals(input.size());
     std::ranges::transform(input, exp_vals.begin(),
+                           // c++ 的 lambda 函数, [] 表示捕获的外部变量
                            [max_val](const double x) { return std::exp(x - max_val); });
 
     double sum_exp = std::accumulate(exp_vals.begin(), exp_vals.end(), 0.0);
@@ -74,7 +75,7 @@ struct Softmax {
   }
 };
 
-enum class ActivationType { ReLU, Sigmoid, Tanh, Swish, Identity };
+enum class ActivationType { ReLU, Sigmoid, Tanh, Swish, Identity, Softmax };
 
 inline double activate(const double x, const ActivationType type) {
   switch (type) {
