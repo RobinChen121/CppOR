@@ -81,7 +81,7 @@ void WorkforcePlan::set_turnover_rate(const double value) {
                                                           const int action,
                                                           const int overturn_num) const {
   int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
-  if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1)
+  if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1) // can affect computational time
     next_workers = ini_state.getInitialWorkers() - overturn_num;
   next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
   // 类可以直接使用列表初始化

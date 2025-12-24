@@ -196,8 +196,8 @@ public:
   double recursion(const CashLeadtimeMultiState &state) { // NOLINT(*-no-recursion)
     std::array bestQ = {0.0, 0.0};
     double bestValue = std::numeric_limits<double>::lowest();
-    for (const std::vector<std::array<double, 2>> actions = feasibleActions();
-         const std::array action : actions) {
+    const std::vector<std::array<double, 2>> actions = feasibleActions(); // should not put in the loop
+    for (const std::array action : actions) {
       double thisValue = 0.0;
       // if (state.getPeriod() == 2 and state.getQpre1() == 15 and
       //     state.getQpre2() == 0) {
