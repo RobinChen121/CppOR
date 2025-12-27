@@ -4,7 +4,7 @@ project(newsvendor) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 if (CMAKE_BUILD_TYPE STREQUAL Release)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
@@ -23,15 +23,19 @@ endif ()
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         ../../utils/pmf.cpp
-        ../states/State.cpp
+        ../states/state.cpp
 
+        #        newsvendor_c.c
+        #        newsvendor_vanilla.c
         #        heuristic1997.cpp
-        newsvendor.cpp
-
+        newsvendor_capacity.cpp
+        #                newsvendor_vanilla.cpp
+        #        newsvendor.cpp
+        #
         ../../utils/draw_graph.cpp
         ../../utils/Kconvexity.cpp
-        ../../tsp/tsp.h
-        ../../tsp/DP.cpp
+        #        ../../tsp/tsp.h
+        #        ../../tsp/DP.cpp
 )
 
 
@@ -44,7 +48,7 @@ target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 #-----------------------------------
 # matplotlib setting
 if (MSVC)
-    add_definitions(-U_DEBUG)  # 取消 _DEBUG 宏,这样jiuneg
+    add_definitions(-U_DEBUG)
 endif ()
 if (APPLE)
     # python head file

@@ -8,7 +8,7 @@
 
 #ifndef LEADTIME_SINGLE_PRODUCT_H
 #define LEADTIME_SINGLE_PRODUCT_H
-#include "../../../utils/PMF.h"
+#include "../../../utils/pmf.h"
 #include "../../states/cash_leadtime_state.h"
 
 class OverdraftLeadtimeSingleProduct {
@@ -40,21 +40,21 @@ private:
   double min_cash = -200;
   double max_cash = 1000;
 
-  std::vector<std::vector<std::vector<double>>> pmf;
-  std::unordered_map<CashLeadtimeState, double> cacheActions;
-  std::unordered_map<CashLeadtimeState, double> cacheValues;
+  std::vector<std::vector<std::array<double, 2>>> pmf;
+  std::unordered_map<CashLeadtimeState, double> cache_actions;
+  std::unordered_map<CashLeadtimeState, double> cache_values;
 
 public:
   OverdraftLeadtimeSingleProduct() {
-    pmf = PMF(truncated_quantile, step_size, distribution_type).getPMFPoisson(demands);
+    pmf = PMF(truncated_quantile, step_size).getPMFPoisson(demands);
   }
 
-  OverdraftLeadtimeSingleProduct(std::vector<double> &mean_demands, double interest,
-                                 double overhead_cost, double price)
+  OverdraftLeadtimeSingleProduct(const std::vector<double> &mean_demands, const double interest,
+                                 const double overhead_cost, const double price)
       : demands(mean_demands), r1(interest) {
     overhead_costs = std::vector<double>(T, overhead_cost);
     prices = std::vector<double>(T, price);
-    pmf = PMF(truncated_quantile, step_size, distribution_type).getPMFPoisson(mean_demands);
+    pmf = PMF(truncated_quantile, step_size).getPMFPoisson(mean_demands);
   }
 
   // [[nodiscard]] 表示：“函数的返回值不应该被忽略”

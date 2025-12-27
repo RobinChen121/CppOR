@@ -10,32 +10,32 @@
 
 State::State() = default; // 由编译器生成，行为是“成员逐个默认初始化”
 
-State::State(const int period, const double initialInventory)
-    : period(period), initialInventory(initialInventory) {};
+State::State(const int period, const double ini_inventory)
+    : period(period), ini_inventory(ini_inventory) {};
 
-double State::getInitialInventory() const { return initialInventory; }
+double State::get_ini_inventory() const { return ini_inventory; }
 
-int State::getPeriod() const { return period; }
+int State::get_period() const { return period; }
 
 void State::print() const {
-  std::cout << "period: " << period << ", ini I: " << initialInventory << std::endl;
+  std::cout << "period: " << period << ", ini I: " << ini_inventory << std::endl;
 }
 
-bool State::operator<(const State &other) const {
-  if (period < other.period) {
-    return true;
-  }
-  if (period == other.period) {
-    if (initialInventory < other.initialInventory) {
-      return true;
-    }
-    return false;
-  }
-  return false;
-}
+// bool State::operator<(const State &other) const {
+//   if (period < other.period) {
+//     return true;
+//   }
+//   if (period == other.period) {
+//     if (ini_inventory < other.ini_inventory) {
+//       return true;
+//     }
+//     return false;
+//   }
+//   return false;
+// }
 
 std::ostream &operator<<(std::ostream &os, const State &state) {
-  os << "period: " << state.period << ", ini I: " << state.initialInventory << std::endl;
+  os << "period: " << state.period << ", ini I: " << state.ini_inventory << std::endl;
   return os;
 }
 
@@ -46,7 +46,7 @@ std::ostream &operator<<(std::ostream &os, const State &state) {
 //             return true;
 //         }
 //         if (p1.getPeriod() == p2.getPeriod()) {
-//             if (p1.getInitialInventory() < p2.getInitialInventory()) {
+//             if (p1.getini_inventory() < p2.getini_inventory()) {
 //                 return true;
 //             }
 //             return false;

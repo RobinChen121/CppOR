@@ -14,23 +14,23 @@
 
 class CashLeadtimeState : public CashState {
 private:
-  double Qpre = 0;
+  double q_pre{}; // default value is 0.0
 
 public:
   CashLeadtimeState(const int period, const double initialInventory, const double iniCash,
                     const double preQ)
-      : CashState(period, initialInventory, iniCash), Qpre(preQ) {};
-  double getQpre() const;
+      : CashState(period, initialInventory, iniCash), q_pre(preQ) {};
+  double get_q_pre() const;
 
   // hashmap must define operator == and a struct to compute hash
+  // for unordered map
   bool operator==(const CashLeadtimeState &other) const {
     // 需要定义 `==`
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
     // 不会修改成员变量的方法 都可以在函数声明的结尾添加 const
-    return getPeriod() == other.getPeriod() &&
-           getInitialInventory() == other.getInitialInventory() &&
-           other.getIniCash() == other.getIniCash() && Qpre == other.Qpre;
+    return get_period() == other.get_period() && get_ini_inventory() == other.get_ini_inventory() &&
+           other.get_ini_cash() == other.get_ini_cash() && q_pre == other.q_pre;
   }
   friend std::ostream &operator<<(std::ostream &os, const CashLeadtimeState &state);
 
@@ -46,14 +46,14 @@ struct std::hash<CashLeadtimeState> {
     // noexcept 表示这个函数不会抛出异常
     // boost 的哈希计算更安全
     // std::size_t seed = 0;
-    // boost::hash_combine(seed, s.getPeriod());
+    // boost::hash_combine(seed, s.get_period());
     // boost::hash_combine(seed, s.getInitialInventory());
-    // boost::hash_combine(seed, s.getIniCash());
-    // boost::hash_combine(seed, s.Qpre);
+    // boost::hash_combine(seed, s.get_ini_cash());
+    // boost::hash_combine(seed, s.q_pre);
     // return seed;
 
-    auto combined_hash =
-        hash_combine(s.getPeriod(), s.getInitialInventory(), s.getIniCash(), s.getQpre());
+    const auto combined_hash =
+        hash_combine(s.get_period(), s.get_ini_inventory(), s.get_ini_cash(), s.get_q_pre());
     return combined_hash;
   }
 };

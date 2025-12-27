@@ -11,19 +11,20 @@
 #include <vector>
 
 class PMF {
-  double truncatedQuantile = 1;
-  double stepSize = 1;
-  std::string distributionName = "poisson";
+  double truncated_quantile = 1;
+  double step_size = 1;
+  std::string distribution_name = "poisson";
 
 public:
   PMF() = default;
-  PMF(double truncatedQuantile, double stepSize);
+  explicit PMF(const double truncated_quantile) : truncated_quantile(truncated_quantile) {};
+  PMF(double truncated_quantile, double step_size);
 
   // std::string getName();
 
   // void checkName() const;
 
-  static double poissonPMF(int k, int lambda);
+  static double poisson_pmf(int k, int lambda);
   static double normalPMF(int k, double mean, double sigma, double truncate_quantile);
 
   // span 本身就是引用传递
@@ -34,8 +35,8 @@ public:
   // [[nodiscard]] std::vector<std::vector<std::vector<double>>>
   // getPMF(std::span<const double> demands) const;
 
-  [[nodiscard]] std::vector<std::vector<std::vector<double>>>
-  getPMFPoisson(std::span<const double> demands) const;
+  [[nodiscard]] std::vector<std::vector<std::array<double, 2>>>
+  getPMFPoisson(const std::vector<double> &demands) const;
 
   [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
   getPMFSelfDefine(std::span<const double> demands, std::span<const double> probs, int T);
@@ -50,9 +51,9 @@ public:
   static std::vector<std::vector<std::vector<std::array<double, 2>>>>
   getPMFBinomial2(int max_staff, std::span<const double> ps);
 
-  static int poissonQuantile(double p, double lambda);
+  static int poisson_quantile(double p, double lambda);
 
-  static double poissonCDF(int k, double lambda);
+  static double poisson_cdf(int k, double lambda);
 
   [[nodiscard]] std::vector<std::vector<std::vector<double>>>
   getPMFPoissonMulti(std::span<const double> demands1, std::span<const double> demands2) const;
