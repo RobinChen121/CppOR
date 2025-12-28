@@ -13,13 +13,13 @@
 
 bool CashLeadtimeMultiState::operator==(const CashLeadtimeMultiState &other) const {
   return period == other.period && ini_I1 == other.ini_I1 && ini_I2 == other.ini_I2 &&
-         Qpre1 == other.Qpre1 && Qpre2 == other.Qpre2 && iniCash == other.iniCash;
+         q_pre1 == other.q_pre1 && q_pre2 == other.q_pre2 && ini_cash == other.ini_cash;
 }
 
 std::ostream &operator<<(std::ostream &os, const CashLeadtimeMultiState &state) {
   os << "Period: " << state.period << ", ini inventory1: " << state.ini_I1
-     << ", ini inventory2: " << state.ini_I2 << ", Qpre1: " << state.Qpre1
-     << ", Qpre2: " << state.Qpre2 << ", ini cash: " << state.iniCash << std::endl;
+     << ", ini inventory2: " << state.ini_I2 << ", q_pre1: " << state.q_pre1
+     << ", q_pre2: " << state.q_pre2 << ", ini cash: " << state.ini_cash << std::endl;
 }
 
 // int main() {

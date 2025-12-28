@@ -18,10 +18,6 @@ int main() {
   std::vector<double> overhead_costs_all = {25.0, 50.0};
   std::vector<double> prices_all = {5, 10};
 
-  int sampleNum = 10;
-  int forwardNum = 30;
-  int iterNum = 50;
-
   const std::string file_name =
       "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
       "Numerical-tests/overdraft/c++/sdp_testing.csv";
@@ -39,17 +35,17 @@ int main() {
 
           auto problem = OverdraftLeadtimeSingleProduct(demands, interest, overhead, price);
           const auto start_time = std::chrono::high_resolution_clock::now();
-          const double final_value = problem.solve()[0];
+          const auto final_value = problem.solve();
           const auto end_time = std::chrono::high_resolution_clock::now();
           const std::chrono::duration<double> time = end_time - start_time;
           const double Q = problem.solve()[1];
-          std::vector<double> arr = {static_cast<double>(i), interest, overhead, price, final_value,
+          std::vector<double> arr = {static_cast<double>(i), interest, overhead, price, final_value[0],
                                      time.count(),           Q};
           appendRowToCSV(file_name, arr);
           std::cout << "**************************************************" << std::endl;
           std::cout << "running time is " << time.count() << 's' << std::endl;
-          std::cout << "Final expected cash increment is " << final_value << std::endl;
-          std::cout << "Optimal Q in the first period is " << problem.solve()[1] << std::endl;
+          std::cout << "Final expected cash increment is " << final_value[0] << std::endl;
+          std::cout << "Optimal Q in the first period is " << final_value[1] << std::endl;
         }
       }
     }

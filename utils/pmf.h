@@ -36,7 +36,7 @@ public:
   // getPMF(std::span<const double> demands) const;
 
   [[nodiscard]] std::vector<std::vector<std::array<double, 2>>>
-  getPMFPoisson(const std::vector<double> &demands) const;
+  get_pmf_poisson(const std::vector<double> &demands) const;
 
   [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
   getPMFSelfDefine(std::span<const double> demands, std::span<const double> probs, int T);
@@ -55,8 +55,9 @@ public:
 
   static double poisson_cdf(int k, double lambda);
 
-  [[nodiscard]] std::vector<std::vector<std::vector<double>>>
-  getPMFPoissonMulti(std::span<const double> demands1, std::span<const double> demands2) const;
+  [[nodiscard]] std::vector<std::vector<std::array<double, 3>>>
+  get_pmf_poisson_multi(const std::vector<double> &demands1,
+                        const std::vector<double> &demands2) const;
 
   static std::vector<std::vector<std::vector<double>>>
   getPMFSelfDiscreteMulti(const std::vector<std::vector<double>> &demand1_values,

@@ -16,15 +16,15 @@ private:
   int period{}; // c++11, {} 值初始化，默认为 0
   double ini_I1{};
   double ini_I2{};
-  double Qpre1{};
-  double Qpre2{};
-  double iniCash{};
+  double q_pre1{};
+  double q_pre2{};
+  double ini_cash{};
 
 public:
   CashLeadtimeMultiState(const int period, const double ini_I1, const double ini_I2,
-                         const double Qpre1, const double Qpre2, const double iniCash)
-      : period(period), ini_I1(ini_I1), ini_I2(ini_I2), Qpre1(Qpre1), Qpre2(Qpre2),
-        iniCash(iniCash) {};
+                         const double q_pre1, const double q_pre2, const double ini_cash)
+      : period(period), ini_I1(ini_I1), ini_I2(ini_I2), q_pre1(q_pre1), q_pre2(q_pre2),
+        ini_cash(ini_cash) {};
 
   bool operator==(const CashLeadtimeMultiState &other) const;
 
@@ -34,12 +34,12 @@ public:
 
   // [[nodiscard]] 是 C++17 引入的属性，它的作用是
   // 提示调用者不要忽略返回值，否则编译器会给出警告
-  [[nodiscard]] int getPeriod() const { return period; }
-  [[nodiscard]] double getIniI1() const { return ini_I1; }
-  [[nodiscard]] double getIniI2() const { return ini_I2; }
-  [[nodiscard]] double getQpre1() const { return Qpre1; }
-  [[nodiscard]] double getQpre2() const { return Qpre2; }
-  [[nodiscard]] double getIniCash() const { return iniCash; }
+  [[nodiscard]] int get_period() const { return period; }
+  [[nodiscard]] double get_iniI1() const { return ini_I1; }
+  [[nodiscard]] double get_iniI2() const { return ini_I2; }
+  [[nodiscard]] double get_q_pre1() const { return q_pre1; }
+  [[nodiscard]] double get_q_pre2() const { return q_pre2; }
+  [[nodiscard]] double get_ini_cash() const { return ini_cash; }
 };
 
 template <> // 表示模版特化， override 标准库中的 hash
@@ -54,9 +54,9 @@ struct std::hash<CashLeadtimeMultiState> {
     boost::hash_combine(seed, s.period);
     boost::hash_combine(seed, s.ini_I1);
     boost::hash_combine(seed, s.ini_I2);
-    boost::hash_combine(seed, s.Qpre1);
-    boost::hash_combine(seed, s.Qpre2);
-    boost::hash_combine(seed, s.iniCash);
+    boost::hash_combine(seed, s.q_pre1);
+    boost::hash_combine(seed, s.q_pre2);
+    boost::hash_combine(seed, s.ini_cash);
     return seed;
   }
 };

@@ -26,7 +26,7 @@ class NewsvendorDP {
   double truncated_quantile;
   double max_I;
   double min_I;
-  std::vector<std::vector<std::vector<double>>> pmf;
+  std::vector<std::vector<std::array<double, 2>>> pmf;
   bool parallel;
   bool compute_Gy = false;
   State ini_state;
@@ -37,7 +37,17 @@ public:
                const double fix_order_cost, const double unit_vari_order_cost,
                const double unit_hold_cost, const double unit_penalty_cost,
                const double truncated_quantile, const double max_I, const double min_I,
-               std::vector<std::vector<std::vector<double>>> pmf, const bool parallel,
+               std::vector<std::vector<std::array<double, 2>>> pmf)
+      : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize),
+        fix_order_cost(fix_order_cost), unit_vari_order_cost(unit_vari_order_cost),
+        unit_hold_cost(unit_hold_cost), unit_penalty_cost(unit_penalty_cost),
+        truncated_quantile(truncated_quantile), max_I(max_I), min_I(min_I), pmf(std::move(pmf)) {};
+
+  NewsvendorDP(const size_t T, const double capacity, const double stepSize,
+               const double fix_order_cost, const double unit_vari_order_cost,
+               const double unit_hold_cost, const double unit_penalty_cost,
+               const double truncated_quantile, const double max_I, const double min_I,
+               std::vector<std::vector<std::array<double, 2>>> pmf, const bool parallel,
                const State ini_state)
       : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize),
         fix_order_cost(fix_order_cost), unit_vari_order_cost(unit_vari_order_cost),
@@ -45,21 +55,23 @@ public:
         truncated_quantile(truncated_quantile), max_I(max_I), min_I(min_I), pmf(std::move(pmf)),
         parallel(parallel), ini_state(ini_state) {};
 
-  [[nodiscard]] std::vector<double> feasibleActions() const;
+  [[nodiscard]] std::vector<double> get_feasible_actions() const;
 
-  [[nodiscard]] State stateTransitionFunction(const State &state, double action,
-                                              double demand) const;
+  [[nodiscard]] State state_transition_function(const State &state, double action,
+                                                double demand) const;
 
-  [[nodiscard]] double immediateValueFunction(const State &state, double action,
-                                              double demand) const;
+  [[nodiscard]] double immediate_value_function(const State &state, double action,
+                                                double demand) const;
 
-  double getOptAction(const State &state);
+  double get_opt_action(const State &state);
 
   [[nodiscard]] auto getTable() const;
 
   double recursion_serial(const State &state);
 
   double recursion_parallel(const State &state);
+
+  double recursion(const State &state);
 
   void computeStage(int t, int start_inventory, int end_inventory);
 

@@ -16,7 +16,7 @@ private:
   double ini_inventory = 0;
   double ini_cash = 0;
   CashLeadtimeState ini_state = CashLeadtimeState{1, ini_inventory, ini_cash, 0.0};
-  std::vector<double> demands = {15.0, 15.0};
+  std::vector<double> demands = {15.0, 15.0, 15.0, 15.0};
   std::string distribution_type = "poisson";
   size_t T = demands.size(); // 直接获取大小
 
@@ -28,7 +28,7 @@ private:
   double unit_salvage_value = 0.5; //  * unit_vari_order_costs[T - 1];
 
   double r0 = 0.0;
-  double r1 = 0.05;
+  double r1 = 0.2;
   double r2 = 2.0;
   double overdraft_limit = 300;
 
@@ -46,25 +46,25 @@ private:
 
 public:
   OverdraftLeadtimeSingleProduct() {
-    pmf = PMF(truncated_quantile, step_size).getPMFPoisson(demands);
+    pmf = PMF(truncated_quantile, step_size).get_pmf_poisson(demands);
   }
 
   OverdraftLeadtimeSingleProduct(const std::vector<double> &mean_demands, const double interest,
                                  const double overhead_cost, const double price)
       : demands(mean_demands), r1(interest) {
     overhead_costs = std::vector<double>(T, overhead_cost);
-    prices = std::vector<double>(T, price);
-    pmf = PMF(truncated_quantile, step_size).getPMFPoisson(mean_demands);
+    prices = std::vector(T, price);
+    pmf = PMF(truncated_quantile, step_size).get_pmf_poisson(mean_demands);
   }
 
   // [[nodiscard]] 表示：“函数的返回值不应该被忽略”
   // 如果你调用这个函数但没有使用返回值，编译器会给你一个警告，提醒你可能写错了。
-  [[nodiscard]] std::vector<double> feasibleActions() const;
-  [[nodiscard]] double immediateValueFunction(const CashLeadtimeState &state, const double action,
-                                              const double randomDemand) const;
-  [[nodiscard]] CashLeadtimeState stateTransitionFunction(const CashLeadtimeState &state,
-                                                          const double action,
-                                                          const double randomDemand) const;
+  [[nodiscard]] std::vector<double> get_feasible_actions() const;
+  [[nodiscard]] double immediate_value_function(const CashLeadtimeState &state, double action,
+                                                double random_demand) const;
+  [[nodiscard]] CashLeadtimeState state_transition_function(const CashLeadtimeState &state,
+                                                            double action,
+                                                            double random_demand) const;
   double recursion(const CashLeadtimeState &state);
   std::vector<double> solve();
 };

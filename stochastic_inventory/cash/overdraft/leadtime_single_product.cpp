@@ -58,24 +58,24 @@ Optimal Q in the first period is 42.
 #include <iostream>
 #include <vector>
 
-[[nodiscard]] std::vector<double> OverdraftLeadtimeSingleProduct::feasibleActions() const {
-  const int QNum = static_cast<int>(max_order_quantity / step_size);
+[[nodiscard]] std::vector<double> OverdraftLeadtimeSingleProduct::get_feasible_actions() const {
+  const int QNum = static_cast<int>(max_order_quantity);
 
   std::vector<double> actions(QNum);
   for (int i = 0; i < QNum; i = i + 1) {
-    actions[i] = i * step_size;
+    actions[i] = i;
   }
   return actions;
 }
 
-[[nodiscard]] double OverdraftLeadtimeSingleProduct::immediateValueFunction(
-    const CashLeadtimeState &state, const double action, const double randomDemand) const {
+[[nodiscard]] double OverdraftLeadtimeSingleProduct::immediate_value_function(
+    const CashLeadtimeState &state, const double action, const double random_demand) const {
   const int t = state.get_period() - 1;
   const double revenue =
-      prices[t] * std::min(state.get_ini_inventory() + state.get_q_pre(), randomDemand);
-  const double variableCost = unit_vari_order_costs[t] * action;
-  const double inventoryLevel = state.get_ini_inventory() + state.get_q_pre() - randomDemand;
-  const double cash_before_interest = state.get_ini_cash() - variableCost - overhead_costs[t];
+      prices[t] * std::min(state.get_ini_inventory() + state.get_q_pre(), random_demand);
+  const double variable_cost = unit_vari_order_costs[t] * action;
+  const double inventory = state.get_ini_inventory() + state.get_q_pre() - random_demand;
+  const double cash_before_interest = state.get_ini_cash() - variable_cost - overhead_costs[t];
   double interest = 0;
   if (cash_before_interest > 0.0) {
     interest = cash_before_interest * r0;
@@ -87,59 +87,60 @@ Optimal Q in the first period is 42.
   }
   const double cash_after_interest = cash_before_interest + interest + revenue;
   double cash_increment = cash_after_interest - state.get_ini_cash();
-  const double salValue =
-      state.get_period() == T ? unit_salvage_value * std::max(inventoryLevel, 0.0) : 0;
-  cash_increment += salValue;
+  const double salvage_value =
+      state.get_period() == T ? unit_salvage_value * std::max(inventory, 0.0) : 0;
+  cash_increment += salvage_value;
   return cash_increment;
 }
 
-[[nodiscard]] CashLeadtimeState OverdraftLeadtimeSingleProduct::stateTransitionFunction(
-    const CashLeadtimeState &state, const double action, const double randomDemand) const {
-  double nextInventory =
-      std::max(0.0, state.get_ini_inventory() + state.get_q_pre() - randomDemand);
+[[nodiscard]] CashLeadtimeState OverdraftLeadtimeSingleProduct::state_transition_function(
+    const CashLeadtimeState &state, const double action, const double random_demand) const {
+  double next_inventory =
+      std::max(0.0, state.get_ini_inventory() + state.get_q_pre() - random_demand);
   const double nextQpre = action;
-  double nextCash = state.get_ini_cash() + immediateValueFunction(state, action, randomDemand);
+  double nextCash = state.get_ini_cash() + immediate_value_function(state, action, random_demand);
   nextCash = nextCash > max_cash ? max_cash : nextCash;
   nextCash = nextCash < min_cash ? min_cash : nextCash;
-  nextInventory = nextInventory > max_inventory ? max_inventory : nextInventory;
-  nextInventory = nextInventory < min_inventory ? min_inventory : nextInventory;
+  next_inventory = next_inventory > max_inventory ? max_inventory : next_inventory;
+  next_inventory = next_inventory < min_inventory ? min_inventory : next_inventory;
   // cash is integer or not
   // nextCash = std::round(nextCash * 100) / 100.0; // the right should be a decimal.
-  return CashLeadtimeState{state.get_period() + 1, nextInventory, nextCash, nextQpre};
+  return CashLeadtimeState{state.get_period() + 1, next_inventory, nextCash, nextQpre};
 }
 
 double OverdraftLeadtimeSingleProduct::recursion(
     const CashLeadtimeState &state) { // NOLINT(*-no-recursion)
-  double bestQ = 0.0;
-  double bestValue = std::numeric_limits<double>::lowest();
-  const std::vector<double> actions = feasibleActions();
+  double best_q = 0.0;
+  double best_value = std::numeric_limits<double>::lowest();
+  const std::vector<double> actions = get_feasible_actions();
   //  if (state.get_period() == 4) {
   //    actions = {0.0};
   //  } else {
-  //    actions = feasibleActions();
+  //    actions = get_feasible_actions();
   //  }
   for (const double action : actions) {
-    double thisValue = 0.0;
-    for (auto demandAndProb : pmf[state.get_period() - 1]) {
-      thisValue += demandAndProb[1] * immediateValueFunction(state, action, demandAndProb[0]);
+    double this_value = 0.0;
+    for (auto demand_and_prob : pmf[state.get_period() - 1]) {
+      this_value +=
+          demand_and_prob[1] * immediate_value_function(state, action, demand_and_prob[0]);
       if (state.get_period() < T) {
-        auto newState = stateTransitionFunction(state, action, demandAndProb[0]);
-        if (auto it = cache_values.find(newState); it != cache_values.end()) {
-          // some issues here
-          thisValue += demandAndProb[1] * it->second;
+        auto new_state = state_transition_function(state, action, demand_and_prob[0]);
+        auto it = cache_values.find(new_state);
+        if (it != cache_values.end()) {
+          this_value += demand_and_prob[1] * it->second;
         } else {
-          thisValue += demandAndProb[1] * recursion(newState);
+          this_value += demand_and_prob[1] * recursion(new_state);
         }
       }
     }
-    if (thisValue > bestValue) {
-      bestValue = thisValue;
-      bestQ = action;
+    if (this_value > best_value) {
+      best_value = this_value;
+      best_q = action;
     }
   }
-  cache_actions[state] = bestQ;
-  cache_values[state] = bestValue;
-  return bestValue;
+  cache_actions[state] = best_q;
+  cache_values[state] = best_value;
+  return best_value;
 }
 
 std::vector<double> OverdraftLeadtimeSingleProduct::solve() {

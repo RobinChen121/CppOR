@@ -101,8 +101,8 @@ public:
 
     std::ranges::transform(mean_demand1, mean_demand2.begin(),
                            [](const double x) { return x / 2; });
-    pmf = PMF(truncated_quantile, step_size, distribution_type)
-              .getPMFPoissonMulti(mean_demand1, mean_demand2);
+    pmf =
+        PMF(truncated_quantile, step_size).get_pmf_poisson_multi(mean_demand1, mean_demand2, TODO);
 
     //    if (distribution_type == "self_discrete") {
     //      for (int t = 0; t < T; ++t) {
@@ -120,7 +120,7 @@ public:
     //    }
   }
 
-  [[nodiscard]] std::vector<std::array<double, 2>> feasibleActions() const {
+  [[nodiscard]] std::vector<std::array<double, 2>> get_feasible_actions() const {
     const int QNum1 = static_cast<int>(max_order_quantity1 / step_size);
     const int QNum2 = static_cast<int>(max_order_quantity2 / step_size);
     const int QTotalNums = QNum1 * QNum2;
@@ -137,19 +137,19 @@ public:
     return actions;
   }
 
-  [[nodiscard]] double immediateValueFunction(const CashLeadtimeMultiState &state,
-                                              const double action1, const double action2,
-                                              const double randomDemand1,
-                                              const double randomDemand2) const {
-    const int t = state.getPeriod() - 1;
+  [[nodiscard]] double immediate_value_function(const CashLeadtimeMultiState &state,
+                                                const double action1, const double action2,
+                                                const double randomDemand1,
+                                                const double randomDemand2) const {
+    const int t = state.get_period() - 1;
     const double revenue =
-        prices1[t] * std::min(state.getIniI1() + state.getQpre1(), randomDemand1) +
-        prices2[t] * std::min(state.getIniI2() + state.getQpre2(), randomDemand2);
+        prices1[t] * std::min(state.get_iniI1() + state.get_q_pre1(), randomDemand1) +
+        prices2[t] * std::min(state.get_iniI2() + state.get_q_pre2(), randomDemand2);
     const double variableCost =
         unit_vari_order_costs1[t] * action1 + unit_vari_order_costs2[t] * action2;
-    const double inventoryLevel1 = state.getIniI1() + state.getQpre1() - randomDemand1;
-    const double inventoryLevel2 = state.getIniI2() + state.getQpre2() - randomDemand2;
-    const double cash_before_interest = state.getIniCash() - variableCost - overhead_costs[t];
+    const double inventoryLevel1 = state.get_iniI1() + state.get_q_pre1() - randomDemand1;
+    const double inventoryLevel2 = state.get_iniI2() + state.get_q_pre2() - randomDemand2;
+    const double cash_before_interest = state.get_ini_cash() - variableCost - overhead_costs[t];
     double interest = 0;
     if (cash_before_interest > 0.0) {
       interest = cash_before_interest * r0;
@@ -160,8 +160,8 @@ public:
       //      interest = cash_before_interest * r2;
     }
     const double cash_after_interest = cash_before_interest + interest + revenue;
-    double cash_increment = cash_after_interest - state.getIniCash();
-    const double salValue = state.getPeriod() == T
+    double cash_increment = cash_after_interest - state.get_ini_cash();
+    const double salValue = state.get_period() == T
                                 ? unit_salvage_value1 * std::max(inventoryLevel1, 0.0) +
                                       unit_salvage_value2 * std::max(inventoryLevel2, 0.0)
                                 : 0;
@@ -169,17 +169,16 @@ public:
     return cash_increment;
   }
 
-  [[nodiscard]] CashLeadtimeMultiState stateTransitionFunction(const CashLeadtimeMultiState &state,
-                                                               const double action1,
-                                                               const double action2,
-                                                               const double randomDemand1,
-                                                               const double randomDemand2) const {
-    double nextInventory1 = std::max(0.0, state.getIniI1() + state.getQpre1() - randomDemand1);
-    double nextInventory2 = std::max(0.0, state.getIniI2() + state.getQpre2() - randomDemand2);
+  [[nodiscard]] CashLeadtimeMultiState
+  state_transition_function(const CashLeadtimeMultiState &state, const double action1,
+                            const double action2, const double randomDemand1,
+                            const double randomDemand2) const {
+    double nextInventory1 = std::max(0.0, state.get_iniI1() + state.get_q_pre1() - randomDemand1);
+    double nextInventory2 = std::max(0.0, state.get_iniI2() + state.get_q_pre2() - randomDemand2);
     const double nextQpre1 = action1;
     const double nextQpre2 = action2;
-    double nextCash = state.getIniCash() +
-                      immediateValueFunction(state, action1, action2, randomDemand1, randomDemand2);
+    double nextCash = state.get_ini_cash() + immediate_value_function(state, action1, action2,
+                                                                      randomDemand1, randomDemand2);
     nextCash = nextCash > max_cash ? max_cash : nextCash;
     nextCash = nextCash < min_cash ? min_cash : nextCash;
     nextInventory1 = nextInventory1 > max_inventory ? max_inventory : nextInventory1;
@@ -190,25 +189,27 @@ public:
     nextCash = std::round(nextCash * 10) / 10.0; // the right should be a
     // decimal
     return CashLeadtimeMultiState{
-        state.getPeriod() + 1, nextInventory1, nextInventory2, nextQpre1, nextQpre2, nextCash};
+        state.get_period() + 1, nextInventory1, nextInventory2, nextQpre1, nextQpre2, nextCash};
   }
 
   double recursion(const CashLeadtimeMultiState &state) { // NOLINT(*-no-recursion)
     std::array bestQ = {0.0, 0.0};
     double bestValue = std::numeric_limits<double>::lowest();
-    const std::vector<std::array<double, 2>> actions = feasibleActions(); // should not put in the loop
+    const std::vector<std::array<double, 2>> actions =
+        get_feasible_actions(); // should not put in the loop
     for (const std::array action : actions) {
       double thisValue = 0.0;
-      // if (state.getPeriod() == 2 and state.getQpre1() == 15 and
-      //     state.getQpre2() == 0) {
+      // if (state.get_period() == 2 and state.get_q_pre1() == 15 and
+      //     state.get_q_pre2() == 0) {
       //   ;
       // }
-      for (auto demandAndProb : pmf[state.getPeriod() - 1]) {
-        thisValue += demandAndProb[2] * immediateValueFunction(state, action[0], action[1],
-                                                               demandAndProb[0], demandAndProb[1]);
-        if (state.getPeriod() < T) {
-          auto newState = stateTransitionFunction(state, action[0], action[1], demandAndProb[0],
-                                                  demandAndProb[1]);
+      for (auto demandAndProb : pmf[state.get_period() - 1]) {
+        thisValue +=
+            demandAndProb[2] * immediate_value_function(state, action[0], action[1],
+                                                        demandAndProb[0], demandAndProb[1]);
+        if (state.get_period() < T) {
+          auto newState = state_transition_function(state, action[0], action[1], demandAndProb[0],
+                                                    demandAndProb[1]);
           if (auto it = cacheValues.find(newState); it != cacheValues.end()) {
             // some issues here
             thisValue += demandAndProb[2] * it->second;
