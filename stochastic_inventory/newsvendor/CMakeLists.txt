@@ -4,19 +4,10 @@ project(newsvendor) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Release)
-if (CMAKE_BUILD_TYPE STREQUAL Release)
-    if (MSVC)
-        set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
-    else ()
-        set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-    endif ()
+if (MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
 else ()
-    if (MSVC)
-        set(CMAKE_CXX_FLAGS_DEBUG "/Od /Zi")
-    else ()
-        set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-    endif ()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
 

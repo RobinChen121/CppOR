@@ -1,21 +1,28 @@
-set(RUN_NAME sddp-overdraft) # 设置运行程序的名字
+cmake_minimum_required(VERSION 3.30)
+project(sddp-overdraft) # 设置运行程序的名字
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-
-# 添加 AddressSanitizer 和调试信息
-set(SANITIZER_FLAGS "-fsanitize=address -g")
+if (MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+else ()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
-add_executable(${RUN_NAME}
+add_executable(${PROJECT_NAME}
         #        double_product.cpp
         #        double_product_testing.cpp
         #        double_product_enhancement_further.cpp
 
-        single_product_testing_ScenarioNum.cpp
-        single_product_enhancement.cpp
+        single_product_enhancement_further.cpp
         I_cash_status.cpp
+
+        #        single_product_testing_ScenarioNum.cpp
+        #        single_product_enhancement.cpp
+        #        I_cash_status.cpp
+
         ../../utils/common.cpp
         ../../utils/sampling.cpp
 )
@@ -28,8 +35,8 @@ if (APPLE)
     # 将路径添加到搜索地址
     include_directories(${GUROBI_INCLUDE_DIR})
     include_directories(${GUROBI_LIB_DIR})
-    target_link_libraries(${RUN_NAME}
-            PRIVATE
+    target_link_libraries(${PROJECT_NAME}
+
             "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
             "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
     )
@@ -59,12 +66,11 @@ else ()
     message(STATUS "Gurobi libraries: ${GUROBI_CXX_LIBRARY}")
 
     if (CXX)
-        set(CMAKE_CXX_STANDARD 11)
-        target_link_libraries(${RUN_NAME} PRIVATE optimized ${GUROBI_CXX_LIBRARY}
+        target_link_libraries(${PROJECT_NAME} optimized ${GUROBI_CXX_LIBRARY}
                 debug ${GUROBI_CXX_DEBUG_LIBRARY})
     endif ()
 
-    target_link_libraries(${RUN_NAME} PRIVATE ${GUROBI_LIBRARY})
+    target_link_libraries(${PROJECT_NAME} ${GUROBI_LIBRARY})
 
     if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
         include(FeatureSummary)
@@ -73,4 +79,4 @@ else ()
 endif ()
 
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})

@@ -9,7 +9,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 #include <boost/functional/hash.hpp>
-#include <fstream>
+#include <fstream> // for file <<
 #include <iomanip> // for std::fixed and std::setprecision
 #include <iostream>
 #include <sstream>
@@ -19,16 +19,27 @@
 
 using Matrix = std::vector<std::vector<double>>;
 
-Matrix removeDuplicateRows(const Matrix &mat);
+Matrix remove_duplicate_rows(const Matrix &mat);
 
 // 自定义哈希函数
 struct VectorHash {
   size_t operator()(const std::vector<double> &v) const {
     std::size_t seed = 0;
     for (const double num : v) {
-      boost::hash_combine(seed, v);
+      boost::hash_combine(seed, num);
     }
     return seed;
+  }
+};
+
+struct VectorEqual {
+  bool operator()(const std::vector<double> &a, const std::vector<double> &b) const {
+    if (a.size() != b.size())
+      return false;
+    for (size_t i = 0; i < a.size(); ++i)
+      if (std::abs(a[i] - b[i]) > 1e-4)
+        return false;
+    return true;
   }
 };
 
@@ -46,7 +57,7 @@ std::vector<std::pair<T1, T2>> product(const std::vector<T1> &a, const std::vect
   return result;
 }
 
-std::string toCSVLine(const std::vector<std::string> &row);
+std::string to_csv_line(const std::vector<std::string> &row);
 
 // 打印一个一维 vector
 template <typename T>
@@ -77,7 +88,7 @@ template <typename T> std::string toString(const T &value) {
 
 // 通用写入函数：支持任意类型的 vector
 template <typename T>
-void appendRowToCSV(const std::string &filename, const std::vector<T> &rowData) {
+void append_csv_row(const std::string &filename, const std::vector<T> &row_data) {
   std::ofstream file(filename, std::ios::app);
   // std::cerr 是 C++ 标准库里用于输出错误信息的一个输出流，用于输出错误、警告、调试信息等
   if (!file.is_open()) {
@@ -86,13 +97,13 @@ void appendRowToCSV(const std::string &filename, const std::vector<T> &rowData) 
   }
 
   // 转换为字符串列表
-  std::vector<std::string> stringRow;
-  for (const auto &item : rowData) {
-    stringRow.push_back(toString(item));
+  std::vector<std::string> string_rows;
+  for (const auto &item : row_data) {
+    string_rows.push_back(toString(item));
   }
 
   // 写入
-  file << toCSVLine(stringRow) << "\n";
+  file << to_csv_line(string_rows) << "\n";
   file.close();
 }
 
@@ -104,6 +115,6 @@ template <typename T> void print2D(std::vector<std::vector<T>> arr) {
   }
 }
 
-void appendHeadToCSV(const std::string &file_name, const std::string &head);
+void append_csv_head(const std::string &file_name, const std::string &head);
 
 #endif // COMMON_H

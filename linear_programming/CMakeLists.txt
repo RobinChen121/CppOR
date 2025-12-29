@@ -3,7 +3,6 @@ set(RUN_NAME LP) # 设置运行程序的名字
 add_subdirectory(sddp_overdraft)
 add_subdirectory(gurobi_examples)
 
-set(CMAKE_BUILD_TYPE Release)
 if (MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "/O2")
 else ()

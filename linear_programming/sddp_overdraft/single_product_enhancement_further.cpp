@@ -16,11 +16,11 @@
 #include "single_product_enhancement_further.h"
 
 std::array<double, 2> SingleProduct::solve() const {
-  const std::vector<int> sampleNums(T, sampleNum);
+  const std::vector<int> sample_nums(T, sample_num);
   std::vector<std::vector<double>> sampleDetails(T);
   for (int t = 0; t < T; t++) {
-    sampleDetails[t].resize(sampleNums[t]);
-    sampleDetails[t] = generateSamplesPoisson(sampleNums[t], mean_demands[t]);
+    sampleDetails[t].resize(sample_nums[t]);
+    sampleDetails[t] = generate_samples_poisson(sample_nums[t], mean_demands[t]);
   }
   // sampleDetails = {{5, 15}, {5, 15}, {5, 15}};
 
@@ -77,61 +77,61 @@ std::array<double, 2> SingleProduct::solve() const {
       W2[t] = models[t].addVar(0, GRB_INFINITY, 0, GRB_CONTINUOUS, "W2_" + std::to_string(t + 1));
       theta[t] = models[t].addVar(-GRB_INFINITY, GRB_INFINITY, 0, GRB_CONTINUOUS,
                                   "theta_" + std::to_string(t + 2));
-      models[t].addConstr(W1[t] <= overdraftLimit);
+      models[t].addConstr(W1[t] <= overdraft_limit);
       if (t == 0)
-        models[t].addConstr(iniCash - unitVariOderCosts[t] * q[t] - W0[t] + W1[t] + W2[t] ==
+        models[t].addConstr(iniCash - unit_vari_order_costs[t] * q[t] - W0[t] + W1[t] + W2[t] ==
                             overhead_costs[t]);
       else {
-        models[t].addConstr(cash[t - 1] - unitVariOderCosts[t] * q[t] - W0[t] + W1[t] + W2[t] ==
+        models[t].addConstr(cash[t - 1] - unit_vari_order_costs[t] * q[t] - W0[t] + W1[t] + W2[t] ==
                             overhead_costs[t]);
       }
-      models[t].addConstr(theta[t] >= thetaInitialValue * (static_cast<double>(T) - t));
+      models[t].addConstr(theta[t] >= theta_initial_value * (static_cast<double>(T) - t));
       models[t].update();
     }
     if (t == 0)
-      models[t].setObjective(overhead_costs[0] + unitVariOderCosts[0] * q[0] + r2 * W2[0] +
+      models[t].setObjective(overhead_costs[0] + unit_vari_order_costs[0] * q[0] + r2 * W2[0] +
                              r1 * W1[0] - r0 * W0[0] + theta[0]);
   }
 
-  // double intercepts[iterNum][T][forwardNum];
-  // double slopes3[iterNum][T][forwardNum];
-  // double slopes2[iterNum][T][forwardNum];
-  // double slopes1[iterNum][T][forwardNum];
-  double qpreValues[iterNum][T][forwardNum];
-  double qValues[iterNum][T][forwardNum];
+  // double intercepts[iter_num][T][forward_num];
+  // double slopes3[iter_num][T][forward_num];
+  // double slopes2[iter_num][T][forward_num];
+  // double slopes1[iter_num][T][forward_num];
+  double q_pre_values[iter_num][T][forward_num];
+  double q_values[iter_num][T][forward_num];
 
-  std::vector slopes1(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  std::vector slopes2(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  std::vector slopes3(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  std::vector intercepts(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  // std::vector qpreValues(iterNum,
-  //                        std::vector(T, std::vector<double>(forwardNum)));
-  // std::vector qValues(iterNum, std::vector(T,
-  // std::vector<double>(forwardNum)));
+  std::vector slopes1(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  std::vector slopes2(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  std::vector slopes3(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  std::vector intercepts(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  // std::vector q_pre_values(iter_num,
+  //                        std::vector(T, std::vector<double>(forward_num)));
+  // std::vector q_values(iter_num, std::vector(T,
+  // std::vector<double>(forward_num)));
 
-  // double IForwardValues[iterNum][T][forwardNum];
-  // double W0ForwardValues[iterNum][T][forwardNum];
-  // double W1ForwardValues[iterNum][T][forwardNum];
-  // double W2ForwardValues[iterNum][T][forwardNum];
-  std::vector IForwardValues(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  std::vector W0ForwardValues(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  std::vector W1ForwardValues(iterNum, std::vector(T, std::vector<double>(forwardNum)));
-  std::vector W2ForwardValues(iterNum, std::vector(T, std::vector<double>(forwardNum)));
+  // double I_forward_values[iter_num][T][forward_num];
+  // double W0_forward_values[iter_num][T][forward_num];
+  // double W1_forward_values[iter_num][T][forward_num];
+  // double W2_forward_values[iter_num][T][forward_num];
+  std::vector I_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  std::vector W0_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  std::vector W1_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num)));
+  std::vector W2_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num)));
 
   // no duplicate cuts during iteration
-  std::vector<std::unordered_set<std::vector<double>, VectorHash>> cut_coefficients_cache(T);
+  std::vector<std::unordered_set<std::vector<double>, VectorHash, VectorEqual>>
+      cut_coefficients_cache(T);
 
   int iter = 0;
-  while (iter < iterNum) {
+  while (iter < iter_num) {
+    // for checking inventory and W status
     std::vector results_status(
         T - 1, std::vector<std::unordered_map<PairStatus, std::array<std::vector<double>, 2>>>(
-                   forwardNum));
-
-    // for checking inventory and W status
+                   forward_num));
     std::vector<std::unordered_map<IStatus, std::array<std::vector<double>, 2>>>
-        results_status_lastStage(forwardNum);
+        results_status_lastStage(forward_num);
 
-    auto scenarioPaths = generateScenarioPaths(forwardNum, sampleNums);
+    auto scenarioPaths = generate_scenario_paths(forward_num, sample_nums);
 
     // scenarioPaths = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {1, 0, 0}, // change
     //                  {1, 1, 0}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}};
@@ -143,20 +143,20 @@ std::array<double, 2> SingleProduct::solve() const {
         models[0].remove(models[0].getConstr(index));
       }
 
-      std::vector<double> thisCoefficients = {slopes1[iter - 1][0][0], slopes2[iter - 1][0][0],
-                                              slopes3[iter - 1][0][0], intercepts[iter - 1][0][0]};
+      std::vector<double> this_coefficients = {slopes1[iter - 1][0][0], slopes2[iter - 1][0][0],
+                                               slopes3[iter - 1][0][0], intercepts[iter - 1][0][0]};
 
       if (!cut_coefficients_cache.empty()) {
-        if (!cut_coefficients_cache[0].contains(thisCoefficients) ||
+        if (!cut_coefficients_cache[0].contains(this_coefficients) ||
             cut_coefficients_cache[0].empty()) {
           models[0].addConstr(theta[0] >=
-                              thisCoefficients[0] * iniI +
-                                  thisCoefficients[1] *
+                              this_coefficients[0] * iniI +
+                                  this_coefficients[1] *
                                       ((1 + r0) * W0[0] - (1 + r1) * W1[0] - (1 + r2) * W2[0]) +
-                                  thisCoefficients[2] * q[0] + thisCoefficients[3]);
+                                  this_coefficients[2] * q[0] + this_coefficients[3]);
           models[0].update();
 
-          cut_coefficients_cache[0].emplace(thisCoefficients);
+          cut_coefficients_cache[0].emplace(this_coefficients);
         }
       }
     }
@@ -167,11 +167,11 @@ std::array<double, 2> SingleProduct::solve() const {
     // models[0].write("iter_" + std::to_string(iter + 1) + ".lp");
     // models[0].write("iter_" + std::to_string(iter + 1) + ".sol");
 
-    for (int n = 0; n < forwardNum; n++) {
-      qValues[iter][0][n] = q[0].get(GRB_DoubleAttr_X);
-      W0ForwardValues[iter][0][n] = W0[0].get(GRB_DoubleAttr_X);
-      W1ForwardValues[iter][0][n] = W1[0].get(GRB_DoubleAttr_X);
-      W2ForwardValues[iter][0][n] = W2[0].get(GRB_DoubleAttr_X);
+    for (int n = 0; n < forward_num; n++) {
+      q_values[iter][0][n] = q[0].get(GRB_DoubleAttr_X);
+      W0_forward_values[iter][0][n] = W0[0].get(GRB_DoubleAttr_X);
+      W1_forward_values[iter][0][n] = W1[0].get(GRB_DoubleAttr_X);
+      W2_forward_values[iter][0][n] = W2[0].get(GRB_DoubleAttr_X);
     }
 
     // forward
@@ -182,44 +182,45 @@ std::array<double, 2> SingleProduct::solve() const {
       }
 
       if (iter > 0 && t < T) {
-        std::vector<std::vector<double>> cutCoefficients(forwardNum, std::vector<double>(4, 0));
-        for (int n = 0; n < forwardNum; n++) {
-          cutCoefficients[n][0] = slopes1[iter - 1][t][n];
-          cutCoefficients[n][1] = slopes2[iter - 1][t][n];
-          cutCoefficients[n][2] = slopes3[iter - 1][t][n];
-          cutCoefficients[n][3] = intercepts[iter - 1][t][n];
+        std::vector<std::vector<double>> cut_coefficients(forward_num, std::vector<double>(4, 0));
+        for (int n = 0; n < forward_num; n++) {
+          cut_coefficients[n][0] = slopes1[iter - 1][t][n];
+          cut_coefficients[n][1] = slopes2[iter - 1][t][n];
+          cut_coefficients[n][2] = slopes3[iter - 1][t][n];
+          cut_coefficients[n][3] = intercepts[iter - 1][t][n];
         };
 
-        for (auto finalCoefficients = removeDuplicateRows(cutCoefficients); // cutCoefficients
-             auto &finalCoefficient : finalCoefficients) {
+        for (auto coefficients = remove_duplicate_rows(cut_coefficients); // cut_coefficients
+             auto &coefficient : coefficients) {
           if (!cut_coefficients_cache.empty()) {
-            if (cut_coefficients_cache[t].contains(finalCoefficient)) {
+            if (cut_coefficients_cache[t].contains(coefficient)) {
               continue;
             }
-            cut_coefficients_cache[t].emplace(finalCoefficient);
+            cut_coefficients_cache[t].emplace(coefficient);
           }
           models[t].addConstr(theta[t] >=
-                              finalCoefficient[0] * (I[t - 1] + q_pre[t - 1]) +
-                                  finalCoefficient[1] *
+                              coefficient[0] * (I[t - 1] + q_pre[t - 1]) +
+                                  coefficient[1] *
                                       ((1 + r0) * W0[t] - (1 + r1) * W1[t] - (1 + r2) * W2[t]) +
-                                  finalCoefficient[2] * q[t] + finalCoefficient[3]);
+                                  coefficient[2] * q[t] + coefficient[3]);
           models[t].update();
         }
       }
 
       // forward
-      for (int n = 0; n < forwardNum; n++) {
+      for (int n = 0; n < forward_num; n++) {
         double rhs2 = 0;
         int index = scenarioPaths[n][t - 1];
         double demand = sampleDetails[t - 1][index];
-        double rhs1 = t == 1 ? iniI - demand
-                             : IForwardValues[iter][t - 2][n] + qpreValues[iter][t - 2][n] - demand;
+        double rhs1 =
+            t == 1 ? iniI - demand
+                   : I_forward_values[iter][t - 2][n] + q_pre_values[iter][t - 2][n] - demand;
         if (t < T) {
-          rhs2 = prices[t - 1] * demand + (1 + r0) * W0ForwardValues[iter][t - 1][n] -
-                 (1 + r1) * W1ForwardValues[iter][t - 1][n] -
-                 (1 + r2) * W2ForwardValues[iter][t - 1][n];
-          double rhs3 = qValues[iter][t - 1][n];
-          models[t].setObjective(overhead_costs[t] + unitVariOderCosts[t] * q[t] -
+          rhs2 = prices[t - 1] * demand + (1 + r0) * W0_forward_values[iter][t - 1][n] -
+                 (1 + r1) * W1_forward_values[iter][t - 1][n] -
+                 (1 + r2) * W2_forward_values[iter][t - 1][n];
+          double rhs3 = q_values[iter][t - 1][n];
+          models[t].setObjective(overhead_costs[t] + unit_vari_order_costs[t] * q[t] -
                                  prices[t - 1] * (demand - B[t - 1]) + r2 * W2[t] + r1 * W1[t] -
                                  r0 * W0[t] + theta[t]);
 
@@ -227,7 +228,7 @@ std::array<double, 2> SingleProduct::solve() const {
           models[t].getConstr(2).set(GRB_DoubleAttr_RHS, rhs3);
         } else {
           models[t].setObjective(-prices[t - 1] * (demand - B[t - 1]) -
-                                 unitSalvageValue * I[t - 1]);
+                                 unit_salvage_value * I[t - 1]);
         }
         models[t].getConstr(0).set(GRB_DoubleAttr_RHS, rhs1);
 
@@ -248,7 +249,7 @@ std::array<double, 2> SingleProduct::solve() const {
         models[t].optimize();
 
         try {
-          IForwardValues[iter][t - 1][n] = I[t - 1].get(GRB_DoubleAttr_X);
+          I_forward_values[iter][t - 1][n] = I[t - 1].get(GRB_DoubleAttr_X);
         } catch (...) {
           models[t].write("iter" + std::to_string(iter + 1) + "_sub_" + std::to_string(t) + "^" +
                           std::to_string(n + 1) + ".lp");
@@ -258,26 +259,26 @@ std::array<double, 2> SingleProduct::solve() const {
         }
 
         if (t < T) {
-          qValues[iter][t][n] = q[t].get(GRB_DoubleAttr_X);
-          qpreValues[iter][t - 1][n] = q_pre[t - 1].get(GRB_DoubleAttr_X);
-          W0ForwardValues[iter][t][n] = W0[t].get(GRB_DoubleAttr_X);
-          W1ForwardValues[iter][t][n] = W1[t].get(GRB_DoubleAttr_X);
-          W2ForwardValues[iter][t][n] = W2[t].get(GRB_DoubleAttr_X);
+          q_values[iter][t][n] = q[t].get(GRB_DoubleAttr_X);
+          q_pre_values[iter][t - 1][n] = q_pre[t - 1].get(GRB_DoubleAttr_X);
+          W0_forward_values[iter][t][n] = W0[t].get(GRB_DoubleAttr_X);
+          W1_forward_values[iter][t][n] = W1[t].get(GRB_DoubleAttr_X);
+          W2_forward_values[iter][t][n] = W2[t].get(GRB_DoubleAttr_X);
         }
       }
     }
 
     // backward
-    std::vector intercept_values_backward(T, std::vector<std::vector<double>>(forwardNum));
-    std::vector slope1_values_backward(T, std::vector<std::vector<double>>(forwardNum));
-    std::vector slope2_values_backward(T, std::vector<std::vector<double>>(forwardNum));
-    std::vector slope3_values_backward(T, std::vector<std::vector<double>>(forwardNum));
+    std::vector intercept_values_backward(T, std::vector<std::vector<double>>(forward_num));
+    std::vector slope1_values_backward(T, std::vector<std::vector<double>>(forward_num));
+    std::vector slope2_values_backward(T, std::vector<std::vector<double>>(forward_num));
+    std::vector slope3_values_backward(T, std::vector<std::vector<double>>(forward_num));
     for (int t = 0; t < T; t++) {
-      for (int n = 0; n < forwardNum; n++) {
-        intercept_values_backward[t][n].resize(sampleNums[t]);
-        slope1_values_backward[t][n].resize(sampleNums[t]);
-        slope2_values_backward[t][n].resize(sampleNums[t]);
-        slope3_values_backward[t][n].resize(sampleNums[t]);
+      for (int n = 0; n < forward_num; n++) {
+        intercept_values_backward[t][n].resize(sample_nums[t]);
+        slope1_values_backward[t][n].resize(sample_nums[t]);
+        slope2_values_backward[t][n].resize(sample_nums[t]);
+        slope3_values_backward[t][n].resize(sample_nums[t]);
       }
     }
     for (size_t t = T; t > 0; t--) {
@@ -294,20 +295,20 @@ std::array<double, 2> SingleProduct::solve() const {
       IStatus status_last_stage;
       PairStatus status;
 
-      for (int n = 0; n < forwardNum; n++) {
+      for (int n = 0; n < forward_num; n++) {
         size_t S = sampleDetails[t - 1].size();
         double last_q = 0;
         double rhs2 = 0;
-        int piNum = models[t].get(GRB_IntAttr_NumConstrs);
-        std::vector<double> pi(piNum);
-        std::vector<double> rhs(piNum);
+        int pi_num = models[t].get(GRB_IntAttr_NumConstrs);
+        std::vector<double> pi(pi_num);
+        std::vector<double> rhs(pi_num);
 
         for (size_t s = 0; s < S; s++) {
           bool skip = false;
           auto demand = sampleDetails[t - 1][s];
-          double rhs1 = t == 1
-                            ? iniI - demand
-                            : IForwardValues[iter][t - 2][n] + qpreValues[iter][t - 2][n] - demand;
+          double rhs1 =
+              t == 1 ? iniI - demand
+                     : I_forward_values[iter][t - 2][n] + q_pre_values[iter][t - 2][n] - demand;
           if (t == T) {
             if (status_last_stage = rhs1 > 0 ? IStatus::POSITIVE : IStatus::NEGATIVE;
                 results_status_lastStage[n].contains(status_last_stage)) {
@@ -317,27 +318,27 @@ std::array<double, 2> SingleProduct::solve() const {
               rhs[0] = rhs1;
             }
             models[t].setObjective(-prices[t - 1] * (demand - B[t - 1]) -
-                                   unitSalvageValue * I[t - 1]);
+                                   unit_salvage_value * I[t - 1]);
           }
           if (t < T) {
-            rhs2 = prices[t - 1] * demand + (1 + r0) * W0ForwardValues[iter][t - 1][n] -
-                   (1 + r1) * W1ForwardValues[iter][t - 1][n] -
-                   (1 + r2) * W2ForwardValues[iter][t - 1][n];
-            double rhs3 = qValues[iter][t - 1][n];
+            rhs2 = prices[t - 1] * demand + (1 + r0) * W0_forward_values[iter][t - 1][n] -
+                   (1 + r1) * W1_forward_values[iter][t - 1][n] -
+                   (1 + r2) * W2_forward_values[iter][t - 1][n];
+            double rhs3 = q_values[iter][t - 1][n];
             if (s > 0) {
               double this_end_cash = rhs1 > 0 ? rhs2 : rhs2 + prices[t - 1] * rhs1;
-              double this_W = this_end_cash - overhead_costs[t] - unitVariOderCosts[t] * last_q;
-              status = checkPairStatus(rhs1, this_W, overdraftLimit);
+              double this_W = this_end_cash - overhead_costs[t] - unit_vari_order_costs[t] * last_q;
+              status = check_pair_status(rhs1, this_W, overdraft_limit);
               if (results_status[t - 1][n].contains(status)) {
                 //                skip = true;
-                skip = s % 3 != 0 ? true : false;
+                skip = s % skip_num != 0;
                 pi = results_status[t - 1][n][status][0];
                 rhs = results_status[t - 1][n][status][1];
                 rhs[0] = rhs1;
                 rhs[1] = rhs2;
               }
             }
-            models[t].setObjective(overhead_costs[t] + unitVariOderCosts[t] * q[t] -
+            models[t].setObjective(overhead_costs[t] + unit_vari_order_costs[t] * q[t] -
                                    prices[t - 1] * (demand - B[t - 1]) + r2 * W2[t] + r1 * W1[t] -
                                    r0 * W0[t] + theta[t]);
             models[t].getConstr(1).set(GRB_DoubleAttr_RHS, rhs2);
@@ -351,7 +352,7 @@ std::array<double, 2> SingleProduct::solve() const {
             if (t < T)
               last_q = q[t].get(GRB_DoubleAttr_X);
 
-            for (int p = 0; p < piNum; p++) {
+            for (int p = 0; p < pi_num; p++) {
               GRBConstr constraint = models[t].getConstr(p);
               pi[p] = constraint.get(GRB_DoubleAttr_Pi);
               rhs[p] = constraint.get(GRB_DoubleAttr_RHS);
@@ -362,8 +363,8 @@ std::array<double, 2> SingleProduct::solve() const {
               results_status_lastStage[n][status_last_stage] = {pi, rhs};
             } else {
               double this_end_cash = rhs1 > 0 ? rhs2 : rhs2 + prices[t - 1] * rhs1;
-              double this_W = this_end_cash - overhead_costs[t] - unitVariOderCosts[t] * last_q;
-              status = checkPairStatus(rhs1, this_W, overdraftLimit);
+              double this_W = this_end_cash - overhead_costs[t] - unit_vari_order_costs[t] * last_q;
+              status = check_pair_status(rhs1, this_W, overdraft_limit);
               results_status[t - 1][n][status] = {pi, rhs};
             }
 
@@ -382,12 +383,12 @@ std::array<double, 2> SingleProduct::solve() const {
             // std::ofstream outFile(filename); // 打开文件进行写入
             // outFile << "demand: " << demand << std::endl;
             // outFile << "pi:";
-            // for (int i = 0; i < piNum; ++i) {
+            // for (int i = 0; i < pi_num; ++i) {
             //   outFile << pi[i] << " "; // 将数组中的每个元素写入文件
             // }
             // outFile << "\n";
             // outFile << "rhs:";
-            // for (int i = 0; i < piNum; ++i) {
+            // for (int i = 0; i < pi_num; ++i) {
             //   outFile << rhs[i] << " "; // 将数组中的每个元素写入文件
             // }
             // outFile.close();
@@ -402,7 +403,7 @@ std::array<double, 2> SingleProduct::solve() const {
           } else {
             intercept_values_backward[t - 1][n][s] += -pi[0] * demand - prices[t - 1] * demand;
           }
-          for (size_t k = 3; k < piNum; k++)
+          for (size_t k = 3; k < pi_num; k++)
             intercept_values_backward[t - 1][n][s] += pi[k] * rhs[k];
           slope1_values_backward[t - 1][n][s] = pi[0];
           if (t < T) {
@@ -442,7 +443,7 @@ std::array<double, 2> SingleProduct::solve() const {
   }
 
   double finalValue = -models[0].get(GRB_DoubleAttr_ObjVal);
-  double Q1 = qValues[iter - 1][0][0];
+  double Q1 = q_values[iter - 1][0][0];
   return {finalValue, Q1};
 }
 

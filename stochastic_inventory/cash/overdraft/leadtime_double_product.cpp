@@ -90,8 +90,8 @@ private:
   double max_cash = 300;
 
   std::vector<std::vector<std::vector<double>>> pmf;
-  std::unordered_map<CashLeadtimeMultiState, std::array<double, 2>> cacheActions;
-  std::unordered_map<CashLeadtimeMultiState, double> cacheValues;
+  std::unordered_map<CashLeadtimeMultiState, std::array<double, 2>> cache_actions;
+  std::unordered_map<CashLeadtimeMultiState, double> cache_values;
 
 public:
   // std::transform
@@ -193,43 +193,43 @@ public:
   }
 
   double recursion(const CashLeadtimeMultiState &state) { // NOLINT(*-no-recursion)
-    std::array bestQ = {0.0, 0.0};
-    double bestValue = std::numeric_limits<double>::lowest();
+    std::array best_q = {0.0, 0.0};
+    double best_value = std::numeric_limits<double>::lowest();
     const std::vector<std::array<double, 2>> actions =
         get_feasible_actions(); // should not put in the loop
     for (const std::array action : actions) {
-      double thisValue = 0.0;
+      double this_value = 0.0;
       // if (state.get_period() == 2 and state.get_q_pre1() == 15 and
       //     state.get_q_pre2() == 0) {
       //   ;
       // }
       for (auto demandAndProb : pmf[state.get_period() - 1]) {
-        thisValue +=
+        this_value +=
             demandAndProb[2] * immediate_value_function(state, action[0], action[1],
                                                         demandAndProb[0], demandAndProb[1]);
         if (state.get_period() < T) {
-          auto newState = state_transition_function(state, action[0], action[1], demandAndProb[0],
+          auto new_state = state_transition_function(state, action[0], action[1], demandAndProb[0],
                                                     demandAndProb[1]);
-          if (auto it = cacheValues.find(newState); it != cacheValues.end()) {
+          if (auto it = cache_values.find(new_state); it != cache_values.end()) {
             // some issues here
-            thisValue += demandAndProb[2] * it->second;
+            this_value += demandAndProb[2] * it->second;
           } else {
-            thisValue += demandAndProb[2] * recursion(newState);
+            this_value += demandAndProb[2] * recursion(new_state);
           }
         }
       }
-      if (thisValue > bestValue) {
-        bestValue = thisValue;
-        bestQ = action;
+      if (this_value > best_value) {
+        best_value = this_value;
+        best_q = action;
       }
     }
-    cacheActions[state] = bestQ;
-    cacheValues[state] = bestValue;
-    return bestValue;
+    cache_actions[state] = best_q;
+    cache_values[state] = best_value;
+    return best_value;
   }
 
   std::vector<double> solve() {
-    return {recursion(ini_state), cacheActions.at(ini_state)[0], cacheActions.at(ini_state)[1]};
+    return {recursion(ini_state), cache_actions.at(ini_state)[0], cache_actions.at(ini_state)[1]};
   }
 };
 

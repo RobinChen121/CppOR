@@ -24,7 +24,7 @@ enum class CashStatus { ATW0, ATW1, ATW2 };
 // using 是用来给 已存在的类型 起别名的，它不能在 using 的同时定义一个新类型
 using PairStatus = std::pair<IStatus, CashStatus>;
 
-using DoubleIStatus = std::pair<IStatus, IStatus>;
+using DoubleIStatus = std::pair<IStatus, IStatus>; // pair does not need writing operator==
 
 struct TripleStatus { // using 用来给变量起别名，typedef 的替代品
   IStatus I_status1;
@@ -40,11 +40,10 @@ struct TripleStatus { // using 用来给变量起别名，typedef 的替代品
 // 在 C++ 标准库中，std::pair<T1, T2> 已经内置了 operator==，不需要手动重载它
 // 自定义哈希函数
 // 使用 std::unordered_set 或 std::unordered_map 时需要重载 operator== 和 hash 函数
-template <> struct std::hash<std::pair<IStatus, CashStatus>> {
-  size_t operator()(const std::pair<IStatus, CashStatus> &p) const {
-    // 哈希计算：使用组合哈希
-    const size_t first_hash = hash<int>()(static_cast<int>(p.first));
-    const size_t second_hash = hash<int>()(static_cast<int>(p.second));
+template <> struct std::hash<PairStatus> {
+  std::size_t operator()(const PairStatus &p) const {
+    const size_t first_hash = std::hash<IStatus>{}(p.first);
+    const size_t second_hash = std::hash<CashStatus>{}(p.second);
     return first_hash ^ (second_hash << 1); // 使用异或和位移合并哈希值
   }
 };
@@ -79,7 +78,7 @@ template <> struct std::hash<TripleStatus> {
 //   }
 // };
 
-PairStatus checkPairStatus(double end_inventory, double end_cash, double overdraft_limit);
+PairStatus check_pair_status(double end_inventory, double end_cash, double overdraft_limit);
 TripleStatus checkTripleStatus(double end_inventory1, double end_inventory2, double end_cash,
                                double overdraft_limit);
 DoubleIStatus checkDoubleIStatus(double end_inventory1, double end_inventory2);

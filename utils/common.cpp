@@ -14,15 +14,16 @@
 
 #define VAR_NAME(x) #x
 
-Matrix removeDuplicateRows(const Matrix &mat) {
-  std::unordered_set<std::vector<double>, VectorHash> uniqueRows(mat.begin(), mat.end());
+Matrix remove_duplicate_rows(const Matrix &mat) {
+  std::unordered_set<std::vector<double>, VectorHash, VectorEqual> uniqueRows(mat.begin(),
+                                                                              mat.end());
   // 用哈希表去重
   return {uniqueRows.begin(), uniqueRows.end()};
 }
 
-// 卸入 csv 一行字符串的代码为 file << "4,Diana,88.7\n";
+// 写入 csv 一行字符串的代码为 file << "4,Diana,88.7\n";
 // 格式化一行为 CSV（加引号、转义等）
-std::string toCSVLine(const std::vector<std::string> &row) {
+std::string to_csv_line(const std::vector<std::string> &row) {
   std::string line;
   for (size_t i = 0; i < row.size(); ++i) {
     std::string cell = row[i];
@@ -31,13 +32,16 @@ std::string toCSVLine(const std::vector<std::string> &row) {
     // 当你在字符串里找某个子串、字符，没找到的时候，就返回 std::string::npos
     // find() find the position of the first character of the found substring or npos
     // if no such substring is found.
+    // 检查是否有逗号和引号，若有逗号也添加双引号
     if (cell.find(',') != std::string::npos || cell.find('"') != std::string::npos) {
       size_t pos = 0;
       // \" 是 转义字符，在 C++ 字符串中它表示一个真正的双引号字符
+      // csv 中 双引号的转义方式是 重复双引号
       while ((pos = cell.find('"', pos)) != std::string::npos) {
         cell.insert(pos, "\"");
         pos += 2;
       }
+      // 给整个字段加外层双引号
       cell = "\"" + cell + "\"";
     }
 
@@ -48,7 +52,7 @@ std::string toCSVLine(const std::vector<std::string> &row) {
   return line;
 }
 
-void appendHeadToCSV(const std::string &file_name, const std::string &head) {
+void append_csv_head(const std::string &file_name, const std::string &head) {
   std::ofstream file(file_name, std::ios::app);
   file << head;
   file.close();
@@ -75,7 +79,7 @@ void appendHeadToCSV(const std::string &file_name, const std::string &head) {
 //     {4, 5, 6} // 重复行
 // };
 //
-// const Matrix uniqueMat = removeDuplicateRows(mat);
+// const Matrix uniqueMat = remove_duplicate_rows(mat);
 //
 // std::unordered_set<std::vector<double>, VectorHash> sets;
 // std::vector<double> first_row = {10, 12, 43};

@@ -22,7 +22,7 @@ int main() {
       "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
       "Numerical-tests/overdraft/c++/sdp_testing.csv";
   const std::string head = "demand pattern, interest rate, overhead, price, final value, time, Q\n";
-  appendHeadToCSV(file_name, head);
+  append_csv_head(file_name, head);
 
   for (int i = 0; i < demands_all.size(); i++) {
     for (int m = 0; m < overdraft_interests.size(); m++) {
@@ -41,7 +41,7 @@ int main() {
           const double Q = problem.solve()[1];
           std::vector<double> arr = {static_cast<double>(i), interest, overhead, price, final_value[0],
                                      time.count(),           Q};
-          appendRowToCSV(file_name, arr);
+          append_csv_row(file_name, arr);
           std::cout << "**************************************************" << std::endl;
           std::cout << "running time is " << time.count() << 's' << std::endl;
           std::cout << "Final expected cash increment is " << final_value[0] << std::endl;

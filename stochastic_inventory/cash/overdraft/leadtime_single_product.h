@@ -20,7 +20,7 @@ private:
   std::string distribution_type = "poisson";
   size_t T = demands.size(); // 直接获取大小
 
-  std::vector<double> prices = std::vector<double>(T, 5.0);
+  std::vector<double> prices = std::vector<double>(T, 10.0);
   // std::vector<double> fixed_order_costs = std::vector<double>(T, 0.0);
   std::vector<double> unit_vari_order_costs = std::vector<double>(T, 1.0);
   // std::vector<double> unit_hold_costs = std::vector<double>(T, 0.0);
@@ -28,9 +28,9 @@ private:
   double unit_salvage_value = 0.5; //  * unit_vari_order_costs[T - 1];
 
   double r0 = 0.0;
-  double r1 = 0.2;
+  double r1 = 0.1;
   double r2 = 2.0;
-  double overdraft_limit = 300;
+  double overdraft_limit = 500;
 
   double max_order_quantity = 60.0; // affect much
   double truncated_quantile = 0.9999;

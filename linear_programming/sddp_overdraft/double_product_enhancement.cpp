@@ -526,14 +526,14 @@ std::array<double, 3> DoubleProduct::solve() const {
 
  int main() {
    const auto problem = DoubleProduct();
-//   auto start = std::chrono::high_resolution_clock::now();
-//   auto result = problem.solve();
-//   auto end = std::chrono::high_resolution_clock::now();
-//
-//   const std::chrono::duration<double> duration = end - start;
-//   std::cout << "running time is " << duration.count() << 's' << std::endl;
-//   std::cout << "final expected cash balance is " << result[0] << std::endl;
-//   std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
-//   std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
-//   return 0;
+   auto start = std::chrono::high_resolution_clock::now();
+   auto result = problem.solve();
+   auto end = std::chrono::high_resolution_clock::now();
+
+   const std::chrono::duration<double> duration = end - start;
+   std::cout << "running time is " << duration.count() << 's' << std::endl;
+   std::cout << "final expected cash balance is " << result[0] << std::endl;
+   std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
+   std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
+   return 0;
  }

@@ -6,7 +6,7 @@
  *
  */
 #include "../../utils/common.h"
-#include "single_product_enhancement_further.h"
+#include "single_product_enhancement.h"
 #include <vector>
 
 int main() {
@@ -22,13 +22,15 @@ int main() {
   int forwardNum = 30;
   int iterNum = 50;
 
+  int skip_num = 3; // l
+
   int runs = 20;
   const std::string file_name =
       "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
-      "Numerical-tests/overdraft/c++/sddp_singleproduct_enhancefurtherSKIP_testing.csv";
+      "Numerical-tests/overdraft/c++/sddp_singleproduct_enhance_testing.csv";
   const std::string head = "run,demand pattern,interest rate,overhead,price,final value, "
-                           "time,Q,sample number,forward number,iter number,\n";
-  appendHeadToCSV(file_name, head);
+                           "time,Q,sample number,forward number,iter number, skip num\n";
+  append_csv_head(file_name, head);
 
   for (int i = 0; i < demands_all.size(); i++) {
     for (double interest : overdraft_interests) {
@@ -56,7 +58,7 @@ int main() {
                                static_cast<double>(sampleNum),
                                static_cast<double>(forwardNum),
                                static_cast<double>(iterNum)};
-            appendRowToCSV(file_name, arr);
+            append_csv_row(file_name, arr);
             std::cout << "**************************************************" << std::endl;
             std::cout << "running time is " << time.count() << 's' << std::endl;
             std::cout << "Final expected cash increment is " << final_value << std::endl;

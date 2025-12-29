@@ -17,9 +17,9 @@ add_executable(${PROJECT_NAME}
         ../../states/cash_leadtime_state.cpp
 
         ../../states/cash_leadtime_multi_state.cpp
-        leadtime_double_product.cpp
+        #        leadtime_double_product.cpp
         #        leadtime_single_product_testing.cpp
-        #        leadtime_single_product.cpp
+        leadtime_single_product.cpp
 
         #        leadtime_single_product_testing.cpp
 

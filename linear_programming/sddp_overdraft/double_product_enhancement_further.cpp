@@ -403,7 +403,7 @@ std::array<double, 3> DoubleProduct::solve() const {
             models[t].getConstr(2).set(GRB_DoubleAttr_RHS, rhs2);
             models[t].getConstr(3).set(GRB_DoubleAttr_RHS, rhs3_1);
             models[t].getConstr(4).set(GRB_DoubleAttr_RHS, rhs3_2);
-          } else {
+          } else { // difference with single product
             if (status_last_stage = checkDoubleIStatus(rhs1_1, rhs1_2);
                 results_status_lastStage[n].contains(status_last_stage)) {
               skip = true;

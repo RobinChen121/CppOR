@@ -9,7 +9,7 @@
 #include "I_cash_status.h"
 #include <iostream>
 
-PairStatus checkPairStatus(const double end_inventory, const double end_cash,
+PairStatus check_pair_status(const double end_inventory, const double end_cash,
                            const double overdraft_limit) {
   auto I_status = end_inventory > 0 ? IStatus::POSITIVE : IStatus::NEGATIVE;
   CashStatus cash_status;
@@ -66,7 +66,7 @@ DoubleIStatus checkDoubleIStatus(const double end_inventory1, const double end_i
 //     std::cout << std::endl;
 //   }
 //
-//   PairStatus result2 = checkPairStatus(-10, -80, 100);
+//   PairStatus result2 = check_pair_status(-10, -80, 100);
 //
 //   return 0;
 // }

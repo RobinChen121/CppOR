@@ -52,7 +52,7 @@ double PMF::normalPMF(const int k, const double mean, const double sigma,
 // get cumulative distribution function value of Poisson
 double PMF::poisson_cdf(const int k, const double lambda) {
   double cumulative = 0.0;
-  double term = std::exp(-lambda);
+  double term = std::exp(-lambda); // P(X=0)
   for (int i = 0; i <= k; ++i) {
     cumulative += term;
     if (i < k)
