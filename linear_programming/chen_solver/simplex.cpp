@@ -277,11 +277,14 @@ std::vector<double> Simplex::getOptSolution() const {
     std::vector<double> solution(var_original_num);
     for (int i = 0; i < basic_vars.size(); i++) {
       const int var_index = basic_vars[indices[i]];
+      if (var_index >= var_original_num)
+        continue;
       double value = tableau[indices[i] + 1][var_total_num];
       if (var_index > threshold and
           front_unsigned_num[var_index] - front_unsigned_num[var_index - 1] > threshold)
         value = -value;
       solution[var_index - front_unsigned_num[var_index]] = value;
+      solution[var_index] = value;
     }
     return solution;
   }
@@ -406,7 +409,7 @@ void Simplex::standardize() {
       front_unsigned_num.emplace_back(var_unsigned_num);
       break;
     }
-    default:
+    default: // >= 0
       if (i == 0)
         front_unsigned_num.emplace_back(0);
       else
