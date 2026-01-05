@@ -4,7 +4,7 @@
  * Created on: 18/10/2025, 16:59
  * Description: about 97% accuracy.
  * swish/softmax need low learning rate such as 0.001, sigmoid 0.1;
- * fix seed value can stablize the result;
+ * fix seed value can stabilize the result;
  * Pytorch has more precision in the computation and guarantee more stability;
  *
  */
@@ -28,8 +28,8 @@ struct Sample {
 // double dSigmoid(const double y) { return y * (1.0 - y); } // derivative wrt output
 
 double randd() {
-//  static std::random_device rd;  // 真随机种子
-//  static std::mt19937 gen(rd()); // rd()                           // 梅森旋转算法引擎
+  //  static std::random_device rd;  // 真随机种子
+  //  static std::mt19937 gen(rd()); // rd()                           // 梅森旋转算法引擎
   static std::uniform_real_distribution<double> dist(-1.0, 1.0); // 区间 [-1,1]
   return dist(gen);
 }
