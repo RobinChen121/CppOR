@@ -29,10 +29,10 @@ int main() {
   int runs = 1;
   const std::string file_name =
       "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
-      "Numerical-tests/overdraft/c++/sddp_doubleproduct_noenhance.csv";
+      "Numerical-tests/overdraft/c++/sddp_doubleproduct_SKIP_testing.csv";
   const std::string head = "run,demand pattern,interest rate,overdraft_limit,final value,"
                            "time,Q1,Q2,sample number,forward number,iter number\n";
-  appendHeadToCSV(file_name, head);
+  append_csv_head(file_name, head);
 
   for (int i = 0; i < demands_all.size(); i++) {
     // for (double overdraft_limit : overdraft_limits) {
@@ -60,7 +60,7 @@ int main() {
                          static_cast<double>(forwardNum),
                          static_cast<double>(iterNum),
                          static_cast<double>(skip_num)};
-      appendRowToCSV(file_name, arr);
+      append_csv_row(file_name, arr);
       // std::cout << "**************************************************" << std::endl;
       std::cout << "running time is " << time.count() << 's' << std::endl;
       std::cout << "Final expected cash increment is " << final_value << std::endl;

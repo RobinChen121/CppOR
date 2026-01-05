@@ -11,7 +11,7 @@
  */
 #include "single_product_enhancement.h"
 
-std::array<double, 2> SingleProduct::solve() const {
+std::array<double, 4> SingleProduct::solve() const {
   const std::vector<int> sample_nums(T, sample_num);
   std::vector<std::vector<double>> sample_details(T);
   for (int t = 0; t < T; t++) {
@@ -112,10 +112,16 @@ std::array<double, 2> SingleProduct::solve() const {
   std::vector W2_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num)));
 
   int iter = 0;
+  double final_confidence_interval1 = 0.0;
+  double final_confidence_interval2 = 0.0;
   while (iter < iter_num) {
     auto scenario_paths = generate_scenario_paths(forward_num, sample_nums);
     // scenario_paths = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     //                  {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
+
+    double ub = 0;
+    std::vector ub_sub(forward_num, std::vector<double>(T + 1));
+    std::vector<double> ubs(forward_num);
 
     if (iter > 0) {
       if (iter == 1) { // remove the big M constraints at iteration 2
@@ -123,8 +129,8 @@ std::array<double, 2> SingleProduct::solve() const {
         models[0].remove(models[0].getConstr(index));
       }
 
-      std::vector<double> this_coefficients = {slopes1[iter - 1][0][0], slopes2[iter - 1][0][0],
-                                               slopes3[iter - 1][0][0], intercepts[iter - 1][0][0]};
+      std::vector this_coefficients = {slopes1[iter - 1][0][0], slopes2[iter - 1][0][0],
+                                       slopes3[iter - 1][0][0], intercepts[iter - 1][0][0]};
 
       // models[0].addConstr(
       //     theta[0] >=
@@ -149,6 +155,11 @@ std::array<double, 2> SingleProduct::solve() const {
     }
     models[0].optimize();
 
+    for (int n = 0; n < forward_num; n++) {
+      double a = models[0].get(GRB_DoubleAttr_ObjVal);
+      double b = theta[0].get(GRB_DoubleAttr_X);
+      ub_sub[n][0] = models[0].get(GRB_DoubleAttr_ObjVal) - theta[0].get(GRB_DoubleAttr_X);
+    }
     // int optimstatus = models[0].get(GRB_IntAttr_Status);
     // std::cout << "optimization status: " << optimstatus << std::endl;
     // models[0].write("iter_" + std::to_string(iter + 1) + ".lp");
@@ -231,6 +242,13 @@ std::array<double, 2> SingleProduct::solve() const {
 
         // optimize
         models[t].optimize();
+        if (t < T) {
+          double a = models[t].get(GRB_DoubleAttr_ObjVal);
+          double b = theta[t].get(GRB_DoubleAttr_X);
+          ub_sub[n][t] = models[t].get(GRB_DoubleAttr_ObjVal) - theta[t].get(GRB_DoubleAttr_X);
+        } else
+          ub_sub[n][t] = models[t].get(GRB_DoubleAttr_ObjVal);
+
         // if (models[t].get(GRB_IntAttr_Status) != 2) {
         //   models[t].write("iter" + std::to_string(iter + 1) + "_sub_" + std::to_string(t) + "^" +
         //                   std::to_string(n + 1) + ".lp");
@@ -367,10 +385,26 @@ std::array<double, 2> SingleProduct::solve() const {
         intercepts[iter][t - 1][n] = avg_intercept;
       }
     }
-    // std::cout << "iteration " << iter << ", objective is " << std::fixed
-    //           << std::setprecision(2) <<
-    //           -models[0].get(GRB_DoubleAttr_ObjVal)
-    //           << std::endl;
+
+    for (int n = 0; n < forward_num; n++) {
+      ubs[n] = std::accumulate(ub_sub[n].begin(), ub_sub[n].end(), 0.0);
+    }
+    double avg_ub = std::accumulate(ubs.begin(), ubs.end(), 0.0) / forward_num;
+    double sigma = compute_ub_sigma(ubs, avg_ub);
+    double confidence_ub1 = avg_ub - 1.96 * sigma / std::sqrt(sigma);
+    double confidence_ub2 = avg_ub + 1.96 * sigma / std::sqrt(sigma);
+
+    // if (iter % 10 == 0)
+    //   std::cout << "iteration " << iter << ", objective is " << std::fixed <<
+    //   std::setprecision(2)
+    //             << -models[0].get(GRB_DoubleAttr_ObjVal) << ", avg lb is " << std::fixed
+    //             << std::setprecision(2) << -avg_ub << ", confidence interval is (" << std::fixed
+    //             << std::setprecision(2) << -confidence_ub2 << ", " << std::fixed
+    //             << std::setprecision(2) << -confidence_ub1 << ")" << std::endl;
+    if (iter == iter_num - 1) {
+      final_confidence_interval1 = -confidence_ub2;
+      final_confidence_interval2 = -confidence_ub1;
+    }
     iter = iter + 1;
   }
 
@@ -380,20 +414,22 @@ std::array<double, 2> SingleProduct::solve() const {
 
   std::cout << "after " << iter_num << " iterations: " << std::endl;
   std::cout << "final expected cash balance is " << final_value << std::endl;
-  std::cout << "ordering Q in the first period is " << Q1 << std::endl;
+  std::cout << "ordering Q in the first period is " << Q1 << ", confidence interval is ("
+            << std::fixed << std::setprecision(2) << final_confidence_interval1 << ", "
+            << std::fixed << std::setprecision(2) << final_confidence_interval2 << ")" << std::endl;
 
-  return {final_value, Q1};
+  return {final_value, Q1, final_confidence_interval1, final_confidence_interval2};
 }
 
-int main() {
-  const auto single_product = SingleProduct();
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  const double final_value = single_product.solve()[0];
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  const std::chrono::duration<double> diff = end_time - start_time;
-  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-  const double optimal_value = 167.31;
-  const double gap = (final_value - optimal_value) / optimal_value;
-  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
-  return 0;
-}
+// int main() {
+//   const auto single_product = SingleProduct();
+//   const auto start_time = std::chrono::high_resolution_clock::now();
+//   const double final_value = single_product.solve()[0];
+//   const auto end_time = std::chrono::high_resolution_clock::now();
+//   const std::chrono::duration<double> diff = end_time - start_time;
+//   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+//   const double optimal_value = 167.31;
+//   const double gap = (final_value - optimal_value) / optimal_value;
+//   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+//   return 0;
+// }

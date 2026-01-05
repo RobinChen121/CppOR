@@ -58,6 +58,16 @@ void append_csv_head(const std::string &file_name, const std::string &head) {
   file.close();
 }
 
+double compute_ub_sigma(const std::vector<double> &ubs, double avg_ub) {
+  const int K = ubs.size();
+  double sigma_square = 0.0;
+  for (int i = 0; i < K; i++) {
+    sigma_square += pow(ubs[i] - avg_ub, 2);
+  }
+  sigma_square /= (K - 1);
+  return std::sqrt(sigma_square);
+}
+
 // int main() {
 //   appendRowToCSV("output.csv", std::vector<int>{7, 8, 9});
 //   appendRowToCSV("output.csv", std::vector<double>{1.23, 4.56});

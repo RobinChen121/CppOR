@@ -34,7 +34,7 @@ int main() {
       "Numerical-tests/overdraft/c++/sddp_singleproduct_scenarioNum_testing.csv";
   const std::string head = "run,final value, "
                            "time,Q,sample number,forward number,iter number,gap\n";
-  appendHeadToCSV(file_name, head);
+  append_csv_head(file_name, head);
 
   double opt = 167.38;
   for (int i = 0; i < 1; i++) {
@@ -59,7 +59,7 @@ int main() {
                            static_cast<double>(forward_num),
                            static_cast<double>(iter_num),
                            gap};
-        appendRowToCSV(file_name, arr);
+        append_csv_row(file_name, arr);
         std::cout << "**************************************************" << std::endl;
         std::cout << "running time is " << time.count() << 's' << std::endl;
         std::cout << "Final expected cash increment is " << final_value << std::endl;

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <numeric>
 
+// 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm 文件
 // #include <emscripten/bind.h>
 // using namespace emscripten;
 //
@@ -21,12 +22,14 @@
 //   register_vector<double>("VectorDouble");
 //   register_vector<int>("VectorInt");
 //   register_vector<std::vector<double>>("VectorVectorDouble");
+//   register_vector<std::vector<int>>("VectorVectorInt");
+//   register_vector<std::vector<std::vector<double>>>("VectorVectorVectorDouble");
 //
 //   // 注册类
 //   class_<Simplex>("Simplex")
 //       .constructor<int, std::vector<double>, std::vector<std::vector<double>>,
 //       std::vector<double>,
-//                    std::vector<int>, std::vector<int>>()
+//                    std::vector<int>, std::vector<int>>() // 这个是类的构造函数
 //       // 注册类里面的函数
 //       // 前面的字符串名字是 js 里面使用的名字
 //       .function("testWeb", &Simplex::testWeb)
@@ -35,6 +38,8 @@
 //       .function("getStatus", &Simplex::getStatus)
 //       .function("getOptValue", &Simplex::getOptValue)
 //       .function("getBasicVars", &Simplex::getBasicVarsIndices)
+//       .function("getRecordedTableau", &Simplex::get_recorded_tableau)
+//       .function("getPivotIndex", &Simplex::get_recorded_pivot_index)
 //       .function("getOptSolution", &Simplex::getOptSolution);
 // }
 
@@ -87,6 +92,8 @@ int Simplex::findPivotRow(const int pivot_column) const {
 }
 
 void Simplex::pivot(const int pivot_row, const int pivot_column) {
+  std::vector index = {pivot_row, pivot_column};
+  recorded_pivot_index.emplace_back(index);
   const double pivot_value = tableau[pivot_row][pivot_column];
   for (int j = 0; j < var_total_num + 1; j++) {
     tableau[pivot_row][j] /= pivot_value; // 除以 pivot_value
@@ -204,7 +211,7 @@ void Simplex::solve() {
     var_total_num -= var_artificial_num;
     var_artificial_num = 0;
     // printTableau();
-    displaySolution();
+    // displaySolution();
   }
 
   while (true) {
@@ -649,7 +656,7 @@ void Simplex::printTableau() const {
   }
 }
 
-void Simplex::printAllTableau() {
+void Simplex::printAllTableau() const {
   std::cout << std::string(50, '*') << std::endl;
   for (size_t i = 0; i < recorded_tableau.size(); i++) {
     std::cout << "iteration step " << i + 1 << std::endl;
@@ -698,16 +705,31 @@ int main() {
   // const std::vector constraint_sense = {0, 0};
   // const std::vector var_sign = {0, 0};
 
-  constexpr int obj_sense = 1; // 0: min, 1: max
-  const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
-  const std::vector<std::vector<double>> con_lhs = {
-      {1.0, 0.0, 1.0, 0, 0},
-      {0, 2.0, 0, 1.0, 0.0},
-      {3, 2.0, 0, 0.0, 1.0},
-  };
-  const std::vector con_rhs = {4.0, 12.0, 18.0};
-  const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
-  const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
+  // constexpr int obj_sense = 1;
+  // const std::vector obj_coe = {1.0, 1.0, 0.0, 0.0};
+  // const std::vector<std::vector<double>> con_lhs = {
+  //     {1, 2, 3, 0}, {-1, 2, 6, 0}, {0, 4, 9, 0}, {0, 0, 3, 1}};
+  // const std::vector con_rhs = {3.0, 2.0, 5.0, 1.0};
+  // const std::vector constraint_sense = {2, 2, 2, 2};
+  // const std::vector var_sign = {0, 0, 0, 0};
+
+  constexpr int obj_sense = 1;
+  const std::vector obj_coe = {-3.0, 0.0, 1.0};
+  const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
+  const std::vector con_rhs = {4.0, 1.0, 9.0};
+  const std::vector constraint_sense = {0, 1, 2};
+  const std::vector var_sign = {0, 0, 0};
+
+  // constexpr int obj_sense = 1; // 0: min, 1: max
+  // const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
+  // const std::vector<std::vector<double>> con_lhs = {
+  //     {1.0, 0.0, 1.0, 0, 0},
+  //     {0, 2.0, 0, 1.0, 0.0},
+  //     {3, 2.0, 0, 0.0, 1.0},
+  // };
+  // const std::vector con_rhs = {4.0, 12.0, 18.0};
+  // const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
+  // const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
 
   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign);
   model.checkInput();

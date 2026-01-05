@@ -38,7 +38,7 @@ class SingleProduct {
   // sddp settings
   int sample_num = 10;
   int forward_num = 30;
-  int iter_num = 50;
+  int iter_num = 200;
   double theta_initial_value = -500;
 
 public:
@@ -51,7 +51,7 @@ public:
     prices = std::vector(T, price);
     overhead_costs = std::vector(T, overhead_cost);
   };
-  [[nodiscard]] std::array<double, 2> solve() const;
+  [[nodiscard]] std::array<double, 4> solve() const;
 };
 
 #endif // SINGLE_PRODUCT_ENHANCEMENT_H

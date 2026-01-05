@@ -9,7 +9,7 @@
 #ifndef DOUBLE_PRODUCT_ENHANCEMENT_FURTHER_H
 #define DOUBLE_PRODUCT_ENHANCEMENT_FURTHER_H
 
-#include "../../utils/fileOperations.h"
+#include "../../utils/common.h"
 #include "../../utils/sampling.h"
 #include "I_cash_status.h"
 #include "gurobi_c++.h"
@@ -18,16 +18,14 @@
 #include <unordered_set>
 
 class DoubleProduct {
-private:
-  // problem settings
   double iniI = 0;
   double ini_cash = 0;
 
-  std::vector<double> mean_demand1 = {30, 30, 30, 30};
+  std::vector<double> mean_demand1 = {30, 30, 30};
   size_t T = mean_demand1.size(); // 直接获取大小
   std::vector<double> mean_demand2 = std::vector<double>(T);
-  std::vector<double> demand1_weights = std::vector{0.25, 0.5, 0.25};
-  std::vector<double> demand2_weights = std::vector<double>(T);
+  // std::vector<double> demand1_weights = std::vector{0.25, 0.5, 0.25};
+  // std::vector<double> demand2_weights = std::vector<double>(T);
 
   std::vector<double> prices1 = std::vector<double>(T, 5.0);
   std::vector<double> prices2 = std::vector<double>(T, 10.0);
@@ -43,9 +41,9 @@ private:
   double overdraft_limit = 500;
 
   // sddp settings
-  int sample_num = 20;  // 10;
-  int forward_num = 10; // 20;
-  int iter_num = 100;
+  int sample_num = 10;  // 10;
+  int forward_num = 20; // 20;
+  int iter_num = 50;
   double theta_initial_value = -1000;
   int skip_num = 3;
 
@@ -53,8 +51,8 @@ public:
   DoubleProduct() {
     std::ranges::transform(mean_demand1, mean_demand2.begin(),
                            [](const double x) { return x / 2; });
-    std::ranges::transform(demand1_weights, demand2_weights.begin(),
-                           [](const double x) { return x; });
+    // std::ranges::transform(demand1_weights, demand2_weights.begin(),
+    //                        [](const double x) { return x; });
   }
 
   DoubleProduct(const std::vector<double> &mean_demands, const double interest, double limit,

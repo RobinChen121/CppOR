@@ -12,15 +12,16 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        #        double_product.cpp
+        #        double_product_enhancement_further.cpp
         #        double_product_testing.cpp
         #        double_product_enhancement_further.cpp
 
-        single_product_enhancement_further.cpp
+        #        single_product_enhancement_further.cpp
+
         I_cash_status.cpp
 
-        #        single_product_testing_ScenarioNum.cpp
-        #        single_product_enhancement.cpp
+        single_product_testing_iteration_num.cpp
+        single_product_enhancement.cpp
         #        I_cash_status.cpp
 
         ../../utils/common.cpp

@@ -16,10 +16,9 @@
 #include <numeric> // for accumulate
 
 class DoubleProduct {
-private:
   // problem settings
-  double iniI = 0;
-  double iniCash = 0;
+  double ini_I = 0;
+  double ini_cash = 0;
 
   std::vector<double> mean_demand1 = {30, 30, 30, 30};
   size_t T = mean_demand1.size(); // 直接获取大小
@@ -41,8 +40,8 @@ private:
   double overdraft_limit = 500;
 
   // sddp settings
-  int sample_num = 20;  // 10;
-  int forward_num = 10; // 20;
+  int sample_num = 10;  // 10;
+  int forward_num = 20; // 20;
   int iter_num = 50;
   double theta_initial_value = -1000;
 

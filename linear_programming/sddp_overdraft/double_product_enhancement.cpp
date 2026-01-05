@@ -207,8 +207,8 @@ std::array<double, 3> DoubleProduct::solve() const {
     sample_details1[t].resize(sample_nums[t]);
     sample_details2[t].resize(sample_nums[t]);
 
-    sample_details1[t] = generateSamplesPoisson(sample_nums[t], mean_demand1[t]);
-    sample_details2[t] = generateSamplesPoisson(sample_nums[t], mean_demand2[t]);
+    sample_details1[t] = generate_samples_poisson(sample_nums[t], mean_demand1[t]);
+    sample_details2[t] = generate_samples_poisson(sample_nums[t], mean_demand2[t]);
 
     // sample_details1[t] = {22.0, 24.0, 26.0, 28.0, 29.0, 31.0, 32.0, 34.0, 36.0, 40.0};
     // sample_details2[t] = {9.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 18.0, 19.0, 22.0};
@@ -225,8 +225,8 @@ std::array<double, 3> DoubleProduct::solve() const {
   int iter = 0;
   while (iter < iter_num) {
 
-    auto scenario_paths1 = generateScenarioPaths(forward_num, sample_nums);
-    auto scenario_paths2 = generateScenarioPaths(forward_num, sample_nums);
+    auto scenario_paths1 = generate_scenario_paths(forward_num, sample_nums);
+    auto scenario_paths2 = generate_scenario_paths(forward_num, sample_nums);
 
     // int scenario_paths1[10][4] = {{5, 8, 2, 5}, {5, 8, 2, 5}, {5, 8, 2, 5}, {5, 8, 2, 5},
     //                               {5, 8, 2, 5}, {5, 8, 2, 5}, {5, 8, 2, 5}, {5, 8, 2, 5},
@@ -293,8 +293,8 @@ std::array<double, 3> DoubleProduct::solve() const {
           cut_coefficients[n][5] = intercepts[iter - 1][t][n];
         };
 
-        for (auto finalCoefficients = removeDuplicateRows(cut_coefficients); // cutCoefficients
-             auto &final_coefficient : finalCoefficients) {                  //
+        for (auto coefficients = remove_duplicate_rows(cut_coefficients); // cutCoefficients
+             auto &final_coefficient : coefficients) {                    //
           if (cut_coefficients_cache[t].empty() ||
               !cut_coefficients_cache[t].contains(final_coefficient)) {
             cut_coefficients_cache[t].emplace(final_coefficient);
@@ -379,7 +379,7 @@ std::array<double, 3> DoubleProduct::solve() const {
     std::vector slope3_2back_values(T, std::vector<std::vector<double>>(forward_num));
 
     for (size_t t = T; t > 0; t--) {
-      auto sample_details = product(sample_details1[t - 1], sample_details2[t - 1]);
+      auto sample_details = cartesian_product(sample_details1[t - 1], sample_details2[t - 1]);
       for (int n = 0; n < forward_num; n++) {
         size_t S = sample_details.size();
 
@@ -524,16 +524,16 @@ std::array<double, 3> DoubleProduct::solve() const {
   return {finalValue, Q1, Q2};
 }
 
- int main() {
-   const auto problem = DoubleProduct();
-   auto start = std::chrono::high_resolution_clock::now();
-   auto result = problem.solve();
-   auto end = std::chrono::high_resolution_clock::now();
+int main() {
+  const auto problem = DoubleProduct();
+  const auto start = std::chrono::high_resolution_clock::now();
+  const auto result = problem.solve();
+  const auto end = std::chrono::high_resolution_clock::now();
 
-   const std::chrono::duration<double> duration = end - start;
-   std::cout << "running time is " << duration.count() << 's' << std::endl;
-   std::cout << "final expected cash balance is " << result[0] << std::endl;
-   std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
-   std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
-   return 0;
- }
+  const std::chrono::duration<double> duration = end - start;
+  std::cout << "running time is " << duration.count() << 's' << std::endl;
+  std::cout << "final expected cash balance is " << result[0] << std::endl;
+  std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
+  std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
+  return 0;
+}

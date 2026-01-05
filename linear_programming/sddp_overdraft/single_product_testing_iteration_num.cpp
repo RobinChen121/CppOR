@@ -19,15 +19,17 @@ int main() {
 
   int sampleNum = 10;
   int forwardNum = 30;
-  std::vector<int> iter_nums = {10};
+  std::vector<int> iter_nums = {
+      10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
+  };
 
   int runs = 20;
   const std::string file_name =
       "/Users/zhenchen/Library/CloudStorage/OneDrive-BrunelUniversityLondon/"
-      "Numerical-tests/overdraft/c++/sddp_singleproduct_iterNum_testing.csv";
+      "Numerical-tests/overdraft/c++/sddp_singleproduct_iterNum_testing2.csv";
   const std::string head = "run,final value, "
-                           "time,Q,sample number,forward number,iter number,gap\n";
-  appendHeadToCSV(file_name, head);
+                           "time,Q,sample number,forward number,iter number,gap, cv1, cv2\n";
+  append_csv_head(file_name, head);
 
   double opt = 167.38;
   for (int i = 0; i < 1; i++) {
@@ -44,6 +46,8 @@ int main() {
         const double final_value = result[0];
         double gap = final_value - opt;
         const double Q = result[1];
+        const double cv1 = result[2];
+        const double cv2 = result[3];
         std::vector arr = {static_cast<double>(n),
                            final_value,
                            time.count(),
@@ -51,8 +55,10 @@ int main() {
                            static_cast<double>(sampleNum),
                            static_cast<double>(forwardNum),
                            static_cast<double>(iter_num),
-                           gap};
-        appendRowToCSV(file_name, arr);
+                           gap,
+                           cv1,
+                           cv2};
+        append_csv_row(file_name, arr);
         std::cout << "**************************************************" << std::endl;
         std::cout << "running time is " << time.count() << 's' << std::endl;
         std::cout << "Final expected cash increment is " << final_value << std::endl;

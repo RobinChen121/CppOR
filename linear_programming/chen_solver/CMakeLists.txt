@@ -17,6 +17,12 @@ add_executable(${PROJECT_NAME}
 
 )
 
+# mac:
+# 1. 激活环境，命令行输入：source /Users/zhenchen/emsdk/emsdk_env.sh
+# 2. 然后运行下面命令
+# emcc simplex.cpp -o simplex.js -std=c++20 -s MODULARIZE=1 -s EXPORT_NAME="simplexModule" --bind -O3
+
+# windows:
 # 编译cpp为js:
 # 1. 激活环境
 # D:\chenzhen\emsdk-main\emsdk_env.bat

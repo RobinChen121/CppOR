@@ -24,8 +24,6 @@ final expected cash balance is 481.49
 #include "double_product.h"
 
 std::array<double, 3> DoubleProduct::solve() const {
-  auto start = std::chrono::high_resolution_clock::now();
-
   const std::vector<int> sample_nums(T, sample_num);
   std::vector<std::vector<double>> sample_details1(T);
   std::vector<std::vector<double>> sample_details2(T);
@@ -33,8 +31,8 @@ std::array<double, 3> DoubleProduct::solve() const {
     sample_details1[t].resize(sample_nums[t]);
     sample_details2[t].resize(sample_nums[t]);
 
-    sample_details1[t] = generateSamplesPoisson(sample_nums[t], mean_demand1[t]);
-    sample_details2[t] = generateSamplesPoisson(sample_nums[t], mean_demand2[t]);
+    sample_details1[t] = generate_samples_poisson(sample_nums[t], mean_demand1[t]);
+    sample_details2[t] = generate_samples_poisson(sample_nums[t], mean_demand2[t]);
 
     // sample_details1[t] =
     //     generateSamplesSelfDiscrete(sample_nums[t], mean_demand1, demand1_weights);
@@ -46,7 +44,7 @@ std::array<double, 3> DoubleProduct::solve() const {
   }
 
   // gurobi environments and model
-  GRBEnv env = GRBEnv(true); // create an empty environment
+  auto env = GRBEnv(); // create an empty environment
   env.set(GRB_IntParam_OutputFlag, 0);
   env.start(); // necessary
   std::vector<GRBModel> models(T + 1, GRBModel(env));
@@ -106,7 +104,7 @@ std::array<double, 3> DoubleProduct::solve() const {
     if (t < T) {
       models[t].addConstr(W1[t] <= overdraft_limit);
       if (t == 0)
-        models[t].addConstr(iniCash - unit_vari_order_costs1[t] * q1[t] -
+        models[t].addConstr(ini_cash - unit_vari_order_costs1[t] * q1[t] -
                                 unit_vari_order_costs2[t] * q2[t] - W0[t] + W1[t] + W2[t] ==
                             overhead_costs[t]);
       else {
@@ -144,8 +142,8 @@ std::array<double, 3> DoubleProduct::solve() const {
 
   int iter = 0;
   while (iter < iter_num) {
-    auto scenario_paths1 = generateScenarioPaths(forward_num, sample_nums);
-    auto scenario_paths2 = generateScenarioPaths(forward_num, sample_nums);
+    auto scenario_paths1 = generate_scenario_paths(forward_num, sample_nums);
+    auto scenario_paths2 = generate_scenario_paths(forward_num, sample_nums);
 
     // int scenario_paths1[8][3] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     //                              {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
@@ -155,7 +153,7 @@ std::array<double, 3> DoubleProduct::solve() const {
 
     if (iter > 0) {
       models[0].addConstr(theta[0] >=
-                          slopes1_1[iter - 1][0][0] * iniI + slopes1_2[iter - 1][0][0] * iniI +
+                          slopes1_1[iter - 1][0][0] * ini_I + slopes1_2[iter - 1][0][0] * ini_I +
                               slopes2[iter - 1][0][0] *
                                   ((1 + r0) * W0[0] - (1 + r1) * W1[0] - (1 + r2) * W2[0]) +
                               slopes3_1[iter - 1][0][0] * q1[0] +
@@ -207,10 +205,10 @@ std::array<double, 3> DoubleProduct::solve() const {
           std::cout << "index error" << std::endl;
         }
         double rhs1_1 =
-            t == 1 ? iniI - demand1
+            t == 1 ? ini_I - demand1
                    : I1_forward_values[iter][t - 2][n] + q1_pre_values[iter][t - 2][n] - demand1;
         double rhs1_2 =
-            t == 1 ? iniI - demand2
+            t == 1 ? ini_I - demand2
                    : I2_forward_values[iter][t - 2][n] + q2_pre_values[iter][t - 2][n] - demand2;
         if (t < T) {
           double rhs2 = prices1[t - 1] * demand1 + prices2[t - 1] * demand2 +
@@ -266,7 +264,7 @@ std::array<double, 3> DoubleProduct::solve() const {
     std::vector slope3_2back_values(T, std::vector<std::vector<double>>(forward_num));
 
     for (size_t t = T; t > 0; t--) {
-      auto sample_details = product(sample_details1[t - 1], sample_details2[t - 1]);
+      auto sample_details = cartesian_product(sample_details1[t - 1], sample_details2[t - 1]);
       for (int n = 0; n < forward_num; n++) {
         size_t S = sample_details.size();
 
@@ -280,10 +278,10 @@ std::array<double, 3> DoubleProduct::solve() const {
           auto demand1 = sample_details[s].first;
           auto demand2 = sample_details[s].second;
           double rhs1_1 =
-              t == 1 ? iniI - demand1
+              t == 1 ? ini_I - demand1
                      : I1_forward_values[iter][t - 2][n] + q1_pre_values[iter][t - 2][n] - demand1;
           double rhs1_2 =
-              t == 1 ? iniI - demand2
+              t == 1 ? ini_I - demand2
                      : I2_forward_values[iter][t - 2][n] + q2_pre_values[iter][t - 2][n] - demand2;
           if (t < T) {
             double rhs2 = prices1[t - 1] * demand1 + prices2[t - 1] * demand2 +
@@ -399,7 +397,6 @@ std::array<double, 3> DoubleProduct::solve() const {
     iter++;
   }
 
-  auto end = std::chrono::high_resolution_clock::now();
   std::cout << "********************************************" << std::endl;
   std::cout << "after " << iter << " iterations, sample number " << sample_num
             << " and scenario number " << forward_num << std::endl;

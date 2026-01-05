@@ -48,8 +48,8 @@ template <> struct std::hash<PairStatus> {
   }
 };
 
-template <> struct std::hash<std::pair<IStatus, IStatus>> {
-  size_t operator()(const std::pair<IStatus, IStatus> &p) const {
+template <> struct std::hash<DoubleIStatus> {
+  size_t operator()(const DoubleIStatus &p) const {
     // 哈希计算：使用组合哈希
     const size_t first_hash = hash<int>()(static_cast<int>(p.first));
     const size_t second_hash = hash<int>()(static_cast<int>(p.second));

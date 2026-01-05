@@ -70,7 +70,7 @@ std::array<double, 3> DoubleProduct::solve() const {
   std::vector<std::vector<double>> sample_details2(T);
 
   // gurobi environments and model
-  GRBEnv env = GRBEnv(true);
+  GRBEnv env = GRBEnv();
   env.set(GRB_IntParam_OutputFlag, 0);
   env.start();
   std::vector<GRBModel> models(T + 1, GRBModel(env));
@@ -175,8 +175,8 @@ std::array<double, 3> DoubleProduct::solve() const {
       sample_details1[t].resize(sample_nums[t]);
       sample_details2[t].resize(sample_nums[t]);
 
-      sample_details1[t] = generateSamplesPoisson(sample_nums[t], mean_demand1[t]);
-      sample_details2[t] = generateSamplesPoisson(sample_nums[t], mean_demand2[t]);
+      sample_details1[t] = generate_samples_poisson(sample_nums[t], mean_demand1[t]);
+      sample_details2[t] = generate_samples_poisson(sample_nums[t], mean_demand2[t]);
 
       // sample_details1[t] =
       //     generateSamplesSelfDiscrete(sample_nums[t], mean_demand1, demand1_weights);
@@ -195,8 +195,8 @@ std::array<double, 3> DoubleProduct::solve() const {
     std::vector<std::unordered_map<DoubleIStatus, std::array<std::vector<double>, 2>>>
         results_status_lastStage(forward_num);
 
-    auto scenario_paths1 = generateScenarioPaths(forward_num, sample_nums);
-    auto scenario_paths2 = generateScenarioPaths(forward_num, sample_nums);
+    auto scenario_paths1 = generate_scenario_paths(forward_num, sample_nums);
+    auto scenario_paths2 = generate_scenario_paths(forward_num, sample_nums);
 
     // int scenario_paths1[8][3] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     //                              {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
@@ -259,8 +259,8 @@ std::array<double, 3> DoubleProduct::solve() const {
           cut_coefficients[n][5] = intercepts[iter - 1][t][n];
         };
 
-        for (auto finalCoefficients = removeDuplicateRows(cut_coefficients); // cutCoefficients
-             auto &final_coefficient : finalCoefficients) {                  //
+        for (auto finalCoefficients = remove_duplicate_rows(cut_coefficients); // cutCoefficients
+             auto &final_coefficient : finalCoefficients) {                    //
           if (!cut_coefficients_cache.empty()) {
             if (cut_coefficients_cache[t].contains(final_coefficient)) {
               continue;
@@ -345,7 +345,7 @@ std::array<double, 3> DoubleProduct::solve() const {
     TripleStatus status;
 
     for (size_t t = T; t > 0; t--) {
-      auto sample_details = product(sample_details1[t - 1], sample_details2[t - 1]);
+      auto sample_details = cartesian_product(sample_details1[t - 1], sample_details2[t - 1]);
       for (int n = 0; n < forward_num; n++) {
         size_t S = sample_details.size();
 
@@ -519,8 +519,8 @@ std::array<double, 3> DoubleProduct::solve() const {
         // }
       }
     }
-    std::cout << "iteration " << iter << ", objective is " << std::fixed << std::setprecision(2)
-              << -models[0].get(GRB_DoubleAttr_ObjVal) << std::endl;
+    // std::cout << "iteration " << iter << ", objective is " << std::fixed << std::setprecision(2)
+    //           << -models[0].get(GRB_DoubleAttr_ObjVal) << std::endl;
     iter++;
   }
 
@@ -534,16 +534,16 @@ std::array<double, 3> DoubleProduct::solve() const {
   return {finalValue, Q1, Q2};
 }
 
-// int main() {
-//   const auto problem = DoubleProduct();
-//   auto start = std::chrono::high_resolution_clock::now();
-//   auto result = problem.solve();
-//   auto end = std::chrono::high_resolution_clock::now();
-//
-//   const std::chrono::duration<double> duration = end - start;
-//   std::cout << "running time is " << duration.count() << 's' << std::endl;
-//   std::cout << "final expected cash balance is " << result[0] << std::endl;
-//   std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
-//   std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
-//   return 0;
-// }
+int main() {
+  const auto problem = DoubleProduct();
+  auto start = std::chrono::high_resolution_clock::now();
+  auto result = problem.solve();
+  auto end = std::chrono::high_resolution_clock::now();
+
+  const std::chrono::duration<double> duration = end - start;
+  std::cout << "running time is " << duration.count() << 's' << std::endl;
+  std::cout << "final expected cash balance is " << result[0] << std::endl;
+  std::cout << "ordering Q1 in the first period is " << result[1] << std::endl;
+  std::cout << "ordering Q2 in the first period is " << result[2] << std::endl;
+  return 0;
+}

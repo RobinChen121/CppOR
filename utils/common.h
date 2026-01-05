@@ -46,7 +46,8 @@ struct VectorEqual {
 // C++ 的模板必须在编译时已知它的定义，因此模板函数的实现一般会放在头文件（.h 或
 // .hpp）中，而不是源文件（.cpp）
 template <typename T1, typename T2>
-std::vector<std::pair<T1, T2>> product(const std::vector<T1> &a, const std::vector<T2> &b) {
+std::vector<std::pair<T1, T2>> cartesian_product(const std::vector<T1> &a,
+                                                 const std::vector<T2> &b) {
   std::vector<std::pair<T1, T2>> result;
 
   for (const auto &i : a) {
@@ -116,5 +117,7 @@ template <typename T> void print2D(std::vector<std::vector<T>> arr) {
 }
 
 void append_csv_head(const std::string &file_name, const std::string &head);
+
+double compute_ub_sigma(const std::vector<double> &ubs, double avg_ub);
 
 #endif // COMMON_H

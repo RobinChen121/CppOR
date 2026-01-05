@@ -15,7 +15,6 @@
 constexpr double M = 10000;
 constexpr double threshold = 1e-6;
 constexpr bool bool_record_tableau = true;
-std::vector<std::vector<std::vector<double>>> recorded_tableau;
 
 // enum class Comparison { LessOrEqual, Equal, GreaterOrEqual };
 enum class AntiCycle { None, Bland, Lexicography };
@@ -62,6 +61,9 @@ class Simplex {
       con_artificial_coe;      // the coefficient of the artificial variable in the constraint
   std::vector<int> basic_vars; // basic var index for each constraint row
 
+  std::vector<std::vector<std::vector<double>>> recorded_tableau;
+  std::vector<std::vector<int>> recorded_pivot_index;
+
   // 找到主列（进入变量）
   [[nodiscard]] int findPivotColumn() const;
 
@@ -85,6 +87,8 @@ public:
     constraint_num = static_cast<int>(con_lhs.size());
     var_total_num = static_cast<int>(var_sign.size());
     var_original_num = var_total_num;
+    recorded_tableau.reserve(10);
+    recorded_pivot_index.reserve(10);
   };
 
   // single argument constructor must be explicit
@@ -95,7 +99,7 @@ public:
     initializeBasicVariables(); // 初始化基变量
   }
 
-  int getStatus() const { return solution_status; }
+  [[nodiscard]] int getStatus() const { return solution_status; }
 
   void standardize();
   void print() const;
@@ -106,7 +110,7 @@ public:
   [[nodiscard]] double testWeb() const;
 
   void printTableau() const;
-  static void printAllTableau();
+  void printAllTableau() const;
 
   void setAntiCycle(AntiCycle rule);
 
@@ -127,6 +131,11 @@ public:
   [[nodiscard]] std::vector<double> getOptSolution() const;
   [[nodiscard]] std::vector<int> getBasicVarsIndices() const { return basic_vars; };
   [[nodiscard]] std::vector<std::vector<double>> getTableau() const { return tableau; };
+
+  std::vector<std::vector<std::vector<double>>> get_recorded_tableau() const {
+    return recorded_tableau;
+  };
+  std::vector<std::vector<int>> get_recorded_pivot_index() const { return recorded_pivot_index; };
 };
 
 #endif // SIMPLEX_H

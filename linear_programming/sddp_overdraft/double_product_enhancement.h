@@ -9,7 +9,7 @@
 #ifndef DOUBLE_PRODUCT_ENHANCEMENT_H
 #define DOUBLE_PRODUCT_ENHANCEMENT_H
 
-#include "../../utils/fileOperations.h"
+#include "../../utils/common.h"
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 #include <iomanip> // for precision
@@ -17,12 +17,10 @@
 #include <unordered_set>
 
 class DoubleProduct {
-private:
-  // problem settings
   double iniI = 0;
   double ini_cash = 0;
 
-  std::vector<double> mean_demand1 = {30, 30, 30, 30};
+  std::vector<double> mean_demand1 = {30, 30, 30};
   size_t T = mean_demand1.size(); // 直接获取大小
   std::vector<double> mean_demand2 = std::vector<double>(T);
   // std::vector<double> demand1_weights = std::vector{0.25, 0.5, 0.25};
@@ -42,9 +40,9 @@ private:
   double overdraft_limit = 500;
 
   // sddp settings
-  int sample_num = 20;  // 10;
-  int forward_num = 10; // 20;
-  int iter_num = 100;
+  int sample_num = 10;  // 10;
+  int forward_num = 20; // 20;
+  int iter_num = 50;
   double theta_initial_value = -1000;
 
 public:
@@ -54,21 +52,22 @@ public:
     // std::ranges::transform(demand1_weights, demand2_weights.begin(),
     //                        [](const double x) { return x; });
   }
-  DoubleProduct(const std::vector<double> &mean_demands, double interest)
+
+  DoubleProduct(const std::vector<double> &mean_demands, const double interest)
       : mean_demand1(mean_demands), r1(interest) {
     std::ranges::transform(mean_demand1, mean_demand2.begin(),
                            [](const double x) { return x / 2; });
   }
 
-  DoubleProduct(const std::vector<double> &mean_demands, double interest, double limit,
-                int sample_num, int forward_num, int iter_num)
+  DoubleProduct(const std::vector<double> &mean_demands, const double interest, const double limit,
+                const int sample_num, const int forward_num, const int iter_num)
       : mean_demand1(mean_demands), r1(interest), overdraft_limit(limit), sample_num(sample_num),
         forward_num(forward_num), iter_num(iter_num) {
     std::ranges::transform(mean_demand1, mean_demand2.begin(),
                            [](const double x) { return x / 2; });
   }
 
-  std::array<double, 3> solve() const;
+  [[nodiscard]] std::array<double, 3> solve() const;
 };
 
 #endif // DOUBLE_PRODUCT_ENHANCEMENT_H
