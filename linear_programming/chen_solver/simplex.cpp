@@ -11,7 +11,7 @@
 #include <iostream>
 #include <numeric>
 
-// 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm 文件
+// // 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm 文件
 // #include <emscripten/bind.h>
 // using namespace emscripten;
 //
@@ -59,7 +59,7 @@ int Simplex::findPivotColumn() const {
       }
     }
     if (anti_cycle == AntiCycle::None) {
-      if (tableau[0][j] < 0 and tableau[0][j] < min_value) {
+      if (tableau[0][j] < -threshold and tableau[0][j] < min_value) {
         pivot_column = j;
         min_value = tableau[0][j];
       }
@@ -123,6 +123,7 @@ void Simplex::solve() {
   // initializeObjective(); // change the big M variables
 
   // two-stage
+  // first stage
   if (var_artificial_num > threshold) {
     // fist-stage
     std::vector<double> new_obj_coe1(var_total_num);
@@ -130,14 +131,14 @@ void Simplex::solve() {
       new_obj_coe1[i] = 1.0;
 
     // get CB and compute the new reduced cost
-    std::vector<double> CB1;
-    CB1.reserve(basic_vars.size());
+    std::vector<double> basic_var_obj_coe1;
+    basic_var_obj_coe1.reserve(basic_vars.size());
     for (const int idx : basic_vars)
-      CB1.emplace_back(new_obj_coe1[idx]);
+      basic_var_obj_coe1.emplace_back(new_obj_coe1[idx]);
     std::vector<double> reduced_costs1(var_total_num + 1);
     for (int i = 0; i < var_total_num; i++)
-      reduced_costs1[i] = new_obj_coe1[i] + computeReduceCost(CB1, i);
-    reduced_costs1[var_total_num] = computeReduceCost(CB1, var_total_num);
+      reduced_costs1[i] = new_obj_coe1[i] + computeReduceCost(basic_var_obj_coe1, i);
+    reduced_costs1[var_total_num] = computeReduceCost(basic_var_obj_coe1, var_total_num);
 
     // auto original_reduced_costs = tableau[0];
     tableau[0] = reduced_costs1;
@@ -148,7 +149,7 @@ void Simplex::solve() {
     simplex1.solve();
 
     // auto solution = simplex1.getOptSolution();
-    auto value = simplex1.getOptValue();
+    const auto value = simplex1.getOptValue();
     // simplex1.printTableau();
     if (!value.has_value() or value.value() > threshold) {
       solution_status = 2;
@@ -181,14 +182,15 @@ void Simplex::solve() {
 
     // get CB and compute the new reduced cost
     tableau = simplex1.tableau;
-    std::vector<double> CB2;
-    CB2.reserve(basic_vars.size());
+    std::vector<double> basic_var_obj_coe2; // CB
+    basic_var_obj_coe2.reserve(basic_vars.size());
     for (const auto i : basic_vars)
-      CB2.emplace_back(new_obj_coe2[i]);
+      basic_var_obj_coe2.emplace_back(new_obj_coe2[i]);
     std::vector<double> reduced_costs2(var_total_num - var_artificial_num + 1);
     for (int i = 0; i < var_total_num - var_artificial_num; i++)
-      reduced_costs2[i] = new_obj_coe2[i] + computeReduceCost(CB2, i);
-    reduced_costs2[var_total_num - var_artificial_num] = computeReduceCost(CB2, var_total_num);
+      reduced_costs2[i] = new_obj_coe2[i] + computeReduceCost(basic_var_obj_coe2, i);
+    reduced_costs2[var_total_num - var_artificial_num] =
+        computeReduceCost(basic_var_obj_coe2, var_total_num);
     std::vector<int> artificial_column(var_artificial_num);
     for (int i = 0; i < var_artificial_num; i++)
       artificial_column[i] = var_total_num - var_artificial_num + i;
@@ -199,9 +201,16 @@ void Simplex::solve() {
       tableau.erase(tableau.begin() + row_index);
       basic_vars.erase(basic_vars.begin() + row_index - 1);
     }
-    // second-stage computation
+    for (int i = 1; i < simplex1.recorded_tableau.size(); i++) {
+      recorded_tableau.emplace_back(simplex1.recorded_tableau[i]);
+    }
+    for (int i = 0; i < simplex1.recorded_pivot_index.size(); i++) {
+      recorded_pivot_index.emplace_back(simplex1.recorded_pivot_index[i]);
+    }
 
+    // second-stage computation
     // printTableau();
+    solution_status = 0;
     if (bool_record_tableau)
       recorded_tableau.emplace_back(tableau);
     Simplex simplex2(tableau);
@@ -210,6 +219,14 @@ void Simplex::solve() {
     tableau = simplex2.tableau;
     var_total_num -= var_artificial_num;
     var_artificial_num = 0;
+    for (int i = 1; i < simplex2.recorded_tableau.size(); i++) {
+      recorded_tableau.emplace_back(simplex2.recorded_tableau[i]);
+    }
+    for (int i = 0; i < simplex2.recorded_pivot_index.size(); i++) {
+      recorded_pivot_index.emplace_back(simplex2.recorded_pivot_index[i]);
+    }
+    if (findPivotColumn() == -1) // 第二阶段得到的单纯形已经是最优了
+      return;
     // printTableau();
     // displaySolution();
   }
@@ -220,7 +237,7 @@ void Simplex::solve() {
       solution_status = 0; // revise
       if (bool_record_tableau)
         recorded_tableau.emplace_back(tableau);
-      break; // 已达到最优解
+      return;
     }
     const int pivot_row = findPivotRow(pivot_column);
     if (pivot_row == -1) {
@@ -277,7 +294,7 @@ std::vector<double> Simplex::getOptSolution() const {
     std::vector<double> solution(var_original_num);
     for (int i = 0; i < basic_vars.size(); i++) {
       const int var_index = basic_vars[indices[i]];
-      if (var_index >= var_original_num)
+      if (var_index >= var_original_num + front_unsigned_num[var_index])
         continue;
       double value = tableau[indices[i] + 1][var_total_num];
       if (var_index > threshold and
@@ -399,7 +416,6 @@ void Simplex::standardize() {
         std::advance(it2, i + 1); // 免去对 i 的类型转换
         con_lhs[j].insert(it2, -con_lhs[j][i]);
       }
-      i++;
       var_total_num++;
       var_unsigned_num++;
       if (i == 0)
@@ -407,6 +423,7 @@ void Simplex::standardize() {
       else
         front_unsigned_num.emplace_back(front_unsigned_num.back());
       front_unsigned_num.emplace_back(var_unsigned_num);
+      i++;
       break;
     }
     default: // >= 0
@@ -419,7 +436,7 @@ void Simplex::standardize() {
   }
 
   for (size_t j = 0; j < constraint_num; j++) {
-    if (con_rhs[j] < 0) {
+    if (con_rhs[j] < -threshold) {
       con_rhs[j] = -con_rhs[j];
       for (auto &item : con_lhs[j]) {
         item = -item; // 注意要用引用才能修改原数组
@@ -708,6 +725,14 @@ int main() {
   // const std::vector constraint_sense = {0, 0};
   // const std::vector var_sign = {0, 0};
 
+  constexpr int obj_sense = 0;
+  const std::vector obj_coe = {50.0, 20.0, 30.0, 80.0};
+  const std::vector<std::vector<double>> con_lhs = {
+      {400, 200, 100, 500}, {3, 2, 0, 0}, {2, 2, 4, 4}, {2, 4, 1, 5}};
+  const std::vector con_rhs = {500.0, 6.0, 10.0, 8.0};
+  const std::vector constraint_sense = {1, 1, 1, 1};
+  const std::vector var_sign = {0, 0, 0, 0};
+
   // constexpr int obj_sense = 1;
   // const std::vector obj_coe = {1.0, 1.0, 0.0, 0.0};
   // const std::vector<std::vector<double>> con_lhs = {
@@ -716,12 +741,19 @@ int main() {
   // const std::vector constraint_sense = {2, 2, 2, 2};
   // const std::vector var_sign = {0, 0, 0, 0};
 
-  constexpr int obj_sense = 1;
-  const std::vector obj_coe = {-3.0, 0.0, 1.0};
-  const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
-  const std::vector con_rhs = {4.0, 1.0, 9.0};
-  const std::vector constraint_sense = {0, 1, 2};
-  const std::vector var_sign = {0, 0, 0};
+  // constexpr int obj_sense = 1;
+  // const std::vector obj_coe = {-3.0, 0.0, 1.0};
+  // const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
+  // const std::vector con_rhs = {4.0, 1.0, 9.0};
+  // const std::vector constraint_sense = {0, 1, 2};
+  // const std::vector var_sign = {0, 0, 0};
+
+  // constexpr int obj_sense = 0;
+  // const std::vector obj_coe = {2.0, 3.0, 1.0};
+  // const std::vector<std::vector<double>> con_lhs = {{1, 4, 2}, {3, 2, 0}};
+  // const std::vector con_rhs = {8.0, 6.0};
+  // const std::vector constraint_sense = {1, 1};
+  // const std::vector var_sign = {0, 0, 0};
 
   // constexpr int obj_sense = 1; // 0: min, 1: max
   // const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};

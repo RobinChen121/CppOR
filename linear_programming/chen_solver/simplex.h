@@ -117,6 +117,8 @@ public:
   void inputObjCoef() const;
 
   void solve();
+  // solve the simpler tableau in 2-stage computation
+  void solve2(std::vector<std::vector<double>> &tableau);
 
   [[nodiscard]] int isBasicVariable(int column_index) const;
 
