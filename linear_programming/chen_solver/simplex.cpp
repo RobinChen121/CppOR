@@ -294,7 +294,7 @@ std::vector<double> Simplex::getOptSolution() const {
     std::vector<double> solution(var_original_num);
     for (int i = 0; i < basic_vars.size(); i++) {
       const int var_index = basic_vars[indices[i]];
-      if (var_index >= var_original_num + front_unsigned_num[var_index])
+      if (var_index > var_original_num - 1 + front_unsigned_num.back())
         continue;
       double value = tableau[indices[i] + 1][var_total_num];
       if (var_index > threshold and
