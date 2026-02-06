@@ -11,7 +11,7 @@
 
 void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
             const double fix_cost, const int capacity) {
-  plt::backend("TkAgg");
+  // plt::backend("TkAgg");
   std::vector<double> x, y;
   for (int i = min_x; i <= max_x; ++i) {
     x.push_back(i);
@@ -115,7 +115,7 @@ void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
 void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int min_x,
                      const int max_x, const double fix_cost,
                      const std::vector<double> &capacities) {
-  plt::backend("TkAgg");
+  // plt::backend("TkAgg");
 
   int repeat = 3;
   while (repeat > 0) {
@@ -224,7 +224,7 @@ void drawGyAnimation(const std::vector<std::map<int, double>> &arr, const int mi
 }
 
 void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS) {
-  plt::backend("TkAgg");
+  // plt::backend("TkAgg");
   std::vector<double> x, y;
   for (int i = 0; i < arr.size() - 200; ++i) {
     x.push_back(i);
@@ -251,12 +251,33 @@ void drawGy(const std::vector<double> &arr, const std::array<int, 2> &arr_sS) {
   plt::show();
 }
 
+// bool check_K_convexity(const std::vector<double> &Gy, const double fix_hire_cost) {
+//   const int y_length = static_cast<int>(Gy.size());
+//
+//   for (int y_plus_a = 1; y_plus_a < y_length; y_plus_a++)
+//     for (int y = 1; y <= y_plus_a; y++)
+//       for (int y_minus_b = 0; y_minus_b < y; y_minus_b++) {
+//         const double left = (y - y_minus_b) * (Gy[y_plus_a] - Gy[y] + fix_hire_cost);
+//         const double right = (y_plus_a - y) * (Gy[y] - Gy[y_minus_b]);
+//         if (left >= right)
+//           continue;
+//         std::cout << "**************" << std::endl;
+//         std::cout << "not K convex" << std::endl;
+//         std::cout << "y + a = " << y_plus_a << ", y = " << y << std::endl;
+//         // K_convexity = "not K convex!";
+//         return false;
+//       }
+//   std::cout << "K convexity holds!" << std::endl;
+//   // K_convexity = "K convexity holds!";
+//   return true;
+// }
+
 void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &parameter,
                      const std::vector<std::string> &kconvexity,
                      const std::vector<std::string> &binomial_kconvexity,
                      const std::vector<std::string> &convexity) {
-  plt::backend("TkAgg");
+  // plt::backend("TkAgg");
   int repeat = 3;
   while (repeat > 0) {
     for (int i = 0; i < arr.size(); i++) {

@@ -24,5 +24,6 @@ void drawGyAnimation(const std::vector<std::vector<double>> &arr,
                      const std::vector<std::string> &kconvexity,
                      const std::vector<std::string> &binomial_kconvexity,
                      const std::vector<std::string> &convexity);
+// bool check_K_convexity(const std::vector<double> &Gy, double fix_hire_cost);
 
 #endif // DRAW_GRAPH_H

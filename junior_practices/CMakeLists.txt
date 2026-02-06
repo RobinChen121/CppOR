@@ -4,7 +4,7 @@ project(practice)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(RUN_NAME junior_practice) # the name of configuration target
+#set(PROJECT_NAME junior_practice) # the name of configuration target
 
 #set(CMAKE_BUILD_TYPE Release)
 if (MSVC)
@@ -16,7 +16,7 @@ endif ()
 #add_subdirectory(qt_practices)
 #add_subdirectory(SDL2_practices)
 
-add_executable(${RUN_NAME}
+add_executable(${PROJECT_NAME}
         #        Qmedia_test.cpp
         #        SFML_practices/main.cpp
 
@@ -25,13 +25,13 @@ add_executable(${RUN_NAME}
         #        draw_python_API.cpp
         #        draw_pythonAPI_animation.cpp
         #        draw_python2.cpp
-        #        draw_animation.cpp
+        draw_animation.cpp
 
         #        boost_test.cpp
         #        game_tetris.cpp
         #        pair_test.cpp
         #               spdlog_test.cpp
-        eigen3_test.cpp
+        #        eigen3_test.cpp
 
         #        draw_QPainter_bar.cpp
         #        draw_QPainter_line.cpp
@@ -53,15 +53,17 @@ if (MSVC)
             boost_thread-vc143-mt-x64-1_88
             boost_filesystem-vc143-mt-x64-1_88
     )
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             "${BOOST_LIBRARYDIR}/boost_system-vc143-mt-x64-1_88.lib"
             "${BOOST_LIBRARYDIR}/boost_thread-vc143-mt-x64-1_88.lib"
             "${BOOST_LIBRARYDIR}/boost_filesystem-vc143-mt-x64-1_88.lib"
     )
 else ()
-    find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-    include_directories(${Boost_INCLUDE_DIRS})
-    target_link_libraries(${RUN_NAME} PRIVATE ${Boost_LIBRARIES})
+    set(BOOST_ROOT "/opt/homebrew/Cellar/boost/1.90.0")
+    set(BOOST_INCLUDEDIR "${BOOST_ROOT}/include")
+    set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib")
+    include_directories(${BOOST_INCLUDEDIR})
+    link_directories(${BOOST_LIBRARYDIR})
 endif ()
 
 #include(FetchContent) # it can fetch content automatically, for mingw
@@ -76,14 +78,14 @@ include_directories(${Vulkan_INCLUDE_DIR})
 find_package(Qt6 COMPONENTS Core Gui Widgets Multimedia REQUIRED)
 message(STATUS "Qt6 found at: ${Qt6_DIR}")
 # link Qt
-target_link_libraries(${RUN_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Multimedia)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Multimedia)
 
 
 #-----------------------------------
 # OpenMP needs to be downloaded to the mac, parallel computing api
 if (APPLE)
-    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.8/include")
-    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.8/lib") # /libomp.dylib
+    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/21.1.8/include")
+    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/21.1.8/lib") # /libomp.dylib
     # 手动设置 OpenMP 相关的编译和链接选项
     set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
     set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")
@@ -98,11 +100,11 @@ else ()
     if (MSVC)
         target_compile_options(junior_practice PRIVATE /openmp)
     else ()
-        target_compile_options(${RUN_NAME} PRIVATE -fopenmp)
-        target_link_options(${RUN_NAME} PRIVATE -fopenmp)
+        target_compile_options(${PROJECT_NAME} PRIVATE -fopenmp)
+        target_link_options(${PROJECT_NAME} PRIVATE -fopenmp)
     endif ()
     if (OpenMP_CXX_FOUND)
-        target_link_libraries(${RUN_NAME} PRIVATE OpenMP::OpenMP_CXX)
+        target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
     endif ()
 endif ()
 
@@ -113,14 +115,14 @@ if (APPLE)
     include_directories(/opt/anaconda3/envs/py312/include/python3.12)
     # numpy head file
     include_directories(/opt/anaconda3/envs/py312/lib/python3.12/site-packages/numpy/_core/include)
-    target_link_libraries(${PROJECT_NAME}
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             /opt/anaconda3/envs/py312/lib/libpython3.12.dylib
             dl
     )
 elseif (MSVC)
     include_directories(C:/ProgramData/anaconda3/include/)
     include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             C:/ProgramData/anaconda3/libs/python312.lib
     )
 else ()
@@ -132,14 +134,14 @@ else ()
     )
     FetchContent_MakeAvailable(matplotlib_cpp)
     # Include matplotlib-cpp
-    target_include_directories(${RUN_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${matplotlib_cpp_SOURCE_DIR})
     # Link Python and NumPy
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
-    target_include_directories(${RUN_NAME} PRIVATE
+    target_include_directories(${PROJECT_NAME} PRIVATE
             ${Python3_INCLUDE_DIRS}
             ${Python3_NumPy_INCLUDE_DIRS}
     )
-    target_link_libraries(${RUN_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME} PRIVATE
             ${Python3_LIBRARIES}
     )
 endif ()
@@ -147,17 +149,17 @@ endif ()
 # Eigen3 setting
 if (APPLE)
     find_package(Eigen3 REQUIRED)
-    target_link_libraries(${RUN_NAME} PRIVATE Eigen3::Eigen)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
 else ()
     set(EIGEN3_INCLUDE_DIR "D:/c++Library/eigen-3.4.0")
-    target_include_directories(${RUN_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
 endif ()
 
 # spdlog setting
 if (APPLE)
     find_package(spdlog)
-    target_link_libraries(${RUN_NAME} PRIVATE spdlog::spdlog)
+    target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 else ()
-    target_include_directories(${RUN_NAME} PRIVATE "D:/c++Library/spdlog/include")
+    target_include_directories(${PROJECT_NAME} PRIVATE "D:/c++Library/spdlog/include")
 endif ()
 

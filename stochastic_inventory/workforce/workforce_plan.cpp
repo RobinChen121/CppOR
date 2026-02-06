@@ -81,7 +81,8 @@ void WorkforcePlan::set_turnover_rate(const double value) {
                                                           const int action,
                                                           const int overturn_num) const {
   int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
-  if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1) // can affect computational time
+  if (to_compute_gy == ToComputeGy::True and
+      ini_state.getPeriod() == 1) // can affect computational time
     next_workers = ini_state.getInitialWorkers() - overturn_num;
   next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
   // 类可以直接使用列表初始化
@@ -400,11 +401,11 @@ bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
         // double test = std::abs(left - right);
         if (left - right > -0.1)
           continue;
-        std::cout << "****" << std::endl;
-        std::cout << "not convex" << std::endl;
-        std::cout << "y + a = " << y_plus_a << ", y = " << y << ", y_minus_b = " << y_minus_b
-                  << std::endl;
-        std::cout << "left = " << left << ", right = " << right << std::endl;
+        // std::cout << "****" << std::endl;
+        // std::cout << "not convex" << std::endl;
+        // std::cout << "y + a = " << y_plus_a << ", y = " << y << ", y_minus_b = " << y_minus_b
+        //           << std::endl;
+        // std::cout << "left = " << left << ", right = " << right << std::endl;
         convexity = "not convex!";
         return false;
       }
