@@ -85,26 +85,26 @@ void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
   }
   plt::plot(x2, y2, {{"color", "red"}, {"label", "capacity length"}});
 
-  auto [fst, snd] = check_K_convexity(arr, fix_cost);
-  const std::string Kconvexity = fst ? "K-convex" : "not K-convex";
-  const int x_scale = max_x + min_x;
-  // auto y_lim = plt::ylim(); // 这个ylim()函数会有越界错误,应该是 matplotlibcpp 本身的错误
-  plt::text(0.3 * x_scale, 0.9 * y_scale, Kconvexity);
-
-  if (!fst) {
-    auto [yb, yy, ya] = snd;
-    std::vector<double> x1, y1;
-    for (int i = yb; i <= ya; ++i) {
-      x1.push_back(i);
-      double value = arr.at(yb) + (i - yb) * (arr.at(yy) - arr.at(yb)) / (yy - yb);
-      y1.push_back(value);
-    }
-    plt::plot(x1, y1, {{"color", "green"}, {"label", "not K-convex line"}});
-
-    const std::vector scatter1_x = {ya};
-    const std::vector scatter1_y = {arr.at(ya) + fix_cost};
-    plt::scatter(scatter1_x, scatter1_y, 10.0, {{"color", "red"}});
-  }
+  // auto [fst, snd] = check_K_convexity(arr, fix_cost);
+  // const std::string Kconvexity = fst ? "K-convex" : "not K-convex";
+  // const int x_scale = max_x + min_x;
+  // // auto y_lim = plt::ylim(); // 这个ylim()函数会有越界错误,应该是 matplotlibcpp 本身的错误
+  // plt::text(0.3 * x_scale, 0.9 * y_scale, Kconvexity);
+  //
+  // if (!fst) {
+  //   auto [yb, yy, ya] = snd;
+  //   std::vector<double> x1, y1;
+  //   for (int i = yb; i <= ya; ++i) {
+  //     x1.push_back(i);
+  //     double value = arr.at(yb) + (i - yb) * (arr.at(yy) - arr.at(yb)) / (yy - yb);
+  //     y1.push_back(value);
+  //   }
+  //   plt::plot(x1, y1, {{"color", "green"}, {"label", "not K-convex line"}});
+  //
+  //   const std::vector scatter1_x = {ya};
+  //   const std::vector scatter1_y = {arr.at(ya) + fix_cost};
+  //   plt::scatter(scatter1_x, scatter1_y, 10.0, {{"color", "red"}});
+  // }
 
   plt::legend(); // 显示图例
   plt::grid(true);

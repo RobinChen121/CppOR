@@ -36,7 +36,7 @@ public:
   // getPMF(std::span<const double> demands) const;
 
   [[nodiscard]] std::vector<std::vector<std::array<double, 2>>>
-  get_pmf_poisson(const std::vector<double> &demands) const;
+  getPMFPoisson(const std::vector<double> &demands) const;
 
   [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
   getPMFSelfDefine(std::span<const double> demands, std::span<const double> probs, int T);

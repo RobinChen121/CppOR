@@ -27,7 +27,7 @@ class NewsvendorDP {
   double max_I;
   double min_I;
   std::vector<std::vector<std::array<double, 2>>> pmf;
-  bool parallel;
+  bool parallel{};
   bool compute_Gy = false;
   State ini_state;
   std::mutex mtx; // 互斥锁保护共享数据写入
@@ -55,15 +55,15 @@ public:
         truncated_quantile(truncated_quantile), max_I(max_I), min_I(min_I), pmf(std::move(pmf)),
         parallel(parallel), ini_state(ini_state) {};
 
-  [[nodiscard]] std::vector<double> get_feasible_actions() const;
+  [[nodiscard]] std::vector<double> feasibleActions() const;
 
-  [[nodiscard]] State state_transition_function(const State &state, double action,
-                                                double demand) const;
+  [[nodiscard]] State stateTransitionFunction(const State &state, double action,
+                                              double demand) const;
 
-  [[nodiscard]] double immediate_value_function(const State &state, double action,
-                                                double demand) const;
+  [[nodiscard]] double immediateValueFunction(const State &state, double action,
+                                              double demand) const;
 
-  double get_opt_action(const State &state);
+  double getOptAction(const State &state);
 
   [[nodiscard]] auto getTable() const;
 

@@ -32,8 +32,15 @@ add_executable(${PROJECT_NAME}
 
 #-----------------------------------
 # Boost
-find_package(Boost REQUIRED COMPONENTS system thread filesystem)
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+if (MSVC)
+    target_include_directories(${PROJECT_NAME}
+            PRIVATE
+            D:/local/boost_1_90_0
+    )
+else ()
+    find_package(Boost REQUIRED)
+    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+endif ()
 
 
 #-----------------------------------
@@ -51,11 +58,15 @@ if (APPLE)
             dl
     )
 elseif (MSVC)
-    include_directories(C:/ProgramData/anaconda3/include/)
-    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
+    find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+            ${Python3_INCLUDE_DIRS}
+            ${Python3_NumPy_INCLUDE_DIRS}
+    )
+
     target_link_libraries(${PROJECT_NAME}
-            optimized C:/ProgramData/anaconda3/libs/python312.lib # Release 模式用 python312.lib
-            debug C:/ProgramData/anaconda3/libs/python312.lib # Debug 模式也强制用 python312.lib
+            ${Python3_LIBRARIES}
     )
 else ()
     FetchContent_Declare(

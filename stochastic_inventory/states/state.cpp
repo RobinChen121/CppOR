@@ -15,7 +15,7 @@ State::State(const int period, const double ini_inventory)
 
 double State::get_ini_inventory() const { return ini_inventory; }
 
-int State::get_period() const { return period; }
+int State::getPeriod() const { return period; }
 
 void State::print() const {
   std::cout << "period: " << period << ", ini I: " << ini_inventory << std::endl;

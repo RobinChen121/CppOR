@@ -27,10 +27,10 @@
  *
  */
 
-#include "newsvendor.h"
 #include "../../utils/Kconvexity.h"
 #include "../../utils/draw_graph.h"
 #include "../../utils/pmf.h"
+#include "newsvendor.h"
 #include <algorithm> // std::max
 #include <array>
 #include <chrono>
@@ -293,24 +293,33 @@ NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
 
 int main() {
 
-  // std::vector<double> demands = {9, 23, 53, 29};
-  // const int T = static_cast<int>(demands.size());
+  std::vector<double> demands = {10, 60, 20};
+  const int T = static_cast<int>(demands.size());
+  constexpr double capacity = 100; // maximum ordering quantity
+  constexpr double fix_order_cost = 500;
+  constexpr double unitVariOderCost = 0;
+  constexpr double unit_hold_cost = 2;
+  constexpr double unit_penalty_cost = 19;
+  constexpr double maxI = 200;  // maximum possible inventory
+  constexpr double minI = -100; // minimum possible inventory
 
   //  std::vector<double> demands = {40, 80};
   //  constexpr int T = 2;
   //  std::vector probs(demands.size(), 1.0 / static_cast<double>(demands.size()));
 
-  constexpr int T = 10;
-  constexpr double mean_demand = 20;
-  std::vector demands(T, mean_demand);
-  constexpr double capacity = 150; // maximum ordering quantity
-  constexpr double fix_order_cost = 0;
-  constexpr double unitVariOderCost = 1;
-  constexpr double unit_hold_cost = 2;
-  constexpr double unit_penalty_cost = 10;
+  // constexpr int T = 10;
+  // constexpr double mean_demand = 20;
+  // std::vector demands(T, mean_demand);
+  // constexpr double capacity = 150; // maximum ordering quantity
+  // constexpr double fix_order_cost = 0;
+  // constexpr double unitVariOderCost = 1;
+  // constexpr double unit_hold_cost = 2;
+  // constexpr double unit_penalty_cost = 10;
+  // constexpr double maxI = 100;             // maximum possible inventory
+  // constexpr double minI = -100;            // minimum possible inventory
+
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
-  constexpr double maxI = 100;             // maximum possible inventory
-  constexpr double minI = -100;            // minimum possible inventory
+
   // when looking for values of s, S or computing Gy, parallel is better to be false
   constexpr bool parallel = false;
   constexpr double stepSize = 1.0;

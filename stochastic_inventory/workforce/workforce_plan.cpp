@@ -5,7 +5,7 @@
  * For 5 periods, c++ parallel 8 threads mac m1 time is 0.77s while serial is 1.76s.
  * dell 7740, 12 threads, time is 1.85s while serial is 3.98s.
  *
- * When using mip, the turnover rate in each period should be sam.
+ * When using mip, the turnover rate in each period should be same.
  *
  */
 
@@ -13,7 +13,7 @@
 #include "../../utils/common.h"
 #include "piecewise.h"
 #include "util_binomial.h"
-#include <boost/math/distributions/binomial.hpp> // 浜岄」鍒嗗竷澶存枃浠? random 搴撴湁鍒嗗竷浣嗘病鏈塸df鍑芥暟
+#include <boost/math/distributions/binomial.hpp>
 #include <cmath>
 #include <random>
 #include <thread>
@@ -81,7 +81,8 @@ void WorkforcePlan::set_turnover_rate(const double value) {
                                                           const int action,
                                                           const int overturn_num) const {
   int next_workers = ini_state.getInitialWorkers() + action - overturn_num;
-  if (to_compute_gy == ToComputeGy::True and ini_state.getPeriod() == 1) // can affect computational time
+  if (to_compute_gy == ToComputeGy::True and
+      ini_state.getPeriod() == 1) // can affect computational time
     next_workers = ini_state.getInitialWorkers() - overturn_num;
   next_workers = next_workers > max_worker_num ? max_worker_num : next_workers;
   // 类可以直接使用列表初始化
@@ -220,7 +221,11 @@ std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
 
   if (direction == Direction::FORWARD) {
     // 把无序 cache_actions 里的所有元素拷贝到有序容器 ordered_cache_actions
-    std::map<WorkerState, int> ordered_cache_actions(cache_actions.begin(), cache_actions.end());
+    // std::map<WorkerState, int> ordered_cache_actions(cache_actions.begin(), cache_actions.end());
+    std::map<WorkerState, int> ordered_cache_actions;
+    for (const auto &[ws, val] : cache_actions) {
+      ordered_cache_actions[ws] = static_cast<int>(std::round(val)); // 或 static_cast<int>(val)
+    }
     int t_index = 1;
     for (const auto &[fst, snd] : ordered_cache_actions) {
       if (fst.getPeriod() == t_index) {
@@ -541,89 +546,92 @@ double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const
   return left_term + right_term;
 }
 
-// int main() {
-//   auto problem = WorkforcePlan();
-//   const WorkerState ini_state{1, 0};
-//   auto start_time = std::chrono::high_resolution_clock::now();
-//   auto final_value = problem.solve(ini_state)[0];
-//   auto end_time = std::chrono::high_resolution_clock::now();
-//   std::chrono::duration<double> time = end_time - start_time;
-//   if (problem.get_direction() == Direction::FORWARD)
-//     std::cout << "running time is " << time.count() << 's' << std::endl;
-//   else {
-//     const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
-//     std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
-//               << time.count() << 's' << std::endl;
-//   }
-//   std::cout << "Final optimal cost is " << final_value << std::endl;
-//   std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
-//             << std::endl;
-//
-//   const auto arr_sS = problem.find_sS();
-//   std::cout << "s, S in each period are: " << std::endl;
-//   for (const auto row : arr_sS) {
-//     for (const auto col : row) {
-//       std::cout << col << ' ';
-//     }
-//     std::cout << std::endl;
-//   }
-//
-//   (void)problem.simulate_sS(problem.get_initial_state(), arr_sS);
-//
-//   std::cout << "******************** " << std::endl;
-//   auto [fst, snd] = problem.solve_mip();
-//   // std::cout << "the objective by MIP is: " << fst << std::endl;
-//   const double gap1 = (fst - final_value) / final_value * 100;
-//   std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 <<
-//   "%"
-//             << std::endl;
-//   std::cout << "s, S in each period by MIP are: " << std::endl;
-//   for (const auto row : snd) {
-//     for (const auto col : row) {
-//       std::cout << col << ' ';
-//     }
-//     std::cout << std::endl;
-//   }
-//   const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
-//   const double gap2 = (mip_sS - final_value) / final_value * 100;
-//   std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
-//             << "%" << std::endl;
-//
-//   // const auto ww_result = problem.compute_ww();
-//   // std::cout << std::endl;
-//   // std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
-//   // const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
-//   // std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3
-//   <<
-//   // "%"
-//   //           << std::endl;
-//   // auto sS_ww = ww_result.second;
-//   // for (const auto row : sS_ww) {
-//   //   for (const auto col : row) {
-//   //     std::cout << col << ' ';
-//   //   }
-//   //   std::cout << std::endl;
-//   // }
-//   // const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
-//   // const double gap4 = (ww_sS - final_value) / final_value * 100;
-//   // std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) <<
-//   gap4
-//   //           << "%" << std::endl;
-//
-//   start_time = std::chrono::high_resolution_clock::now();
-//   const auto arr = problem.compute_Gy();
-//   end_time = std::chrono::high_resolution_clock::now();
-//   time = end_time - start_time;
-//   std::cout << "running time is " << time.count() << 's' << std::endl;
-//   std::cout << "*******************************" << std::endl;
-//   problem.check_K_convexity(arr);
-//   const auto expect_Gy = problem.compute_expect_Gy(arr);
-//   problem.check_Binomial_KConvexity(arr, expect_Gy);
-//   problem.check_convexity(arr);
-//   drawGy(arr, arr_sS[0]);
-//
-//   return 0;
-// }
+int main() {
+  auto problem = WorkforcePlan();
+  const WorkerState ini_state{1, 0};
+  auto start_time = std::chrono::high_resolution_clock::now();
+  auto final_value = problem.solve(ini_state)[0];
+  auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time = end_time - start_time;
+  if (problem.get_direction() == Direction::FORWARD)
+    std::cout << "running time is " << time.count() << 's' << std::endl;
+  else {
+    const int thread_num = static_cast<int>(std::thread::hardware_concurrency());
+    std::cout << "running time of C++ in parallel with " << thread_num << " threads is "
+              << time.count() << 's' << std::endl;
+  }
+  std::cout << "Final optimal cost is " << final_value << std::endl;
+  std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
+            << std::endl;
+
+  const auto arr_sS = problem.find_sS();
+  std::cout << "s, S in each period are: " << std::endl;
+  for (const auto row : arr_sS) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+
+  (void)problem.simulate_sS(problem.get_initial_state(), arr_sS);
+
+  std::cout << "******************** " << std::endl;
+  auto start_time2 = std::chrono::high_resolution_clock::now();
+  auto [fst, snd] = problem.solve_mip();
+  auto end_time2 = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time2 = end_time2 - start_time2;
+  std::cout << "running time of MIP is " << time2.count() << 's' << std::endl;
+  // std::cout << "the objective by MIP is: " << fst << std::endl;
+  const double gap1 = (fst - final_value) / final_value * 100;
+  std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 << "%"
+            << std::endl;
+  std::cout << "s, S in each period by MIP are: " << std::endl;
+  for (const auto row : snd) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+  const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
+  const double gap2 = (mip_sS - final_value) / final_value * 100;
+  std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
+            << "%" << std::endl;
+
+  // const auto ww_result = problem.compute_ww();
+  // std::cout << std::endl;
+  // std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
+  // const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
+  // std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3
+  // <<
+  // "%"
+  //           << std::endl;
+  // auto sS_ww = ww_result.second;
+  // for (const auto row : sS_ww) {
+  //   for (const auto col : row) {
+  //     std::cout << col << ' ';
+  //   }
+  //   std::cout << std::endl;
+  // }
+  // const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
+  // const double gap4 = (ww_sS - final_value) / final_value * 100;
+  // std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) <<
+  // gap4
+  //           << "%" << std::endl;
+
+  // start_time = std::chrono::high_resolution_clock::now();
+  // const auto arr = problem.compute_Gy();
+  // end_time = std::chrono::high_resolution_clock::now();
+  // time = end_time - start_time;
+  // std::cout << "running time is " << time.count() << 's' << std::endl;
+  // std::cout << "*******************************" << std::endl;
+  // problem.check_K_convexity(arr);
+  // const auto expect_Gy = problem.compute_expect_Gy(arr);
+  // problem.check_Binomial_KConvexity(arr, expect_Gy);
+  // problem.check_convexity(arr);
+  // drawGy(arr, arr_sS[0]);
+
+  return 0;
+}
 
 // double recursion2(const WorkerState ini_state) {
 //   const auto actions = feasible_actions();

@@ -28,9 +28,9 @@ add_executable(${PROJECT_NAME}
         worker_state.cpp
         workforce_plan.cpp
 
-        workforce_testing_animation.cpp
+        #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
-        ../../utils/draw_graph.cpp
+        #        ../../utils/draw_graph.cpp
         #        binomial_product_test.cpp
         #        Binomial_conditional_expectation_test.cpp
         #        Binomial_stochastic_order_test.cpp
@@ -153,11 +153,15 @@ if (APPLE)
             dl
     )
 elseif (MSVC)
-    include_directories(C:/ProgramData/anaconda3/include/)
-    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
+    find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+            ${Python3_INCLUDE_DIRS}
+            ${Python3_NumPy_INCLUDE_DIRS}
+    )
+
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            C:/ProgramData/anaconda3/libs/python312.lib
-            C:/Users/Administrator/cpython/PCbuild/amd64/python312_d.lib
+            ${Python3_LIBRARIES}
     )
 else ()
     FetchContent_Declare(
