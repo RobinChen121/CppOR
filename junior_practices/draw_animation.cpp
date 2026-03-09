@@ -12,8 +12,6 @@ namespace plt = matplotlibcpp;
 
 int main() {
   std::vector<double> x, y;
-  // 强制使用 TkAgg 后端，避免 Qt6Agg 卡死
-  plt::backend("TkAgg");  // 等价于 python 中的命令 matplotlib.use("TkAgg")
 
   for (int i = 0; i < 100; ++i) {
     x.push_back(i);

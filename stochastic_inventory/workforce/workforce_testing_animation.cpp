@@ -11,7 +11,7 @@
 int main() {
   int num = 10;
   std::vector<int> fix_costs(num);
-  for (int i = 0; i < num; i++) {
+  for (int i = 4; i < num; i++) {
     fix_costs[i] = (i + 1) * 50;
   }
   std::vector<int> salaries(num);
@@ -27,7 +27,6 @@ int main() {
   for (int i = 0; i < num; i++) {
     min_workers[i] = (i + 1) * 10;
   }
-  num = 9;
   std::vector<double> turnover_rate(num);
   for (int i = 0; i < num; i++) {
     turnover_rate[i] = (i + 1) * 0.1;

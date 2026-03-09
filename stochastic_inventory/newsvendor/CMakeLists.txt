@@ -19,12 +19,12 @@ add_executable(${PROJECT_NAME}
         #        newsvendor_c.c
         #        newsvendor_vanilla.c
         #        heuristic1997.cpp
-        #        newsvendor_capacity.cpp
-        newsvendor_vanilla.cpp
-        #        newsvendor.cpp
+        newsvendor_capacity.cpp
+        #        newsvendor_vanillalla.cpp
+        newsvendor.h
         #
-        #        ../../utils/draw_graph.cpp
-        #        ../../utils/Kconvexity.cpp
+        ../../utils/draw_graph.cpp
+        ../../utils/Kconvexity.cpp
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )

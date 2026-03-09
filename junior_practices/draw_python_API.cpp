@@ -13,8 +13,8 @@ int main() {
   Py_Initialize();
 
   // 2️⃣ 导入 Python 模块
-  // TkAgg 通常更稳定，不容易阻塞
-  PyRun_SimpleString("import matplotlib; matplotlib.use('TkAgg')");
+  // TkAgg 通常更稳定，不容易阻塞，2026 年更新了 QT6 之后，又不需要了
+  // PyRun_SimpleString("import matplotlib; matplotlib.use('TkAgg')");
   PyRun_SimpleString("import matplotlib.pyplot as plt");
   PyRun_SimpleString("import numpy as np");
 

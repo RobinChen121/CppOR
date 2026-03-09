@@ -405,11 +405,11 @@ bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
         // double test = std::abs(left - right);
         if (left - right > -0.1)
           continue;
-        std::cout << "****" << std::endl;
-        std::cout << "not convex" << std::endl;
-        std::cout << "y + a = " << y_plus_a << ", y = " << y << ", y_minus_b = " << y_minus_b
-                  << std::endl;
-        std::cout << "left = " << left << ", right = " << right << std::endl;
+        // std::cout << "****" << std::endl;
+        // std::cout << "not convex" << std::endl;
+        // std::cout << "y + a = " << y_plus_a << ", y = " << y << ", y_minus_b = " << y_minus_b
+        //           << std::endl;
+        // std::cout << "left = " << left << ", right = " << right << std::endl;
         convexity = "not convex!";
         return false;
       }

@@ -12,8 +12,8 @@ int main() {
   // 1️⃣ 初始化 Python
   Py_Initialize();
 
-  // 2️⃣ 强制使用 TkAgg 后端，避免 Qt6Agg 卡死
-  PyRun_SimpleString("import matplotlib; matplotlib.use('TkAgg')");
+  // 2️⃣ 强制使用 TkAgg 后端，避免 Qt6Agg 卡死，2026年更新 QT6 后不用了
+  // PyRun_SimpleString("import matplotlib; matplotlib.use('TkAgg')");
   PyRun_SimpleString("import matplotlib.pyplot as plt");
   PyRun_SimpleString("import numpy as np");
   PyRun_SimpleString("import time");
