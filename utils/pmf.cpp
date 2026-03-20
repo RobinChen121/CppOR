@@ -94,7 +94,7 @@ PMF::getPMFSelfDefine(const std::span<const double> demands, const std::span<con
 
 // get probability mass function values for each period of Poisson
 std::vector<std::vector<std::array<double, 2>>>
-PMF::get_pmf_poisson(const std::vector<double> &demands) const {
+PMF::getPMFPoisson(const std::vector<double> &demands) const {
   const size_t T = demands.size();
   std::vector<int> support_lb(T);
   std::vector<int> support_ub(T);

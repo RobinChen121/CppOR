@@ -18,7 +18,7 @@ public:
 
   [[nodiscard]] double get_ini_inventory() const;
 
-  [[nodiscard]] int get_period() const;
+  [[nodiscard]] int getPeriod() const;
 
   void print() const;
 

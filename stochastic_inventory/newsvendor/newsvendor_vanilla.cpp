@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/12/24.
  * Email: chen.zhen5526@gmail.com
  * Description: vanilla version of DP for newsvendor;
@@ -21,13 +21,14 @@
 
 #include "newsvendor.h"
 
+#include <array>
 #include <chrono>
 #include <iostream>
 
 #include "../../utils/pmf.h"
 #include <limits>
 
-std::vector<double> NewsvendorDP::get_feasible_actions() const {
+std::vector<double> NewsvendorDP::feasibleActions() const {
   const int QNum = static_cast<int>(capacity / stepSize);
   std::vector<double> actions(QNum);
   for (int i = 0; i < QNum; i = i + 1) {
@@ -36,22 +37,22 @@ std::vector<double> NewsvendorDP::get_feasible_actions() const {
   return actions;
 }
 
-State NewsvendorDP::state_transition_function(const State &state, const double action,
-                                              const double demand) const {
+State NewsvendorDP::stateTransitionFunction(const State &state, const double action,
+                                            const double demand) const {
   double nextInventory = state.get_ini_inventory() + action - demand;
 
   nextInventory = nextInventory > max_I ? max_I : nextInventory;
   nextInventory = nextInventory < min_I ? min_I : nextInventory;
 
-  const int nextPeriod = state.get_period() + 1;
+  const int nextPeriod = state.getPeriod() + 1;
   // C++11 引入了统一的列表初始化（Uniform Initialization），鼓励使用大括号 {} 初始化类
   const auto newState = State{nextPeriod, nextInventory};
 
   return newState;
 }
 
-double NewsvendorDP::immediate_value_function(const State &state, const double action,
-                                              const double demand) const {
+double NewsvendorDP::immediateValueFunction(const State &state, const double action,
+                                            const double demand) const {
   const double fixCost = action > 0 ? fix_order_cost : 0;
   const double variCost = action * unit_vari_order_cost;
   double nextInventory = state.get_ini_inventory() + action - demand;
@@ -64,14 +65,14 @@ double NewsvendorDP::immediate_value_function(const State &state, const double a
   return totalCost;
 }
 
-double NewsvendorDP::get_opt_action(const State &state) { return cache_actions[state]; }
+double NewsvendorDP::getOptAction(const State &state) { return cache_actions[state]; }
 
 auto NewsvendorDP::getTable() const {
   const size_t stateNums = cache_actions.size();
   std::vector<std::vector<double>> table(stateNums, std::vector<double>(3));
   int index = 0;
   for (const auto &[fst, snd] : cache_actions) {
-    table[index][0] = fst.get_period();
+    table[index][0] = fst.getPeriod();
     table[index][1] = fst.get_ini_inventory();
     table[index][2] = snd;
     index++;
@@ -82,13 +83,13 @@ auto NewsvendorDP::getTable() const {
 double NewsvendorDP::recursion(const State &state) { // NOLINT
   double bestQ = 0.0;
   double bestValue = std::numeric_limits<double>::max();
-  const std::vector<double> actions = get_feasible_actions(); // should not move inside
+  const std::vector<double> actions = feasibleActions(); // should not move inside
   for (const double action : actions) {
     double thisValue = 0;
-    for (auto demandAndProb : pmf[state.get_period() - 1]) {
-      thisValue += demandAndProb[1] * immediate_value_function(state, action, demandAndProb[0]);
-      if (state.get_period() < T) {
-        auto newState = state_transition_function(state, action, demandAndProb[0]);
+    for (auto demandAndProb : pmf[state.getPeriod() - 1]) {
+      thisValue += demandAndProb[1] * immediateValueFunction(state, action, demandAndProb[0]);
+      if (state.getPeriod() < T) {
+        auto newState = stateTransitionFunction(state, action, demandAndProb[0]);
         auto it = cache_values.find(newState);
         if (it != cache_values.end()) {
           thisValue += demandAndProb[1] * it->second;
@@ -122,7 +123,7 @@ int main() {
   constexpr double maxI = 100;             // maximum possible inventory
   constexpr double minI = -100;            // minimum possible inventory
 
-  const auto pmf = PMF(truncQuantile, stepSize).get_pmf_poisson(demands);
+  const auto pmf = PMF(truncQuantile, stepSize).getPMFPoisson(demands);
   auto model = NewsvendorDP(T, capacity, stepSize, fix_order_cost, unitVariOderCost, unit_hold_cost,
                             unit_penalty_cost, truncQuantile, maxI, minI, pmf);
 

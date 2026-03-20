@@ -4,14 +4,13 @@ Project(workforce) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+#set(CMAKE_BUILD_TYPE Debug) # 运行 Debug 还是 Release
 if (CMAKE_BUILD_TYPE STREQUAL Release)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_RELEASE "/Ox")
     else ()
         set(CMAKE_CXX_FLAGS_RELEASE "-O3")
     endif ()
-else ()
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")  # 明确关闭优化
 endif ()
 
 #if (MSVC)
@@ -29,10 +28,9 @@ add_executable(${PROJECT_NAME}
         worker_state.cpp
         workforce_plan.cpp
 
-        workforce_testing_animation.cpp
+        #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
-        ../../utils/draw_graph.cpp
-        ../../utils/Kconvexity.cpp # this is for testing K convexity in draw_graph.cpp
+        #        ../../utils/draw_graph.cpp
         #        binomial_product_test.cpp
         #        Binomial_conditional_expectation_test.cpp
         #        Binomial_stochastic_order_test.cpp
@@ -60,11 +58,9 @@ if (MSVC)
             "${BOOST_LIBRARYDIR}/boost_filesystem-vc143-mt-x64-1_88.lib"
     )
 else ()
-    set(BOOST_ROOT "/opt/homebrew/Cellar/boost/1.90.0")
-    set(BOOST_INCLUDEDIR "${BOOST_ROOT}/include")
-    set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib")
-    include_directories(${BOOST_INCLUDEDIR})
-    link_directories(${BOOST_LIBRARYDIR})
+    find_package(Boost REQUIRED COMPONENTS system thread filesystem)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 endif ()
 
 ## 设置 Gurobi 路径（根据你的安装调整）
@@ -157,11 +153,15 @@ if (APPLE)
             dl
     )
 elseif (MSVC)
-    include_directories(C:/ProgramData/anaconda3/include/)
-    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
+    find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+            ${Python3_INCLUDE_DIRS}
+            ${Python3_NumPy_INCLUDE_DIRS}
+    )
+
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            C:/ProgramData/anaconda3/libs/python312.lib
-            C:/Users/Administrator/cpython/PCbuild/amd64/python312_d.lib
+            ${Python3_LIBRARIES}
     )
 else ()
     FetchContent_Declare(
