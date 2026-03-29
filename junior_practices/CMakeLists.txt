@@ -26,6 +26,7 @@ add_executable(${PROJECT_NAME}
         #        draw_pythonAPI_animation.cpp
         #        draw_python2.cpp
         draw_animation.cpp
+        ../linear_programming/chen_solver2/simplex.cpp
 
         #        boost_test.cpp
         #        game_tetris.cpp
