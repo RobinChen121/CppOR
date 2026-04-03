@@ -10,6 +10,7 @@
 #define SIMPLEX_H
 #include <algorithm>
 #include <optional>
+#include <unordered_set>
 #include <vector>
 
 constexpr double M = 10000;
@@ -37,6 +38,7 @@ void eraseColumns(std::vector<std::vector<T>> &matrix, std::vector<int> columns)
 }
 
 class Simplex {
+  // original input
   std::vector<double> obj_coe;
   int obj_sense{}; // 0:min, 1: max
   std::vector<std::vector<double>> con_lhs;
@@ -44,6 +46,7 @@ class Simplex {
   std::vector<int> constraint_sense; // 0:<=, 1: >=, 2: =
   std::vector<int> var_sign;         // 0: >=, 1: <=, 2: unsigned
 
+  // middle attributes
   AntiCycle anti_cycle{AntiCycle::None};
   bool obj_sense_changed{};
   int solution_status = {3}; // 0 optimal, 1 unbounded, 2 infeasible, 3 unsolved
@@ -51,15 +54,16 @@ class Simplex {
   std::vector<std::vector<double>> tableau;
   int constraint_num{}; // number of constraints
   int var_total_num{};
-  int var_original_num{};
-  int var_unsigned_num{};
+  int var_num_start{}; // number of variables at the beginning
+  int var_num_unsigned{};
   std::vector<int> front_unsigned_num; // unsigned var number before a var
-  int var_slack_num{};
-  int var_artificial_num{};
-  std::vector<int> con_slack_coe; // the coefficient of the slack variable in the constraint
+  int var_num_slack{};
+  int var_num_artificial{};
   std::vector<int>
-      con_artificial_coe;      // the coefficient of the artificial variable in the constraint
-  std::vector<int> basic_vars; // basic var index for each constraint row
+      con_slack_coe; // the coefficient of the corresponding slack variable for each constraint
+  std::vector<int> con_artificial_coe; // the coefficient of the corresponding artificial variable
+                                       // for each constraint
+  std::vector<int> basic_var_index;    // basic var index for each constraint row
 
   std::vector<std::vector<std::vector<double>>> recorded_tableau;
   std::vector<std::vector<int>> recorded_pivot_index;
@@ -86,9 +90,9 @@ public:
         constraint_sense(constraint_sense), var_sign(var_sign) {
     constraint_num = static_cast<int>(con_lhs.size());
     var_total_num = static_cast<int>(var_sign.size());
-    var_original_num = var_total_num;
+    var_num_start = var_total_num;
     recorded_tableau.reserve(10);
-    recorded_pivot_index.reserve(10);
+    recorded_pivot_index.reserve(10); // not use this variable
   };
 
   // single argument constructor must be explicit
@@ -96,7 +100,7 @@ public:
     tableau = initialTableau;
     constraint_num = static_cast<int>(tableau.size()) - 1;
     var_total_num = static_cast<int>(tableau[0].size()) - 1;
-    initializeBasicVariables(); // 初始化基变量
+    initializeBasicVars(); // 初始化基变量
   }
 
   [[nodiscard]] int getStatus() const { return solution_status; }
@@ -125,19 +129,21 @@ public:
   void displaySolution() const;
   void displayBasicSolution() const;
 
-  void initializeBasicVariables();
+  void initializeBasicVars();
 
   void initializeObjective();
 
   [[nodiscard]] std::optional<double> getOptValue() const;
   [[nodiscard]] std::vector<double> getOptSolution() const;
-  [[nodiscard]] std::vector<int> getBasicVarsIndices() const { return basic_vars; };
+  [[nodiscard]] std::vector<int> getBasicVarsIndices() const { return basic_var_index; };
   [[nodiscard]] std::vector<std::vector<double>> getTableau() const { return tableau; };
 
-  std::vector<std::vector<std::vector<double>>> get_recorded_tableau() const {
+  [[nodiscard]] std::vector<std::vector<std::vector<double>>> get_recorded_tableau() const {
     return recorded_tableau;
   };
-  std::vector<std::vector<int>> get_recorded_pivot_index() const { return recorded_pivot_index; };
+  [[nodiscard]] std::vector<std::vector<int>> get_recorded_pivot_index() const {
+    return recorded_pivot_index;
+  };
 };
 
 #endif // SIMPLEX_H

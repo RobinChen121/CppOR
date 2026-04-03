@@ -7,40 +7,43 @@
  */
 
 #include "simplex.h"
+
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
-
-// 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm 文件
-#include <emscripten/bind.h>
-using namespace emscripten;
-
-// 使用 Emscripten 绑定暴露 Simplex 类和 solve 函数
-// 必须注册才能调用
-EMSCRIPTEN_BINDINGS(simplex_module) {
-  // 注册 vector 类型，相当于在js中重新定义了几个数据类型
-  register_vector<double>("VectorDouble");
-  register_vector<int>("VectorInt");
-  register_vector<std::vector<double>>("VectorVectorDouble");
-  register_vector<std::vector<int>>("VectorVectorInt");
-  register_vector<std::vector<std::vector<double>>>("VectorVectorVectorDouble");
-
-  // 注册类
-  class_<Simplex>("Simplex")
-      .constructor<int, std::vector<double>, std::vector<std::vector<double>>, std::vector<double>,
-                   std::vector<int>, std::vector<int>>() // 这个是类的构造函数
-      // 注册类里面的函数
-      // 前面的字符串名字是 js 里面使用的名字
-      .function("testWeb", &Simplex::testWeb)
-      .function("solve", &Simplex::solve)
-      .function("standardize", &Simplex::standardize)
-      .function("getStatus", &Simplex::getStatus)
-      .function("getOptValue", &Simplex::getOptValue)
-      .function("getBasicVars", &Simplex::getBasicVarsIndices)
-      .function("getRecordedTableau", &Simplex::get_recorded_tableau)
-      .function("getPivotIndex", &Simplex::get_recorded_pivot_index)
-      .function("getOptSolution", &Simplex::getOptSolution);
-}
+//
+// // 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm 文件
+// #include <emscripten/bind.h>
+// using namespace emscripten;
+//
+// // 使用 Emscripten 绑定暴露 Simplex 类和 solve 函数
+// // 必须注册才能调用
+// EMSCRIPTEN_BINDINGS(simplex_module) {
+//   // 注册 vector 类型，相当于在js中重新定义了几个数据类型
+//   register_vector<double>("VectorDouble");
+//   register_vector<int>("VectorInt");
+//   register_vector<std::vector<double>>("VectorVectorDouble");
+//   register_vector<std::vector<int>>("VectorVectorInt");
+//   register_vector<std::vector<std::vector<double>>>("VectorVectorVectorDouble");
+//
+//   // 注册类
+//   class_<Simplex>("Simplex")
+//       .constructor<int, std::vector<double>, std::vector<std::vector<double>>,
+//       std::vector<double>,
+//                    std::vector<int>, std::vector<int>>() // 这个是类的构造函数
+//       // 注册类里面的函数
+//       // 前面的字符串名字是 js 里面使用的名字
+//       .function("testWeb", &Simplex::testWeb)
+//       .function("solve", &Simplex::solve)
+//       .function("standardize", &Simplex::standardize)
+//       .function("getStatus", &Simplex::getStatus)
+//       .function("getOptValue", &Simplex::getOptValue)
+//       .function("getBasicVars", &Simplex::getBasicVarsIndices)
+//       .function("getRecordedTableau", &Simplex::get_recorded_tableau)
+//       .function("getPivotIndex", &Simplex::get_recorded_pivot_index)
+//       .function("getOptSolution", &Simplex::getOptSolution);
+// }
 
 // 单纯形法实现
 // Bland 规则确保单纯形法不会在退化解之间循环，最终会收敛到最优解或检测到无界解
@@ -79,12 +82,13 @@ int Simplex::findPivotRow(const int pivot_column) const {
         // 严格小于，确保唯一性
         minRatio = ratio;
         pivot_row = i;
-      } else if (abs(ratio - minRatio) < threshold) {
-        // 比率相等时选最小索引
-        if (basic_vars[i - 1] < basic_vars[pivot_row - 1]) {
-          pivot_row = i;
-        }
       }
+      // else if (abs(ratio - minRatio) < threshold) { // 若 none 规则使用这个选择行，会陷入死循环
+      //   // 比率相等时选最小索引
+      //   if (basic_var_index[i - 1] < basic_var_index[pivot_row - 1]) {
+      //     pivot_row = i;
+      //   }
+      // }
     }
   }
   return pivot_row;
@@ -106,7 +110,7 @@ void Simplex::pivot(const int pivot_row, const int pivot_column) {
     }
   }
   // 更新基变量：新进入变量替换旧基变量
-  basic_vars[pivot_row - 1] = pivot_column;
+  basic_var_index[pivot_row - 1] = pivot_column;
 }
 
 double Simplex::computeReduceCost(const std::vector<double> &cB, const int Ai_index) const {
@@ -123,16 +127,16 @@ void Simplex::solve() {
 
   // two-stage
   // first stage
-  if (var_artificial_num > threshold) {
+  if (var_num_artificial > 0) {
     // fist-stage
     std::vector<double> new_obj_coe1(var_total_num);
-    for (int i = var_total_num - var_artificial_num; i < var_total_num; i++)
+    for (int i = var_total_num - var_num_artificial; i < var_total_num; i++)
       new_obj_coe1[i] = 1.0;
 
     // get CB and compute the new reduced cost
     std::vector<double> basic_var_obj_coe1;
-    basic_var_obj_coe1.reserve(basic_vars.size());
-    for (const int idx : basic_vars)
+    basic_var_obj_coe1.reserve(basic_var_index.size());
+    for (const int idx : basic_var_index)
       basic_var_obj_coe1.emplace_back(new_obj_coe1[idx]);
     std::vector<double> reduced_costs1(var_total_num + 1);
     for (int i = 0; i < var_total_num; i++)
@@ -156,50 +160,59 @@ void Simplex::solve() {
       std::cout << "the problem is infeasible" << std::endl;
       return;
     }
-    bool all_zeros = false;
-    int row_index = -1;
-    while (true) {
-      basic_vars = simplex1.basic_vars;
-      row_index = artificialIndexInBasicVars();
-      if (row_index == -1 or all_zeros)
-        break;
-      all_zeros = true;
-      for (int i = 0; i < var_total_num - var_artificial_num - 1; i++) {
-        if (std::abs(simplex1.tableau[row_index][i]) > threshold) {
-          simplex1.pivot(row_index, i);
-          if (bool_record_tableau)
-            recorded_tableau.emplace_back(tableau);
-          all_zeros = false;
-          break;
-        }
-      }
+    basic_var_index = simplex1.basic_var_index;
+    int row_index = artificialIndexInBasicVars();
+    if (row_index != -1) {
+      // simplex1.printTableau();
+      simplex1.tableau.erase(simplex1.tableau.begin() + row_index);
+      basic_var_index.erase(basic_var_index.begin() + row_index - 1);
     }
+
+    // bool all_zeros = false; // whether the values of column having a are all zero
+    // int row_index = -1;
+    // while (true) {
+    //   basic_vars = simplex1.basic_vars;
+    //   row_index = artificialIndexInBasicVars();
+    //   if (row_index == -1 or all_zeros)
+    //     break;
+    //   all_zeros = true;
+    // for (int i = 0; i < simplex1.var_total_num - 1; i++) {
+    //   if (std::abs(simplex1.tableau[row_index][i]) > threshold) {
+    //     simplex1.pivot(row_index, i);
+    //     // simplex1.tableau.erase(simplex1.tableau.begin() + row_index);
+    //     if (bool_record_tableau)
+    //       recorded_tableau.emplace_back(tableau);
+    //     all_zeros = false;
+    //     break;
+    //   }
+    // }
+    // }
     // simplex1.printTableau();
-    std::vector<double> new_obj_coe2(var_total_num - var_artificial_num);
-    for (int i = 0; i < var_total_num - var_artificial_num; i++)
+    std::vector<double> new_obj_coe2(var_total_num - var_num_artificial);
+    for (int i = 0; i < var_total_num - var_num_artificial; i++)
       new_obj_coe2[i] = obj_coe[i];
 
     // get CB and compute the new reduced cost
     tableau = simplex1.tableau;
     std::vector<double> basic_var_obj_coe2; // CB
-    basic_var_obj_coe2.reserve(basic_vars.size());
-    for (const auto i : basic_vars)
+    basic_var_obj_coe2.reserve(basic_var_index.size());
+    for (const auto i : basic_var_index)
       basic_var_obj_coe2.emplace_back(new_obj_coe2[i]);
-    std::vector<double> reduced_costs2(var_total_num - var_artificial_num + 1);
-    for (int i = 0; i < var_total_num - var_artificial_num; i++)
+    std::vector<double> reduced_costs2(var_total_num - var_num_artificial + 1);
+    for (int i = 0; i < var_total_num - var_num_artificial; i++)
       reduced_costs2[i] = new_obj_coe2[i] + computeReduceCost(basic_var_obj_coe2, i);
-    reduced_costs2[var_total_num - var_artificial_num] =
+    reduced_costs2[var_total_num - var_num_artificial] =
         computeReduceCost(basic_var_obj_coe2, var_total_num);
-    std::vector<int> artificial_column(var_artificial_num);
-    for (int i = 0; i < var_artificial_num; i++)
-      artificial_column[i] = var_total_num - var_artificial_num + i;
+    std::vector<int> artificial_column(var_num_artificial);
+    for (int i = 0; i < var_num_artificial; i++)
+      artificial_column[i] = var_total_num - var_num_artificial + i;
 
     eraseColumns(tableau, artificial_column);
     tableau[0] = reduced_costs2;
-    if (all_zeros) {
-      tableau.erase(tableau.begin() + row_index);
-      basic_vars.erase(basic_vars.begin() + row_index - 1);
-    }
+    // if (all_zeros) {
+    //   tableau.erase(tableau.begin() + row_index);
+    //   basic_vars.erase(basic_vars.begin() + row_index - 1);
+    // }
     for (int i = 1; i < simplex1.recorded_tableau.size(); i++) {
       recorded_tableau.emplace_back(simplex1.recorded_tableau[i]);
     }
@@ -214,10 +227,10 @@ void Simplex::solve() {
       recorded_tableau.emplace_back(tableau);
     Simplex simplex2(tableau);
     simplex2.solve();
-    basic_vars = simplex2.basic_vars;
+    basic_var_index = simplex2.basic_var_index;
     tableau = simplex2.tableau;
-    var_total_num -= var_artificial_num;
-    var_artificial_num = 0;
+    var_total_num -= var_num_artificial;
+    var_num_artificial = 0;
     for (int i = 1; i < simplex2.recorded_tableau.size(); i++) {
       recorded_tableau.emplace_back(simplex2.recorded_tableau[i]);
     }
@@ -284,16 +297,17 @@ std::optional<double> Simplex::getOptValue() const {
 
 std::vector<double> Simplex::getOptSolution() const {
   if (solution_status == 0) {
-    std::vector<int> indices(basic_vars.size());
+    std::vector<int> indices(basic_var_index.size());
     std::iota(indices.begin(), indices.end(), 0); // fill the range sequentially with a start value
     // there is a lambda function below
     // class attribute vectors should use [this], not [&basic_vars]
-    std::ranges::sort(
-        indices, [this](const int i1, const int i2) { return basic_vars[i1] < basic_vars[i2]; });
-    std::vector<double> solution(var_original_num);
-    for (int i = 0; i < basic_vars.size(); i++) {
-      const int var_index = basic_vars[indices[i]];
-      if (var_index > var_original_num - 1 + front_unsigned_num.back())
+    std::ranges::sort(indices, [this](const int i1, const int i2) {
+      return basic_var_index[i1] < basic_var_index[i2];
+    });
+    std::vector<double> solution(var_num_start);
+    for (int i = 0; i < basic_var_index.size(); i++) {
+      const int var_index = basic_var_index[indices[i]];
+      if (var_index > var_num_start - 1 + front_unsigned_num.back())
         continue;
       double value = tableau[indices[i] + 1][var_total_num];
       if (var_index > threshold and
@@ -321,40 +335,41 @@ void Simplex::displayBasicSolution() const {
   if (solution_status == 0) {
     const double opt_value =
         obj_sense_changed ? tableau[0][var_total_num] : -tableau[0][var_total_num];
-    std::vector<int> indices(basic_vars.size());
+    std::vector<int> indices(basic_var_index.size());
     std::iota(indices.begin(), indices.end(), 0); // fill the range sequentially with a start value
     // there is a lambda function below
     // class attribute vectors should use [this], not [&basic_vars]
-    std::ranges::sort(
-        indices, [this](const int i1, const int i2) { return basic_vars[i1] < basic_vars[i2]; });
+    std::ranges::sort(indices, [this](const int i1, const int i2) {
+      return basic_var_index[i1] < basic_var_index[i2];
+    });
 
     std::cout << std::string(50, '*') << std::endl;
     std::cout << "The optimal value is: " << opt_value << std::endl;
     std::cout << std::endl;
     std::cout << "The final basic variables and the corresponding values:\n";
-    for (int i = 0; i < basic_vars.size(); i++) {
-      const int var_index = basic_vars[indices[i]];
-      if (var_index < var_total_num - var_artificial_num - var_slack_num) {
+    for (int i = 0; i < basic_var_index.size(); i++) {
+      const int var_index = basic_var_index[indices[i]];
+      if (var_index < var_total_num - var_num_artificial - var_num_slack) {
         double value = tableau[indices[i] + 1][var_total_num];
         if (var_index > threshold and
             front_unsigned_num[var_index] - front_unsigned_num[var_index - 1] > threshold)
           value = -value;
         std::cout << "x" << (var_index + 1 - front_unsigned_num[var_index]) << " = " << value
                   << std::endl;
-      } else if (var_index < var_total_num - var_artificial_num)
-        std::cout << "s" << (var_index - var_original_num - var_unsigned_num + 1) << " = "
+      } else if (var_index < var_total_num - var_num_artificial)
+        std::cout << "s" << (var_index - var_num_start - var_num_unsigned + 1) << " = "
                   << tableau[indices[i] + 1][var_total_num] << std::endl;
     }
   }
 }
 
 // 初始化基变量
-void Simplex::initializeBasicVariables() {
-  basic_vars.resize(constraint_num, -1);
+void Simplex::initializeBasicVars() {
+  basic_var_index.resize(constraint_num, -1);
   for (int i = 0; i < constraint_num; i++) {
     for (int j = 0; j < var_total_num; j++) {
       if (isBasicVariable(j) == i) {
-        basic_vars[i] = j;
+        basic_var_index[i] = j;
         break;
       }
     }
@@ -416,12 +431,12 @@ void Simplex::standardize() {
         con_lhs[j].insert(it2, -con_lhs[j][i]);
       }
       var_total_num++;
-      var_unsigned_num++;
+      var_num_unsigned++;
       if (i == 0)
         front_unsigned_num.emplace_back(0);
       else
         front_unsigned_num.emplace_back(front_unsigned_num.back());
-      front_unsigned_num.emplace_back(var_unsigned_num);
+      front_unsigned_num.emplace_back(var_num_unsigned);
       i++;
       break;
     }
@@ -455,23 +470,25 @@ void Simplex::standardize() {
       break;
     default: // ==
       con_slack_coe.emplace_back(0);
-      bool only_one = true; // 判断是否存在已有的变量可以作为初始基变量
+      bool exist_basic_var = true; // 判断是否存在已有的变量可以作为初始基变量
       for (size_t i = 0; i < var_total_num; i++) {
-        only_one = true;
+        exist_basic_var = true;
         if (std::abs(con_lhs[j][i] - 1.0) > threshold) {
-          only_one = false;
+          exist_basic_var = false;
         } else {
           for (size_t k = 0; k < constraint_num; k++)
             if (k != j and std::abs(con_lhs[k][i]) > threshold) {
-              only_one = false;
+              exist_basic_var = false;
               break;
             }
         }
-        if (only_one)
+        if (exist_basic_var)
           break;
       }
-      if (!only_one)
+      if (!exist_basic_var)
         con_artificial_coe.emplace_back(1);
+      else
+        con_artificial_coe.emplace_back(0);
       break;
     }
 
@@ -481,7 +498,7 @@ void Simplex::standardize() {
   for (size_t i = 0; i < con_slack_coe.size(); i++) {
     if (con_slack_coe[i] != 0) {
       obj_coe.emplace_back(0);
-      var_slack_num++;
+      var_num_slack++;
       for (size_t j = 0; j < constraint_num; j++) {
         if (j == i)
           con_lhs[j].emplace_back(con_slack_coe[i]);
@@ -494,7 +511,7 @@ void Simplex::standardize() {
   for (size_t i = 0; i < con_artificial_coe.size(); i++) {
     if (con_artificial_coe[i] != 0) {
       obj_coe.emplace_back(0);
-      var_artificial_num++;
+      var_num_artificial++;
       for (size_t j = 0; j < constraint_num; j++) {
         if (j == i)
           con_lhs[j].emplace_back(con_artificial_coe[i]);
@@ -505,7 +522,7 @@ void Simplex::standardize() {
   }
 
   // initialize tableau
-  var_total_num += var_artificial_num + var_slack_num;
+  var_total_num += var_num_artificial + var_num_slack;
   tableau.resize(constraint_num + 1);
   for (size_t i = 0; i <= constraint_num; i++) {
     tableau[i].resize(var_total_num + 1);
@@ -519,16 +536,15 @@ void Simplex::standardize() {
       tableau[i][var_total_num] = con_rhs[i - 1];
     }
   }
-  initializeBasicVariables();
+  initializeBasicVars();
 }
 
 void Simplex::print() const {
-  const int var_original_num = var_total_num - var_slack_num - var_artificial_num;
   if (obj_sense == 0)
     std::cout << "min    ";
   else
     std::cout << "max    ";
-  for (int i = 0; i < var_original_num; i++) {
+  for (int i = 0; i < var_num_start; i++) {
     if (std::abs(-1 - obj_coe[i]) < threshold)
       std::cout << "- ";
     else if (std::abs(1 - obj_coe[i]) > threshold)
@@ -555,7 +571,7 @@ void Simplex::print() const {
   std::cout << std::endl;
   std::cout << "s.t." << std::endl;
   for (int j = 0; j < constraint_num; j++) {
-    for (size_t i = 0; i < var_original_num; i++) {
+    for (size_t i = 0; i < var_num_start; i++) {
       if (std::abs(-1 - con_lhs[j][i]) < threshold)
         std::cout << "-";
       else if (std::abs(1 - con_lhs[j][i]) > threshold && con_lhs[j][i] > -threshold)
@@ -563,12 +579,12 @@ void Simplex::print() const {
       else if (std::abs(1 - con_lhs[j][i]) > threshold && con_lhs[j][i] < -threshold)
         std::cout << "-" << -con_lhs[j][i];
       std::cout << "x_" << (i + 1);
-      if (i != var_original_num - 1 && con_lhs[j][i + 1] > -threshold)
+      if (i != var_num_start - 1 && con_lhs[j][i + 1] > -threshold)
         std::cout << " + ";
-      if (i != var_original_num - 1 && con_lhs[j][i + 1] < -threshold)
+      if (i != var_num_start - 1 && con_lhs[j][i + 1] < -threshold)
         std::cout << " ";
     }
-    if (var_slack_num > 1e-1) {
+    if (var_num_slack > 1e-1) {
       int slack_count = 0;
       for (size_t k = 0; k <= j; k++) {
         if (std::abs(con_slack_coe[k]) > threshold)
@@ -581,14 +597,14 @@ void Simplex::print() const {
           std::cout << " + s_" << (slack_count);
         else if (std::abs(-1 - con_slack_coe[j]) < threshold)
           std::cout << " -s_" << (slack_count);
-        for (int m = slack_count + 1; m <= var_slack_num; m++)
+        for (int m = slack_count + 1; m <= var_num_slack; m++)
           std::cout << " + 0s_" << (m);
       } else {
-        for (int m = 0; m < var_slack_num; m++)
+        for (int m = 0; m < var_num_slack; m++)
           std::cout << " + 0s_" << (m + 1);
       }
     }
-    if (var_artificial_num > 1e-1) {
+    if (var_num_artificial > 1e-1) {
       artificial_count = 0;
       for (size_t k = 0; k <= j; k++) {
         if (std::abs(con_artificial_coe[k]) > threshold)
@@ -598,10 +614,10 @@ void Simplex::print() const {
         for (int m = 0; m < artificial_count - 1; m++)
           std::cout << " + 0a_" << (m + 1);
         std::cout << " + a_" << (artificial_count);
-        for (int m = artificial_count + 1; m <= var_artificial_num; m++)
+        for (int m = artificial_count + 1; m <= var_num_artificial; m++)
           std::cout << " + 0a_" << (m);
       } else {
-        for (int m = 0; m < var_artificial_num; m++)
+        for (int m = 0; m < var_num_artificial; m++)
           std::cout << " + 0a_" << (m + 1);
       }
     }
@@ -618,7 +634,7 @@ void Simplex::print() const {
     }
     std::cout << con_rhs[j] << std::endl;
   }
-  for (int i = 0; i < var_original_num; i++) {
+  for (int i = 0; i < var_num_start; i++) {
     if (var_sign[i] != 2 && i != 0)
       std::cout << ", ";
     if (var_sign[i] == 0)
@@ -646,9 +662,9 @@ void Simplex::print() const {
 // return -1 if no artificial variable in the basic variables, else return the row index of the
 // first artificial variable in the tableau
 int Simplex::artificialIndexInBasicVars() {
-  for (int i = var_total_num - var_artificial_num; i < var_total_num; i++) {
-    if (auto it = std::ranges::find(basic_vars, i); it != basic_vars.end()) {
-      const size_t index = std::distance(basic_vars.begin(), it);
+  for (int i = var_total_num - var_num_artificial; i < var_total_num; i++) {
+    if (auto it = std::ranges::find(basic_var_index, i); it != basic_var_index.end()) {
+      const size_t index = std::distance(basic_var_index.begin(), it);
       return static_cast<int>(index + 1);
     }
   }
@@ -710,114 +726,136 @@ double Simplex::testWeb() const { // NOLINT(*-convert-member-functions-to-static
   return sum;
 }
 
-// int main() {
-//   // 初始化单纯形表
-//   // 标准化的单纯性表，目标函数为 max
-//   // 目标函数: max z = 2x1 + 3x2 转换为 z -2x1 - 3x2
-//   // 约束: 2x1 + x2 + s1 = 4
-//   //       x1 + 2x2 + s2 = 5
-//
-//   // constexpr int obj_sense = 1;
-//   // const std::vector obj_coe = {2.0, 3.0};
-//   // const std::vector<std::vector<double>> con_lhs = {{2, 1}, {1, 2}};
-//   // const std::vector con_rhs = {4.0, 5.0};
-//   // const std::vector constraint_sense = {0, 0};
-//   // const std::vector var_sign = {0, 0};
-//
-//   constexpr int obj_sense = 0;
-//   const std::vector obj_coe = {50.0, 20.0, 30.0, 80.0};
-//   const std::vector<std::vector<double>> con_lhs = {
-//       {400, 200, 100, 500}, {3, 2, 0, 0}, {2, 2, 4, 4}, {2, 4, 1, 5}};
-//   const std::vector con_rhs = {500.0, 6.0, 10.0, 8.0};
-//   const std::vector constraint_sense = {1, 1, 1, 1};
-//   const std::vector var_sign = {0, 0, 0, 0};
-//
-//   // constexpr int obj_sense = 1;
-//   // const std::vector obj_coe = {1.0, 1.0, 0.0, 0.0};
-//   // const std::vector<std::vector<double>> con_lhs = {
-//   //     {1, 2, 3, 0}, {-1, 2, 6, 0}, {0, 4, 9, 0}, {0, 0, 3, 1}};
-//   // const std::vector con_rhs = {3.0, 2.0, 5.0, 1.0};
-//   // const std::vector constraint_sense = {2, 2, 2, 2};
-//   // const std::vector var_sign = {0, 0, 0, 0};
-//
-//   // constexpr int obj_sense = 1;
-//   // const std::vector obj_coe = {-3.0, 0.0, 1.0};
-//   // const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
-//   // const std::vector con_rhs = {4.0, 1.0, 9.0};
-//   // const std::vector constraint_sense = {0, 1, 2};
-//   // const std::vector var_sign = {0, 0, 0};
-//
-//   // constexpr int obj_sense = 0;
-//   // const std::vector obj_coe = {2.0, 3.0, 1.0};
-//   // const std::vector<std::vector<double>> con_lhs = {{1, 4, 2}, {3, 2, 0}};
-//   // const std::vector con_rhs = {8.0, 6.0};
-//   // const std::vector constraint_sense = {1, 1};
-//   // const std::vector var_sign = {0, 0, 0};
-//
-//   // constexpr int obj_sense = 1; // 0: min, 1: max
-//   // const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
-//   // const std::vector<std::vector<double>> con_lhs = {
-//   //     {1.0, 0.0, 1.0, 0, 0},
-//   //     {0, 2.0, 0, 1.0, 0.0},
-//   //     {3, 2.0, 0, 0.0, 1.0},
-//   // };
-//   // const std::vector con_rhs = {4.0, 12.0, 18.0};
-//   // const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
-//   // const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
-//
-//   auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign);
-//   model.checkInput();
-//   std::cout << "original model is:" << std::endl;
-//   model.print();
-//
-//   model.standardize();
-//   std::cout << std::string(50, '*') << std::endl;
-//   std::cout << "the standardized model is:" << std::endl;
-//   model.print();
-//   // model.setAntiCycle(AntiCycle::Bland);
-//   model.solve();
-//   model.displaySolution();
-//   if (bool_record_tableau) {
-//     model.printAllTableau();
-//   }
-//
-//   // const std::vector<std::vector<double>> tableau = {
-//   //     {-2, -3, 0, 0, 0}, // 目标函数 z -2x1 - 3x2
-//   //     {2, 1, 1, 0, 4},   // 约束1
-//   //     {1, 2, 0, 1, 5}    // 约束2
-//   // };
-//   //
-//   // Simplex simplex(tableau);
-//   // simplex.initializeBasicVariables();
-//   // simplex.solve();
-//   // std::cout << "****************************" << std::endl;
-//
-//   // // 初始化单纯形表
-//   // //  目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + M*a1 + M*a2 + z = 0
-//   // //  约束: x1+x2 >= 2, i.e.,  x1 + x2 - s1 + a1 = 2
-//   // //       2x1+x2 = 4, i.e., 2x1 + x2 + a2 = 4
-//   // const std::vector<std::vector<double>> tableau2 = {
-//   //     {-2, -3, 1, -M, -M, 0}, // 目标函数 (x1, x2, s1, a1, a2, z)
-//   //     {1, 1, -1, 1, 0, 2},    // 约束1
-//   //     {2, 1, 0, 0, 1, 4}      // 约束2
-//   // };
-//   // Simplex simplex2(tableau2);
-//   // simplex2.solve();
-//   //
-//   // std::cout << "****************************" << std::endl;
-//   // // test recycling
-//   // // maximize z = (3/4)x1 -20x2 + (1/2)x3 -6x4 subject to
-//   // // (1 / 4)x1 - 8x2 - x3 + 9x4 <= 0
-//   // // (1 / 2)x1 - 12x2 - (1 / 2)x3 + 3x4 <= 0
-//   // // x3 <= 1
-//   // const std::vector<std::vector<double>> tableau3 = {
-//   //     {-3.0 / 4, 20, -1.0 / 2, 6, 0, 0, 0, 0}, // 目标函数
-//   //     {1.0 / 4, -8, -1, 9, 1, 0, 0, 0},        // 约束1
-//   //     {1.0 / 2, -12, -1.0 / 2, 3, 0, 1, 0, 0}, // 约束2
-//   //     {0, 0, 1, 0, 0, 0, 1, 1}                 // 约束3
-//   // };
-//   //
-//   // Simplex simplex3(tableau3);
-//   // simplex3.solve();
-//   return 0;
-// }
+int main() {
+  // 初始化单纯形表
+  // 标准化的单纯性表，目标函数为 max
+  // 目标函数: max z = 2x1 + 3x2 转换为 z -2x1 - 3x2
+  // 约束: 2x1 + x2 + s1 = 4
+  //       x1 + 2x2 + s2 = 5
+
+  // constexpr int obj_sense = 1;
+  // const std::vector obj_coe = {2.0, 3.0};
+  // const std::vector<std::vector<double>> con_lhs = {{2, 1}, {1, 2}};
+  // const std::vector con_rhs = {4.0, 5.0};
+  // const std::vector constraint_sense = {0, 0};
+  // const std::vector var_sign = {0, 0};
+
+  // constexpr int obj_sense = 1; // 0: min, 1: max
+  // const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
+  // const std::vector<std::vector<double>> con_lhs = {
+  //     {1.0, 0.0, 1.0, 0, 0},
+  //     {0, 2.0, 0, 1.0, 0.0},
+  //     {3, 2.0, 0, 0.0, 1.0},
+  // };
+  // const std::vector con_rhs = {4.0, 12.0, 18.0};
+  // const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
+  // const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
+
+  // constexpr int obj_sense = 0;
+  // const std::vector obj_coe = {50.0, 20.0, 30.0, 80.0};
+  // const std::vector<std::vector<double>> con_lhs = {
+  //     {400, 200, 100, 500}, {3, 2, 0, 0}, {2, 2, 4, 4}, {2, 4, 1, 5}};
+  // const std::vector con_rhs = {500.0, 6.0, 10.0, 8.0};
+  // const std::vector constraint_sense = {1, 1, 1, 1};
+  // const std::vector var_sign = {0, 0, 0, 0};
+
+  // constexpr int obj_sense = 1; // two-stage
+  // const std::vector obj_coe = {1.0, 5.0, 3.0};
+  // const std::vector<std::vector<double>> con_lhs = {
+  //     {1, 2, 1},
+  //     {2, -1, 0},
+  // };
+  // const std::vector con_rhs = {3.0, 4.0};
+  // const std::vector constraint_sense = {2, 2};
+  // const std::vector var_sign = {0, 0, 0};
+
+  // constexpr int obj_sense = 1; // cycling
+  // const std::vector<double> obj_coe = {3.0 / 4, -20, 1.0 / 2, -6};
+  // const std::vector<std::vector<double>> con_lhs = {
+  //     {1.0 / 4, -8, -1, 9}, {1.0 / 2, -12, -1.0 / 2, 3}, {0, 0, 1, 0}};
+  // const std::vector con_rhs = {0.0, 0.0, 1.0};
+  // const std::vector constraint_sense = {0, 0, 0};
+  // const std::vector var_sign = {0, 0, 0, 0};
+
+  constexpr int obj_sense = 0; // two-stage with column and row elimination
+  const std::vector obj_coe = {1.0, 1.0, 1.0, 0.0};
+  const std::vector<std::vector<double>> con_lhs = {
+      {1, 2, 3, 0}, {-1, 2, 6, 0}, {0, 4, 9, 0}, {0, 0, 3, 1}};
+  const std::vector con_rhs = {3.0, 2.0, 5.0, 1.0};
+  const std::vector constraint_sense = {2, 2, 2, 2};
+  const std::vector var_sign = {0, 0, 0, 0};
+
+  // constexpr int obj_sense = 1;
+  // const std::vector obj_coe = {-3.0, 0.0, 1.0};
+  // const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
+  // const std::vector con_rhs = {4.0, 1.0, 9.0};
+  // const std::vector constraint_sense = {0, 1, 2};
+  // const std::vector var_sign = {0, 0, 0};
+
+  // constexpr int obj_sense = 0;
+  // const std::vector obj_coe = {2.0, 3.0, 1.0};
+  // const std::vector<std::vector<double>> con_lhs = {{1, 4, 2}, {3, 2, 0}};
+  // const std::vector con_rhs = {8.0, 6.0};
+  // const std::vector constraint_sense = {1, 1};
+  // const std::vector var_sign = {0, 0, 0};
+
+  auto model = Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign);
+  model.checkInput();
+  std::cout << "original model is:" << std::endl;
+  model.print();
+
+  model.standardize();
+  std::cout << std::string(50, '*') << std::endl;
+  std::cout << "the standardized model is:" << std::endl;
+  model.print();
+  // model.setAntiCycle(AntiCycle::Bland);
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  model.solve();
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  model.displaySolution();
+  if (bool_record_tableau)
+    model.printAllTableau();
+  const std::chrono::duration<double> diff = end_time - start_time;
+  std::cout << std::fixed << std::setprecision(6) << "cpu time is: " << diff.count() << " seconds"
+            << std::endl;
+
+  // const std::vector<std::vector<double>> tableau = {
+  //     {-2, -3, 0, 0, 0}, // 目标函数 z -2x1 - 3x2
+  //     {2, 1, 1, 0, 4},   // 约束1
+  //     {1, 2, 0, 1, 5}    // 约束2
+  // };
+  //
+  // Simplex simplex(tableau);
+  // simplex.initializeBasicVariables();
+  // simplex.solve();
+  // std::cout << "****************************" << std::endl;
+
+  // // 初始化单纯形表
+  // //  目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + M*a1 + M*a2 + z = 0
+  // //  约束: x1+x2 >= 2, i.e.,  x1 + x2 - s1 + a1 = 2
+  // //       2x1+x2 = 4, i.e., 2x1 + x2 + a2 = 4
+  // const std::vector<std::vector<double>> tableau2 = {
+  //     {-2, -3, 1, -M, -M, 0}, // 目标函数 (x1, x2, s1, a1, a2, z)
+  //     {1, 1, -1, 1, 0, 2},    // 约束1
+  //     {2, 1, 0, 0, 1, 4}      // 约束2
+  // };
+  // Simplex simplex2(tableau2);
+  // simplex2.solve();
+  //
+  // std::cout << "****************************" << std::endl;
+  // // test recycling
+  // // maximize z = (3/4)x1 -20x2 + (1/2)x3 -6x4 subject to
+  // // (1 / 4)x1 - 8x2 - x3 + 9x4 <= 0
+  // // (1 / 2)x1 - 12x2 - (1 / 2)x3 + 3x4 <= 0
+  // // x3 <= 1
+  // const std::vector<std::vector<double>> tableau3 = {
+  //     {-3.0 / 4, 20, -1.0 / 2, 6, 0, 0, 0, 0}, // 目标函数
+  //     {1.0 / 4, -8, -1, 9, 1, 0, 0, 0},        // 约束1
+  //     {1.0 / 2, -12, -1.0 / 2, 3, 0, 1, 0, 0}, // 约束2
+  //     {0, 0, 1, 0, 0, 0, 1, 1}                 // 约束3
+  // };
+  //
+  // Simplex simplex3(tableau3);
+  // simplex3.solve();
+  return 0;
+}

@@ -26,22 +26,8 @@ add_executable(${PROJECT_NAME}
 # 编译cpp为js:
 # 1. 激活环境
 # D:\chenzhen\emsdk-main\emsdk_env.bat
-# 2. 然后运行下面命令
-# emcc simplex.cpp -o simplex.js -std=c++20 -s MODULARIZE=1 -s EXPORT_NAME="simplexModule" --bind -O3
-
-# 或者按下面步骤生成到那个build 文件夹里
-## Emscripten 的编译设置
-#set_target_properties(${PROJECT_NAME} PROPERTIES
-#        LINK_FLAGS "--bind -s MODULARIZE=1 -s EXPORT_NAME=simplexModule"
-#        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/dist"
-#)
-# 有时需要重新删除那个 build 文件夹
-# 1. 激活环境
-# D:\chenzhen\emsdk-main\emsdk_env.bat
-# 2. 配置
-# emcmake cmake -B build -S .
-# 3. 编译
-# cmake --build build
+# 2. 然后在命令行运行下面命令
+# python D:\chenzhen\emsdk-main\upstream\emscripten\emcc.py simplex.cpp -o simplex.js -std=c++20 -s MODULARIZE=1 -s EXPORT_NAME="simplexModule" -s ALLOW_MEMORY_GROWTH=1 --bind -O3
 
 # 这几个路径可能没啥用
 #include_directories(
