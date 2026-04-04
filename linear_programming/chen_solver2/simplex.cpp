@@ -15,38 +15,37 @@
 #include <numeric>
 #include <optional>
 
-// 转化成js时多维数组不能作为全局变量
-// 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm 文件
-// #include <emscripten/bind.h>
-// using namespace emscripten;
-//
-// // 使用 Emscripten 绑定暴露 Simplex 类和 solve 函数
-// // 必须注册才能调用
-// EMSCRIPTEN_BINDINGS(simplex_module) {
-//   // 注册 vector 类型，相当于在js中重新定义了几个数据类型
-//   register_vector<double>("VectorDouble");
-//   register_vector<int>("VectorInt");
-//   register_vector<std::vector<double>>("VectorVectorDouble");
-//   register_vector<std::vector<int>>("VectorVectorInt");
-//   register_vector<std::vector<std::vector<double>>>("VectorVectorVectorDouble");
-//
-//   // 注册类
-//   class_<Simplex>("Simplex")
-//       .constructor<int, std::vector<double>, std::vector<std::vector<double>>,
-//       std::vector<double>,
-//                    std::vector<int>, std::vector<int>, int>() // 这个是类的构造函数
-//       // 注册类里面的函数
-//       // 前面的字符串名字是 js 里面使用的名字
-//       .function("solve", &Simplex::solve)
-//       .function("standardize", &Simplex::standardize)
-//       .function("getStatus", &Simplex::getStatus)
-//       .function("getOptValue", &Simplex::getOptValue)
-//       .function("getBasicVars", &Simplex::getBasicVarsIndices)
-//       .function("getRecordedTableau", &Simplex::get_recorded_tableau)
-//       .function("getOptSolution", &Simplex::getOptSolution)
-//       .function("getTime", &Simplex::getTime)
-//       .function("getPivotIndex", &Simplex::get_recorded_pivot);
-// }
+// 转化成js时多维数组不能作为全局变量 下面 emcc 的一些命令显示红字是正常的，通过命令行生成 js，wasm
+//     文件
+#include <emscripten/bind.h>
+using namespace emscripten;
+
+// 使用 Emscripten 绑定暴露 Simplex 类和 solve 函数
+// 必须注册才能调用
+EMSCRIPTEN_BINDINGS(simplex_module) {
+  // 注册 vector 类型，相当于在js中重新定义了几个数据类型
+  register_vector<double>("VectorDouble");
+  register_vector<int>("VectorInt");
+  register_vector<std::vector<double>>("VectorVectorDouble");
+  register_vector<std::vector<int>>("VectorVectorInt");
+  register_vector<std::vector<std::vector<double>>>("VectorVectorVectorDouble");
+
+  // 注册类
+  class_<Simplex>("Simplex")
+      .constructor<int, std::vector<double>, std::vector<std::vector<double>>, std::vector<double>,
+                   std::vector<int>, std::vector<int>, int>() // 这个是类的构造函数
+      // 注册类里面的函数
+      // 前面的字符串名字是 js 里面使用的名字
+      .function("solve", &Simplex::solve)
+      .function("standardize", &Simplex::standardize)
+      .function("getStatus", &Simplex::getStatus)
+      .function("getOptValue", &Simplex::getOptValue)
+      .function("getBasicVars", &Simplex::getBasicVarsIndices)
+      .function("getRecordedTableau", &Simplex::get_recorded_tableau)
+      .function("getOptSolution", &Simplex::getOptSolution)
+      .function("getTime", &Simplex::getTime)
+      .function("getPivotIndex", &Simplex::get_recorded_pivot);
+}
 
 // -------------------------
 // non-class functions
@@ -341,7 +340,6 @@ void Simplex::firstStage() {
   tableau[0] = reduced_cost_stage2;
 
   if (anti_cycle_rule == 0 and bool_record_tableau) {
-    recorded_pivot.clear();
     recorded_basic_var_index.clear();
   }
 
@@ -784,123 +782,130 @@ bool detectCycling(std::vector<int> current_basis, std::set<std::vector<int>> ba
   return false;
 }
 
-int main() {
-  // 初始化单纯形表
-  // 标准化的单纯性表，目标函数为 max
-  // 目标函数: max z = 2x1 + 3x2 转换为 z -2x1 - 3x2
-  // 约束: 2x1 + x2 + s1 = 4
-  //       x1 + 2x2 + s2 = 5
-
-  // constexpr int obj_sense = 1;
-  // const std::vector obj_coe = {2.0, 3.0};
-  // const std::vector<std::vector<double>> con_lhs = {{2, 1}, {1, 2}};
-  // const std::vector con_rhs = {4.0, 5.0};
-  // const std::vector constraint_sense = {0, 0};
-  // const std::vector var_sign = {0, 0};
-
-  // constexpr int obj_sense = 1; // 0: min, 1: max, basic var already
-  // const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
-  // const std::vector<std::vector<double>> con_lhs = {
-  //     {1.0, 0.0, 1.0, 0, 0},
-  //     {0, 2.0, 0, 1.0, 0.0},
-  //     {3, 2.0, 0, 0.0, 1.0},
-  // };
-  // const std::vector con_rhs = {4.0, 12.0, 18.0};
-  // const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
-  // const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
-
-  // constexpr int obj_sense = 0;
-  // const std::vector obj_coe = {50.0, 20.0, 30.0, 80.0}; // two-stage
-  // const std::vector<std::vector<double>> con_lhs = {
-  //     {400, 200, 100, 500}, {3, 2, 0, 0}, {2, 2, 4, 4}, {2, 4, 1, 5}};
-  // const std::vector con_rhs = {500.0, 6.0, 10.0, 8.0};
-  // const std::vector constraint_sense = {1, 1, 1, 1};
-  // const std::vector var_sign = {0, 0, 0, 0};
-
-  // constexpr int obj_sense = 1; // two-stage
-  // const std::vector obj_coe = {1.0, 5.0, 3.0};
-  // const std::vector<std::vector<double>> con_lhs = {
-  //     {1, 2, 1},
-  //     {2, -1, 0},
-  // };
-  // const std::vector con_rhs = {3.0, 4.0};
-  // const std::vector constraint_sense = {2, 2};
-  // const std::vector var_sign = {0, 0, 0};
-
-  constexpr int obj_sense = 1; // cycling
-  const std::vector<double> obj_coe = {0.75, -20, 0.5, -6};
-  const std::vector<std::vector<double>> con_lhs = {
-      {0.25, -8, -1, 9}, {0.5, -12, -0.5, 3}, {0, 0, 1, 0}};
-  const std::vector con_rhs = {0.0, 0.0, 1.0};
-  const std::vector constraint_sense = {0, 0, 0};
-  const std::vector var_sign = {0, 0, 0, 0};
-
-  // constexpr int obj_sense = 0; // two-stage with column and row elimination
-  // const std::vector obj_coe = {1.0, 1.0, 1.0, 0.0};
-  // const std::vector<std::vector<double>> con_lhs = {
-  //     {1, 2, 3, 0}, {-1, 2, 6, 0}, {0, 4, 9, 0}, {0, 0, 3, 1}};
-  // const std::vector con_rhs = {3.0, 2.0, 5.0, 1.0};
-  // const std::vector constraint_sense = {2, 2, 2, 2};
-  // const std::vector var_sign = {0, 0, 0, 0};
-
-  // constexpr int obj_sense = 1;
-  // const std::vector obj_coe = {-3.0, 0.0, 1.0};
-  // const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
-  // const std::vector con_rhs = {4.0, 1.0, 9.0};
-  // const std::vector constraint_sense = {0, 1, 2};
-  // const std::vector var_sign = {0, 0, 0};
-
-  // constexpr int obj_sense = 0;
-  // const std::vector obj_coe = {2.0, 3.0, 1.0};
-  // const std::vector<std::vector<double>> con_lhs = {{1, 4, 2}, {3, 2, 0}};
-  // const std::vector con_rhs = {8.0, 6.0};
-  // const std::vector constraint_sense = {1, 1};
-  // const std::vector var_sign = {0, 0, 0};
-
-  auto model =
-      Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign, anti_cycle_rule);
-  model.checkInput();
-  std::cout << "original model is:" << std::endl;
-  model.print();
-
-  model.standardize();
-  std::cout << std::string(50, '*') << std::endl;
-  std::cout << "the standardized model is:" << std::endl;
-  model.print();
-  const auto start_time = std::chrono::high_resolution_clock::now();
-  model.solve();
-  const auto end_time = std::chrono::high_resolution_clock::now();
-  model.displaySolution();
-  if (bool_record_tableau)
-    model.printAllTableau();
-  const std::chrono::duration<double> diff = end_time - start_time;
-  std::cout << std::fixed << std::setprecision(6) << "cpu time is: " << diff.count() << "seconds"
-            << std::endl;
-
-  // // 初始化单纯形表
-  // //  目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + M*a1 + M*a2 + z =
-  // 0
-  // //  约束: x1+x2 >= 2, i.e.,  x1 + x2 - s1 + a1 = 2
-  // //       2x1+x2 = 4, i.e., 2x1 + x2 + a2 = 4
-  // const std::vector<std::vector<double>> tableau2 = {
-  //     {-2, -3, 1, -M, -M, 0}, // 目标函数 (x1, x2, s1, a1, a2, z)
-  //     {1, 1, -1, 1, 0, 2},    // 约束1
-  //     {2, 1, 0, 0, 1, 4}      // 约束2
-  // };
-  // Simplex simplex2(tableau2);
-  // simplex2.solve();
-  //
-  return 0;
-
-  // const std::vector<std::vector<double>> A = {{1, 0, 2}, {0, 3, 0}, {4,
-  // 0, 5}};
-  //
-  // const CSC csc = denseToCSC(A);
-  // printCSC(csc);
-  // for (int i = 0; i < A.size(); i++) {
-  //   std::cout << std::endl;
-  //   for (int j = 0; j < A[0].size(); j++) {
-  //     std::cout << getValue(csc, i, j) << " ";
-  //   }
-  // }
-}
+// int main() {
+//   // 初始化单纯形表
+//   // 标准化的单纯性表，目标函数为 max
+//   // 目标函数: max z = 2x1 + 3x2 转换为 z -2x1 - 3x2
+//   // 约束: 2x1 + x2 + s1 = 4
+//   //       x1 + 2x2 + s2 = 5
+//
+//   // constexpr int obj_sense = 1;
+//   // const std::vector obj_coe = {2.0, 3.0};
+//   // const std::vector<std::vector<double>> con_lhs = {{2, 1}, {1, 2}};
+//   // const std::vector con_rhs = {4.0, 5.0};
+//   // const std::vector constraint_sense = {0, 0};
+//   // const std::vector var_sign = {0, 0};
+//
+//   // constexpr int obj_sense = 1; // 0: min, 1: max, basic var already
+//   // const std::vector obj_coe = {3.0, 5.0, 0.0, 0.0, 0.0};
+//   // const std::vector<std::vector<double>> con_lhs = {
+//   //     {1.0, 0.0, 1.0, 0, 0},
+//   //     {0, 2.0, 0, 1.0, 0.0},
+//   //     {3, 2.0, 0, 0.0, 1.0},
+//   // };
+//   // const std::vector con_rhs = {4.0, 12.0, 18.0};
+//   // const std::vector constraint_sense = {2, 2, 2}; // 0:<=, 1: >=, 2: =
+//   // const std::vector var_sign = {0, 0, 0, 0, 0};   // 0: >=, 1: <=, 2: unsigned
+//
+//   // constexpr int obj_sense = 0;
+//   // const std::vector obj_coe = {50.0, 20.0, 30.0, 80.0}; // two-stage
+//   // const std::vector<std::vector<double>> con_lhs = {
+//   //     {400, 200, 100, 500}, {3, 2, 0, 0}, {2, 2, 4, 4}, {2, 4, 1, 5}};
+//   // const std::vector con_rhs = {500.0, 6.0, 10.0, 8.0};
+//   // const std::vector constraint_sense = {1, 1, 1, 1};
+//   // const std::vector var_sign = {0, 0, 0, 0};
+//
+//   // constexpr int obj_sense = 1; // two-stage
+//   // const std::vector obj_coe = {1.0, 5.0, 3.0};
+//   // const std::vector<std::vector<double>> con_lhs = {
+//   //     {1, 2, 1},
+//   //     {2, -1, 0},
+//   // };
+//   // const std::vector con_rhs = {3.0, 4.0};
+//   // const std::vector constraint_sense = {2, 2};
+//   // const std::vector var_sign = {0, 0, 0};
+//
+//   // constexpr int obj_sense = 1; // cycling
+//   // const std::vector<double> obj_coe = {0.75, -20, 0.5, -6};
+//   // const std::vector<std::vector<double>> con_lhs = {
+//   //     {0.25, -8, -1, 9}, {0.5, -12, -0.5, 3}, {0, 0, 1, 0}};
+//   // const std::vector con_rhs = {0.0, 0.0, 1.0};
+//   // const std::vector constraint_sense = {0, 0, 0};
+//   // const std::vector var_sign = {0, 0, 0, 0};
+//
+//   constexpr int obj_sense = 1; // unsigned
+//   const std::vector<double> obj_coe = {-4, 10, -5};
+//   const std::vector<std::vector<double>> con_lhs = {{-1, 2, -1}, {1, 3, -1}, {0, -1, 2}};
+//   const std::vector con_rhs = {-2.0, 14.0, 2.0};
+//   const std::vector constraint_sense = {2, 0, 1};
+//   const std::vector var_sign = {0, 0, 2};
+//
+//   // constexpr int obj_sense = 0; // two-stage with column and row elimination
+//   // const std::vector obj_coe = {1.0, 1.0, 1.0, 0.0};
+//   // const std::vector<std::vector<double>> con_lhs = {
+//   //     {1, 2, 3, 0}, {-1, 2, 6, 0}, {0, 4, 9, 0}, {0, 0, 3, 1}};
+//   // const std::vector con_rhs = {3.0, 2.0, 5.0, 1.0};
+//   // const std::vector constraint_sense = {2, 2, 2, 2};
+//   // const std::vector var_sign = {0, 0, 0, 0};
+//
+//   // constexpr int obj_sense = 1;
+//   // const std::vector obj_coe = {-3.0, 0.0, 1.0};
+//   // const std::vector<std::vector<double>> con_lhs = {{1, 1, 1}, {-2, 1, -1}, {0, 3, 1}};
+//   // const std::vector con_rhs = {4.0, 1.0, 9.0};
+//   // const std::vector constraint_sense = {0, 1, 2};
+//   // const std::vector var_sign = {0, 0, 0};
+//
+//   // constexpr int obj_sense = 0;
+//   // const std::vector obj_coe = {2.0, 3.0, 1.0};
+//   // const std::vector<std::vector<double>> con_lhs = {{1, 4, 2}, {3, 2, 0}};
+//   // const std::vector con_rhs = {8.0, 6.0};
+//   // const std::vector constraint_sense = {1, 1};
+//   // const std::vector var_sign = {0, 0, 0};
+//
+//   auto model =
+//       Simplex(obj_sense, obj_coe, con_lhs, con_rhs, constraint_sense, var_sign, anti_cycle_rule);
+//   model.checkInput();
+//   std::cout << "original model is:" << std::endl;
+//   model.print();
+//
+//   model.standardize();
+//   std::cout << std::string(50, '*') << std::endl;
+//   std::cout << "the standardized model is:" << std::endl;
+//   model.print();
+//   const auto start_time = std::chrono::high_resolution_clock::now();
+//   model.solve();
+//   const auto end_time = std::chrono::high_resolution_clock::now();
+//   model.displaySolution();
+//   if (bool_record_tableau)
+//     model.printAllTableau();
+//   const std::chrono::duration<double> diff = end_time - start_time;
+//   std::cout << std::fixed << std::setprecision(6) << "cpu time is: " << diff.count() << "seconds"
+//             << std::endl;
+//
+//   // // 初始化单纯形表
+//   // //  目标函数: max z = 2x1 + 3x2 转换为 -2x1 - 3x2 + M*a1 + M*a2 + z =
+//   // 0
+//   // //  约束: x1+x2 >= 2, i.e.,  x1 + x2 - s1 + a1 = 2
+//   // //       2x1+x2 = 4, i.e., 2x1 + x2 + a2 = 4
+//   // const std::vector<std::vector<double>> tableau2 = {
+//   //     {-2, -3, 1, -M, -M, 0}, // 目标函数 (x1, x2, s1, a1, a2, z)
+//   //     {1, 1, -1, 1, 0, 2},    // 约束1
+//   //     {2, 1, 0, 0, 1, 4}      // 约束2
+//   // };
+//   // Simplex simplex2(tableau2);
+//   // simplex2.solve();
+//   //
+//   return 0;
+//
+//   // const std::vector<std::vector<double>> A = {{1, 0, 2}, {0, 3, 0}, {4,
+//   // 0, 5}};
+//   //
+//   // const CSC csc = denseToCSC(A);
+//   // printCSC(csc);
+//   // for (int i = 0; i < A.size(); i++) {
+//   //   std::cout << std::endl;
+//   //   for (int j = 0; j < A[0].size(); j++) {
+//   //     std::cout << getValue(csc, i, j) << " ";
+//   //   }
+//   // }
+// }
