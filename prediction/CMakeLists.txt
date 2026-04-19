@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(chen_solver2) # 设置运行程序的名字
+project(prediction) # 设置运行程序的名字
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,8 +13,7 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        simplex.cpp
-        ../../prediction/statistic_predict.h
+        statistic_predict.cpp
 
 )
 

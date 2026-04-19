@@ -37,11 +37,11 @@ public:
                const double fix_order_cost, const double unit_vari_order_cost,
                const double unit_hold_cost, const double unit_penalty_cost,
                const double truncated_quantile, const double max_I, const double min_I,
-               std::vector<std::vector<std::array<double, 2>>> pmf)
+               const std::vector<std::vector<std::array<double, 2>>> &pmf)
       : T(static_cast<int>(T)), capacity(capacity), stepSize(stepSize),
         fix_order_cost(fix_order_cost), unit_vari_order_cost(unit_vari_order_cost),
         unit_hold_cost(unit_hold_cost), unit_penalty_cost(unit_penalty_cost),
-        truncated_quantile(truncated_quantile), max_I(max_I), min_I(min_I), pmf(std::move(pmf)) {};
+        truncated_quantile(truncated_quantile), max_I(max_I), min_I(min_I), pmf(pmf) {};
 
   NewsvendorDP(const size_t T, const double capacity, const double stepSize,
                const double fix_order_cost, const double unit_vari_order_cost,

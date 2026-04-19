@@ -13,18 +13,18 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        ../../utils/pmf.cpp
-        ../states/state.cpp
+        #        ../../utils/pmf.cpp
+        #        ../states/state.cpp
 
         #        newsvendor_c.c
         #        newsvendor_vanilla.c
         #        heuristic1997.cpp
-        newsvendor_capacity.cpp
-        #        newsvendor_vanillalla.cpp
-        newsvendor.h
+        #        newsvendor_capacity.cpp
+        newsvendor_vanilla.cpp
+        #        newsvendor.h
         #
-        ../../utils/draw_graph.cpp
-        ../../utils/Kconvexity.cpp
+        #        ../../utils/draw_graph.cpp
+        #        ../../utils/Kconvexity.cpp
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )
