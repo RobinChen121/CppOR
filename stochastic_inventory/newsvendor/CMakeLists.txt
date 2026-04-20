@@ -13,18 +13,18 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        #        ../../utils/pmf.cpp
-        #        ../states/state.cpp
+        ../../utils/pmf.cpp
+        ../states/state.cpp
 
         #        newsvendor_c.c
         #        newsvendor_vanilla.c
         #        heuristic1997.cpp
-        #        newsvendor_capacity.cpp
-        newsvendor_vanilla.cpp
+        newsvendor_capacity.cpp
+        #        newsvendor_vanilla.cpp
         #        newsvendor.h
         #
-        #        ../../utils/draw_graph.cpp
-        #        ../../utils/Kconvexity.cpp
+        ../../utils/draw_graph.cpp
+        ../../utils/Kconvexity.cpp
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )
@@ -38,8 +38,19 @@ if (MSVC)
             D:/local/boost_1_90_0
     )
 else ()
+    # 1. 寻找 Boost 库
+    # 如果你需要特定的组件（如 system, filesystem），在后面加上 COMPONENTS
     find_package(Boost REQUIRED)
-    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+
+    # 2. 包含头文件路径
+    include_directories(${Boost_INCLUDE_DIRS})
+
+    # 3. 链接库
+    # Boost::boost 是一个虚拟目标，它会自动处理头文件搜索路径
+    # 避免 boost 升级路径错误
+    target_link_libraries(${PROJECT_NAME}
+            Boost::boost
+    )
 endif ()
 
 
@@ -50,11 +61,11 @@ if (MSVC)
 endif ()
 if (APPLE)
     # python head file
-    include_directories(/opt/anaconda3/envs/py312/include/python3.12)
+    include_directories(/opt/anaconda3/include/python3.13)
     # numpy head file
-    include_directories(/opt/anaconda3/envs/py312/lib/python3.12/site-packages/numpy/_core/include)
+    include_directories(/opt/anaconda3/lib/python3.13/site-packages/numpy/_core/include)
     target_link_libraries(${PROJECT_NAME}
-            /opt/anaconda3/envs/py312/lib/libpython3.12.dylib
+            /opt/anaconda3/lib/libpython3.13.dylib
             dl
     )
 elseif (MSVC)

@@ -40,7 +40,7 @@
 #include <mutex>
 #include <thread>
 
-std::vector<double> NewsvendorDP::get_feasible_actions() const {
+std::vector<double> NewsvendorDP::feasibleActions() const {
   const int QNum = static_cast<int>(capacity / stepSize);
   std::vector<double> actions(QNum);
   for (int i = 0; i < QNum; i = i + 1) {
@@ -49,8 +49,8 @@ std::vector<double> NewsvendorDP::get_feasible_actions() const {
   return actions;
 }
 
-State NewsvendorDP::state_transition_function(const State &state, const double action,
-                                              const double demand) const {
+State NewsvendorDP::stateTransitionFunction(const State &state, const double action,
+                                            const double demand) const {
   double next_inventory = state.get_ini_inventory() + action - demand;
   if (compute_Gy == true and state.getPeriod() == 1) // affect computational time very much
     next_inventory = state.get_ini_inventory() - demand;
