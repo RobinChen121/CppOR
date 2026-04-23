@@ -17,7 +17,7 @@ class Predictor {
 public:
   explicit Predictor(const std::vector<double> &data) : data(data) {};
 
-  std::vector<double> singleExponentialSmooth(double alpha, int forecast_step) const;
+  [[nodiscard]] std::vector<double> singleSmooth(double alpha) const;
 };
 
 #endif // CHEN_SOLVER_JS_STATISTIC_PREDICT_H

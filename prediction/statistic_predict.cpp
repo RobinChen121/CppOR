@@ -12,8 +12,7 @@
 #include <stdexcept>
 #include <vector>
 
-std::vector<double> Predictor::singleExponentialSmooth(const double alpha,
-                                                       const int forecast_step) const {
+std::vector<double> Predictor::singleSmooth(const double alpha) const {
   const int n = data.size();
   std::vector<double> smooth(n + 1);
 
@@ -25,17 +24,7 @@ std::vector<double> Predictor::singleExponentialSmooth(const double alpha,
     smooth[t] = alpha * data[t - 1] + (1 - alpha) * smooth[t - 1];
   }
 
-  // 预测结果（长度 = 历史 + forecast_step）
-  std::vector<double> result = smooth;
-
-  const double last_s = smooth.back();
-
-  // 未来预测：SES 的预测是常数（= 最后一个平滑值）
-  for (int i = 0; i < forecast_step; ++i) {
-    result.push_back(last_s);
-  }
-
-  return result;
+  return smooth;
 }
 
 int main() {
@@ -43,7 +32,7 @@ int main() {
 
   const Predictor model(data);
 
-  auto result = model.singleExponentialSmooth(0.3, 3);
+  auto result = model.singleExponentialSmooth(0.3);
 
   for (const double v : result) {
     std::cout << v << " ";
