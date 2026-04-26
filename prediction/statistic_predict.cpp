@@ -9,11 +9,26 @@
 #include "statistic_predict.h"
 
 #include <iostream>
-#include <stdexcept>
 #include <vector>
 
+#include <emscripten/bind.h>
+using namespace emscripten;
+// 使用 Emscripten 绑定暴露 Simplex 类和 solve 函数
+// 必须注册才能调用
+EMSCRIPTEN_BINDINGS(predict_module) {
+  // 注册 vector 类型，相当于在js中重新定义了几个数据类型
+  register_vector<double>("VectorDouble");
+
+  // 注册类
+  class_<Predictor>("Predictor")
+      .constructor<std::vector<double>>() // 这个是类的构造函数
+      // 注册类里面的函数
+      // 前面的字符串名字是 js 里面使用的名字
+      .function("singleSmooth", &Predictor::singleSmooth);
+}
+
 std::vector<double> Predictor::singleSmooth(const double alpha) const {
-  const int n = data.size();
+  const size_t n = data.size();
   std::vector<double> smooth(n + 1);
 
   // 初始化：常见做法是 S0 = y0
@@ -27,16 +42,16 @@ std::vector<double> Predictor::singleSmooth(const double alpha) const {
   return smooth;
 }
 
-int main() {
-  std::vector<double> data = {10, 12, 13, 12, 14, 16};
-
-  const Predictor model(data);
-
-  auto result = model.singleExponentialSmooth(0.3);
-
-  for (const double v : result) {
-    std::cout << v << " ";
-  }
-
-  return 0;
-}
+// int main() {
+//   std::vector<double> data = {10, 12, 13, 12, 14, 16};
+//
+//   const Predictor model(data);
+//
+//   auto result = model.singleSmooth(0.3);
+//
+//   for (const double v : result) {
+//     std::cout << v << " ";
+//   }
+//
+//   return 0;
+// }
