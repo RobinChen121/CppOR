@@ -22,4 +22,4 @@ add_executable(${PROJECT_NAME}
 # 1. 激活环境
 # D:\chenzhen\emsdk-main\emsdk_env.bat
 # 2. 然后在命令行运行下面命令，下面是适用于 react的，多了一个
-# python D:\chenzhen\emsdk-main\upstream\emscripten\emcc.py statistic_predict.cpp -o predict.js -std=c++20 -s MODULARIZE=1 -s EXPORT_NAME="predictModule" -s ALLOW_MEMORY_GROWTH=1 --bind -O3 -s ENVIRONMENT=web
+# python D:\chenzhen\emsdk-main\upstream\emscripten\emcc.py statistic_predict.cpp -o predict.js -std=c++20 -s MODULARIZE=1 -s EXPORT_NAME="wasmPredict" -s ALLOW_MEMORY_GROWTH=1 --bind -O3 -s ENVIRONMENT=web

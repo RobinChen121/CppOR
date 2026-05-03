@@ -123,6 +123,8 @@ Thumbs.db
 *.ninja_deps
 *.ninja_log
 *.log
+*.js
+*.wasm
 
 # CLion / CMake build directories
 **/cmake-build-debug/

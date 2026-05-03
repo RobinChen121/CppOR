@@ -22,6 +22,8 @@ using namespace emscripten;
 
 // 使用 Emscripten 绑定暴露 Simplex 类和 solve 函数
 // 必须注册才能调用
+// simplex_module is just a unique identifier for the binding block,
+// it is useless
 EMSCRIPTEN_BINDINGS(simplex_module) {
   // 注册 vector 类型，相当于在js中重新定义了几个数据类型
   register_vector<double>("VectorDouble");
