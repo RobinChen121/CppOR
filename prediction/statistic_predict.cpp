@@ -6,18 +6,16 @@
  *
  */
 
+#include "linear_regression.h"
 #include <iostream>
 #include <vector>
 
-int matrixStatus = 0; // 全局变量，0 正常， 1 为奇异矩阵
 // declare first
 std::vector<double> singleSmooth(const std::vector<double> &data, double alpha, int n_forecast);
 std::vector<double> doubleSmooth(const std::vector<double> &data, double alpha, double beta,
                                  int n_forecast);
 std::vector<double> TripleSmooth(const std::vector<double> &series, int season_len, double alpha,
                                  double beta, double gamma, int n_forecast);
-std::vector<double> linearRegression(const std::vector<double> &X_raw, const std::vector<double> &y,
-                                     int n_samples, int n_features);
 
 #include <emscripten/bind.h>
 // wasm_predict is just a unique identifier for the binding block,
@@ -29,8 +27,23 @@ EMSCRIPTEN_BINDINGS(wasm_predict) {
   // 注册函数
   emscripten::function("singleSmooth", &singleSmooth);
   emscripten::function("doubleSmooth", &doubleSmooth);
-  emscripten::function("linearRegression", &linearRegression);
-};
+
+  emscripten::class_<LinearRegression>("Regression") // 引号里是 js 调用时用的名称
+      .constructor<std::vector<double>,
+                   std::vector<double>>() // 这个是类的构造函数，() 非常关键，它代表了
+                                          // “执行注册操作” 注册类里面的函数 前面的字符串名字是 js
+      // 里面使用的名字
+      .function("regression", &LinearRegression::linearRegression);
+}
+
+// 注册结构体
+// emscripten::value_object<RegressionResult>("RegressionResult")
+//     .field("weights", &RegressionResult::weights)
+//     .field("status", &RegressionResult::status);
+
+// 注册全局变量，不推荐
+// 作为只读常量 constant (JS 不能修改它)，若要修改需要注册为 property
+// emscripten::constant("matrixStatus", matrixStatus);
 
 /**************************************/
 // linear regression by matrix
@@ -139,7 +152,7 @@ int getIndex(const int row_index, const int col_index, const int col_num) {
 
 // 高斯-约当消元法（含主元选择），针对连续内存优化
 // res 是 A 的逆矩阵
-std::vector<double> invert(const std::vector<double> &A, const int col_num) {
+std::vector<double> LinearRegression::invert(const std::vector<double> &A, const int col_num) {
   std::vector<double> temp = A;
   std::vector<double> res(col_num * col_num, 0.0);
   for (int i = 0; i < col_num; ++i)
@@ -156,7 +169,7 @@ std::vector<double> invert(const std::vector<double> &A, const int col_num) {
 
     // 检查矩阵是否奇异
     if (std::abs(temp[getIndex(pivot, i, col_num)]) < 1e-12) {
-      matrixStatus = 1;
+      matrix_status = 1;
       return {};
     }
 
@@ -189,10 +202,10 @@ std::vector<double> invert(const std::vector<double> &A, const int col_num) {
 }
 
 // 训练函数：输入一维化的 X 和 Y
-std::vector<double> linearRegression(const std::vector<double> &X_raw, const std::vector<double> &y,
-                                     const int n_samples, const int n_features) {
-  if (static_cast<int>(X_raw.size()) != n_samples * n_features || y.size() != n_samples) {
-    matrixStatus = 2;
+std::vector<double> LinearRegression::linearRegression(const int n_features) {
+  const size_t n_samples = vector_y.size();
+  if (static_cast<int>(vector_X.size()) != n_samples * n_features || vector_y.size() != n_samples) {
+    matrix_status = 2;
     return {};
   }
 
@@ -203,7 +216,7 @@ std::vector<double> linearRegression(const std::vector<double> &X_raw, const std
   for (int i = 0; i < n_samples; ++i) {
     X[getIndex(i, 0, dim)] = 1.0; // 截距项
     for (int j = 0; j < n_features; ++j) {
-      X[getIndex(i, j + 1, dim)] = X_raw[getIndex(i, j, n_features)];
+      X[getIndex(i, j + 1, dim)] = vector_X[getIndex(i, j, n_features)];
     }
   }
 
@@ -224,7 +237,7 @@ std::vector<double> linearRegression(const std::vector<double> &X_raw, const std
   std::vector<double> XTy(dim, 0.0);
   for (int i = 0; i < dim; ++i) {
     for (int k = 0; k < n_samples; ++k) {
-      XTy[i] += X[getIndex(k, i, dim)] * y[k];
+      XTy[i] += X[getIndex(k, i, dim)] * vector_y[k];
     }
   }
 
@@ -407,9 +420,9 @@ std::vector<double> tripleSmooth(const std::vector<double> &series, const int se
 //
 //   std::cout << "**********************" << std::endl;
 //   // 示例数据: y = 5 + 2*x1 + 0.5*x2
-//   const int n_samples = static_cast<int>(X.size());
 //   const int n_features = static_cast<int>(X[0].size());
-//   const Vector weights = linearRegression(toVector(X), y, n_samples, n_features);
+//   LinearRegression model(toVector(X), y);
+//   const Vector weights = model.linearRegression(n_features);
 //
 //   std::cout << "Intercept: " << weights[0] << "\nWeights: ";
 //   for (size_t i = 1; i < weights.size(); ++i)

@@ -129,3 +129,5 @@ Thumbs.db
 # CLion / CMake build directories
 **/cmake-build-debug/
 **/cmake-build-release/
+*.js
+*.wasm
