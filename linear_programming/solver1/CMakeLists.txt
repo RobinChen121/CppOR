@@ -1,3 +1,4 @@
+# using matrix in this solver and initialize new class instances each stage in the two stage solving
 cmake_minimum_required(VERSION 3.30)
 project(chen_solver) # 设置运行程序的名字
 
