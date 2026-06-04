@@ -38,7 +38,7 @@ int poisson_quantile(const double p, const double lambda) {
 }
 
 // 一个 const 函数 通常指的是一个 成员函数，它承诺不会修改类的成员数据
-std::vector<double> generate_samples_poisson(const int sample_nums, const double mean) {
+std::vector<double> generateSamplesPoisson(const int sample_nums, const double mean) {
   std::vector<double> samples(sample_nums);
   // 创建随机数引擎
   std::random_device rd;  // 随机设备，用来生成随机种子
@@ -84,8 +84,8 @@ int rand_uniform(const int a, const int b) {
   return random_number;
 }
 
-std::vector<std::vector<int>> generate_scenario_paths(const int scenario_num,
-                                                      const std::vector<int> &sample_nums) {
+std::vector<std::vector<int>> generateScenarioPaths(const int scenario_num,
+                                                    const std::vector<int> &sample_nums) {
   const size_t T = sample_nums.size();
   std::vector<std::vector<int>> scenario_paths(scenario_num);
   for (int i = 0; i < scenario_num; ++i) {

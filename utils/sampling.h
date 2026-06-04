@@ -18,14 +18,14 @@
 double poisson_cdf(int k, double lambda);
 
 int poisson_quantile(double p, double lambda);
-std::vector<double> generate_samples_poisson(int sample_nums, double mean);
+std::vector<double> generateSamplesPoisson(int sample_nums, double mean);
 std::vector<double> generateSamplesSelfDiscrete(const int num_samples,
                                                 const std::vector<double> &values,
                                                 const std::vector<double> &weights);
 
 int rand_uniform(int a, int b);
 
-std::vector<std::vector<int>> generate_scenario_paths(int scenario_num,
-                                                      const std::vector<int> &sample_nums);
+std::vector<std::vector<int>> generateScenarioPaths(int scenario_num,
+                                                    const std::vector<int> &sample_nums);
 
 #endif // SAMPLING_H
