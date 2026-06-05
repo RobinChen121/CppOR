@@ -4,6 +4,7 @@
  * Description:
  * without removing duplicate constraints, running time is 2.2s while 0.83s for
  * removing.
+ * single product with lead time = 1;
  *
  */
 #include "single_product.h"

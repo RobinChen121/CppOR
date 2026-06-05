@@ -10,6 +10,8 @@
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 
+#include <numeric>
+
 std::array<double, 2> Newsvendor::solve() const {
   const std::vector sample_nums(T, sample_num);
   std::vector<std::vector<double>> sample_details(T);
@@ -57,12 +59,135 @@ std::array<double, 2> Newsvendor::solve() const {
   double slopes[iter_num][T][forward_num];
   double q_values[iter_num][T][forward_num];
   double I_forward_values[iter_num][T][forward_num];
+  double B_forward_values[iter_num][T][forward_num];
 
   int iter = 0;
   while (iter < iter_num) {
     auto scenario_paths = generateScenarioPaths(forward_num, sample_nums);
+
+    if (iter > 0) {
+      models[0].addConstr(theta[0] >= slopes[iter - 1][0][0] * q[0] + intercepts[iter - 1][0][0]);
+      models[0].update();
+    }
+    models[0].optimize();
+
+    for (int n = 0; n < forward_num; n++) {
+      q_values[iter][0][n] = q[0].get(GRB_DoubleAttr_X);
+    }
+
+    // forward
+    for (int t = 1; t < T + 1; t++) {
+      std::vector cut_coefficients(forward_num, std::vector<double>(2, 0));
+      for (int n = 0; n < forward_num; n++) {
+        cut_coefficients[n][0] = slopes[iter - 1][t][n];
+        cut_coefficients[n][1] = intercepts[iter - 1][t][n];
+      };
+
+      // without enhancement
+      for (auto &coefficient : cut_coefficients) {
+        models[t].addConstr(theta[t] >=
+                            coefficient[0] * (I[t - 1] - B[t - 1] + q[t]) + coefficient[1]);
+      }
+
+      for (int n = 0; n < forward_num; n++) {
+        int index = scenario_paths[n][t - 1];
+        double demand = sample_details[t - 1][index];
+        if (t < T)
+          models[t].setObjective(unit_vari_costs[t] * q[t] +
+                                 unit_backorder_costs[t - 1] * B[t - 1] +
+                                 unit_holding_costs[t - 1] * I[t - 1] + theta[t]);
+        else {
+          models[t].setObjective(unit_backorder_costs[t - 1] * B[t - 1] +
+                                 unit_holding_costs[t - 1] * I[t - 1]);
+        }
+
+        double rhs = t == 1 ? ini_I - demand + q_values[iter][t - 1][n]
+                            : I_forward_values[iter][t - 2][n] - B_forward_values[iter][t - 2][n] +
+                                  q_values[iter][t - 1][n] - demand;
+
+        models[t].getConstr(0).set(GRB_DoubleAttr_RHS, rhs);
+        models[t].update();
+        models[t].optimize();
+
+        if (models[t].get(GRB_IntAttr_SolCount) == 1) {
+          I_forward_values[iter][t - 1][n] = I[t - 1].get(GRB_DoubleAttr_X);
+          B_forward_values[iter][t - 1][n] = B[t - 1].get(GRB_DoubleAttr_X);
+          if (t < T)
+            q_values[iter][t][n] = q[t].get(GRB_DoubleAttr_X);
+        }
+      }
+    }
+
+    // backward
+    std::vector intercepts_detail(T, std::vector<std::vector<double>>(forward_num));
+    std::vector slopes_detail(T, std::vector<std::vector<double>>(forward_num));
+    for (int t = 0; t < T; t++) {
+      for (int n = 0; n < forward_num; n++) {
+        intercepts_detail[t][n].resize(sample_nums[t]);
+        slopes_detail[t][n].resize(sample_nums[t]);
+      }
+    }
+
+    for (size_t t = T; t > 0; t--) {
+      for (int n = 0; n < forward_num; n++) {
+        size_t S = sample_details[t - 1].size();
+        for (size_t s = 0; s < S; s++) {
+          auto demand = sample_details[t - 1][s];
+          double rhs = t == 1
+                           ? ini_I - demand + q_values[iter][t - 1][n]
+                           : I_forward_values[iter][t - 2][n] - B_forward_values[iter][t - 2][n] +
+                                 q_values[iter][t - 1][n] - demand;
+          models[t].getConstr(0).set(GRB_DoubleAttr_RHS, rhs);
+          models[t].update();
+          models[t].optimize();
+
+          int pi_num = models[t].get(GRB_IntAttr_NumConstrs);
+          double pi[pi_num];
+          double rhs_detail[pi_num];
+          for (int p = 0; p < pi_num; p++) {
+            GRBConstr constraint = models[t].getConstr(p);
+            pi[p] = constraint.get(GRB_DoubleAttr_Pi);
+            rhs_detail[p] = constraint.get(GRB_DoubleAttr_RHS);
+          }
+          intercepts_detail[t - 1][n][s] = -pi[0] * demand;
+          for (size_t k = 1; k < pi_num; k++)
+            intercepts_detail[t - 1][n][s] += pi[k] * rhs_detail[k];
+          slopes_detail[t - 1][n][s] = pi[0];
+        }
+
+        double avg_intercept;
+        double avg_slope;
+        for (size_t s = 0; s < S; s++) {
+          double sum = std::accumulate(intercepts_detail[t - 1][n].begin(),
+                                       intercepts_detail[t - 1][n].end(), 0.0);
+          avg_intercept = sum / static_cast<double>(S);
+          sum =
+              std::accumulate(slopes_detail[t - 1][n].begin(), slopes_detail[t - 1][n].end(), 0.0);
+          avg_slope = sum / static_cast<double>(S);
+        }
+        slopes[iter][t - 1][n] = avg_slope;
+        intercepts[iter][t - 1][n] = avg_intercept;
+      }
+    }
+    iter++;
   }
-  return {};
+  double final_value = -models[0].get(GRB_DoubleAttr_ObjVal);
+  double Q1 = q_values[iter - 1][0][0];
+  return {final_value, Q1};
 }
 
-int main() { return 0; }
+int main() {
+  const Newsvendor single_product;
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  const auto result = single_product.solve();
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> diff = end_time - start_time;
+  std::cout << "********************************************" << std::endl;
+  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+  std::cout << "final expected cash balance is " << result[0] << std::endl;
+  std::cout << "ordering Q in the first period is " << result[1] << std::endl;
+  double optimal_value = 167.31;
+  double gap = (result[0] - optimal_value) / optimal_value;
+  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+  return 0;
+}

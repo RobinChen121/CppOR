@@ -3,8 +3,9 @@
  * Email: chen.zhen5526@gmail.com
  * Description: vanilla version of DP for newsvendor;
  *
- * 40 periods, running time under serial computing is 0.29s(dell):
-* std::vector<double> demands(40, 20);
+ * 40 periods, running time under serial computing is 0.29s(dell), 0.21s(apple m1)
+ *
+ * std::vector<double> demands(40, 20);
   const std::string distribution_type = "poisson";
   constexpr int capacity = 150; // maximum ordering quantity
   constexpr double stepSize = 1.0;
@@ -15,8 +16,8 @@
   constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
   constexpr double maxI = 100;             // maximum possible inventory
   constexpr double minI = -100;            // minimum possible inventory
- *
- *
+  *
+  *
  */
 
 #include <array>
@@ -24,6 +25,7 @@
 #include <chrono>
 #include <iostream>
 #include <limits>
+#include <numeric>
 #include <unordered_map>
 
 double poissonCDF(const int k, const double lambda) {
@@ -88,7 +90,7 @@ class State {
   double ini_inventory{};
 
 public:
-  State() {}
+  State() = default;
 
   explicit State(const int period, const double ini_inventory)
       : period(period), ini_inventory(ini_inventory) {};
@@ -130,7 +132,7 @@ template <> struct std::hash<State> {
 
 class NewsvendorDP {
   size_t T;
-  double capacity;
+  int capacity;
   double fix_order_cost;
   double unit_vari_order_cost;
   double unit_hold_cost;
@@ -145,24 +147,32 @@ class NewsvendorDP {
   std::unordered_map<State, double> cache_actions;
   std::unordered_map<State, double> cache_values;
 
+  std::vector<int> feasible_actions;
+
 public:
-  NewsvendorDP(const size_t T, const double capacity, const double fix_order_cost,
+  NewsvendorDP(const size_t T, const int capacity, const double fix_order_cost,
                const double unit_vari_order_cost, const double unit_hold_cost,
                const double unit_penalty_cost, const double truncated_quantile, const double max_I,
                const double min_I, const std::vector<std::vector<std::array<double, 2>>> &pmf)
       : T(static_cast<int>(T)), capacity(capacity), fix_order_cost(fix_order_cost),
         unit_vari_order_cost(unit_vari_order_cost), unit_hold_cost(unit_hold_cost),
         unit_penalty_cost(unit_penalty_cost), truncated_quantile(truncated_quantile), max_I(max_I),
-        min_I(min_I), pmf(pmf) {};
+        min_I(min_I), pmf(pmf) {
+    feasible_actions.resize(capacity + 1);
+    // iota: Fills the range [first, last) with sequentially increasing values, starting with value
+    // (last argument) and repetitively evaluating ++value
+    std::iota(feasible_actions.begin(), feasible_actions.end(), 0);
+  };
 
-  [[nodiscard]] std::vector<double> feasibleActions() const {
-    const int QNum = static_cast<int>(capacity);
-    std::vector<double> actions(QNum);
-    for (int i = 0; i < QNum; i = i + 1) {
-      actions[i] = i;
-    }
-    return actions;
-  }
+  // 可以在类构件时预生成，避免重复调用这个函数
+  // [[nodiscard]] std::vector<double> feasibleActions() const {
+  //   const int QNum = static_cast<int>(capacity + 1);
+  //   std::vector<double> actions(QNum);
+  //   for (int i = 0; i < QNum; i = i + 1) {
+  //     actions[i] = i;
+  //   }
+  //   return actions;
+  // }
 
   [[nodiscard]] State stateTransitionFunction(const State &state, const double action,
                                               const double demand) const {
@@ -173,9 +183,9 @@ public:
 
     const int nextPeriod = state.getPeriod() + 1;
     // C++11 引入了统一的列表初始化（Uniform Initialization），鼓励使用大括号 {} 初始化类
-    const auto newState = State{nextPeriod, nextInventory};
+    const auto new_state = State{nextPeriod, nextInventory};
 
-    return newState;
+    return new_state;
   }
 
   [[nodiscard]] double immediateValueFunction(const State &state, const double action,
@@ -195,18 +205,17 @@ public:
   double recursion(const State &state) { // NOLINT
     double bestQ = 0.0;
     double bestValue = std::numeric_limits<double>::max();
-    const std::vector<double> actions = feasibleActions(); // should not move inside
-    for (const double action : actions) {
+    for (const int action : feasible_actions) {
       double thisValue = 0;
       for (auto demandAndProb : pmf[state.getPeriod() - 1]) {
         thisValue += demandAndProb[1] * immediateValueFunction(state, action, demandAndProb[0]);
         if (state.getPeriod() < T) {
-          auto newState = stateTransitionFunction(state, action, demandAndProb[0]);
-          auto it = cache_values.find(newState);
+          auto new_state = stateTransitionFunction(state, action, demandAndProb[0]);
+          auto it = cache_values.find(new_state);
           if (it != cache_values.end()) {
             thisValue += demandAndProb[1] * it->second;
           } else {
-            thisValue += demandAndProb[1] * recursion(newState);
+            thisValue += demandAndProb[1] * recursion(new_state);
           }
         }
       }
