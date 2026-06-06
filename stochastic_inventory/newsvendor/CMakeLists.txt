@@ -10,6 +10,24 @@ else ()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
+# 为不同平台配置 ASan 标志
+# 启用会影响速度
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if (APPLE)
+        # Mac 上的 Clang
+        add_compile_options(-fsanitize=address -g -fno-omit-frame-pointer)
+        add_link_options(-fsanitize=address)
+    elseif (MSVC)
+        # Windows 上的 MSVC
+        # /fsanitize=address 会自动包含调试信息并优化堆栈帧
+        add_compile_options(/fsanitize=address)
+        # 注意：MSVC 不需要额外的链接标志，编译器会自动处理
+    else ()
+        # Linux 上的 GCC/Clang (通用处理)
+        add_compile_options(-fsanitize=address -g -fno-omit-frame-pointer)
+        add_link_options(-fsanitize=address)
+    endif ()
+endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
@@ -20,7 +38,8 @@ add_executable(${PROJECT_NAME}
         #        newsvendor_vanilla.c
         #        heuristic1997.cpp
         #        newsvendor_capacity.cpp
-        newsvendor_vanilla.cpp
+        newsvendor_vanilla_vector.cpp
+        #        newsvendor_vanilla.cpp
         #        newsvendor.h
         #
         #        ../../utils/draw_graph.cpp

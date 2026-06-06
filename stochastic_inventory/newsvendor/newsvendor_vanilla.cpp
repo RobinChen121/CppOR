@@ -1,7 +1,7 @@
 ﻿/*
  * Created by Zhen Chen on 2025/12/24.
  * Email: chen.zhen5526@gmail.com
- * Description: vanilla version of DP for newsvendor;
+ * Description: vanilla version of DP for newsvendor, using unordered map;
  *
  * 40 periods, running time under serial computing is 0.29s(dell), 0.21s(apple m1)
  *
@@ -20,6 +20,7 @@
   *
  */
 
+#include <algorithm>
 #include <array>
 #include <boost/functional/hash.hpp>
 #include <chrono>
@@ -178,8 +179,9 @@ public:
                                               const double demand) const {
     double nextInventory = state.get_ini_inventory() + action - demand;
 
-    nextInventory = nextInventory > max_I ? max_I : nextInventory;
-    nextInventory = nextInventory < min_I ? min_I : nextInventory;
+    // nextInventory = nextInventory > max_I ? max_I : nextInventory;
+    // nextInventory = nextInventory < min_I ? min_I : nextInventory;
+    nextInventory = std::ranges::clamp(nextInventory, min_I, max_I);
 
     const int nextPeriod = state.getPeriod() + 1;
     // C++11 引入了统一的列表初始化（Uniform Initialization），鼓励使用大括号 {} 初始化类
@@ -193,8 +195,9 @@ public:
     const double fixCost = action > 0 ? fix_order_cost : 0;
     const double variCost = action * unit_vari_order_cost;
     double nextInventory = state.get_ini_inventory() + action - demand;
-    nextInventory = nextInventory > max_I ? max_I : nextInventory;
-    nextInventory = nextInventory < min_I ? min_I : nextInventory;
+    // nextInventory = nextInventory > max_I ? max_I : nextInventory;
+    // nextInventory = nextInventory < min_I ? min_I : nextInventory;
+    nextInventory = std::ranges::clamp(nextInventory, min_I, max_I);
     const double holdCost = std::max(unit_hold_cost * nextInventory, 0.0);
     const double penaltyCost = std::max(-unit_penalty_cost * nextInventory, 0.0);
 
@@ -208,6 +211,9 @@ public:
     for (const int action : feasible_actions) {
       double thisValue = 0;
       for (auto demandAndProb : pmf[state.getPeriod() - 1]) {
+        // immediateValueFunction 与 stateTransitionFunction 里面对 nextInventory 有重复计算，
+        // 若修改的话，得修改这两个函数的传递参数为 nextInventory，而 nextInventory
+        // 在这里面计算，麻烦没必要.
         thisValue += demandAndProb[1] * immediateValueFunction(state, action, demandAndProb[0]);
         if (state.getPeriod() < T) {
           auto new_state = stateTransitionFunction(state, action, demandAndProb[0]);
