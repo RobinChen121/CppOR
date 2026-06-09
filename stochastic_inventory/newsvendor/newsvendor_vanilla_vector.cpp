@@ -6,7 +6,8 @@
  * using 2D vector is 0.077s;
  * using 1D vector can be much faster 0.056s;
  * using pointer to access vector values can be faster further 0.04s.
- * 40 periods, running time under serial computing is 0.035s(dell), a little faster than Julia 0.05s
+ * 40 periods, running time under serial computing is 0.035s(dell), a little faster than Julia
+ * 0.048s
  *
  *
  */
@@ -77,8 +78,8 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 }
 
 int main() {
-  constexpr int T = 40;
-  constexpr double mean_demand = 20.0;
+  constexpr int T = 2;
+  constexpr double mean_demand = 10.0;
   const std::vector demands(T, mean_demand);
 
   constexpr int capacity = 150;
@@ -87,7 +88,7 @@ int main() {
   constexpr double hold_cost = 2.0;
   constexpr double penalty_cost = 10.0;
   constexpr double truncQuantile = 0.9999;
-  const double INF = 1e100;
+  constexpr double INF = 1e100;
 
   constexpr int min_I = -100;
   constexpr int max_I = 100;

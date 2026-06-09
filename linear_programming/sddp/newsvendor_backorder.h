@@ -14,7 +14,7 @@
 
 class Newsvendor {
   double ini_I = 0.0;
-  int T = 10;
+  int T = 1;
   std::vector<double> unit_vari_costs = std::vector(T, 1.0);
   std::vector<double> unit_holding_costs = std::vector(T, 2.0);
   std::vector<double> unit_backorder_costs = std::vector(T, 10.0);

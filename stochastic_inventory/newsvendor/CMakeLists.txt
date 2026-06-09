@@ -4,6 +4,8 @@ project(newsvendor) # 设置运行程序的名字
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(/utf-8) # 防止编译乱码
+
 if (MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "/O2")
 else ()
@@ -31,8 +33,8 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        #        ../../utils/pmf.cpp
-        #        ../states/state.cpp
+        ../../utils/pmf.cpp
+        ../states/state.cpp
 
         #        newsvendor_c.c
         #        newsvendor_vanilla.c
@@ -42,8 +44,8 @@ add_executable(${PROJECT_NAME}
         #        newsvendor_vanilla.cpp
         #        newsvendor.h
         #
-        #        ../../utils/draw_graph.cpp
-        #        ../../utils/Kconvexity.cpp
+        ../../utils/draw_graph.cpp
+        ../../utils/Kconvexity.cpp
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )

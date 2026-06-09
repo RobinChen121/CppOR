@@ -5,10 +5,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 
-# 为 Mac 上的 Clang 编译器添加 ASan 标志
+# ==================== 仅在 Debug 模式下启用 ASan ====================
 if (APPLE)
-    add_compile_options(-fsanitize=address -g -fno-omit-frame-pointer)
-    add_link_options(-fsanitize=address)
+    # Mac (Clang): 仅在当前配置为 Debug 时，追加 ASan 编译和链接标志
+    add_compile_options("$<$<CONFIG:Debug>:-fsanitize=address;-g;-fno-omit-frame-pointer>")
+    add_link_options("$<$<CONFIG:Debug>:-fsanitize=address>")
+
+elseif (MSVC)
+    # Windows (MSVC): 仅在当前配置为 Debug 时，追加微软的 ASan 编译和链接标志
+    # 注意：MSVC 多个参数在生成器表达式中需要用分号 ";" 隔开
+    add_compile_options("$<$<CONFIG:Debug>:/fsanitize=address;/Zi;/Oy->")
+    add_link_options("$<$<CONFIG:Debug>:/fsanitize=address>")
 endif ()
 
 add_executable(${PROJECT_NAME} main.cpp)

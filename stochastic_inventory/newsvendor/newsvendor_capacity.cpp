@@ -293,14 +293,15 @@ NewsvendorDP::varyParameter(const std::vector<double> &parameter) {
 
 int main() {
 
-  std::vector<double> demands = {10, 60, 20};
+  // std::vector<double> demands = {10, 60, 20};
+  const auto demands = std::vector<double>(10, 20);
   const int T = static_cast<int>(demands.size());
-  constexpr double capacity = 100; // maximum ordering quantity
-  constexpr double fix_order_cost = 500;
-  constexpr double unitVariOderCost = 0;
+  constexpr double capacity = 150; // maximum ordering quantity
+  constexpr double fix_order_cost = 0;
+  constexpr double unitVariOderCost = 1;
   constexpr double unit_hold_cost = 2;
-  constexpr double unit_penalty_cost = 19;
-  constexpr double maxI = 200;  // maximum possible inventory
+  constexpr double unit_penalty_cost = 10;
+  constexpr double maxI = 100;  // maximum possible inventory
   constexpr double minI = -100; // minimum possible inventory
 
   //  std::vector<double> demands = {40, 80};
@@ -362,7 +363,7 @@ int main() {
 
   const auto arr1 = model.computeGy();
   // (void)check_K_convexity(arr1, fix_order_cost);
-  drawGy(arr1, -100, maxI, fix_order_cost, capacity);
+  drawGy(arr1, minI, maxI, fix_order_cost, capacity);
 
   // std::vector<double> capacities;
   // for (int i = 0; i < 20; i++) {

@@ -10,6 +10,7 @@
 #include "../../utils/sampling.h"
 #include "gurobi_c++.h"
 
+#include <chrono>
 #include <numeric>
 
 std::array<double, 2> Newsvendor::solve() const {
@@ -55,11 +56,11 @@ std::array<double, 2> Newsvendor::solve() const {
     }
   }
 
-  double intercepts[iter_num][T][forward_num];
-  double slopes[iter_num][T][forward_num];
-  double q_values[iter_num][T][forward_num];
-  double I_forward_values[iter_num][T][forward_num];
-  double B_forward_values[iter_num][T][forward_num];
+  std::vector intercepts(iter_num, std::vector(T, std::vector<double>(forward_num, 0.0)));
+  std::vector slopes(iter_num, std::vector(T, std::vector<double>(forward_num, 0.0)));
+  std::vector q_values(iter_num, std::vector(T, std::vector<double>(forward_num, 0.0)));
+  std::vector I_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num, 0.0)));
+  std::vector B_forward_values(iter_num, std::vector(T, std::vector<double>(forward_num, 0.0)));
 
   int iter = 0;
   while (iter < iter_num) {
@@ -70,6 +71,7 @@ std::array<double, 2> Newsvendor::solve() const {
       models[0].update();
     }
     models[0].optimize();
+    models[0].write("iter_" + std::to_string(iter + 1) + ".lp");
 
     for (int n = 0; n < forward_num; n++) {
       q_values[iter][0][n] = q[0].get(GRB_DoubleAttr_X);
@@ -142,8 +144,8 @@ std::array<double, 2> Newsvendor::solve() const {
           models[t].optimize();
 
           int pi_num = models[t].get(GRB_IntAttr_NumConstrs);
-          double pi[pi_num];
-          double rhs_detail[pi_num];
+          std::vector<double> pi(pi_num);
+          std::vector<double> rhs_detail(pi_num);
           for (int p = 0; p < pi_num; p++) {
             GRBConstr constraint = models[t].getConstr(p);
             pi[p] = constraint.get(GRB_DoubleAttr_Pi);

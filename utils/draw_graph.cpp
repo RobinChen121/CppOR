@@ -38,7 +38,7 @@ void drawGy(const std::map<int, double> &arr, const int min_x, const int max_x,
   constexpr double y_max = 10000; // may set according to problem
   constexpr double y_min = -1;    // may set according to problem
   constexpr double y_scale = y_max - y_min;
-  plt::ylim(y_min, y_max);
+  // plt::ylim(y_min, y_max);
 
   const std::vector scatter_x = {s, S};
   const std::vector scatter_y = {arr.at(s), GS};
