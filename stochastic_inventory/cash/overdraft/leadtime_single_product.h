@@ -16,7 +16,7 @@ private:
   double ini_inventory = 0;
   double ini_cash = 0;
   CashLeadtimeState ini_state = CashLeadtimeState{1, ini_inventory, ini_cash, 0.0};
-  std::vector<double> demands = {15.0, 15.0, 15.0, 15.0};
+  std::vector<double> demands = {15.0, 15.0, 15.0};
   std::string distribution_type = "poisson";
   size_t T = demands.size(); // 直接获取大小
 
@@ -46,7 +46,7 @@ private:
 
 public:
   OverdraftLeadtimeSingleProduct() {
-    pmf = PMF(truncated_quantile, step_size).get_pmf_poisson(demands);
+    pmf = PMF(truncated_quantile, step_size).getPMFPoisson(demands);
   }
 
   OverdraftLeadtimeSingleProduct(const std::vector<double> &mean_demands, const double interest,
@@ -54,7 +54,7 @@ public:
       : demands(mean_demands), r1(interest) {
     overhead_costs = std::vector<double>(T, overhead_cost);
     prices = std::vector(T, price);
-    pmf = PMF(truncated_quantile, step_size).get_pmf_poisson(mean_demands);
+    pmf = PMF(truncated_quantile, step_size).getPMFPoisson(mean_demands);
   }
 
   // [[nodiscard]] 表示：“函数的返回值不应该被忽略”

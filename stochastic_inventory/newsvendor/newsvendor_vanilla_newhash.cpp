@@ -1,23 +1,12 @@
-﻿/*
- * Created by Zhen Chen on 2025/12/24.
+/*
+ * Created by Zhen Chen on 2026/6/12.
  * Email: chen.zhen5526@gmail.com
- * Description: vanilla version of DP for newsvendor, using unordered map;
+ * Description: using long long integer hash.
  *
- * 40 periods, running time under serial computing is 0.29s(dell), 0.21s(apple m1)
+ * The running time is almost same with the new hash for this problem. I think it can save time for
+ * the real float states.
  *
- * std::vector<double> demands(40, 20);
-  const std::string distribution_type = "poisson";
-  constexpr int capacity = 150; // maximum ordering quantity
-  constexpr double stepSize = 1.0;
-  constexpr double fix_order_cost = 0;
-  constexpr double unitVariOderCost = 1;
-  constexpr double unit_hold_cost = 2;
-  constexpr double unit_penalty_cost = 10;
-  constexpr double truncQuantile = 0.9999; // truncated quantile for the demand distribution
-  constexpr double maxI = 100;             // maximum possible inventory
-  constexpr double minI = -100;            // minimum possible inventory
-  *
-  *
+ *
  */
 
 #include <algorithm>
@@ -28,6 +17,8 @@
 #include <limits>
 #include <numeric>
 #include <unordered_map>
+
+constexpr double EPS = 1e-4;
 
 double poissonCDF(const int k, const double lambda) {
   double cumulative = 0.0;
@@ -102,7 +93,8 @@ public:
 
   // for unordered map
   bool operator==(const State &other) const {
-    return period == other.period && ini_inventory == other.ini_inventory;
+    return period == other.period &&
+           std::llround(ini_inventory / EPS) == std::llround(other.ini_inventory / EPS);
   }
 
   friend struct std::hash<State>;
@@ -111,23 +103,24 @@ public:
   bool operator<(const State &other) const {
     if (period != other.period)
       return period < other.period;
-    if (ini_inventory != other.ini_inventory)
-      return ini_inventory < other.ini_inventory;
+    if (std::llround(ini_inventory / EPS) != std::llround(other.ini_inventory / EPS))
+      return std::llround(ini_inventory / EPS) < std::llround(other.ini_inventory / EPS);
     return false;
   }
 
   friend std::ostream &operator<<(std::ostream &os, const State &state);
 };
 
+// 用了新 hash
 template <> struct std::hash<State> {
   // size_t 表示无符号整数
   size_t operator()(const State &s) const noexcept {
-    // noexcept 表示这个函数不会抛出异常
-    // boost 的哈希计算更安全
-    std::size_t seed = 0;
-    boost::hash_combine(seed, s.period);
-    boost::hash_combine(seed, s.ini_inventory);
-    return seed;
+    const long long inv = std::llround(s.ini_inventory / EPS);
+
+    const size_t h1 = std::hash<int>{}(s.period);
+    const size_t h2 = std::hash<long long>{}(inv);
+
+    return h1 ^ (h2 << 1);
   }
 };
 

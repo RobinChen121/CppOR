@@ -28,7 +28,7 @@ public:
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
     // 不会修改成员变量的方法 都可以在函数声明的结尾添加 const
-    return get_period() == other.get_period() && get_ini_inventory() == other.get_ini_inventory() &&
+    return getPeriod() == other.getPeriod() && get_ini_inventory() == other.get_ini_inventory() &&
            initial_cash == other.initial_cash;
   }
 
@@ -48,7 +48,7 @@ struct std::hash<CashState> {
     // noexcept 表示这个函数不会抛出异常
     // boost 的哈希计算更安全
     std::size_t seed = 0;
-    boost::hash_combine(seed, s.get_period());
+    boost::hash_combine(seed, s.getPeriod());
     boost::hash_combine(seed, s.get_ini_inventory());
     boost::hash_combine(seed, s.get_ini_cash());
     return seed;

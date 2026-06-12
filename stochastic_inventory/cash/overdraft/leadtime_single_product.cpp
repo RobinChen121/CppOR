@@ -70,7 +70,7 @@ Optimal Q in the first period is 42.
 
 [[nodiscard]] double OverdraftLeadtimeSingleProduct::immediate_value_function(
     const CashLeadtimeState &state, const double action, const double random_demand) const {
-  const int t = state.get_period() - 1;
+  const int t = state.getPeriod() - 1;
   const double revenue =
       prices[t] * std::min(state.get_ini_inventory() + state.get_q_pre(), random_demand);
   const double variable_cost = unit_vari_order_costs[t] * action;
@@ -88,7 +88,7 @@ Optimal Q in the first period is 42.
   const double cash_after_interest = cash_before_interest + interest + revenue;
   double cash_increment = cash_after_interest - state.get_ini_cash();
   const double salvage_value =
-      state.get_period() == T ? unit_salvage_value * std::max(inventory, 0.0) : 0;
+      state.getPeriod() == T ? unit_salvage_value * std::max(inventory, 0.0) : 0;
   cash_increment += salvage_value;
   return cash_increment;
 }
@@ -105,7 +105,7 @@ Optimal Q in the first period is 42.
   next_inventory = next_inventory < min_inventory ? min_inventory : next_inventory;
   // cash is integer or not
   // nextCash = std::round(nextCash * 100) / 100.0; // the right should be a decimal.
-  return CashLeadtimeState{state.get_period() + 1, next_inventory, nextCash, nextQpre};
+  return CashLeadtimeState{state.getPeriod() + 1, next_inventory, nextCash, nextQpre};
 }
 
 double OverdraftLeadtimeSingleProduct::recursion(
@@ -113,17 +113,17 @@ double OverdraftLeadtimeSingleProduct::recursion(
   double best_q = 0.0;
   double best_value = std::numeric_limits<double>::lowest();
   const std::vector<double> actions = get_feasible_actions();
-  //  if (state.get_period() == 4) {
+  //  if (state.getPeriod() == 4) {
   //    actions = {0.0};
   //  } else {
   //    actions = get_feasible_actions();
   //  }
   for (const double action : actions) {
     double this_value = 0.0;
-    for (auto demand_and_prob : pmf[state.get_period() - 1]) {
+    for (auto demand_and_prob : pmf[state.getPeriod() - 1]) {
       this_value +=
           demand_and_prob[1] * immediate_value_function(state, action, demand_and_prob[0]);
-      if (state.get_period() < T) {
+      if (state.getPeriod() < T) {
         auto new_state = state_transition_function(state, action, demand_and_prob[0]);
         auto it = cache_values.find(new_state);
         if (it != cache_values.end()) {

@@ -13,7 +13,7 @@
 double CashState::get_ini_cash() const { return initial_cash; }
 
 std::ostream &operator<<(std::ostream &os, const CashState &state) {
-  os << "Period: " << state.get_period() << ", ini inventory: " << state.get_ini_inventory()
+  os << "Period: " << state.getPeriod() << ", ini inventory: " << state.get_ini_inventory()
      << ", ini cash: " << state.get_ini_cash() << std::endl;
   return os;
 }

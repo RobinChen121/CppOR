@@ -1,10 +1,8 @@
-cmake_minimum_required(VERSION 3.30)
+﻿cmake_minimum_required(VERSION 3.30)
 project(newsvendor) # 设置运行程序的名字
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-add_compile_options(/utf-8) # 防止编译乱码
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "/O2")
@@ -40,12 +38,13 @@ add_executable(${PROJECT_NAME}
         #        newsvendor_vanilla.c
         #        heuristic1997.cpp
         #        newsvendor_capacity.cpp
-        newsvendor_vanilla_vector.cpp
-        #        newsvendor_vanilla.cpp
+        #        newsvendor_vanilla_vector.cpp
+        newsvendor_vanilla.cpp
+        #        newsvendor_vanilla_newhash.cpp
         #        newsvendor.h
         #
-        ../../utils/draw_graph.cpp
-        ../../utils/Kconvexity.cpp
+        #        ../../utils/draw_graph.cpp
+        #        ../../utils/Kconvexity.cpp
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )
