@@ -36,14 +36,6 @@ std::array<double, 2> Newsvendor::solve() const {
   std::vector<GRBVar> theta(T); // previous is T - 1, which causing the error
                                 // build initial models for each stage
   for (int t = 0; t < T + 1; t++) {
-    if (t == 0)
-      models[t].setObjective(unit_vari_costs[0] * q[0] + theta[0]);
-    else if (t == T)
-      models[t].setObjective(unit_holding_costs[T] * I[T] + unit_backorder_costs[T] * B[T]);
-    else
-      models[t].setObjective(unit_holding_costs[t - 1] * I[t - 1] +
-                             unit_backorder_costs[t - 1] * B[t - 1] + unit_vari_costs[0] * q[t] +
-                             theta[t]);
     if (t < T) {
       q[t] = models[t].addVar(0, GRB_INFINITY, 0, GRB_CONTINUOUS, "q_" + std::to_string(t + 1));
       theta[t] = models[t].addVar(theta_lb, GRB_INFINITY, 0, GRB_CONTINUOUS,
@@ -53,7 +45,18 @@ std::array<double, 2> Newsvendor::solve() const {
       I[t - 1] = models[t].addVar(0, GRB_INFINITY, 0, GRB_CONTINUOUS, "I_" + std::to_string(t));
       B[t - 1] = models[t].addVar(0, GRB_INFINITY, 0, GRB_CONTINUOUS, "B_" + std::to_string(t));
       models[t].addConstr(I[t - 1] - B[t - 1] == 0);
+      models[t].update(); // should update the model every time we add the contraint into the model
     }
+
+    if (t == 0)
+      models[t].setObjective(unit_vari_costs[0] * q[0] + theta[0]);
+    else if (t == T)
+      models[t].setObjective(unit_holding_costs[T - 1] * I[T - 1] +
+                             unit_backorder_costs[T - 1] * B[T - 1]);
+    else
+      models[t].setObjective(unit_holding_costs[t - 1] * I[t - 1] +
+                             unit_backorder_costs[t - 1] * B[t - 1] + unit_vari_costs[t] * q[t] +
+                             theta[t]);
   }
 
   std::vector intercepts(iter_num, std::vector(T, std::vector<double>(forward_num, 0.0)));
@@ -71,7 +74,7 @@ std::array<double, 2> Newsvendor::solve() const {
       models[0].update();
     }
     models[0].optimize();
-    models[0].write("iter_" + std::to_string(iter + 1) + ".lp");
+    // models[0].write("iter_" + std::to_string(iter + 1) + ".lp");
 
     for (int n = 0; n < forward_num; n++) {
       q_values[iter][0][n] = q[0].get(GRB_DoubleAttr_X);
@@ -79,16 +82,18 @@ std::array<double, 2> Newsvendor::solve() const {
 
     // forward
     for (int t = 1; t < T + 1; t++) {
-      std::vector cut_coefficients(forward_num, std::vector<double>(2, 0));
-      for (int n = 0; n < forward_num; n++) {
-        cut_coefficients[n][0] = slopes[iter - 1][t][n];
-        cut_coefficients[n][1] = intercepts[iter - 1][t][n];
-      };
+      if (iter > 0 && t < T) {
+        std::vector cut_coefficients(forward_num, std::vector<double>(2, 0));
+        for (int n = 0; n < forward_num; n++) {
+          cut_coefficients[n][0] = slopes[iter - 1][t][n];
+          cut_coefficients[n][1] = intercepts[iter - 1][t][n];
+        };
 
-      // without enhancement
-      for (auto &coefficient : cut_coefficients) {
-        models[t].addConstr(theta[t] >=
-                            coefficient[0] * (I[t - 1] - B[t - 1] + q[t]) + coefficient[1]);
+        // without enhancement
+        for (auto &coefficient : cut_coefficients) {
+          models[t].addConstr(theta[t] >=
+                              coefficient[0] * (I[t - 1] - B[t - 1] + q[t]) + coefficient[1]);
+        }
       }
 
       for (int n = 0; n < forward_num; n++) {
@@ -171,9 +176,11 @@ std::array<double, 2> Newsvendor::solve() const {
         intercepts[iter][t - 1][n] = avg_intercept;
       }
     }
+    std::cout << "iter " << iter + 1 << " value is " << models[0].get(GRB_DoubleAttr_ObjVal)
+              << std::endl;
     iter++;
   }
-  double final_value = -models[0].get(GRB_DoubleAttr_ObjVal);
+  double final_value = models[0].get(GRB_DoubleAttr_ObjVal);
   double Q1 = q_values[iter - 1][0][0];
   return {final_value, Q1};
 }
@@ -186,10 +193,7 @@ int main() {
   const std::chrono::duration<double> diff = end_time - start_time;
   std::cout << "********************************************" << std::endl;
   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-  std::cout << "final expected cash balance is " << result[0] << std::endl;
+  std::cout << "final expected cost is " << result[0] << std::endl;
   std::cout << "ordering Q in the first period is " << result[1] << std::endl;
-  double optimal_value = 167.31;
-  double gap = (result[0] - optimal_value) / optimal_value;
-  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
   return 0;
 }

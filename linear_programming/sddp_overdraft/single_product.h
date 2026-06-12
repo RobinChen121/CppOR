@@ -36,7 +36,7 @@ class SingleProduct {
 
   // sddp settings
   int sample_num = 10;  // 10;
-  int forward_num = 30; // 20;
+  int forward_num = 20; // 20;
   int iter_num = 50;
   double theta_initial_value = -500;
 

@@ -78,9 +78,11 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 }
 
 int main() {
-  constexpr int T = 2;
+  // constexpr int T = 10;
   constexpr double mean_demand = 10.0;
-  const std::vector demands(T, mean_demand);
+  // const std::vector demands(T, mean_demand);
+  const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
+  const int T = demands.size();
 
   constexpr int capacity = 150;
   constexpr double fix_order_cost = 0.0;

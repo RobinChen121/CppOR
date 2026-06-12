@@ -7,16 +7,18 @@
  * removing; with avoiding adding same constraints during iteration, running
  * time is 0.66s; with pre solving some vales of variables in forward computing,
  * running time is 0.48s;
+ * NOTE: the enhancement is only necessary when the scenario number/forward number is large.
  *
  */
 #include "single_product_enhancement.h"
+#include <chrono>
 
 std::array<double, 4> SingleProduct::solve() const {
   const std::vector<int> sample_nums(T, sample_num);
   std::vector<std::vector<double>> sample_details(T);
   for (int t = 0; t < T; t++) {
     sample_details[t].resize(sample_nums[t]);
-    sample_details[t] = generate_samples_poisson(sample_nums[t], mean_demands[t]);
+    sample_details[t] = generateSamplesPoisson(sample_nums[t], mean_demands[t]);
   }
   // sample_details = {{5, 15}, {5, 15}, {5, 15}};
 
@@ -115,7 +117,7 @@ std::array<double, 4> SingleProduct::solve() const {
   double final_confidence_interval1 = 0.0;
   double final_confidence_interval2 = 0.0;
   while (iter < iter_num) {
-    auto scenario_paths = generate_scenario_paths(forward_num, sample_nums);
+    auto scenario_paths = generateScenarioPaths(forward_num, sample_nums);
     // scenario_paths = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     //                  {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
 
@@ -421,15 +423,15 @@ std::array<double, 4> SingleProduct::solve() const {
   return {final_value, Q1, final_confidence_interval1, final_confidence_interval2};
 }
 
-// int main() {
-//   const auto single_product = SingleProduct();
-//   const auto start_time = std::chrono::high_resolution_clock::now();
-//   const double final_value = single_product.solve()[0];
-//   const auto end_time = std::chrono::high_resolution_clock::now();
-//   const std::chrono::duration<double> diff = end_time - start_time;
-//   std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
-//   const double optimal_value = 167.31;
-//   const double gap = (final_value - optimal_value) / optimal_value;
-//   std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
-//   return 0;
-// }
+int main() {
+  const auto single_product = SingleProduct();
+  const auto start_time = std::chrono::high_resolution_clock::now();
+  const double final_value = single_product.solve()[0];
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> diff = end_time - start_time;
+  std::cout << "cpu time is: " << diff.count() << " seconds" << std::endl;
+  const double optimal_value = 167.31;
+  const double gap = (final_value - optimal_value) / optimal_value;
+  std::cout << "gap is " << std::format("{: .2f}%", gap * 100) << std::endl;
+  return 0;
+}

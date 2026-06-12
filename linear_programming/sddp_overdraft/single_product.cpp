@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/13.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -8,13 +8,15 @@
  *
  */
 #include "single_product.h"
+#include <array>
+#include <chrono>
 
 std::array<double, 2> SingleProduct::solve() const {
   const std::vector sample_nums(T, sample_num);
   std::vector<std::vector<double>> sample_details(T);
   for (int t = 0; t < T; t++) {
     sample_details[t].resize(sample_nums[t]);
-    sample_details[t] = generate_samples_poisson(sample_nums[t], mean_demands[t]);
+    sample_details[t] = generateSamplesPoisson(sample_nums[t], mean_demands[t]);
   }
 
   // sample_details = {{5, 15}, {5, 15}, {5, 15}};
@@ -75,22 +77,36 @@ std::array<double, 2> SingleProduct::solve() const {
     models[t].update();
   }
 
-  double intercepts[iter_num][T][forward_num];
-  double slopes3[iter_num][T][forward_num];
-  double slopes2[iter_num][T][forward_num];
-  double slopes1[iter_num][T][forward_num];
-  double q_pre_values[iter_num][T][forward_num];
-  double q_values[iter_num][T][forward_num];
+  // 使用 typedef 或 using 简化类型别名
+  using Vec3D = std::vector<std::vector<std::vector<double>>>;
+  // 初始化一个三维 vector 的标准写法
+  Vec3D intercepts(iter_num,
+                   std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
 
-  double I_forward_values[iter_num][T][forward_num];
-  //  double BForwardValues[iter_num][T][forward_num];
-  //  double cashForwardValues[iter_num][T][forward_num];
-  double W0_forward_values[iter_num][T][forward_num];
-  double W1_forward_values[iter_num][T][forward_num];
-  double W2_forward_values[iter_num][T][forward_num];
+  // 用上面同样的方法初始化其余变量：
+  Vec3D slopes3(iter_num,
+                std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D slopes2(iter_num,
+                std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D slopes1(iter_num,
+                std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D q_pre_values(iter_num,
+                     std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D q_values(iter_num,
+                 std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+
+  Vec3D I_forward_values(
+      iter_num, std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D W0_forward_values(
+      iter_num, std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D W1_forward_values(
+      iter_num, std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+  Vec3D W2_forward_values(
+      iter_num, std::vector<std::vector<double>>(T, std::vector<double>(forward_num, 0.0)));
+
   int iter = 0;
   while (iter < iter_num) {
-    auto scenarioPaths = generate_scenario_paths(forward_num, sample_nums);
+    auto scenarioPaths = generateScenarioPaths(forward_num, sample_nums);
 
     // int scenarioPaths[8][3] = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
     // {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}
@@ -229,8 +245,8 @@ std::array<double, 2> SingleProduct::solve() const {
           // }
 
           int pi_num = models[t].get(GRB_IntAttr_NumConstrs);
-          double pi[pi_num];
-          double rhs[pi_num];
+          std::vector<double> pi(pi_num);
+          std::vector<double> rhs(pi_num);
           for (int p = 0; p < pi_num; p++) {
             GRBConstr constraint = models[t].getConstr(p);
             pi[p] = constraint.get(GRB_DoubleAttr_Pi);

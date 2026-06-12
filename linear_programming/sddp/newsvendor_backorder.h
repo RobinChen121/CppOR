@@ -14,16 +14,17 @@
 
 class Newsvendor {
   double ini_I = 0.0;
-  int T = 1;
+  double mean_demand = 10.0;
+  // std::vector<double> mean_demands = std::vector<double>(T, mean_demand);
+  std::vector<double> mean_demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
+  int T = mean_demands.size();
   std::vector<double> unit_vari_costs = std::vector(T, 1.0);
   std::vector<double> unit_holding_costs = std::vector(T, 2.0);
   std::vector<double> unit_backorder_costs = std::vector(T, 10.0);
-  double mean_demand = 20.0;
-  std::vector<double> mean_demands = std::vector<double>(T, mean_demand);
 
   // SDDP settings
-  int sample_num = 10; // 10;
-  int forward_num = 30;
+  int sample_num = 30; // 10;
+  int forward_num = 1;
   int iter_num = 50;
   double theta_lb = 0;
 
