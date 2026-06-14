@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2025/3/12.
  * Email: chen.zhen5526@gmail.com
  * Description:
@@ -18,7 +18,7 @@ public:
   CashState(const int period, const double ini_inventory, const double initial_cash)
       : State(period, ini_inventory), initial_cash(initial_cash) {};
 
-  double get_ini_cash() const;
+  [[nodiscard]] double getIniCash() const { return initial_cash; };
 
   friend std::ostream &operator<<(std::ostream &os, const CashState &state);
 
@@ -28,7 +28,7 @@ public:
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
     // 不会修改成员变量的方法 都可以在函数声明的结尾添加 const
-    return getPeriod() == other.getPeriod() && get_ini_inventory() == other.get_ini_inventory() &&
+    return getPeriod() == other.getPeriod() && getIniInventory() == other.getIniInventory() &&
            initial_cash == other.initial_cash;
   }
 
@@ -49,8 +49,8 @@ struct std::hash<CashState> {
     // boost 的哈希计算更安全
     std::size_t seed = 0;
     boost::hash_combine(seed, s.getPeriod());
-    boost::hash_combine(seed, s.get_ini_inventory());
-    boost::hash_combine(seed, s.get_ini_cash());
+    boost::hash_combine(seed, s.getIniInventory());
+    boost::hash_combine(seed, s.getIniCash());
     return seed;
   }
 };

@@ -4,23 +4,33 @@
  * Description: 6 periods running time 12.91s, while java is 20.28s on mac book
  * pro m1.
  *
- *
+ * transforming float hash to integer hash results in slower running speed if using std::llround()
+ * and / EPS. Changing to * INV_EPS can be faster. for float states, using static_cast<long long>
+ * can be faster: in dell, 2.46s using it and 3.15s without.
  */
 
 #include "../../utils/pmf.h"
-#include "../states/cash_state.h"
+// #include "../states/cash_state.h"
+#include "../states/cash_state_newhash.h"
+#include <array>
 #include <chrono>
 #include <cstddef> // for size_t
 #include <iostream>
 #include <ostream>
+#include <unordered_map>
 #include <vector>
 
 class StrongConstraint {
 private:
-  double ini_inventory = 0;
-  double ini_cash = 100;
+  double ini_inventory = 0.5;
+  double ini_cash = 100.5;
   CashState ini_state = CashState(1, ini_inventory, ini_cash);
-  std::vector<double> demands = {10, 10, 10, 10};
+  std::vector<double> demands = {
+      10,
+      10,
+      10,
+      10,
+  };
   std::string distribution_type = "poisson";
   size_t T = demands.size(); // 直接获取大小
 
@@ -40,8 +50,8 @@ private:
   double max_cash = 2000;
   double min_cash = 0;
 
-  const std::vector<std::vector<std::vector<double>>> pmf =
-      PMF(truncated_quantile, step_size, distribution_type).getPMFPoisson(demands);
+  const std::vector<std::vector<std::array<double, 2>>> pmf =
+      PMF(truncated_quantile, step_size).getPMFPoisson(demands);
   std::unordered_map<CashState, double> cacheActions;
   std::unordered_map<CashState, double> cacheValues;
 
@@ -60,25 +70,25 @@ public:
 
   [[nodiscard]] CashState stateTransitionFunction(const CashState &state, const double action,
                                                   const double randomDemand) const {
-    double nextInventory = std::max(0.0, state.getInitialInventory() + action - randomDemand);
+    double nextInventory = std::max(0.0, state.getIniInventory() + action - randomDemand);
     double nextCash = state.getIniCash() + immediateValueFunction(state, action, randomDemand);
     nextCash = nextCash > max_cash ? max_cash : nextCash;
     nextCash = nextCash < min_cash ? min_cash : nextCash;
     nextInventory = nextInventory > max_inventory ? max_inventory : nextInventory;
     nextInventory = nextInventory < min_inventory ? min_inventory : nextInventory;
     // cash is integer or not
-    nextCash = std::round(nextCash * 10) / 10.0; // the right should be a decimal
+    nextCash = std::round(nextCash * 1) / 1.0; // the right should be a decimal
     return CashState{state.getPeriod() + 1, nextInventory, nextCash};
   }
 
   [[nodiscard]] double immediateValueFunction(const CashState &state, const double action,
                                               const double randomDemand) const {
     int t = state.getPeriod() - 1;
-    const double revenue = prices[t] * std::min(state.getInitialInventory() + action, randomDemand);
+    const double revenue = prices[t] * std::min(state.getIniInventory() + action, randomDemand);
     const double fixedCost = action > 0 ? fixed_order_costs[t] : 0;
     const double variableCost = unit_vari_order_costs[t] * action;
     const double deposit = (state.getIniCash() - fixedCost - variableCost) * (1 + deposit_rate);
-    const double inventoryLevel = state.getInitialInventory() + action - randomDemand;
+    const double inventoryLevel = state.getIniInventory() + action - randomDemand;
     const double holdCosts = unit_hold_costs[t] * std::max(inventoryLevel, 0.0);
     double cash_increment = revenue + deposit - holdCosts - overhead_costs[t] - state.getIniCash();
     const double salValue =

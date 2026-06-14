@@ -16,7 +16,7 @@ public:
 
   explicit State(int period, double ini_inventory);
 
-  [[nodiscard]] double get_ini_inventory() const;
+  [[nodiscard]] double getIniInventory() const;
 
   [[nodiscard]] int getPeriod() const;
 

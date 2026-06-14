@@ -3,7 +3,7 @@
  * Email: chen.zhen5526@gmail.com
  * Description: using long long integer hash.
  *
- * The running time is almost same with the new hash for this problem. I think it can save time for
+ * The running time is almost same with the new hash for this problem. It can save time for
  * the real float states.
  *
  *
@@ -18,7 +18,7 @@
 #include <numeric>
 #include <unordered_map>
 
-constexpr double EPS = 1e-4;
+constexpr double EPS = 1e4;
 
 double poissonCDF(const int k, const double lambda) {
   double cumulative = 0.0;
@@ -93,8 +93,8 @@ public:
 
   // for unordered map
   bool operator==(const State &other) const {
-    return period == other.period &&
-           std::llround(ini_inventory / EPS) == std::llround(other.ini_inventory / EPS);
+    return period == other.period && static_cast<long long>(ini_inventory * EPS) ==
+                                         static_cast<long long>(other.ini_inventory * EPS);
   }
 
   friend struct std::hash<State>;
@@ -103,8 +103,10 @@ public:
   bool operator<(const State &other) const {
     if (period != other.period)
       return period < other.period;
-    if (std::llround(ini_inventory / EPS) != std::llround(other.ini_inventory / EPS))
-      return std::llround(ini_inventory / EPS) < std::llround(other.ini_inventory / EPS);
+    if (static_cast<long long>(ini_inventory * EPS) !=
+        static_cast<long long>(other.ini_inventory * EPS))
+      return static_cast<long long>(ini_inventory * EPS) <
+             static_cast<long long>(other.ini_inventory * EPS);
     return false;
   }
 
@@ -115,7 +117,7 @@ public:
 template <> struct std::hash<State> {
   // size_t 表示无符号整数
   size_t operator()(const State &s) const noexcept {
-    const long long inv = std::llround(s.ini_inventory / EPS);
+    const long long inv = static_cast<long long>(s.ini_inventory * EPS);
 
     const size_t h1 = std::hash<int>{}(s.period);
     const size_t h2 = std::hash<long long>{}(inv);

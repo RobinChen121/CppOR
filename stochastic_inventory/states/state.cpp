@@ -13,7 +13,7 @@ State::State() = default; // 由编译器生成，行为是“成员逐个默认
 State::State(const int period, const double ini_inventory)
     : period(period), ini_inventory(ini_inventory) {};
 
-double State::get_ini_inventory() const { return ini_inventory; }
+double State::getIniInventory() const { return ini_inventory; }
 
 int State::getPeriod() const { return period; }
 

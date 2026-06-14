@@ -12,7 +12,6 @@
 #include "../../utils/self_hash.h"
 #include "cash_state.h"
 
-constexpr double EPS = 1e-4;
 class CashLeadtimeState : public CashState {
 private:
   double q_pre{}; // default value is 0.0
@@ -30,11 +29,8 @@ public:
     // const MyClass &other	保证 other 参数不可修改
     // const 在函数结尾 保证当前对象(this) 不可修改
     // 不会修改成员变量的方法 都可以在函数声明的结尾添加 const
-    return getPeriod() == other.getPeriod() &&
-           std::llround(get_ini_inventory() / EPS) ==
-               std::llround(other.get_ini_inventory() / EPS) &&
-           std::llround(other.get_ini_cash() / EPS) == other.get_ini_cash() &&
-           std::llround(q_pre / EPS) == std::llround(other.q_pre / EPS);
+    return getPeriod() == other.getPeriod() && get_ini_inventory() == other.get_ini_inventory() &&
+           other.get_ini_cash() == other.get_ini_cash() && q_pre == other.q_pre;
   }
   friend std::ostream &operator<<(std::ostream &os, const CashLeadtimeState &state);
 
