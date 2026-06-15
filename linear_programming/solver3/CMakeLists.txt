@@ -15,6 +15,5 @@ endif ()
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         simplex.cpp
-        ../../prediction/statistic_predict.h
 
 )
