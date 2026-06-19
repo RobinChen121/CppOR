@@ -73,7 +73,6 @@ class Simplex {
 
   // --------------------
   // middle attributes
-
   int solution_status = {3}; // 0 optimal, 1 unbounded, 2 infeasible, 3 unsolved, 4 cycling
   int var_num_start{};       // var number at the beginning
   int var_num_total{};       // var number later

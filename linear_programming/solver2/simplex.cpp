@@ -317,7 +317,7 @@ void Simplex::firstStage() {
     const int row_index =
         artificialIndexInBasicVars(); // whether artificial variable is still in the basics
     if (row_index != -1) {
-      // printTableau();
+      // printTableau(); 这边有个错误，必须是原始变量在单纯形所在行的值全部为0时才同时消去
       tableau.erase(tableau.begin() + row_index);
       basic_var_index.erase(basic_var_index.begin() + row_index - 1);
       con_num--;
