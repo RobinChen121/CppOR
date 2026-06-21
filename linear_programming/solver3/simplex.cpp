@@ -94,14 +94,16 @@ public:
   // FTRAN: solve B x = rhs
   // forward transformation
   // 计算当前基变量 x = B^- * b (相当于解方程 Bx=b),入基方向 d = B^- * a
-  virtual std::vector<double> forwardTransform(const std::vector<double> &rhs) const = 0;
+  [[nodiscard]] virtual std::vector<double>
+  forwardTransform(const std::vector<double> &rhs) const = 0;
 
   // BTRAN: solve B^T x = rhs
   // backward transformation
   // 用于计算对偶信息/reduced cost: c_j - c_B^T * B^- * a
   // 对偶值为 pi^T = c_B^T * B^-
   // pi = (B^-)^T * c_B, 相当于解方程 B^T*pi=c_B
-  virtual std::vector<double> backwardTransform(const std::vector<double> &rhs) const = 0;
+  [[nodiscard]] virtual std::vector<double>
+  backwardTransform(const std::vector<double> &rhs) const = 0;
 
   // Replace a basis column after pivot
   virtual bool replaceColumn(const CSC &A, const std::vector<int> &basis, int leave_row,
@@ -143,7 +145,8 @@ public:
     return luFactorize(B_); // LU 分解
   }
 
-  std::vector<double> forwardTransform(const std::vector<double> &rhs) const override {
+  [[nodiscard]] std::vector<double>
+  forwardTransform(const std::vector<double> &rhs) const override {
     std::vector<double> x = solveBaseEquations(rhs, false); // solve B0 x = rhs
     for (const EtaUpdate &eta : eta_updates_) {
       applyEtaInverse(eta, x);
@@ -151,7 +154,8 @@ public:
     return x;
   }
 
-  std::vector<double> backwardTransform(const std::vector<double> &rhs) const override {
+  [[nodiscard]] std::vector<double>
+  backwardTransform(const std::vector<double> &rhs) const override {
     std::vector<double> x(rhs);
     for (auto it = eta_updates_.rbegin(); it != eta_updates_.rend(); ++it) {
       applyEtaTransposeInverse(*it, x);
@@ -161,8 +165,8 @@ public:
 
   // 这个函数的两个参数里有 /* 表示这个输入参数可以不要求输入
   // 每次调用时，basis 可能会变
-  bool replaceColumn(const CSC &A, const std::vector<int> &basis, int leave_row, int entering_col,
-                     const int m) override {
+  bool replaceColumn(const CSC &A, const std::vector<int> &basis, const int leave_row,
+                     const int entering_col, const int m) override {
     assert(m == m_);
     const std::vector<double> entering = getColumnDense(A, entering_col, m_);
     std::vector<double> eta_col = forwardTransform(entering);
@@ -188,7 +192,8 @@ private:
 
   int m_{};
   std::vector<int> basis_;
-  int max_eta_updates_ = 64;
+  int max_eta_updates_ =
+      64; // 工业级求解器中，这个可能是动态更新的，当 solve time > refactor time 时重新分解
 
   // 一维 row-major dense matrix
   std::vector<double> B_;
@@ -205,11 +210,11 @@ private:
   // 下面两个同名函数，只写 const 函数不能修改 B_，只写非 const 导致类为 const 时调用B出错
   // & 返回底层矩阵元素的可修改引用，这样才能真正修改原始元素值，否则只能返回一个副本了
   inline double &B(const int i, const int j) { return B_[idx(i, j)]; }
-  inline const double &B(const int i, const int j) const { return B_[idx(i, j)]; }
+  [[nodiscard]] inline const double &B(const int i, const int j) const { return B_[idx(i, j)]; }
 
   // 访问 LU_
   inline double &LU(const int i, const int j) { return LU_[idx(i, j)]; }
-  inline const double &LU(const int i, const int j) const { return LU_[idx(i, j)]; }
+  [[nodiscard]] inline const double &LU(const int i, const int j) const { return LU_[idx(i, j)]; }
 
   static std::vector<double> getColumnDense(const CSC &A, const int col, const int m) {
     std::vector<double> a(m, 0.0);
@@ -460,11 +465,12 @@ int LinearModel::chooseEnteringColumn(const std::vector<double> &phase_c,
       continue;
 
     const std::vector<double> aj = getColumnDense(j);
+    // reduced cost = c_j - c_B^T * B^- * a_j
     const double reduced_cost = phase_c[j] - dot(y, aj);
 
     if (enter_rule == 0 || enter_rule == 2) {
-      if (reduced_cost < -EPS)
-        return j;
+      if (reduced_cost < -EPS) // Bland or lexi rule
+        return j;              // 直接返回最小行索引
     } else if (reduced_cost < -EPS && reduced_cost < best_reduced_cost - EPS) {
       enter_col = j;
       best_reduced_cost = reduced_cost;
@@ -474,6 +480,7 @@ int LinearModel::chooseEnteringColumn(const std::vector<double> &phase_c,
   return enter_col;
 }
 
+// 相当于取 B^- 的指定行
 std::vector<double> LinearModel::basisInverseRow(const BasisFactorization &factor, const int row,
                                                  const int m) {
   std::vector<double> unit(m, 0.0);
@@ -493,6 +500,7 @@ int LinearModel::chooseLeavingRow(const std::vector<double> &xB, const std::vect
 
     const double ratio = xB[i] / d[i];
     if (enter_rule == 0) {
+      // 相同时取最小行索引
       if (ratio < min_ratio - EPS || (std::abs(ratio - min_ratio) <= EPS &&
                                       (leave_row == -1 || basis[i] < basis[leave_row]))) {
         min_ratio = ratio;
@@ -509,7 +517,7 @@ int LinearModel::chooseLeavingRow(const std::vector<double> &xB, const std::vect
 
       if (leave_row == -1 || ratio < min_ratio - EPS) {
         take = true;
-      } else if (std::abs(ratio - min_ratio) <= EPS) {
+      } else if (std::abs(ratio - min_ratio) <= EPS) { // 只对 ratio 相等的行采用lexi比较
         bool all_equal = true;
         for (int k = 0; k < m; ++k) {
           const double lhs = lex_row[k] / d[i];
@@ -524,7 +532,7 @@ int LinearModel::chooseLeavingRow(const std::vector<double> &xB, const std::vect
             break;
           }
         }
-        if (all_equal && basis[i] < basis[leave_row])
+        if (all_equal && basis[i] < basis[leave_row]) // 全部相等时选择最小列索引
           take = true;
       }
 
@@ -920,7 +928,8 @@ bool LinearModel::simplexPhase(const std::vector<double> &phase_c,
       cB[i] = phase_c[basis[i]];
     }
 
-    // y^T = c_B^T B^{-1}
+    // 对偶值 y^T = c_B^T B^{-1}
+    // 对偶值为 pi^T = c_B^T * B^-， pi 就是 y
     // equivalently solve B^T y = c_B
     const std::vector<double> y = factor.backwardTransform(cB);
 
