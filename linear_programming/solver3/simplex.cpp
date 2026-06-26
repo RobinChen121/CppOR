@@ -15,45 +15,30 @@
 #include <algorithm>
 #include <cassert>
 #include <chrono>
-#include <cctype>
 #include <cstdlib>
-#include <cmath>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <map>
 #include <memory>
-#include <sstream>
-#include <stdexcept>
+#include <ranges>
 #include <string>
 #include <vector>
 
-double EPS = 1e-9;
-int MAX_ITER = 1e5;
-double INF = 1e100;
-
-// 当函数极其短小（如 1~3 行）、逻辑极其简单（如类的 Getter/Setter 函数、简单的数学计算），
-// 且在核心循环中被高频调用时，考虑手动加上 inline,
-// 使得在每次调用该函数的地方，直接把函数的代码“复制粘贴”过去，而不是通过传统的函数调用机制
-// （压栈、跳转、出栈）来执行，提高运行效率
-inline bool is_zero(const double x) { return x > -EPS && x < EPS; }
-
-// dot product of two 1-dimension array
-static double dot(const std::vector<double> &a, const std::vector<double> &b) {
-  double s = 0.0;
-  for (size_t i = 0; i < a.size(); ++i)
-    s += a[i] * b[i];
-  return s;
-}
+#include "config.h"
+#include "read_file.h"
+#include "util.h"
 
 // 一个例子 [[0, 0, 3, 0], [5, 0, 0, 0], [0, 0, 0, 2], [0, 8, 0, 1]]
+// 0x_1 + 0x_2 + 3x_3 + 0x_4
+// 5x_1 + 0x_2 + 0x_3 + 0x_4
+// 0x_1 + 0x_2 + 0x_3 + 2x_4
+// 0x_1 + 8x_2 + 0x_3 + 1x_4
 // values = {5, 8, 3, 2, 1}
 // row_indices = {1, 3, 0, 2, 3}
-// col_start_end = {0, 1, 2, 3, 5}, col[i+1]-col[i]为第i列的非零元素个数
+// col_ptr = {0, 1, 2, 3, 5}, col[i+1]-col[i]为第i列的非零元素个数
 struct CSC {
   std::vector<double> values{};   // non zeros values
   std::vector<int> row_indices{}; // row indices for the non-zero values
-  // the number of the following values always 1 larger than the number of columns
+  // col_ptr 的个数为列数加 1
   // 记录每一列的第一个非零元素在 values 数组中的起始位置（索引）
   std::vector<int> col_ptr{}; // start and end indices in the non-zero values in each column
 
@@ -76,328 +61,6 @@ struct SimplexTableau {
   int entering_col{-1};
   int leaving_row{-1};
 };
-
-struct ParsedLinearProgram {
-  int obj_sense = 0;
-  std::vector<std::string> var_names;
-  std::map<std::string, int> var_index;
-  std::map<int, double> objective;
-  std::vector<std::map<int, double>> lhs;
-  std::vector<double> rhs;
-  std::vector<int> constraint_sense;
-  std::vector<double> lower_bound;
-  std::vector<double> upper_bound;
-  std::vector<bool> free_var;
-
-  int ensureVar(const std::string &name) {
-    if (const auto it = var_index.find(name); it != var_index.end())
-      return it->second;
-    const int index = static_cast<int>(var_names.size());
-    var_index[name] = index;
-    var_names.push_back(name);
-    lower_bound.push_back(0.0);
-    upper_bound.push_back(INF);
-    free_var.push_back(false);
-    return index;
-  }
-
-  void addConstraint(const std::map<int, double> &row, const int sense, const double value) {
-    lhs.push_back(row);
-    constraint_sense.push_back(sense);
-    rhs.push_back(value);
-  }
-};
-
-static std::string trim(const std::string &s) {
-  size_t first = 0;
-  while (first < s.size() && std::isspace(static_cast<unsigned char>(s[first])))
-    ++first;
-  size_t last = s.size();
-  while (last > first && std::isspace(static_cast<unsigned char>(s[last - 1])))
-    --last;
-  return s.substr(first, last - first);
-}
-
-static std::string toLower(std::string s) {
-  for (char &ch : s)
-    ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
-  return s;
-}
-
-static std::string toUpper(std::string s) {
-  for (char &ch : s)
-    ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
-  return s;
-}
-
-static bool startsWithWord(const std::string &line, const std::string &word) {
-  const std::string lower = toLower(trim(line));
-  if (lower.rfind(word, 0) != 0)
-    return false;
-  return lower.size() == word.size() ||
-         std::isspace(static_cast<unsigned char>(lower[word.size()]));
-}
-
-static bool isNumberStart(const char ch) {
-  return std::isdigit(static_cast<unsigned char>(ch)) || ch == '.';
-}
-
-static bool isVarChar(const char ch) {
-  return std::isalnum(static_cast<unsigned char>(ch)) || ch == '_' || ch == '.' || ch == '[' ||
-         ch == ']';
-}
-
-static std::vector<std::string> splitTokens(const std::string &line) {
-  std::istringstream in(line);
-  std::vector<std::string> tokens;
-  std::string token;
-  while (in >> token)
-    tokens.push_back(token);
-  return tokens;
-}
-
-static std::string stripLpComment(const std::string &line) {
-  if (const size_t pos = line.find('\\'); pos != std::string::npos)
-    return line.substr(0, pos);
-  return line;
-}
-
-static std::string removeOptionalLabel(const std::string &line) {
-  const size_t colon = line.find(':');
-  if (colon == std::string::npos)
-    return line;
-
-  const std::string before = trim(line.substr(0, colon));
-  if (before.find_first_of("+-*<=>") == std::string::npos)
-    return trim(line.substr(colon + 1));
-  return line;
-}
-
-static double parseDoubleToken(std::string token) {
-  token = toLower(trim(token));
-  if (token == "inf" || token == "+inf" || token == "infinity" || token == "+infinity")
-    return INF;
-  if (token == "-inf" || token == "-infinity")
-    return -INF;
-  return std::stod(token);
-}
-
-static std::map<int, double> parseLinearExpression(const std::string &expr,
-                                                   ParsedLinearProgram &lp) {
-  std::map<int, double> coefficients;
-  size_t pos = 0;
-
-  while (pos < expr.size()) {
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-    if (pos >= expr.size())
-      break;
-
-    double sign = 1.0;
-    if (expr[pos] == '+') {
-      ++pos;
-    } else if (expr[pos] == '-') {
-      sign = -1.0;
-      ++pos;
-    }
-
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-
-    double coef = 1.0;
-    bool has_coef = false;
-    if (pos < expr.size() && isNumberStart(expr[pos])) {
-      const char *start = expr.c_str() + pos;
-      char *end = nullptr;
-      coef = std::strtod(start, &end);
-      if (end != start) {
-        has_coef = true;
-        pos += static_cast<size_t>(end - start);
-      }
-    }
-
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-    if (pos < expr.size() && expr[pos] == '*')
-      ++pos;
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-
-    const size_t name_start = pos;
-    while (pos < expr.size() && isVarChar(expr[pos]))
-      ++pos;
-
-    if (name_start == pos) {
-      if (!has_coef)
-        ++pos;
-      continue;
-    }
-
-    const std::string name = expr.substr(name_start, pos - name_start);
-    coefficients[lp.ensureVar(name)] += sign * coef;
-  }
-
-  return coefficients;
-}
-
-static void mergeCoefficients(std::map<int, double> &target, const std::map<int, double> &source) {
-  for (const auto &[col, value] : source)
-    target[col] += value;
-}
-
-static void setLpBound(ParsedLinearProgram &lp, const int col, const double lower,
-                       const double upper, const bool is_free) {
-  lp.free_var[col] = is_free;
-  lp.lower_bound[col] = lower;
-  lp.upper_bound[col] = upper;
-}
-
-static void parseLpBoundLine(const std::string &line, ParsedLinearProgram &lp) {
-  std::string s = removeOptionalLabel(trim(line));
-  if (s.empty())
-    return;
-
-  const std::string lower = toLower(s);
-  if (lower.ends_with(" free")) {
-    const std::string name = trim(s.substr(0, s.size() - 5));
-    setLpBound(lp, lp.ensureVar(name), -INF, INF, true);
-    return;
-  }
-
-  const size_t first_le = s.find("<=");
-  const size_t first_ge = s.find(">=");
-  if (first_le != std::string::npos && s.find("<=", first_le + 2) != std::string::npos) {
-    const size_t second_le = s.find("<=", first_le + 2);
-    const double lb = parseDoubleToken(s.substr(0, first_le));
-    const std::string name = trim(s.substr(first_le + 2, second_le - first_le - 2));
-    const double ub = parseDoubleToken(s.substr(second_le + 2));
-    setLpBound(lp, lp.ensureVar(name), lb, ub, false);
-    return;
-  }
-  if (first_ge != std::string::npos && s.find(">=", first_ge + 2) != std::string::npos) {
-    const size_t second_ge = s.find(">=", first_ge + 2);
-    const double ub = parseDoubleToken(s.substr(0, first_ge));
-    const std::string name = trim(s.substr(first_ge + 2, second_ge - first_ge - 2));
-    const double lb = parseDoubleToken(s.substr(second_ge + 2));
-    setLpBound(lp, lp.ensureVar(name), lb, ub, false);
-    return;
-  }
-
-  const size_t eq = s.find('=');
-  if (eq != std::string::npos && s.find("<=") == std::string::npos &&
-      s.find(">=") == std::string::npos) {
-    const std::string name = trim(s.substr(0, eq));
-    const double value = parseDoubleToken(s.substr(eq + 1));
-    setLpBound(lp, lp.ensureVar(name), value, value, false);
-    return;
-  }
-
-  const size_t op = first_le != std::string::npos ? first_le : first_ge;
-  if (op == std::string::npos)
-    return;
-
-  const bool is_le = first_le != std::string::npos;
-  const std::string left = trim(s.substr(0, op));
-  const std::string right = trim(s.substr(op + 2));
-  const bool left_is_number =
-      !left.empty() && (std::isdigit(static_cast<unsigned char>(left[0])) || left[0] == '-' ||
-                        left[0] == '+' || left[0] == '.');
-
-  if (left_is_number) {
-    const double value = parseDoubleToken(left);
-    const int col = lp.ensureVar(right);
-    if (is_le)
-      lp.lower_bound[col] = value;
-    else
-      lp.upper_bound[col] = value;
-  } else {
-    const int col = lp.ensureVar(left);
-    const double value = parseDoubleToken(right);
-    if (is_le)
-      lp.upper_bound[col] = value;
-    else
-      lp.lower_bound[col] = value;
-  }
-}
-
-static ParsedLinearProgram parseLpFileData(const std::string &path) {
-  std::ifstream file(path);
-  if (!file)
-    throw std::runtime_error("Cannot open LP file: " + path);
-
-  ParsedLinearProgram lp;
-  enum class Section { None, Objective, Constraints, Bounds };
-  Section section = Section::None;
-  std::string line;
-
-  while (std::getline(file, line)) {
-    line = trim(stripLpComment(line));
-    if (line.empty())
-      continue;
-
-    const std::string lower = toLower(line);
-    if (startsWithWord(line, "minimize") || startsWithWord(line, "minimum") ||
-        startsWithWord(line, "min")) {
-      lp.obj_sense = 0;
-      section = Section::Objective;
-      const size_t space = line.find_first_of(" \t");
-      line = space == std::string::npos ? "" : trim(line.substr(space + 1));
-    } else if (startsWithWord(line, "maximize") || startsWithWord(line, "maximum") ||
-               startsWithWord(line, "max")) {
-      lp.obj_sense = 1;
-      section = Section::Objective;
-      const size_t space = line.find_first_of(" \t");
-      line = space == std::string::npos ? "" : trim(line.substr(space + 1));
-    } else if (startsWithWord(line, "subject to") || startsWithWord(line, "such that") ||
-               startsWithWord(line, "s.t.") || startsWithWord(line, "st")) {
-      section = Section::Constraints;
-      continue;
-    } else if (startsWithWord(line, "bounds")) {
-      section = Section::Bounds;
-      continue;
-    } else if (startsWithWord(line, "end")) {
-      break;
-    }
-
-    line = trim(line);
-    if (line.empty())
-      continue;
-
-    if (section == Section::Objective) {
-      mergeCoefficients(lp.objective, parseLinearExpression(removeOptionalLabel(line), lp));
-    } else if (section == Section::Constraints) {
-      std::string op;
-      size_t pos = line.find("<=");
-      if (pos != std::string::npos) {
-        op = "<=";
-      } else if ((pos = line.find(">=")) != std::string::npos) {
-        op = ">=";
-      } else if ((pos = line.find('=')) != std::string::npos) {
-        op = "=";
-      } else {
-        continue;
-      }
-
-      const std::string lhs_text = removeOptionalLabel(line.substr(0, pos));
-      const double value = parseDoubleToken(line.substr(pos + op.size()));
-      const int sense = op == "<=" ? 0 : (op == ">=" ? 1 : 2);
-      lp.addConstraint(parseLinearExpression(lhs_text, lp), sense, value);
-    } else if (section == Section::Bounds) {
-      parseLpBoundLine(line, lp);
-    }
-  }
-
-  return lp;
-}
-
-// get all values for a given column in the dense matrix
-static std::vector<double> getColumnDense(const CSC &A, const int col, const int m) {
-  std::vector a(m, 0.0);
-  for (int p = A.col_ptr[col]; p < A.col_ptr[col + 1]; ++p) {
-    a[A.row_indices[p]] = A.values[p];
-  }
-  return a;
-}
 
 /* ============================================================
  * BasisFactorization interface
@@ -480,7 +143,7 @@ public:
   forwardTransform(const std::vector<double> &rhs) const override {
     std::vector<double> x = solveBaseEquations(rhs, false); // solve B0 x = rhs
     for (const EtaUpdate &eta : eta_updates_) {
-      applyEtaInverse(eta, x);
+      applyEtaInverse(eta, x); // 这个应该是有计算规律的
     }
     return x;
   }
@@ -488,13 +151,13 @@ public:
   [[nodiscard]] std::vector<double>
   backwardTransform(const std::vector<double> &rhs) const override {
     std::vector<double> x(rhs);
-    for (auto it = eta_updates_.rbegin(); it != eta_updates_.rend(); ++it) {
-      applyEtaTransposeInverse(*it, x);
+    for (const auto &eta_update : std::ranges::reverse_view(eta_updates_)) {
+      applyEtaTransposeInverse(eta_update, x);
     }
     return solveBaseEquations(x, true); // solve B0^T x = rhs
   }
 
-  // 这个函数的两个参数里有 /* 表示这个输入参数可以不要求输入
+  // 若这个函数的两个参数里有 /* 表示这个输入参数可以不要求输入
   // 每次调用时，basis 可能会变
   bool replaceColumn(const CSC &A, const std::vector<int> &basis, const int leave_row,
                      const int entering_col, const int m) override {
@@ -547,6 +210,7 @@ private:
   inline double &LU(const int i, const int j) { return LU_[idx(i, j)]; }
   [[nodiscard]] inline const double &LU(const int i, const int j) const { return LU_[idx(i, j)]; }
 
+  // // get all values for a given column in the dense matrix
   static std::vector<double> getColumnDense(const CSC &A, const int col, const int m) {
     std::vector<double> a(m, 0.0);
     for (int p = A.col_ptr[col]; p < A.col_ptr[col + 1]; ++p) {
@@ -709,7 +373,8 @@ class LinearModel {
   std::vector<double> con_rhs;
   std::vector<int> constraint_sense; // 0:<=, 1: >=, 2: =
   std::vector<int> var_sign;         // 0: >=, 1: <=, 2: unsigned
-  int enter_rule{};                  // 0: Bland, 1: Dantzig, 2: lexicographic
+
+  int enter_rule{}; // 0: Bland, 1: Dantzig, 2: lexicographic
 
   // middle parameters
   int m;   // number of constraints
@@ -754,10 +419,24 @@ public:
               const std::vector<std::vector<double>> &con_lhs, const std::vector<double> &con_rhs,
               const std::vector<int> &constraint_sense, const std::vector<int> &var_sign)
       : obj_coe(obj_coe), obj_sense(obj_sense), con_lhs(con_lhs), con_rhs(con_rhs),
-        constraint_sense(constraint_sense), var_sign(var_sign), original_obj_sense(obj_sense) {
+        constraint_sense(constraint_sense), var_sign(var_sign) {
     m = static_cast<int>(con_lhs.size());
     n0 = static_cast<int>(var_sign.size());
     original_var_sign = var_sign;
+    original_obj_sense = obj_sense;
+  };
+
+  LinearModel(const ParsedLinearProgram &lp) {
+    obj_sense = lp.obj_sense;
+    n0 = static_cast<int>(lp.objective.size());
+    m = static_cast<int>(lp.lhs.size());
+
+    auto values_view = std::views::values(lp.objective);
+    // 使用迭代器范围进行赋值
+    obj_coe.assign(values_view.begin(), values_view.end());
+
+    original_var_sign = var_sign;
+    original_obj_sense = obj_sense;
   };
 
   [[nodiscard]] std::vector<double> getColumnDense(int col) const;
@@ -773,9 +452,8 @@ public:
   bool simplexPhase(const std::vector<double> &phase_c, const std::vector<bool> &allow_enter,
                     BasisFactorization &factor, int max_iter, double &phase_obj, int phase);
   void recordTableau(const std::vector<double> &phase_c, const BasisFactorization &factor,
-                     const std::vector<double> &xB,
-                     const std::vector<double> &y, double phase_obj, int phase, int iteration,
-                     int entering_col, int leaving_row);
+                     const std::vector<double> &xB, const std::vector<double> &y, double phase_obj,
+                     int phase, int iteration, int entering_col, int leaving_row);
   void printSolution() const;
   void print() const;
   void setEnterRule(const int i) { enter_rule = i; };
@@ -1464,6 +1142,7 @@ void LinearModel::print() const {
     return;
   }
 
+  // if n > 0, meaning having been standardized, it will run the following
   std::vector<std::string> names(n);
   for (int old_col = 0; old_col < n0; ++old_col) {
     const int col = map_old_to_new[old_col];
