@@ -34,7 +34,7 @@
 // 0x_1 + 8x_2 + 0x_3 + 1x_4
 // values = {5, 8, 3, 2, 1}
 // row_indices = {1, 3, 0, 2, 3}
-// col_ptr = {0, 1, 2, 3, 5}, col[i+1]-col[i]为第i列的非零元素个数
+// col_ptr = {0, 1, 2, 3, 5}, col[i+1]-col[i] equals the number of non-zeros in column i
 struct CSC {
   std::vector<double> values{};   // non zeros values
   std::vector<int> row_indices{}; // row indices for the non-zero values
@@ -373,6 +373,8 @@ class LinearModel {
   std::vector<double> con_rhs;
   std::vector<int> constraint_sense; // 0:<=, 1: >=, 2: =
   std::vector<int> var_sign;         // 0: >=, 1: <=, 2: unsigned
+  std::vector<double> lb;            // lower bound for each variable
+  std::vector<double> ub;
 
   int enter_rule{}; // 0: Bland, 1: Dantzig, 2: lexicographic
 

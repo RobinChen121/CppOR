@@ -11,7 +11,6 @@
 
 #include "config.h"
 
-#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -50,6 +49,7 @@ struct ParsedLinearProgram {
   }
 };
 
+// trim is to remove the spaces in the front and end of a string
 static std::string trim(const std::string &s) {
   size_t first = 0;
   while (first < s.size() && std::isspace(static_cast<unsigned char>(s[first])))
@@ -104,14 +104,23 @@ static std::string stripLpComment(const std::string &line) {
   return line;
 }
 
+// 识别并剥离 LP（或 MPS）文件中的“可选标签/名称”（Label），只保留实际的数学表达式
 static std::string removeOptionalLabel(const std::string &line) {
   const size_t colon = line.find(':');
   if (colon == std::string::npos)
     return line;
 
+  // 提取冒号前面的文本，并去除前后空格
   const std::string before = trim(line.substr(0, colon));
+  // 校验冒号前的文本是不是一个合法的“标签名”
+  // 查找 before 中是否包含任何数学运算符/比较符 (+, -, *, <, =, >)
   if (before.find_first_of("+-*<=>") == std::string::npos)
+    // 如果不包含这些运算符，说明 before 是一个纯粹的标签名（如 "c1" 或 "cost"）
+    // 于是把冒号及冒号左边的标签剥离掉，只返回冒号后面的表达式内容
     return trim(line.substr(colon + 1));
+
+  // 如果冒号前面包含了运算符，说明这个冒号可能不是标签分隔符（或者是非法的/特殊情况）
+  // 为了安全起见，不作修改，原样返回
   return line;
 }
 
@@ -261,74 +270,6 @@ static void parseLpBoundLine(const std::string &line, ParsedLinearProgram &lp) {
   }
 }
 
-static ParsedLinearProgram parseLpFileData(const std::string &path) {
-  std::ifstream file(path);
-  if (!file)
-    throw std::runtime_error("Cannot open LP file: " + path);
-
-  ParsedLinearProgram lp;
-  enum class Section { None, Objective, Constraints, Bounds };
-  Section section = Section::None;
-  std::string line;
-
-  while (std::getline(file, line)) {
-    line = trim(stripLpComment(line));
-    if (line.empty())
-      continue;
-
-    const std::string lower = toLower(line);
-    if (startsWithWord(line, "minimize") || startsWithWord(line, "minimum") ||
-        startsWithWord(line, "min")) {
-      lp.obj_sense = 0;
-      section = Section::Objective;
-      const size_t space = line.find_first_of(" \t");
-      line = space == std::string::npos ? "" : trim(line.substr(space + 1));
-    } else if (startsWithWord(line, "maximize") || startsWithWord(line, "maximum") ||
-               startsWithWord(line, "max")) {
-      lp.obj_sense = 1;
-      section = Section::Objective;
-      const size_t space = line.find_first_of(" \t");
-      line = space == std::string::npos ? "" : trim(line.substr(space + 1));
-    } else if (startsWithWord(line, "subject to") || startsWithWord(line, "such that") ||
-               startsWithWord(line, "s.t.") || startsWithWord(line, "st")) {
-      section = Section::Constraints;
-      continue;
-    } else if (startsWithWord(line, "bounds")) {
-      section = Section::Bounds;
-      continue;
-    } else if (startsWithWord(line, "end")) {
-      break;
-    }
-
-    line = trim(line);
-    if (line.empty())
-      continue;
-
-    if (section == Section::Objective) {
-      mergeCoefficients(lp.objective, parseLinearExpression(removeOptionalLabel(line), lp));
-    } else if (section == Section::Constraints) {
-      std::string op;
-      size_t pos = line.find("<=");
-      if (pos != std::string::npos) {
-        op = "<=";
-      } else if ((pos = line.find(">=")) != std::string::npos) {
-        op = ">=";
-      } else if ((pos = line.find('=')) != std::string::npos) {
-        op = "=";
-      } else {
-        continue;
-      }
-
-      const std::string lhs_text = removeOptionalLabel(line.substr(0, pos));
-      const double value = parseDoubleToken(line.substr(pos + op.size()));
-      const int sense = op == "<=" ? 0 : (op == ">=" ? 1 : 2);
-      lp.addConstraint(parseLinearExpression(lhs_text, lp), sense, value);
-    } else if (section == Section::Bounds) {
-      parseLpBoundLine(line, lp);
-    }
-  }
-
-  return lp;
-}
+static ParsedLinearProgram parseLpFileData(const std::string &path);
 
 #endif // CHEN_SOLVER_JS_READ_FILE_H
