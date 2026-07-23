@@ -7,16 +7,239 @@
  */
 
 #include "read_file.h"
+
+#include "util.h"
+
+#include <fstream>
+#include <iostream>
+#include <ranges>
 #include <string>
 
-static ParsedLinearProgram parseLpFileData(const std::string &path) {
+// 包在这个 namespace 里面让这些函数只能在这个 cpp 文件里用
+namespace {
+// basic utilities
+
+// trim is to remove the spaces in the front and end of a string
+std::string trim(const std::string &s) {
+  size_t first = 0;
+  while (first < s.size() && std::isspace(static_cast<unsigned char>(s[first])))
+    ++first;
+  size_t last = s.size();
+  while (last > first && std::isspace(static_cast<unsigned char>(s[last - 1])))
+    --last;
+  return s.substr(first, last - first);
+}
+
+std::string toLower(std::string s) {
+  for (char &ch : s)
+    ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+  return s;
+}
+
+bool isNumberStart(const char ch) {
+  return std::isdigit(static_cast<unsigned char>(ch)) || ch == '.';
+}
+
+bool isVarChar(const char ch) {
+  return std::isalnum(static_cast<unsigned char>(ch)) || ch == '_' || ch == '.' || ch == '[' ||
+         ch == ']';
+}
+
+bool startsWithWord(const std::string &line, const std::string &word) {
+  const std::string lower = toLower(trim(line));
+  if (lower.rfind(word, 0) != 0)
+    return false;
+  return lower.size() == word.size() ||
+         std::isspace(static_cast<unsigned char>(lower[word.size()]));
+}
+
+// text processing
+
+// 剥离 comments
+std::string stripLpComment(const std::string &line) {
+  if (const size_t pos = line.find('\\'); pos != std::string::npos)
+    return line.substr(0, pos);
+  return line;
+}
+
+// 识别并剥离 LP（或 MPS）文件中的“可选标签/名称”（Label），只保留实际的数学表达式
+std::string removeOptionalLabel(const std::string &line) {
+  const size_t colon = line.find(':');
+  if (colon == std::string::npos)
+    return line;
+
+  // 提取冒号前面的文本，并去除前后空格
+  const std::string before = trim(line.substr(0, colon));
+  // 校验冒号前的文本是不是一个合法的“标签名”
+  // 查找 before 中是否包含任何数学运算符/比较符 (+, -, *, <, =, >)
+  if (before.find_first_of("+-*<=>") == std::string::npos)
+    // 如果不包含这些运算符，说明 before 是一个纯粹的标签名（如 "c1" 或 "cost"）
+    // 于是把冒号及冒号左边的标签剥离掉，只返回冒号后面的表达式内容
+    return trim(line.substr(colon + 1));
+
+  // 如果冒号前面包含了运算符，说明这个冒号可能不是标签分隔符（或者是非法的/特殊情况）
+  // 为了安全起见，不作修改，原样返回
+  return line;
+}
+
+// 将字符串解析为浮点型
+double parseDoubleToken(std::string token) {
+  token = toLower(trim(token));
+  if (token == "inf" || token == "+inf" || token == "infinity" || token == "+infinity")
+    return INF;
+  if (token == "-inf" || token == "-infinity")
+    return -INF;
+  return std::stod(token);
+}
+
+// LP parsing helpers
+
+void mergeCoefficients(std::map<int, double> &target, const std::map<int, double> &source) {
+  for (const auto &[col, value] : source)
+    target[col] += value;
+}
+
+void setLpBound(ParsedModel &lp, const int col, const double lower, const double upper,
+                const bool is_free) {
+  lp.free_var[col] = is_free;
+  lp.lower_bound[col] = lower;
+  lp.upper_bound[col] = upper;
+}
+
+std::map<int, double> parseLinearExpression(const std::string &expr, ParsedModel &lp) {
+  std::map<int, double> coefficients;
+  size_t pos = 0;
+
+  while (pos < expr.size()) {
+    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
+      ++pos;
+    if (pos >= expr.size())
+      break;
+
+    double sign = 1.0;
+    if (expr[pos] == '+') {
+      ++pos;
+    } else if (expr[pos] == '-') {
+      sign = -1.0;
+      ++pos;
+    }
+
+    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
+      ++pos;
+
+    double coef = 1.0;
+    bool has_coef = false;
+    if (pos < expr.size() && isNumberStart(expr[pos])) {
+      const char *start = expr.c_str() + pos;
+      char *end = nullptr;
+      coef = std::strtod(start, &end);
+      if (end != start) {
+        has_coef = true;
+        pos += static_cast<size_t>(end - start);
+      }
+    }
+
+    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
+      ++pos;
+    if (pos < expr.size() && expr[pos] == '*')
+      ++pos;
+    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
+      ++pos;
+
+    const size_t name_start = pos;
+    while (pos < expr.size() && isVarChar(expr[pos]))
+      ++pos;
+
+    if (name_start == pos) {
+      if (!has_coef)
+        ++pos;
+      continue;
+    }
+
+    const std::string name = expr.substr(name_start, pos - name_start);
+    coefficients[lp.ensureVar(name)] += sign * coef;
+  }
+
+  return coefficients;
+}
+
+void parseLpBoundLine(const std::string &line, ParsedModel &lp) {
+  std::string s = removeOptionalLabel(trim(line));
+  if (s.empty())
+    return;
+
+  const std::string lower = toLower(s);
+  if (lower.ends_with(" free")) {
+    const std::string name = trim(s.substr(0, s.size() - 5));
+    setLpBound(lp, lp.ensureVar(name), -INF, INF, true);
+    return;
+  }
+
+  const size_t first_le = s.find("<=");
+  const size_t first_ge = s.find(">=");
+  if (first_le != std::string::npos && s.find("<=", first_le + 2) != std::string::npos) {
+    const size_t second_le = s.find("<=", first_le + 2);
+    const double lb = parseDoubleToken(s.substr(0, first_le));
+    const std::string name = trim(s.substr(first_le + 2, second_le - first_le - 2));
+    const double ub = parseDoubleToken(s.substr(second_le + 2));
+    setLpBound(lp, lp.ensureVar(name), lb, ub, false);
+    return;
+  }
+  if (first_ge != std::string::npos && s.find(">=", first_ge + 2) != std::string::npos) {
+    const size_t second_ge = s.find(">=", first_ge + 2);
+    const double ub = parseDoubleToken(s.substr(0, first_ge));
+    const std::string name = trim(s.substr(first_ge + 2, second_ge - first_ge - 2));
+    const double lb = parseDoubleToken(s.substr(second_ge + 2));
+    setLpBound(lp, lp.ensureVar(name), lb, ub, false);
+    return;
+  }
+
+  const size_t eq = s.find('=');
+  if (eq != std::string::npos && s.find("<=") == std::string::npos &&
+      s.find(">=") == std::string::npos) {
+    const std::string name = trim(s.substr(0, eq));
+    const double value = parseDoubleToken(s.substr(eq + 1));
+    setLpBound(lp, lp.ensureVar(name), value, value, false);
+    return;
+  }
+
+  const size_t op = first_le != std::string::npos ? first_le : first_ge;
+  if (op == std::string::npos)
+    return;
+
+  const bool is_le = first_le != std::string::npos;
+  const std::string left = trim(s.substr(0, op));
+  const std::string right = trim(s.substr(op + 2));
+  const bool left_is_number = !left.empty() && (std::isdigit(static_cast<unsigned char>(left[0])) ||
+                                                left[0] == '-' || left[0] == '+' || left[0] == '.');
+
+  if (left_is_number) {
+    const double value = parseDoubleToken(left);
+    const int col = lp.ensureVar(right);
+    if (is_le)
+      lp.lower_bound[col] = value;
+    else
+      lp.upper_bound[col] = value;
+  } else {
+    const int col = lp.ensureVar(left);
+    const double value = parseDoubleToken(right);
+    if (is_le)
+      lp.upper_bound[col] = value;
+    else
+      lp.lower_bound[col] = value;
+  }
+}
+
+} // namespace
+
+ParsedModel parseLpFileData(const std::string &path) {
   std::ifstream file(path);
   if (!file)
     throw std::runtime_error("Cannot open LP file: " + path);
 
-  ParsedLinearProgram lp;
-  enum class Section { None, Objective, Constraints, Bounds };
-  Section section = Section::None;
+  ParsedModel lp;
+  enum class Section { None, Objective, Constraints, Bounds, Generals, Binaries };
+  auto section = Section::None;
   std::string line;
 
   // getline is defined in <string, ftream, stream>: reads characters from an input stream and
@@ -48,6 +271,15 @@ static ParsedLinearProgram parseLpFileData(const std::string &path) {
     } else if (startsWithWord(line, "bounds")) {
       section = Section::Bounds;
       continue;
+    } else if (startsWithWord(line, "general") || startsWithWord(line, "generals")) {
+
+      section = Section::Generals;
+      continue;
+    } else if (startsWithWord(line, "binary") || startsWithWord(line, "binaries") ||
+               startsWithWord(line, "bin")) {
+
+      section = Section::Binaries;
+      continue;
     } else if (startsWithWord(line, "end")) {
       break;
     }
@@ -77,10 +309,138 @@ static ParsedLinearProgram parseLpFileData(const std::string &path) {
       lp.addConstraint(parseLinearExpression(lhs_text, lp), sense, value);
     } else if (section == Section::Bounds) {
       parseLpBoundLine(line, lp);
+    } else if (section == Section::Generals) {
+
+      std::istringstream in(line); // 逐个读取一行文本中的单词
+
+      std::string name;
+
+      while (in >> name) {
+        int col = lp.ensureVar(name);
+        lp.var_type[col] = 1;
+      }
+    } else if (section == Section::Binaries) {
+
+      std::istringstream in(line);
+
+      std::string name;
+
+      while (in >> name) {
+        int col = lp.ensureVar(name);
+        lp.var_type[col] = 2;
+        lp.lower_bound[col] = 0.0;
+        lp.upper_bound[col] = 1.0;
+      }
     }
   }
 
   return lp;
+}
+
+void ParsedModel::print() {
+
+  // 这个匿名函数里面的第一个 & 使得它可以访问匿名函数外面的函数或变量
+  const auto printTerm = [&](const double coef, const std::string &name, bool &printed) {
+    if (std::abs(coef) < EPS)
+      return;
+
+    if (printed) {
+      std::cout << (coef < 0.0 ? " - " : " + ");
+    } else if (coef < 0.0) {
+      std::cout << "-";
+    }
+
+    const double abs_coef = std::abs(coef);
+
+    if (std::abs(abs_coef - 1.0) > EPS)
+      std::cout << abs_coef << " ";
+
+    std::cout << name;
+    printed = true;
+  };
+
+  const auto printExpr = [&](const std::map<int, double> &expr) {
+    bool printed = false;
+
+    for (const auto &[col, coef] : expr) {
+      printTerm(coef, var_names[col], printed); // 饮用传递，可能会修改 printed
+    }
+
+    if (!printed)
+      std::cout << "0";
+  };
+
+  const auto senseText = [](const int sense) {
+    if (sense == 0)
+      return " <= ";
+    if (sense == 1)
+      return " >= ";
+    return " = ";
+  };
+
+  std::cout << "********************************\n";
+
+  if (obj_sense == 0)
+    std::cout << "Minimize\n";
+  else
+    std::cout << "Maximize\n";
+
+  std::cout << " obj: ";
+  printExpr(objective);
+  std::cout << "\n\n";
+
+  std::cout << "Subject To\n";
+
+  for (size_t row = 0; row < lhs.size(); ++row) {
+    std::cout << " c" << row + 1 << ": ";
+
+    printExpr(lhs[row]);
+
+    std::cout << senseText(constraint_sense[row]) << rhs[row] << "\n";
+  }
+
+  std::cout << "\nBounds\n";
+
+  const size_t n = var_names.size();
+
+  for (size_t i = 0; i < n; ++i) {
+
+    const std::string &name = var_names[i];
+
+    if (free_var[i]) {
+      std::cout << " " << name << " free\n";
+      continue;
+    }
+
+    const double lb = lower_bound[i];
+    const double ub = upper_bound[i];
+
+    if (std::abs(lb - ub) < EPS) {
+      std::cout << " " << name << " = " << lb << "\n";
+    } else {
+      if (lb > -INF / 2 && ub < INF / 2) {
+        std::cout << " " << lb << " <= " << name << " <= " << ub << "\n";
+      } else if (lb > -INF / 2) {
+        std::cout << " " << lb << " <= " << name << "\n";
+      } else if (ub < INF / 2) {
+        std::cout << " " << name << " <= " << ub << "\n";
+      }
+    }
+  }
+
+  std::cout << "\nGenerals\n";
+  for (size_t i = 0; i < n; ++i) {
+    if (var_type[i] == 1)
+      std::cout << " " << var_names[i] << "\n";
+  }
+
+  std::cout << "\nBinaries\n";
+  for (size_t i = 0; i < n; ++i) {
+    if (var_type[i] == 2)
+      std::cout << " " << var_names[i] << "\n";
+  }
+
+  std::cout << "\nEnd\n";
 }
 
 int main() {
@@ -89,6 +449,7 @@ int main() {
 #ifdef _WIN32
   file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/afiro.lp";
 #endif
-  file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/afiro.lp";
+  file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/afiro.lp";
   auto problem = parseLpFileData(file_path);
+  problem.print();
 }

@@ -11,21 +11,20 @@
 
 #include "config.h"
 
-#include <fstream>
-#include <iostream>
 #include <map>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
 
-struct ParsedLinearProgram {
+struct ParsedModel {
   int obj_sense = 0;
   std::vector<std::string> var_names;
   std::map<std::string, int> var_index;
   std::map<int, double> objective;
   std::vector<std::map<int, double>> lhs;
   std::vector<double> rhs;
-  std::vector<int> constraint_sense;
+  std::vector<int> constraint_sense; // <=: 0, =: 1, >=: 2
+  std::vector<int> var_type;         // 0: continuous, 1: integer, 2: binary
   std::vector<double> lower_bound;
   std::vector<double> upper_bound;
   std::vector<bool> free_var;
@@ -39,6 +38,7 @@ struct ParsedLinearProgram {
     lower_bound.push_back(0.0);
     upper_bound.push_back(INF);
     free_var.push_back(false);
+    var_type.push_back(0);
     return index;
   }
 
@@ -47,229 +47,10 @@ struct ParsedLinearProgram {
     constraint_sense.push_back(sense);
     rhs.push_back(value);
   }
+
+  void print();
 };
 
-// trim is to remove the spaces in the front and end of a string
-static std::string trim(const std::string &s) {
-  size_t first = 0;
-  while (first < s.size() && std::isspace(static_cast<unsigned char>(s[first])))
-    ++first;
-  size_t last = s.size();
-  while (last > first && std::isspace(static_cast<unsigned char>(s[last - 1])))
-    --last;
-  return s.substr(first, last - first);
-}
-
-static std::string toLower(std::string s) {
-  for (char &ch : s)
-    ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
-  return s;
-}
-
-static std::string toUpper(std::string s) {
-  for (char &ch : s)
-    ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
-  return s;
-}
-
-static bool startsWithWord(const std::string &line, const std::string &word) {
-  const std::string lower = toLower(trim(line));
-  if (lower.rfind(word, 0) != 0)
-    return false;
-  return lower.size() == word.size() ||
-         std::isspace(static_cast<unsigned char>(lower[word.size()]));
-}
-
-static bool isNumberStart(const char ch) {
-  return std::isdigit(static_cast<unsigned char>(ch)) || ch == '.';
-}
-
-static bool isVarChar(const char ch) {
-  return std::isalnum(static_cast<unsigned char>(ch)) || ch == '_' || ch == '.' || ch == '[' ||
-         ch == ']';
-}
-
-static std::vector<std::string> splitTokens(const std::string &line) {
-  std::istringstream in(line);
-  std::vector<std::string> tokens;
-  std::string token;
-  while (in >> token)
-    tokens.push_back(token);
-  return tokens;
-}
-
-static std::string stripLpComment(const std::string &line) {
-  if (const size_t pos = line.find('\\'); pos != std::string::npos)
-    return line.substr(0, pos);
-  return line;
-}
-
-// 识别并剥离 LP（或 MPS）文件中的“可选标签/名称”（Label），只保留实际的数学表达式
-static std::string removeOptionalLabel(const std::string &line) {
-  const size_t colon = line.find(':');
-  if (colon == std::string::npos)
-    return line;
-
-  // 提取冒号前面的文本，并去除前后空格
-  const std::string before = trim(line.substr(0, colon));
-  // 校验冒号前的文本是不是一个合法的“标签名”
-  // 查找 before 中是否包含任何数学运算符/比较符 (+, -, *, <, =, >)
-  if (before.find_first_of("+-*<=>") == std::string::npos)
-    // 如果不包含这些运算符，说明 before 是一个纯粹的标签名（如 "c1" 或 "cost"）
-    // 于是把冒号及冒号左边的标签剥离掉，只返回冒号后面的表达式内容
-    return trim(line.substr(colon + 1));
-
-  // 如果冒号前面包含了运算符，说明这个冒号可能不是标签分隔符（或者是非法的/特殊情况）
-  // 为了安全起见，不作修改，原样返回
-  return line;
-}
-
-static double parseDoubleToken(std::string token) {
-  token = toLower(trim(token));
-  if (token == "inf" || token == "+inf" || token == "infinity" || token == "+infinity")
-    return INF;
-  if (token == "-inf" || token == "-infinity")
-    return -INF;
-  return std::stod(token);
-}
-
-static std::map<int, double> parseLinearExpression(const std::string &expr,
-                                                   ParsedLinearProgram &lp) {
-  std::map<int, double> coefficients;
-  size_t pos = 0;
-
-  while (pos < expr.size()) {
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-    if (pos >= expr.size())
-      break;
-
-    double sign = 1.0;
-    if (expr[pos] == '+') {
-      ++pos;
-    } else if (expr[pos] == '-') {
-      sign = -1.0;
-      ++pos;
-    }
-
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-
-    double coef = 1.0;
-    bool has_coef = false;
-    if (pos < expr.size() && isNumberStart(expr[pos])) {
-      const char *start = expr.c_str() + pos;
-      char *end = nullptr;
-      coef = std::strtod(start, &end);
-      if (end != start) {
-        has_coef = true;
-        pos += static_cast<size_t>(end - start);
-      }
-    }
-
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-    if (pos < expr.size() && expr[pos] == '*')
-      ++pos;
-    while (pos < expr.size() && std::isspace(static_cast<unsigned char>(expr[pos])))
-      ++pos;
-
-    const size_t name_start = pos;
-    while (pos < expr.size() && isVarChar(expr[pos]))
-      ++pos;
-
-    if (name_start == pos) {
-      if (!has_coef)
-        ++pos;
-      continue;
-    }
-
-    const std::string name = expr.substr(name_start, pos - name_start);
-    coefficients[lp.ensureVar(name)] += sign * coef;
-  }
-
-  return coefficients;
-}
-
-static void mergeCoefficients(std::map<int, double> &target, const std::map<int, double> &source) {
-  for (const auto &[col, value] : source)
-    target[col] += value;
-}
-
-static void setLpBound(ParsedLinearProgram &lp, const int col, const double lower,
-                       const double upper, const bool is_free) {
-  lp.free_var[col] = is_free;
-  lp.lower_bound[col] = lower;
-  lp.upper_bound[col] = upper;
-}
-
-static void parseLpBoundLine(const std::string &line, ParsedLinearProgram &lp) {
-  std::string s = removeOptionalLabel(trim(line));
-  if (s.empty())
-    return;
-
-  const std::string lower = toLower(s);
-  if (lower.ends_with(" free")) {
-    const std::string name = trim(s.substr(0, s.size() - 5));
-    setLpBound(lp, lp.ensureVar(name), -INF, INF, true);
-    return;
-  }
-
-  const size_t first_le = s.find("<=");
-  const size_t first_ge = s.find(">=");
-  if (first_le != std::string::npos && s.find("<=", first_le + 2) != std::string::npos) {
-    const size_t second_le = s.find("<=", first_le + 2);
-    const double lb = parseDoubleToken(s.substr(0, first_le));
-    const std::string name = trim(s.substr(first_le + 2, second_le - first_le - 2));
-    const double ub = parseDoubleToken(s.substr(second_le + 2));
-    setLpBound(lp, lp.ensureVar(name), lb, ub, false);
-    return;
-  }
-  if (first_ge != std::string::npos && s.find(">=", first_ge + 2) != std::string::npos) {
-    const size_t second_ge = s.find(">=", first_ge + 2);
-    const double ub = parseDoubleToken(s.substr(0, first_ge));
-    const std::string name = trim(s.substr(first_ge + 2, second_ge - first_ge - 2));
-    const double lb = parseDoubleToken(s.substr(second_ge + 2));
-    setLpBound(lp, lp.ensureVar(name), lb, ub, false);
-    return;
-  }
-
-  const size_t eq = s.find('=');
-  if (eq != std::string::npos && s.find("<=") == std::string::npos &&
-      s.find(">=") == std::string::npos) {
-    const std::string name = trim(s.substr(0, eq));
-    const double value = parseDoubleToken(s.substr(eq + 1));
-    setLpBound(lp, lp.ensureVar(name), value, value, false);
-    return;
-  }
-
-  const size_t op = first_le != std::string::npos ? first_le : first_ge;
-  if (op == std::string::npos)
-    return;
-
-  const bool is_le = first_le != std::string::npos;
-  const std::string left = trim(s.substr(0, op));
-  const std::string right = trim(s.substr(op + 2));
-  const bool left_is_number = !left.empty() && (std::isdigit(static_cast<unsigned char>(left[0])) ||
-                                                left[0] == '-' || left[0] == '+' || left[0] == '.');
-
-  if (left_is_number) {
-    const double value = parseDoubleToken(left);
-    const int col = lp.ensureVar(right);
-    if (is_le)
-      lp.lower_bound[col] = value;
-    else
-      lp.upper_bound[col] = value;
-  } else {
-    const int col = lp.ensureVar(left);
-    const double value = parseDoubleToken(right);
-    if (is_le)
-      lp.upper_bound[col] = value;
-    else
-      lp.lower_bound[col] = value;
-  }
-}
-
-static ParsedLinearProgram parseLpFileData(const std::string &path);
+ParsedModel parseLpFileData(const std::string &path);
 
 #endif // CHEN_SOLVER_JS_READ_FILE_H
