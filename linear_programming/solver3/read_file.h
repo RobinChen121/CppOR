@@ -11,17 +11,17 @@
 
 #include "config.h"
 
-#include <map>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 
 struct ParsedModel {
   int obj_sense = 0;
   std::vector<std::string> var_names;
-  std::map<std::string, int> var_index;
-  std::map<int, double> objective;
-  std::vector<std::map<int, double>> lhs;
+  std::unordered_map<std::string, int> var_index;
+  std::unordered_map<int, double> objective;
+  std::vector<std::unordered_map<int, double>> lhs;
   std::vector<double> rhs;
   std::vector<int> constraint_sense; // <=: 0, =: 1, >=: 2
   std::vector<int> var_type;         // 0: continuous, 1: integer, 2: binary
@@ -42,7 +42,8 @@ struct ParsedModel {
     return index;
   }
 
-  void addConstraint(const std::map<int, double> &row, const int sense, const double value) {
+  void addConstraint(const std::unordered_map<int, double> &row, const int sense,
+                     const double value) {
     lhs.push_back(row);
     constraint_sense.push_back(sense);
     rhs.push_back(value);
@@ -51,6 +52,7 @@ struct ParsedModel {
   void print();
 };
 
-ParsedModel parseLpFileData(const std::string &path);
+ParsedModel readLP(const std::string &path);
+ParsedModel readMPS(const std::string &path);
 
 #endif // CHEN_SOLVER_JS_READ_FILE_H

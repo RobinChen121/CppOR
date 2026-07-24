@@ -10,6 +10,7 @@
 
 #include "util.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <ranges>
@@ -38,6 +39,15 @@ std::string toLower(std::string s) {
 
 bool isNumberStart(const char ch) {
   return std::isdigit(static_cast<unsigned char>(ch)) || ch == '.';
+}
+
+bool isInteger(const std::string &str) {
+  return std::ranges::all_of(
+      str, [](const char ch) { return std::isdigit(static_cast<unsigned char>(ch)); });
+
+  // lambda 函数可以实现函数参数隐式类型转换（Implicit Parameter Conversion）
+  // 与上面的等价
+  // return std::ranges::all_of(str, [](const unsigned char ch) { return std::isdigit(ch); });
 }
 
 bool isVarChar(const char ch) {
@@ -94,7 +104,8 @@ double parseDoubleToken(std::string token) {
 
 // LP parsing helpers
 
-void mergeCoefficients(std::map<int, double> &target, const std::map<int, double> &source) {
+void mergeCoefficients(std::unordered_map<int, double> &target,
+                       const std::unordered_map<int, double> &source) {
   for (const auto &[col, value] : source)
     target[col] += value;
 }
@@ -106,8 +117,8 @@ void setLpBound(ParsedModel &lp, const int col, const double lower, const double
   lp.upper_bound[col] = upper;
 }
 
-std::map<int, double> parseLinearExpression(const std::string &expr, ParsedModel &lp) {
-  std::map<int, double> coefficients;
+std::unordered_map<int, double> parseLinearExpression(const std::string &expr, ParsedModel &lp) {
+  std::unordered_map<int, double> coefficients;
   size_t pos = 0;
 
   while (pos < expr.size()) {
@@ -232,7 +243,7 @@ void parseLpBoundLine(const std::string &line, ParsedModel &lp) {
 
 } // namespace
 
-ParsedModel parseLpFileData(const std::string &path) {
+ParsedModel readLP(const std::string &path) {
   std::ifstream file(path);
   if (!file)
     throw std::runtime_error("Cannot open LP file: " + path);
@@ -337,6 +348,328 @@ ParsedModel parseLpFileData(const std::string &path) {
   return lp;
 }
 
+ParsedModel readMPS(const std::string &path) {
+  std::ifstream file(path);
+
+  if (!file.is_open())
+    throw std::runtime_error("Cannot open MPS file");
+
+  enum class Section { NONE, ROWS, COLUMNS, RHS, BOUNDS };
+
+  auto section = Section::NONE;
+
+  struct RowInfo {
+    char type;
+    std::string name;
+  };
+
+  std::vector<RowInfo> rows;
+
+  std::string objective_name;
+
+  //----------------------------------------
+  // temporary storage
+  //----------------------------------------
+
+  std::unordered_map<std::string, std::unordered_map<std::string, double>> columns;
+
+  std::unordered_map<std::string, double> rhs_values;
+
+  struct Bounds {
+    double lb = 0.0;
+    double ub = INF;
+  };
+
+  std::unordered_map<std::string, Bounds> bounds;
+
+  //----------------------------------------
+
+  std::string line;
+
+  while (std::getline(file, line)) {
+    if (line.empty())
+      continue;
+
+    std::istringstream iss(line);
+
+    std::string first;
+    iss >> first;
+
+    //------------------------------------
+    // section headers
+    //------------------------------------
+
+    if (first == "NAME")
+      continue;
+
+    if (first == "ROWS") {
+      section = Section::ROWS;
+      continue;
+    }
+
+    if (first == "COLUMNS") {
+      section = Section::COLUMNS;
+      continue;
+    }
+
+    if (first == "RHS") {
+      section = Section::RHS;
+      continue;
+    }
+
+    if (first == "BOUNDS") {
+      section = Section::BOUNDS;
+      continue;
+    }
+
+    if (first == "ENDATA")
+      break;
+
+    //------------------------------------
+    // ROWS
+    //------------------------------------
+
+    if (section == Section::ROWS) {
+      char type = first[0];
+
+      std::string row_name;
+      iss >> row_name;
+
+      rows.push_back({type, row_name});
+
+      if (type == 'N')
+        objective_name = row_name;
+    }
+
+    //------------------------------------
+    // COLUMNS
+    //------------------------------------
+
+    else if (section == Section::COLUMNS) {
+      std::string &col = first;
+      if (isInteger(col))
+        col += 'x';
+
+      std::string row1;
+      double val1;
+
+      iss >> row1 >> val1;
+
+      columns[col][row1] = val1; // 某个变量在第几行的数值
+
+      std::string row2;
+      double val2;
+
+      if (iss >> row2 >> val2) {
+        columns[col][row2] = val2;
+      }
+    }
+
+    //------------------------------------
+    // RHS
+    //------------------------------------
+
+    else if (section == Section::RHS) {
+      std::string rhs_name = first;
+
+      std::string row1;
+      double val1;
+
+      iss >> row1 >> val1;
+
+      rhs_values[row1] = val1;
+
+      std::string row2;
+      double val2;
+
+      if (iss >> row2 >> val2) {
+        rhs_values[row2] = val2;
+      }
+    }
+
+    //------------------------------------
+    // BOUNDS
+    //------------------------------------
+
+    else if (section == Section::BOUNDS) {
+      std::string btype = first;
+
+      std::string bname;
+      std::string col;
+
+      iss >> bname >> col;
+
+      if (btype == "FR") {
+        bounds[col].lb = -INF;
+        bounds[col].ub = INF;
+      } else {
+        double value;
+        iss >> value;
+
+        if (btype == "LO")
+          bounds[col].lb = value;
+
+        else if (btype == "UP")
+          bounds[col].ub = value;
+
+        else if (btype == "FX") {
+          bounds[col].lb = value;
+          bounds[col].ub = value;
+        }
+      }
+    }
+  }
+
+  //----------------------------------------
+  // Build row index
+  //----------------------------------------
+
+  std::unordered_map<std::string, int> row_id;
+
+  std::vector<RowInfo> constraints;
+
+  for (auto &r : rows) {
+    if (r.type == 'N')
+      continue;
+
+    row_id[r.name] = static_cast<int>(constraints.size());
+
+    constraints.push_back(r);
+  }
+
+  //----------------------------------------
+  // Build column index
+  //----------------------------------------
+
+  std::unordered_map<std::string, int> col_id;
+
+  int j = 0;
+
+  for (auto &[name, data] : columns)
+    col_id[name] = j++;
+
+  //----------------------------------------
+  // LP
+  //----------------------------------------
+
+  ParsedModel lp;
+
+  lp.num_row = static_cast<int>(constraints.size());
+
+  lp.num_col = static_cast<int>(col_id.size());
+
+  lp.col_cost.assign(lp.num_col, 0.0);
+
+  lp.col_lower.assign(lp.num_col, 0.0);
+
+  lp.col_upper.assign(lp.num_col, INF);
+
+  lp.row_lower.assign(lp.num_row, -INF);
+
+  lp.row_upper.assign(lp.num_row, INF);
+
+  //----------------------------------------
+  // row bounds
+  //----------------------------------------
+
+  for (int i = 0; i < lp.num_row; i++) {
+    auto &r = constraints[i];
+
+    double rhs = 0.0;
+
+    auto it_rhs = rhs_values.find(r.name);
+
+    if (it_rhs != rhs_values.end())
+      rhs = it_rhs->second;
+
+    if (r.type == 'L') {
+      lp.row_upper[i] = rhs;
+    } else if (r.type == 'G') {
+      lp.row_lower[i] = rhs;
+    } else if (r.type == 'E') {
+      lp.row_lower[i] = rhs;
+      lp.row_upper[i] = rhs;
+    }
+  }
+
+  //----------------------------------------
+  // column bounds
+  //----------------------------------------
+
+  for (auto &[name, bnd] : bounds) {
+    int col = col_id[name];
+
+    lp.col_lower[col] = bnd.lb;
+    lp.col_upper[col] = bnd.ub;
+  }
+
+  //----------------------------------------
+  // count nnz
+  //----------------------------------------
+
+  std::vector<int> col_nnz(lp.num_col, 0);
+
+  int nnz = 0;
+
+  for (auto &[col_name, rowmap] : columns) {
+    int col = col_id[col_name];
+
+    for (auto &[row, val] : rowmap) {
+      if (row == objective_name)
+        continue;
+
+      col_nnz[col]++;
+      nnz++;
+    }
+  }
+
+  //----------------------------------------
+  // allocate CSC
+  //----------------------------------------
+
+  lp.A = CSC(nnz, lp.num_col);
+
+  lp.A.col_ptr[0] = 0;
+
+  for (int c = 0; c < lp.num_col; c++) {
+    lp.A.col_ptr[c + 1] = lp.A.col_ptr[c] + col_nnz[c];
+  }
+
+  std::vector<int> offset = lp.A.col_ptr;
+
+  //----------------------------------------
+  // fill CSC
+  //----------------------------------------
+
+  for (auto &[col_name, rowmap] : columns) {
+    int col = col_id[col_name];
+
+    for (auto &[row, val] : rowmap) {
+      //--------------------------------
+      // objective coefficient
+      //--------------------------------
+
+      if (row == objective_name) {
+        lp.col_cost[col] = val;
+        continue;
+      }
+
+      //--------------------------------
+      // matrix coefficient
+      //--------------------------------
+
+      int row_idx = row_id[row];
+
+      int p = offset[col]++;
+
+      lp.A.values[p] = val;
+      lp.A.row_indices[p] = row_idx;
+    }
+  }
+
+  return lp;
+}
+
 void ParsedModel::print() {
 
   // 这个匿名函数里面的第一个 & 使得它可以访问匿名函数外面的函数或变量
@@ -359,7 +692,7 @@ void ParsedModel::print() {
     printed = true;
   };
 
-  const auto printExpr = [&](const std::map<int, double> &expr) {
+  const auto printExpr = [&](const std::unordered_map<int, double> &expr) {
     bool printed = false;
 
     for (const auto &[col, coef] : expr) {
@@ -450,6 +783,6 @@ int main() {
   file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/afiro.lp";
 #endif
   file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/afiro.lp";
-  auto problem = parseLpFileData(file_path);
+  auto problem = readLP(file_path);
   problem.print();
 }
