@@ -352,10 +352,9 @@ ParsedModel readMPS(const std::string &path) {
   std::ifstream file(path);
 
   if (!file.is_open())
-    throw std::runtime_error("Cannot open MPS file");
+    throw std::runtime_error("Cannot open MPS file: " + path);
 
-  enum class Section { NONE, ROWS, COLUMNS, RHS, BOUNDS };
-
+  enum class Section { NONE, OBJSENSE, ROWS, COLUMNS, RHS, BOUNDS };
   auto section = Section::NONE;
 
   struct RowInfo {
@@ -364,310 +363,275 @@ ParsedModel readMPS(const std::string &path) {
   };
 
   std::vector<RowInfo> rows;
-
   std::string objective_name;
 
-  //----------------------------------------
-  // temporary storage
-  //----------------------------------------
-
+  // 临时存储解析数据
+  std::vector<std::string> col_names;
   std::unordered_map<std::string, std::unordered_map<std::string, double>> columns;
-
   std::unordered_map<std::string, double> rhs_values;
 
-  struct Bounds {
+  struct BoundInfo {
     double lb = 0.0;
     double ub = INF;
+    bool is_explicit_free = false;
+    bool is_binary = false;
   };
+  std::unordered_map<std::string, BoundInfo> bounds_map;
+  std::unordered_map<std::string, bool> is_int_marker; // 标记 COLUMNS 中的 MARKER 变量
 
-  std::unordered_map<std::string, Bounds> bounds;
-
-  //----------------------------------------
-
+  ParsedModel lp;
   std::string line;
+  bool in_integer_section = false; // 是否在 MARKER 整数块内
 
   while (std::getline(file, line)) {
-    if (line.empty())
+    // 跳过空行和注释行（* 开头）
+    if (line.empty() || line[0] == '*')
       continue;
 
     std::istringstream iss(line);
-
     std::string first;
     iss >> first;
 
-    //------------------------------------
-    // section headers
-    //------------------------------------
-
+    // Section 切换判断
     if (first == "NAME")
       continue;
-
+    if (first == "OBJSENSE") {
+      section = Section::OBJSENSE;
+      continue;
+    }
     if (first == "ROWS") {
       section = Section::ROWS;
       continue;
     }
-
     if (first == "COLUMNS") {
       section = Section::COLUMNS;
       continue;
     }
-
     if (first == "RHS") {
       section = Section::RHS;
       continue;
     }
-
     if (first == "BOUNDS") {
       section = Section::BOUNDS;
       continue;
     }
-
     if (first == "ENDATA")
       break;
 
-    //------------------------------------
-    // ROWS
-    //------------------------------------
-
-    if (section == Section::ROWS) {
+    // 解析 OBJSENSE (部分扩展支持)
+    if (section == Section::OBJSENSE) {
+      if (first == "MAX" || first == "MAXIMIZE")
+        lp.obj_sense = 1;
+      else if (first == "MIN" || first == "MINIMIZE")
+        lp.obj_sense = 0;
+    }
+    // 解析 ROWS
+    else if (section == Section::ROWS) {
       char type = first[0];
-
       std::string row_name;
       iss >> row_name;
-
       rows.push_back({type, row_name});
 
-      if (type == 'N')
-        objective_name = row_name;
+      if (type == 'N' && objective_name.empty()) {
+        objective_name = row_name; // 记录目标函数行名
+      }
     }
-
-    //------------------------------------
-    // COLUMNS
-    //------------------------------------
-
+    // 解析 COLUMNS (包含 MARKER 处理)
     else if (section == Section::COLUMNS) {
-      std::string &col = first;
-      if (isInteger(col))
-        col += 'x';
-
+      std::string col = first;
       std::string row1;
+      iss >> row1;
+
+      // 检查是否为 INTORG / INTEND 整数区间标记
+      if (row1 == "'MARKER'") {
+        std::string marker_type;
+        iss >> marker_type;
+        if (marker_type == "'INTORG'")
+          in_integer_section = true;
+        else if (marker_type == "'INTEND'")
+          in_integer_section = false;
+        continue;
+      }
+
       double val1;
+      iss >> val1;
 
-      iss >> row1 >> val1;
+      // 记录变量出现顺序
+      if (!columns.contains(col)) {
+        col_names.push_back(col);
+        if (in_integer_section) {
+          is_int_marker[col] = true;
+        }
+      }
 
-      columns[col][row1] = val1; // 某个变量在第几行的数值
+      columns[col][row1] = val1;
 
       std::string row2;
       double val2;
-
       if (iss >> row2 >> val2) {
         columns[col][row2] = val2;
       }
     }
-
-    //------------------------------------
-    // RHS
-    //------------------------------------
-
+    // 解析 RHS
     else if (section == Section::RHS) {
-      std::string rhs_name = first;
+      std::string rhs_name = first; // 忽略向量名
 
       std::string row1;
       double val1;
-
-      iss >> row1 >> val1;
-
-      rhs_values[row1] = val1;
+      if (iss >> row1 >> val1) {
+        rhs_values[row1] = val1;
+      }
 
       std::string row2;
       double val2;
-
       if (iss >> row2 >> val2) {
         rhs_values[row2] = val2;
       }
     }
-
-    //------------------------------------
-    // BOUNDS
-    //------------------------------------
-
+    // 解析 BOUNDS
     else if (section == Section::BOUNDS) {
       std::string btype = first;
-
-      std::string bname;
-      std::string col;
-
+      std::string bname, col;
       iss >> bname >> col;
 
-      if (btype == "FR") {
-        bounds[col].lb = -INF;
-        bounds[col].ub = INF;
+      auto &bnd = bounds_map[col];
+
+      if (btype == "FR") { // Free 变量 (-INF, +INF)
+        bnd.lb = -INF;
+        bnd.ub = INF;
+        bnd.is_explicit_free = true;
+      } else if (btype == "BV") { // Binary 变量 [0, 1]
+        bnd.lb = 0.0;
+        bnd.ub = 1.0;
+        bnd.is_binary = true;
+      } else if (btype == "MI") { // Minus infinity (-INF, 0]
+        bnd.lb = -INF;
+        if (bnd.ub == INF)
+          bnd.ub = 0.0;
+      } else if (btype == "PL") { // Plus infinity [0, +INF)
+        bnd.lb = 0.0;
+        bnd.ub = INF;
       } else {
         double value;
-        iss >> value;
-
-        if (btype == "LO")
-          bounds[col].lb = value;
-
-        else if (btype == "UP")
-          bounds[col].ub = value;
-
-        else if (btype == "FX") {
-          bounds[col].lb = value;
-          bounds[col].ub = value;
+        if (iss >> value) {
+          if (btype == "LO" || btype == "LI")
+            bnd.lb = value;
+          else if (btype == "UP" || btype == "UI")
+            bnd.ub = value;
+          else if (btype == "FX") {
+            bnd.lb = value;
+            bnd.ub = value;
+          }
         }
       }
     }
   }
 
   //----------------------------------------
-  // Build row index
+  // 构建映射与约束信息
   //----------------------------------------
-
   std::unordered_map<std::string, int> row_id;
-
   std::vector<RowInfo> constraints;
 
   for (auto &r : rows) {
-    if (r.type == 'N')
-      continue;
-
+    if (r.name == objective_name)
+      continue; // 排除目标函数号
     row_id[r.name] = static_cast<int>(constraints.size());
-
     constraints.push_back(r);
   }
 
-  //----------------------------------------
-  // Build column index
-  //----------------------------------------
+  int num_rows = static_cast<int>(constraints.size());
+  int num_cols = static_cast<int>(col_names.size());
 
-  std::unordered_map<std::string, int> col_id;
+  // 初始化容器尺寸
+  lp.var_names = col_names;
+  lp.lhs.resize(num_rows);
+  lp.rhs.resize(num_rows, 0.0);
+  lp.constraint_sense.resize(num_rows, 0);
 
-  int j = 0;
+  lp.var_type.resize(num_cols, 0);
+  lp.lower_bound.resize(num_cols, 0.0);
+  lp.upper_bound.resize(num_cols, INF);
+  lp.free_var.resize(num_cols, false);
 
-  for (auto &[name, data] : columns)
-    col_id[name] = j++;
+  // 填充约束条件 (RHS 与 Sense)
+  for (int i = 0; i < num_rows; ++i) {
+    const auto &[type, name] = constraints[i];
 
-  //----------------------------------------
-  // LP
-  //----------------------------------------
+    if (type == 'L')
+      lp.constraint_sense[i] = 0; // <=
+    else if (type == 'E')
+      lp.constraint_sense[i] = 1; // =
+    else if (type == 'G')
+      lp.constraint_sense[i] = 2; // >=
 
-  ParsedModel lp;
-
-  lp.num_row = static_cast<int>(constraints.size());
-
-  lp.num_col = static_cast<int>(col_id.size());
-
-  lp.col_cost.assign(lp.num_col, 0.0);
-
-  lp.col_lower.assign(lp.num_col, 0.0);
-
-  lp.col_upper.assign(lp.num_col, INF);
-
-  lp.row_lower.assign(lp.num_row, -INF);
-
-  lp.row_upper.assign(lp.num_row, INF);
-
-  //----------------------------------------
-  // row bounds
-  //----------------------------------------
-
-  for (int i = 0; i < lp.num_row; i++) {
-    auto &r = constraints[i];
-
-    double rhs = 0.0;
-
-    auto it_rhs = rhs_values.find(r.name);
-
-    if (it_rhs != rhs_values.end())
-      rhs = it_rhs->second;
-
-    if (r.type == 'L') {
-      lp.row_upper[i] = rhs;
-    } else if (r.type == 'G') {
-      lp.row_lower[i] = rhs;
-    } else if (r.type == 'E') {
-      lp.row_lower[i] = rhs;
-      lp.row_upper[i] = rhs;
+    if (rhs_values.contains(name)) {
+      lp.rhs[i] = rhs_values[name];
     }
   }
 
-  //----------------------------------------
-  // column bounds
-  //----------------------------------------
+  // 填充变量信息、目标函数以及 LHS 稀疏矩阵
+  for (int j = 0; j < num_cols; ++j) {
+    const std::string &col_name = col_names[j];
+    lp.var_index[col_name] = j;
 
-  for (auto &[name, bnd] : bounds) {
-    int col = col_id[name];
+    // --- 处理 Bounds 与 变量类型 ---
+    double lb = 0.0;
+    double ub = INF;
+    bool is_free = false;
+    int vtype = 0; // 0: continuous
 
-    lp.col_lower[col] = bnd.lb;
-    lp.col_upper[col] = bnd.ub;
-  }
-
-  //----------------------------------------
-  // count nnz
-  //----------------------------------------
-
-  std::vector<int> col_nnz(lp.num_col, 0);
-
-  int nnz = 0;
-
-  for (auto &[col_name, rowmap] : columns) {
-    int col = col_id[col_name];
-
-    for (auto &[row, val] : rowmap) {
-      if (row == objective_name)
-        continue;
-
-      col_nnz[col]++;
-      nnz++;
+    // 检查 MARKER 标记的整数
+    if (is_int_marker.contains(col_name) && is_int_marker[col_name]) {
+      vtype = 1; // Integer
     }
-  }
 
-  //----------------------------------------
-  // allocate CSC
-  //----------------------------------------
+    // 检查 BOUNDS 节显式定义
+    if (bounds_map.contains(col_name)) {
+      const auto &bnd = bounds_map[col_name];
+      lb = bnd.lb;
+      ub = bnd.ub;
+      is_free = bnd.is_explicit_free || (lb == -INF && ub == INF);
 
-  lp.A = CSC(nnz, lp.num_col);
-
-  lp.A.col_ptr[0] = 0;
-
-  for (int c = 0; c < lp.num_col; c++) {
-    lp.A.col_ptr[c + 1] = lp.A.col_ptr[c] + col_nnz[c];
-  }
-
-  std::vector<int> offset = lp.A.col_ptr;
-
-  //----------------------------------------
-  // fill CSC
-  //----------------------------------------
-
-  for (auto &[col_name, rowmap] : columns) {
-    int col = col_id[col_name];
-
-    for (auto &[row, val] : rowmap) {
-      //--------------------------------
-      // objective coefficient
-      //--------------------------------
-
-      if (row == objective_name) {
-        lp.col_cost[col] = val;
-        continue;
+      if (bnd.is_binary) {
+        vtype = 2; // Binary
+      } else if (vtype == 0 && (bnd.lb != 0.0 || bnd.ub != INF)) {
+        // 如果原本不是 MARKER 整数，但有 UI/LI 标记，也可在此扩展判断
       }
+    }
 
-      //--------------------------------
-      // matrix coefficient
-      //--------------------------------
+    lp.lower_bound[j] = lb;
+    lp.upper_bound[j] = ub;
+    lp.free_var[j] = is_free;
+    lp.var_type[j] = vtype;
 
-      int row_idx = row_id[row];
-
-      int p = offset[col]++;
-
-      lp.A.values[p] = val;
-      lp.A.row_indices[p] = row_idx;
+    // --- 处理 矩阵 A (lhs) 与 目标函数 (objective) ---
+    for (const auto &[rname, val] : columns[col_name]) {
+      if (rname == objective_name) {
+        if (val != 0.0) {
+          lp.objective[j] = val; // 目标函数非零项
+        }
+      } else if (row_id.contains(rname)) {
+        int i = row_id[rname];
+        lp.lhs[i][j] = val; // 给第 i 行约束，插入第 j 个变量的系数
+      }
     }
   }
 
   return lp;
+}
+
+ParsedModel read(const std::string &path) {
+  auto pos = path.find('.');
+  auto file_type = path.substr(pos);
+  for (char &c : file_type) // 转小写
+    c = static_cast<char>(std::tolower(c));
+  if (file_type == ".mps")
+    return readMPS(path);
+  else if (file_type == ".lp")
+    return readLP(path);
+  else
+    throw std::runtime_error("Unknown file type");
 }
 
 void ParsedModel::print() {
@@ -780,9 +744,9 @@ int main() {
   std::string file_path;
   // #ifdef 是 C/C++ 预处理器（Preprocessor）指令，_WIN32 为宏
 #ifdef _WIN32
-  file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/afiro.lp";
+  file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/boeing1.mps";
 #endif
   file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/afiro.lp";
-  auto problem = readLP(file_path);
+  auto problem = read(file_path);
   problem.print();
 }

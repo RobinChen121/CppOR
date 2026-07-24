@@ -428,7 +428,7 @@ public:
     original_obj_sense = obj_sense;
   };
 
-  LinearModel(const ParsedLinearProgram &lp) {
+  explicit LinearModel(const ParsedLinearProgram &lp) {
     obj_sense = lp.obj_sense;
     n0 = static_cast<int>(lp.objective.size());
     m = static_cast<int>(lp.lhs.size());

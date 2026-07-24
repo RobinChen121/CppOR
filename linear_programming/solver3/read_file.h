@@ -55,4 +55,6 @@ struct ParsedModel {
 ParsedModel readLP(const std::string &path);
 ParsedModel readMPS(const std::string &path);
 
+ParsedModel read(const std::string &path);
+
 #endif // CHEN_SOLVER_JS_READ_FILE_H
