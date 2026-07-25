@@ -16,19 +16,50 @@
 #include <unordered_map>
 #include <vector>
 
+// 标准 enum 默认通常占 4 字节（int 或 32 bit）。指定为 uint8_t（无符号 8
+// 位整数）后，每个枚举实例仅占用 1 个字节（8 bit）
+enum class ConstraintSense : uint8_t {
+  LE, // Less Than or Equal (<=)
+  EQ, // Equal (=)
+  GE  // Greater Than or Equal (>=)
+};
+
+enum class VarType : uint8_t { Continuous, Integer, Binary };
+
+// 定义一个数据结构存储稀疏向量，用来记录每个非零变量对应的系数
+using SparseVector = std::unordered_map<int, double>;
+
+struct Constraint {
+  std::unordered_map<int, double> coeffs;
+  ConstraintSense sense;
+  double rhs;
+};
+
+struct Variable {
+  int id;
+  std::string name;
+  double lb = 0.0;
+  double ub = INF;
+  VarType type = VarType::Continuous;
+};
+
 struct ParsedModel {
   int obj_sense = 0;
-  std::vector<std::string> var_names;
-  std::unordered_map<std::string, int> var_index;
-  std::unordered_map<int, double> objective;
-  std::vector<std::unordered_map<int, double>> lhs;
+  std::vector<VarType> variables;
+  std::unordered_map<std::string, int>
+      var_index;          // 依次按照变量从目标函数，约束条件，上下界中出现的顺序编号
+  SparseVector objective; // 这种方式能够节省存储空间
+  std::vector<Constraint> constraints;
+
+  std::vector<SparseVector> lhs;
   std::vector<double> rhs;
-  std::vector<int> constraint_sense; // <=: 0, =: 1, >=: 2
-  std::vector<int> var_type;         // 0: continuous, 1: integer, 2: binary
+  std::vector<ConstraintSense> constraint_sense; // <=: 0, =: 1, >=: 2
+  std::vector<VarType> var_type;                 // 0: continuous, 1: integer, 2: binary
   std::vector<double> lower_bound;
   std::vector<double> upper_bound;
   std::vector<bool> free_var;
 
+  // 根据变量名字返回对应的下标
   int ensureVar(const std::string &name) {
     if (const auto it = var_index.find(name); it != var_index.end())
       return it->second;
@@ -38,7 +69,7 @@ struct ParsedModel {
     lower_bound.push_back(0.0);
     upper_bound.push_back(INF);
     free_var.push_back(false);
-    var_type.push_back(0);
+    var_type.push_back(VarType::Continuous);
     return index;
   }
 
@@ -48,6 +79,10 @@ struct ParsedModel {
     constraint_sense.push_back(sense);
     rhs.push_back(value);
   }
+
+  int numVars() const { return static_cast<int>(var_names.size()); }
+
+  int numRows() const { return static_cast<int>(lhs.size()); }
 
   void print();
 };

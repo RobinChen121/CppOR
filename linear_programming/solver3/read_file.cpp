@@ -72,7 +72,7 @@ std::string stripLpComment(const std::string &line) {
   return line;
 }
 
-// 识别并剥离 LP（或 MPS）文件中的“可选标签/名称”（Label），只保留实际的数学表达式
+// 识别并剥离 LP（或 MPS）文件中的“可选标签/名称”（Label，例如+-），只保留实际的数学表达式
 std::string removeOptionalLabel(const std::string &line) {
   const size_t colon = line.find(':');
   if (colon == std::string::npos)
@@ -328,7 +328,7 @@ ParsedModel readLP(const std::string &path) {
 
       while (in >> name) {
         int col = lp.ensureVar(name);
-        lp.var_type[col] = 1;
+        lp.var_type[col] = VarType::Integer;
       }
     } else if (section == Section::Binaries) {
 
@@ -338,7 +338,7 @@ ParsedModel readLP(const std::string &path) {
 
       while (in >> name) {
         int col = lp.ensureVar(name);
-        lp.var_type[col] = 2;
+        lp.var_type[col] = VarType::Binary;
         lp.lower_bound[col] = 0.0;
         lp.upper_bound[col] = 1.0;
       }
@@ -544,12 +544,13 @@ ParsedModel readMPS(const std::string &path) {
   int num_cols = static_cast<int>(col_names.size());
 
   // 初始化容器尺寸
+  lp.objective.resize(num_cols);
   lp.var_names = col_names;
   lp.lhs.resize(num_rows);
   lp.rhs.resize(num_rows, 0.0);
-  lp.constraint_sense.resize(num_rows, 0);
+  lp.constraint_sense.resize(num_rows, ConstraintSense::LE);
 
-  lp.var_type.resize(num_cols, 0);
+  lp.var_type.resize(num_cols, VarType::Continuous);
   lp.lower_bound.resize(num_cols, 0.0);
   lp.upper_bound.resize(num_cols, INF);
   lp.free_var.resize(num_cols, false);
@@ -559,11 +560,11 @@ ParsedModel readMPS(const std::string &path) {
     const auto &[type, name] = constraints[i];
 
     if (type == 'L')
-      lp.constraint_sense[i] = 0; // <=
+      lp.constraint_sense[i] = ConstraintSense::LE; // <=
     else if (type == 'E')
-      lp.constraint_sense[i] = 1; // =
+      lp.constraint_sense[i] = ConstraintSense::EQ; // =
     else if (type == 'G')
-      lp.constraint_sense[i] = 2; // >=
+      lp.constraint_sense[i] = ConstraintSense::GE; // >=
 
     if (rhs_values.contains(name)) {
       lp.rhs[i] = rhs_values[name];
@@ -579,11 +580,11 @@ ParsedModel readMPS(const std::string &path) {
     double lb = 0.0;
     double ub = INF;
     bool is_free = false;
-    int vtype = 0; // 0: continuous
+    auto vtype = VarType::Continuous; // 0: continuous
 
     // 检查 MARKER 标记的整数
     if (is_int_marker.contains(col_name) && is_int_marker[col_name]) {
-      vtype = 1; // Integer
+      vtype = VarType::Integer; // Integer
     }
 
     // 检查 BOUNDS 节显式定义
@@ -594,8 +595,8 @@ ParsedModel readMPS(const std::string &path) {
       is_free = bnd.is_explicit_free || (lb == -INF && ub == INF);
 
       if (bnd.is_binary) {
-        vtype = 2; // Binary
-      } else if (vtype == 0 && (bnd.lb != 0.0 || bnd.ub != INF)) {
+        vtype = VarType::Binary; // Binary
+      } else if (vtype == VarType::Continuous && (bnd.lb != 0.0 || bnd.ub != INF)) {
         // 如果原本不是 MARKER 整数，但有 UI/LI 标记，也可在此扩展判断
       }
     }
@@ -667,10 +668,10 @@ void ParsedModel::print() {
       std::cout << "0";
   };
 
-  const auto senseText = [](const int sense) {
-    if (sense == 0)
+  const auto senseText = [](const ConstraintSense sense) {
+    if (sense == ConstraintSense::LE)
       return " <= ";
-    if (sense == 1)
+    if (sense == ConstraintSense::EQ)
       return " >= ";
     return " = ";
   };
@@ -727,13 +728,14 @@ void ParsedModel::print() {
 
   std::cout << "\nGenerals\n";
   for (size_t i = 0; i < n; ++i) {
-    if (var_type[i] == 1)
-      std::cout << " " << var_names[i] << "\n";
+    if (var_type[i] == VarType::Integer) {
+    }
+    std::cout << " " << var_names[i] << "\n";
   }
 
   std::cout << "\nBinaries\n";
   for (size_t i = 0; i < n; ++i) {
-    if (var_type[i] == 2)
+    if (var_type[i] == VarType::Integer)
       std::cout << " " << var_names[i] << "\n";
   }
 
