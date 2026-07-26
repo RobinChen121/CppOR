@@ -10,11 +10,12 @@
 #define CHEN_SOLVER_JS_MODEL_H
 
 #include "config.h"
+#include <map>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 // 更加明确这些整型占用的字节数
+// ChenInt is for indexing
 using ChenInt = int32_t;
 using VarId = uint64_t;
 using ConId = uint64_t;
@@ -65,30 +66,31 @@ struct Model {
   ModelStatus status = ModelStatus::Empty;
   ObjSense obj_sense = ObjSense::Minimize;
   std::vector<Variable> variables;
-  // in user model, sparse objetive coefficients are stored in dense map
-  std::unordered_map<ChenInt, double> objective_coef;
+  // sparse objective coefficients
+  std::map<ChenInt, double> objective_coef;
   std::vector<Constraint> constraints;
 
   // map from var name to its variable index
-  std::unordered_map<std::string, ChenInt> name_to_varIndex;
+  std::map<std::string, ChenInt> name_to_varIndex;
   // map from constraint name to its constraint index
-  std::unordered_map<std::string, ChenInt> name_to_conIndex;
+  std::map<std::string, ChenInt> name_to_conIndex;
 
   VarId next_var_id = 0;
   ConId next_con_id = 0;
 
-  ChenInt nameToVarIndex(std::string &name);
-
-  void addVariable(std::string &name, double lb = 0.0, double ub = INF,
+  void addVariable(const std::string &name, double lb = 0.0, double ub = INF,
                    VarType type = VarType::Continuous);
-  void addConstraint(std::string &name, const std::vector<LinearTerm> &terms, double lb, double ub);
+  void addConstraint(const std::string &name, const std::vector<LinearTerm> &terms, double lb,
+                     double ub);
   // 检查模型是否有效
   [[nodiscard]] bool valid() const;
+  [[nodiscard]] ChenInt nameToVarIndex(const std::string &name) const;
+  ChenInt findOrCreateVariable(const std::string &name);
 
-  void print();
-  void printLinearExpression(std::vector<LinearTerm> &terms) const;
-  void printObjective();
-  void printConstraints();
+  void print() const;
+  void printLinearExpression(const std::vector<LinearTerm> &terms) const;
+  void printObjective() const;
+  void printConstraints() const;
   void printBounds() const;
   void printIntegers() const;
   void printBinaries() const;

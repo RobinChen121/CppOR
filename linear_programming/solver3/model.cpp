@@ -11,39 +11,37 @@
 #include <iostream>
 #include <stdexcept>
 
-void Model::addVariable(std::string &name, const double lb, const double ub, const VarType type) {
-  if (name.empty())
-    name = "x" + std::to_string(next_var_id);
-  if (name_to_varIndex.contains(name))
+void Model::addVariable(const std::string &name, const double lb, const double ub,
+                        const VarType type) {
+  const std::string actual_name = name.empty() ? "x" + std::to_string(next_var_id) : name;
+
+  if (name_to_varIndex.contains(actual_name))
     throw std::runtime_error("Duplicate variable name");
 
   const auto col = static_cast<ChenInt>(variables.size());
-  variables.push_back(Variable{next_var_id++, name, lb, ub, type});
+  variables.push_back(Variable{next_var_id++, actual_name, lb, ub, type});
 
   name_to_varIndex[variables.back().name] = col;
+  status = ModelStatus::Modified;
 };
 
-void Model::addConstraint(std::string &name, const std::vector<LinearTerm> &terms, const double lb,
-                          const double ub) {
-  if (name.empty())
-    name = "c" + std::to_string(next_con_id);
+void Model::addConstraint(const std::string &name, const std::vector<LinearTerm> &terms,
+                          const double lb, const double ub) {
+  const std::string actual_name = name.empty() ? "c" + std::to_string(next_con_id) : name;
 
-  if (name_to_conIndex.contains(name)) {
-    throw std::runtime_error("Constraint already exists: " + name);
+  if (name_to_conIndex.contains(actual_name)) {
+    throw std::runtime_error("Constraint already exists: " + actual_name);
   }
 
   Constraint con;
   con.id = next_con_id++;
-  con.name = name;
+  con.name = actual_name;
   con.lb = lb;
   con.ub = ub;
 
   // 合并重复列
-  std::unordered_map<ChenInt, double> coeffs;
+  std::map<ChenInt, double> coeffs;
   for (const auto &[col, coef] : terms) {
-    if (col < 0 || col >= static_cast<ChenInt>(variables.size())) {
-      throw std::runtime_error("Invalid variable index in constraint " + name);
-    }
     coeffs[col] += coef;
   }
 
@@ -56,30 +54,42 @@ void Model::addConstraint(std::string &name, const std::vector<LinearTerm> &term
 
   constraints.push_back(std::move(con));
   name_to_conIndex[name] = static_cast<ChenInt>(constraints.size() - 1);
+  status = ModelStatus::Modified;
 }
 
 [[nodiscard]] bool Model::valid() const {
-  for (auto const &v : variables)
-    if (v.lb > v.ub)
-      return false;
-
-  for (auto const &c : constraints)
-    if (c.lb > c.ub)
-      return false;
-  return variables.size() == objective_coef.size();
+  if (std::ranges::any_of(variables, [](const auto &c) { return c.lb > c.ub; }))
+    return false;
+  if (std::ranges::all_of(constraints, [](const auto &c) { return c.lb < c.ub; }))
+    return false;
+  for (auto const &con : constraints) {
+    for (const auto &[col, coef] : con.lhs) {
+      if (col < 0 || col >= variables.size())
+        return false;
+    }
+  }
+  return true;
 }
 
-ChenInt Model::nameToVarIndex(std::string &name) {
-  if (const auto it = name_to_varIndex.find(name); it != name_to_varIndex.end())
+// 求解器中使用 nameToVarIndex
+ChenInt Model::nameToVarIndex(const std::string &name) const {
+  const auto it = name_to_varIndex.find(name);
+  if (it == name_to_varIndex.end())
+    throw std::runtime_error("Unknown variable: " + name);
+  return it->second;
+}
+
+// LP/MPS Reader 中统一使用：findOrCreateVariable
+ChenInt Model::findOrCreateVariable(const std::string &name) {
+  const auto it = name_to_varIndex.find(name);
+  if (it != name_to_varIndex.end())
     return it->second;
-  const int index = static_cast<int>(name_to_varIndex.size());
-  name_to_varIndex[name] = index;
-  addVariable(name, 0.0, INF, VarType::Continuous);
-  // free_var.push_back(false);
-  return index;
+
+  addVariable(name);
+  return static_cast<ChenInt>(variables.size() - 1);
 }
 
-void Model::printLinearExpression(std::vector<LinearTerm> &terms) const {
+void Model::printLinearExpression(const std::vector<LinearTerm> &terms) const {
   bool first = true;
 
   for (const auto &[col, coef] : terms) {
@@ -101,7 +111,7 @@ void Model::printLinearExpression(std::vector<LinearTerm> &terms) const {
     std::cout << "0";
 }
 
-void Model::printObjective() {
+void Model::printObjective() const {
   std::cout << (obj_sense == ObjSense::Minimize ? "Minimize\n" : "Maximize\n");
   std::cout << " obj: ";
   bool first = true;
@@ -127,7 +137,7 @@ void Model::printObjective() {
   std::cout << "\n\n";
 }
 
-void Model::printConstraints() {
+void Model::printConstraints() const {
   std::cout << "Subject To\n";
   for (auto &con : constraints) {
     std::cout << " " << (con.name.empty() ? "c" : con.name) << ": ";
@@ -152,9 +162,9 @@ void Model::printConstraints() {
 void Model::printBounds() const {
   std::cout << "Bounds\n";
   for (const auto &var : variables) {
-    if (var.var_type == VarType::Binary)
+    if (var.var_type == VarType::Binary) {
       continue;
-
+    }
     if (var.lb <= -INF / 2 && var.ub >= INF / 2) {
       std::cout << " " << var.name << " free\n";
     } else if (std::abs(var.lb - var.ub) < 1e-12) {
@@ -205,7 +215,7 @@ void Model::printBinaries() const {
   std::cout << "\n";
 }
 
-void Model::print() {
+void Model::print() const {
   std::cout << "========================================\n";
 
   printObjective();

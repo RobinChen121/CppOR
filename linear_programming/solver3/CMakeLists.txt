@@ -20,5 +20,4 @@ add_executable(${PROJECT_NAME}
         read_file.cpp
         util.h
         config.h
-
 )
