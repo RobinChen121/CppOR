@@ -57,6 +57,7 @@ bool startsWithWord(const std::string &line, const std::string &word) {
 
 // 剥离 comments
 std::string stripLpComment(const std::string &line) {
+  // 下面的两个\\ 表示一个斜杠
   if (const size_t pos = line.find('\\'); pos != std::string::npos)
     return line.substr(0, pos);
   return line;
@@ -246,7 +247,21 @@ Model readLP(const std::string &path) {
   Model lp;
   enum class Section { None, Objective, Constraints, Bounds, Generals, Binaries };
   auto section = Section::None;
+
   std::string line;
+  std::string obj_buffer; // 目标函数拼接缓冲区
+  std::string con_buffer; // 跨行约束条件拼接缓冲区
+
+  // 辅助 lambda：解析并清空目标函数缓冲区
+  auto flushObjective = [&]() {
+    std::string text = trim(obj_buffer);
+    if (!text.empty()) {
+      for (auto &[index, coef] : parseLinearExpression(removeOptionalLabel(text), lp)) {
+        lp.objective_coef[index] += coef;
+      }
+      obj_buffer.clear();
+    }
+  };
 
   // getline is defined in <string, ftream, stream>: reads characters from an input stream and
   // places them into a string until \n or end of file
@@ -272,6 +287,7 @@ Model readLP(const std::string &path) {
       line = space == std::string::npos ? "" : trim(line.substr(space + 1));
     } else if (startsWithWord(line, "subject to") || startsWithWord(line, "such that") ||
                startsWithWord(line, "s.t.") || startsWithWord(line, "st")) {
+      flushObjective(); // 解析并清空目标函数缓冲区
       section = Section::Constraints;
       continue;
     } else if (startsWithWord(line, "bounds")) {
@@ -299,6 +315,7 @@ Model readLP(const std::string &path) {
            auto &[index, coef] : obj_formula) {
         lp.objective_coef[index] += coef;
       }
+      obj_buffer = "" + line; // 目标函数拼接缓冲区
     } else if (section == Section::Constraints) {
       std::string con_name;
       if (size_t name_pos = line.find(':'); name_pos != std::string::npos)
@@ -379,9 +396,8 @@ Model readMPS(const std::string &path) {
   std::vector<RowInfo> rows;
   std::string objective_name;
   std::vector<std::string> col_names;
-  std::map<std::string, std::map<std::string, double>> columns; // 用于 objective
-  std::unordered_map<std::string, std::vector<std::pair<std::string, double>>>
-      row_terms; // 用于 constraints
+  std::map<std::string, std::map<std::string, double>> columns;                 // 用于 objective
+  std::map<std::string, std::vector<std::pair<std::string, double>>> row_terms; // 用于 constraints
   std::map<std::string, double> rhs_values;
   std::map<std::string, BoundInfo> bounds_map;
   std::map<std::string, bool> is_int_marker;
@@ -664,9 +680,10 @@ int main() {
   std::string file_path;
   // #ifdef 是 C/C++ 预处理器（Preprocessor）指令，_WIN32 为宏
 #ifdef _WIN32
-  file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/boeing1.mps";
-#endif
+  file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/boeing1.lp";
+#else
   file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/boeing1.mps";
+#endif
   auto problem = read(file_path);
   problem.print();
 }
