@@ -263,6 +263,46 @@ Model readLP(const std::string &path) {
     }
   };
 
+  // 辅助 lambda：检查并解析拼接好的单个约束条件
+  auto tryParseConstraint = [&](std::string &text) {
+    text = trim(text);
+    if (text.empty())
+      return;
+
+    // 检查是否包含完整的关系运算符
+    size_t pos = std::string::npos;
+    std::string operator_;
+    if ((pos = text.find("<=")) != std::string::npos) {
+      operator_ = "<=";
+    } else if ((pos = text.find(">=")) != std::string::npos) {
+      operator_ = ">=";
+    } else if ((pos = text.find('=')) != std::string::npos) {
+      operator_ = "=";
+    } else {
+      // 还没拼接完整，等待下一行输入
+      return;
+    }
+
+    // 提取约束名称（如果有）
+    std::string con_name;
+    if (size_t name_pos = text.find(':'); name_pos != std::string::npos && name_pos < pos)
+      con_name = trim(text.substr(0, name_pos));
+
+    std::string lhs_text = removeOptionalLabel(text.substr(0, pos));
+    const double rhs = parseDoubleToken(text.substr(pos + operator_.size()));
+    const int sense = operator_ == "<=" ? 0 : (operator_ == ">=" ? 1 : 2);
+
+    if (sense == 0)
+      lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), -INF, rhs);
+    else if (sense == 1)
+      lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), rhs, INF);
+    else
+      lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), rhs, rhs);
+
+    // 解析完成后清空缓冲区
+    text.clear();
+  };
+
   // getline is defined in <string, ftream, stream>: reads characters from an input stream and
   // places them into a string until \n or end of file
   // 每次读取一行，直到文件末尾循环结束
@@ -277,14 +317,18 @@ Model readLP(const std::string &path) {
       lp.obj_sense = ObjSense::Minimize;
       section = Section::Objective;
       const size_t space = line.find_first_of(" \t"); // 找到第一个 tab 位
-      line = space == std::string::npos ? "" : trim(line.substr(space + 1));
+      if (space != std::string::npos)
+        obj_buffer += " " + trim(line.substr(space + 1)); // 去掉前面的 min 然后拼接后面可能的公式
+      continue;
     } else if (startsWithWord(line, "maximize") || startsWithWord(line, "maximum") ||
                startsWithWord(line, "max")) {
       lp.obj_sense = ObjSense::Maximize;
       section = Section::Objective;
       const size_t space = line.find_first_of(" \t"); // return the position of the found character
                                                       // or npos if no such character is found.
-      line = space == std::string::npos ? "" : trim(line.substr(space + 1));
+      if (space != std::string::npos)
+        obj_buffer += " " + trim(line.substr(space + 1));
+      continue;
     } else if (startsWithWord(line, "subject to") || startsWithWord(line, "such that") ||
                startsWithWord(line, "s.t.") || startsWithWord(line, "st")) {
       flushObjective(); // 解析并清空目标函数缓冲区
@@ -315,33 +359,20 @@ Model readLP(const std::string &path) {
            auto &[index, coef] : obj_formula) {
         lp.objective_coef[index] += coef;
       }
-      obj_buffer = "" + line; // 目标函数拼接缓冲区
+      obj_buffer += " " + line; // 目标函数拼接缓冲区
     } else if (section == Section::Constraints) {
-      std::string con_name;
-      if (size_t name_pos = line.find(':'); name_pos != std::string::npos)
-        con_name = trim(line.substr(0, name_pos));
-      std::string operator_;
-      size_t pos = line.find("<=");
-      if (pos != std::string::npos) {
-        operator_ = "<=";
-      } else if ((pos = line.find(">=")) != std::string::npos) {
-        operator_ = ">=";
-      } else if ((pos = line.find('=')) != std::string::npos) {
-        operator_ = "=";
-      } else {
-        throw std::runtime_error("Cannot parse constraint: " +
-                                 line); // 防止约束条件书写错误时（例如<没有等号）被直接跳过的情况
+      // 若 con_buffer 不为空，当前新行不应该包含了新的约束名 (例如 "c2:")
+      if (!con_buffer.empty() && line.find(':') != std::string::npos &&
+          con_buffer.find("<=") == std::string::npos &&
+          con_buffer.find(">=") == std::string::npos && con_buffer.find('=') == std::string::npos) {
+        throw std::runtime_error("Invalid constraint structure near: " + con_buffer);
       }
 
-      std::string lhs_text = removeOptionalLabel(line.substr(0, pos));
-      const double rhs = parseDoubleToken(line.substr(pos + operator_.size()));
-      const int sense = operator_ == "<=" ? 0 : (operator_ == ">=" ? 1 : 2);
-      if (sense == 0)
-        lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), -INF, rhs);
-      else if (sense == 1)
-        lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), rhs, INF);
-      else
-        lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), rhs, rhs);
+      // 追加当前行到约束缓冲区
+      con_buffer += " " + line;
+
+      // 尝试解析，只有检测到关系运算符和 RHS 时才会真正触发解析并清空 con_buffer
+      tryParseConstraint(con_buffer);
 
     } else if (section == Section::Bounds) {
       parseLpBoundLine(line, lp);
@@ -682,7 +713,7 @@ int main() {
 #ifdef _WIN32
   file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/boeing1.lp";
 #else
-  file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/boeing1.mps";
+  file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/boeing1.lp";
 #endif
   auto problem = read(file_path);
   problem.print();
