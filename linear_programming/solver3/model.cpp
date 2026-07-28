@@ -92,6 +92,7 @@ ChenInt Model::findOrCreateVariable(const std::string &name) {
 void Model::printLinearExpression(const std::vector<LinearTerm> &terms) const {
   bool first = true;
 
+  size_t counter = 0;
   for (const auto &[col, coef] : terms) {
     if (std::abs(coef) < 1e-12)
       continue;
@@ -104,6 +105,9 @@ void Model::printLinearExpression(const std::vector<LinearTerm> &terms) const {
     if (const double abs_coef = std::abs(coef); std::abs(abs_coef - 1.0) > 1e-12)
       std::cout << abs_coef << " ";
     std::cout << variables[col].name;
+    counter++;
+    if (counter % 3 == 0)
+      std::cout << "\n      ";
     first = false;
   }
 
@@ -116,6 +120,7 @@ void Model::printObjective() const {
   std::cout << " obj: ";
   bool first = true;
 
+  size_t counter = 0;
   for (auto const &[col, coef] : objective_coef) {
     if (std::abs(coef) < 1e-12)
       continue;
@@ -129,10 +134,13 @@ void Model::printObjective() const {
     if (const double abs_coef = std::abs(coef); std::abs(abs_coef - 1.0) > 1e-12)
       std::cout << abs_coef << " ";
     std::cout << variables[col].name;
+    counter++;
+    if (counter % 3 == 0)
+      std::cout << "\n      ";
     first = false;
   }
 
-  if (first)
+  if (first) // 目标函数全部为0
     std::cout << "0";
   std::cout << "\n\n";
 }

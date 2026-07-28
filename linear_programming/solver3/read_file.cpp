@@ -285,10 +285,13 @@ Model readLP(const std::string &path) {
 
     // 提取约束名称（如果有）
     std::string con_name;
-    if (size_t name_pos = text.find(':'); name_pos != std::string::npos && name_pos < pos)
+    size_t name_pos = text.find(':');
+    if (name_pos == std::string::npos)
+      name_pos = 0;
+    if (name_pos != 0 && name_pos < pos)
       con_name = trim(text.substr(0, name_pos));
 
-    std::string lhs_text = removeOptionalLabel(text.substr(0, pos));
+    const std::string lhs_text = removeOptionalLabel(text.substr(name_pos, pos - name_pos));
     const double rhs = parseDoubleToken(text.substr(pos + operator_.size()));
     const int sense = operator_ == "<=" ? 0 : (operator_ == ">=" ? 1 : 2);
 
