@@ -67,7 +67,7 @@ struct Model {
   ModelStatus status = ModelStatus::Empty;
   ObjSense obj_sense = ObjSense::Minimize;
   std::vector<Variable> variables;
-  // sparse objective coefficients
+  // sparse objective coefficients for each column index
   std::map<ChenInt, double> objective_coef;
   std::vector<Constraint> constraints;
 

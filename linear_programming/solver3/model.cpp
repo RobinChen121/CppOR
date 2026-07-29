@@ -223,6 +223,99 @@ void Model::printBinaries() const {
   std::cout << "\n";
 }
 
+SolverModel compile(const Model &model) {
+  SolverModel solver_model;
+
+  // 1. 基础元数据复制与维度初始化
+  solver_model.obj_sense = model.obj_sense;
+  solver_model.obj_offset = 0.0; // 若 Model 增加 offset 字段可在此处赋值
+
+  const ChenInt num_cols = static_cast<ChenInt>(model.variables.size());
+  const ChenInt num_rows = static_cast<ChenInt>(model.constraints.size());
+
+  solver_model.num_col = num_cols;
+  solver_model.num_row = num_rows;
+
+  // 2. 提取变量界限、类型和 ID，以及密集的目标函数系数
+  solver_model.col_lb.resize(num_cols);
+  solver_model.col_ub.resize(num_cols);
+  solver_model.var_type.resize(num_cols);
+  solver_model.col_ids.resize(num_cols);
+
+  for (ChenInt j = 0; j < num_cols; ++j) {
+    const auto &var = model.variables[j];
+    solver_model.col_lb[j] = var.lb;
+    solver_model.col_ub[j] = var.ub;
+    solver_model.var_type[j] = var.var_type;
+    solver_model.col_ids[j] = var.id;
+  }
+
+  // 稀疏目标函数转化为稠密向量 (大小等于变量个数)
+  solver_model.objective_coef.assign(num_cols, 0.0);
+  for (const auto &[col_idx, coef] : model.objective_coef) {
+    if (col_idx >= 0 && col_idx < num_cols) {
+      solver_model.objective_coef[col_idx] = coef;
+    }
+  }
+
+  // 3. 提取约束上下界和 ID
+  solver_model.row_lb.resize(num_rows);
+  solver_model.row_ub.resize(num_rows);
+  solver_model.row_ids.resize(num_rows);
+
+  for (ChenInt i = 0; i < num_rows; ++i) {
+    const auto &con = model.constraints[i];
+    solver_model.row_lb[i] = con.lb;
+    solver_model.row_ub[i] = con.ub;
+    solver_model.row_ids[i] = con.id;
+  }
+
+  // 4. 构建 CSC 矩阵 (核心：行格式 -> 稀疏列格式)
+
+  // 步骤 4.1：统计矩阵每一列（每个变量）的非零元数量
+  std::vector<ChenInt> col_counts(num_cols, 0);
+  ChenInt total_nnz = 0;
+
+  for (const auto &con : model.constraints) {
+    for (const auto &[col, coef] : con.lhs) {
+      if (col >= 0 && col < num_cols) {
+        col_counts[col]++;
+        total_nnz++;
+      }
+    }
+  }
+
+  // 初始化求解器的 CSC 结构，一次性预分配内存
+  solver_model.A_matrix = CSC(total_nnz, num_cols);
+  CSC &csc = solver_model.A_matrix;
+
+  // 步骤 4.2：构建 col_ptr，并准备一个游标数组用于桶排序 (Bucket Sort)
+  csc.col_ptr[0] = 0;
+  for (ChenInt j = 0; j < num_cols; ++j) {
+    csc.col_ptr[j + 1] = csc.col_ptr[j] + col_counts[j];
+  }
+
+  // current_col_offset 记录当前列下一个非零元应该填入 csc.values 的位置
+  std::vector<ChenInt> current_col_offset = csc.col_ptr;
+
+  // 步骤 4.3：遍历所有约束，将非零元填入对应的列中
+  for (ChenInt row_idx = 0; row_idx < num_rows; ++row_idx) {
+    const auto &con = model.constraints[row_idx];
+    for (const auto &term : con.lhs) {
+      const ChenInt col_idx = term.col;
+      if (col_idx >= 0 && col_idx < num_cols) {
+        // 获取当前列在 CSC 数组中的写入位置
+        const ChenInt dest_idx = current_col_offset[col_idx]++;
+
+        csc.row_indices[dest_idx] = row_idx;
+        csc.values[dest_idx] = term.coef;
+      }
+    }
+  }
+
+  return solver_model;
+}
+
 void Model::print() const {
   std::cout << "========================================\n";
 
