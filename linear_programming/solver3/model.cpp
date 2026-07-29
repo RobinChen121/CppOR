@@ -157,7 +157,7 @@ void Model::printConstraints() const {
       std::cout << " <= " << con.ub;
     } else if (con.ub >= INF / 2) {
       std::cout << " >= " << con.lb;
-    } else {
+    } else { // 处理约束条件在可能的 ranges 的情况
       std::cout << " in [" << con.lb << ", " << con.ub << "]";
     }
 
@@ -225,6 +225,9 @@ void Model::printBinaries() const {
 
 void Model::print() const {
   std::cout << "========================================\n";
+
+  if (!model_name.empty())
+    std::cout << "Model Name: " << model_name << "\n\n";
 
   printObjective();
   printConstraints();

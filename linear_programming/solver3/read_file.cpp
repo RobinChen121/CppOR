@@ -99,13 +99,13 @@ double parseDoubleToken(std::string token) {
   return value;
 }
 
-void setLpBound(Model &lp, const ChenInt col, const double lower, const double upper) {
-  // lp.free_var[col] = is_free;
-  lp.variables[col].lb = lower;
-  lp.variables[col].ub = upper;
+void setLpBound(Model &model, const ChenInt col, const double lower, const double upper) {
+  // model.free_var[col] = is_free;
+  model.variables[col].lb = lower;
+  model.variables[col].ub = upper;
 }
 
-std::vector<LinearTerm> parseLinearExpression(const std::string &expr, Model &lp) {
+std::vector<LinearTerm> parseLinearExpression(const std::string &expr, Model &model) {
   std::map<ChenInt, double> coefficients;
   size_t pos = 0;
 
@@ -156,7 +156,7 @@ std::vector<LinearTerm> parseLinearExpression(const std::string &expr, Model &lp
 
     const std::string name = expr.substr(name_start, pos - name_start);
     // 合并可能的重复变量
-    coefficients[lp.findOrCreateVariable(name)] += sign * coef;
+    coefficients[model.findOrCreateVariable(name)] += sign * coef;
   }
 
   std::vector<LinearTerm> terms;
@@ -171,14 +171,14 @@ std::vector<LinearTerm> parseLinearExpression(const std::string &expr, Model &lp
   return terms;
 }
 
-void parseLpBoundLine(const std::string &line, Model &lp) {
+void parseLpBoundLine(const std::string &line, Model &model) {
   std::string s = removeOptionalLabel(trim(line));
   if (s.empty())
     return;
 
   if (const std::string lower = toLower(s); lower.ends_with(" free")) {
     const std::string name = trim(s.substr(0, s.size() - 5));
-    setLpBound(lp, lp.findOrCreateVariable(name), -INF, INF);
+    setLpBound(model, model.findOrCreateVariable(name), -INF, INF);
     return;
   }
 
@@ -189,7 +189,7 @@ void parseLpBoundLine(const std::string &line, Model &lp) {
     const double lb = parseDoubleToken(s.substr(0, first_le));
     const std::string name = trim(s.substr(first_le + 2, second_le - first_le - 2));
     const double ub = parseDoubleToken(s.substr(second_le + 2));
-    setLpBound(lp, lp.findOrCreateVariable(name), lb, ub);
+    setLpBound(model, model.findOrCreateVariable(name), lb, ub);
     return;
   }
   if (first_ge != std::string::npos && s.find(">=", first_ge + 2) != std::string::npos) {
@@ -197,7 +197,7 @@ void parseLpBoundLine(const std::string &line, Model &lp) {
     const double ub = parseDoubleToken(s.substr(0, first_ge));
     const std::string name = trim(s.substr(first_ge + 2, second_ge - first_ge - 2));
     const double lb = parseDoubleToken(s.substr(second_ge + 2));
-    setLpBound(lp, lp.findOrCreateVariable(name), lb, ub);
+    setLpBound(model, model.findOrCreateVariable(name), lb, ub);
     return;
   }
 
@@ -205,7 +205,7 @@ void parseLpBoundLine(const std::string &line, Model &lp) {
                                      s.find(">=") == std::string::npos) {
     const std::string name = trim(s.substr(0, eq));
     const double value = parseDoubleToken(s.substr(eq + 1));
-    setLpBound(lp, lp.findOrCreateVariable(name), value, value);
+    setLpBound(model, model.findOrCreateVariable(name), value, value);
     return;
   }
 
@@ -222,29 +222,30 @@ void parseLpBoundLine(const std::string &line, Model &lp) {
 
   if (left_is_number) {
     const double value = parseDoubleToken(left);
-    const ChenInt col = lp.findOrCreateVariable(right);
+    const ChenInt col = model.findOrCreateVariable(right);
     if (is_le)
-      lp.variables[col].lb = value;
+      model.variables[col].lb = value;
     else
-      lp.variables[col].ub = value;
+      model.variables[col].ub = value;
   } else {
-    const ChenInt col = lp.findOrCreateVariable(left);
+    const ChenInt col = model.findOrCreateVariable(left);
     const double value = parseDoubleToken(right);
     if (is_le)
-      lp.variables[col].ub = value;
+      model.variables[col].ub = value;
     else
-      lp.variables[col].lb = value;
+      model.variables[col].lb = value;
   }
 }
 
 } // namespace
 
+// LP 文件一般没有模型的名字
 Model readLP(const std::string &path) {
   std::ifstream file(path);
   if (!file)
     throw std::runtime_error("Cannot open LP file: " + path);
 
-  Model lp;
+  Model model;
   enum class Section { None, Objective, Constraints, Bounds, Generals, Binaries };
   auto section = Section::None;
 
@@ -256,8 +257,8 @@ Model readLP(const std::string &path) {
   auto flushObjective = [&]() {
     std::string text = trim(obj_buffer);
     if (!text.empty()) {
-      for (auto &[index, coef] : parseLinearExpression(removeOptionalLabel(text), lp)) {
-        lp.objective_coef[index] += coef;
+      for (auto &[index, coef] : parseLinearExpression(removeOptionalLabel(text), model)) {
+        model.objective_coef[index] += coef;
       }
       obj_buffer.clear();
     }
@@ -296,11 +297,11 @@ Model readLP(const std::string &path) {
     const int sense = operator_ == "<=" ? 0 : (operator_ == ">=" ? 1 : 2);
 
     if (sense == 0)
-      lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), -INF, rhs);
+      model.addConstraint(con_name, parseLinearExpression(lhs_text, model), -INF, rhs);
     else if (sense == 1)
-      lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), rhs, INF);
+      model.addConstraint(con_name, parseLinearExpression(lhs_text, model), rhs, INF);
     else
-      lp.addConstraint(con_name, parseLinearExpression(lhs_text, lp), rhs, rhs);
+      model.addConstraint(con_name, parseLinearExpression(lhs_text, model), rhs, rhs);
 
     // 解析完成后清空缓冲区
     text.clear();
@@ -317,7 +318,7 @@ Model readLP(const std::string &path) {
     const std::string lower = toLower(line);
     if (startsWithWord(line, "minimize") || startsWithWord(line, "minimum") ||
         startsWithWord(line, "min")) {
-      lp.obj_sense = ObjSense::Minimize;
+      model.obj_sense = ObjSense::Minimize;
       section = Section::Objective;
       const size_t space = line.find_first_of(" \t"); // 找到第一个 tab 位
       if (space != std::string::npos)
@@ -325,7 +326,7 @@ Model readLP(const std::string &path) {
       continue;
     } else if (startsWithWord(line, "maximize") || startsWithWord(line, "maximum") ||
                startsWithWord(line, "max")) {
-      lp.obj_sense = ObjSense::Maximize;
+      model.obj_sense = ObjSense::Maximize;
       section = Section::Objective;
       const size_t space = line.find_first_of(" \t"); // return the position of the found character
                                                       // or npos if no such character is found.
@@ -358,9 +359,9 @@ Model readLP(const std::string &path) {
       continue;
 
     if (section == Section::Objective) {
-      for (auto obj_formula = parseLinearExpression(removeOptionalLabel(line), lp);
+      for (auto obj_formula = parseLinearExpression(removeOptionalLabel(line), model);
            auto &[index, coef] : obj_formula) {
-        lp.objective_coef[index] += coef;
+        model.objective_coef[index] += coef;
       }
       obj_buffer += " " + line; // 目标函数拼接缓冲区
     } else if (section == Section::Constraints) {
@@ -378,30 +379,30 @@ Model readLP(const std::string &path) {
       tryParseConstraint(con_buffer);
 
     } else if (section == Section::Bounds) {
-      parseLpBoundLine(line, lp);
+      parseLpBoundLine(line, model);
     } else if (section == Section::Generals) {
 
       std::istringstream in(line); // 逐个读取一行文本中的单词
 
       std::string name;
       while (in >> name) {
-        ChenInt col = lp.findOrCreateVariable(name);
-        lp.variables[col].var_type = VarType::Integer;
+        ChenInt col = model.findOrCreateVariable(name);
+        model.variables[col].var_type = VarType::Integer;
       }
     } else if (section == Section::Binaries) {
 
       std::istringstream in(line);
       std::string name;
       while (in >> name) {
-        ChenInt col = lp.findOrCreateVariable(name);
-        lp.variables[col].var_type = VarType::Binary;
-        lp.variables[col].lb = 0.0;
-        lp.variables[col].ub = 1.0;
+        ChenInt col = model.findOrCreateVariable(name);
+        model.variables[col].var_type = VarType::Binary;
+        model.variables[col].lb = 0.0;
+        model.variables[col].ub = 1.0;
       }
     }
   }
 
-  return lp;
+  return model;
 }
 
 Model readMPS(const std::string &path) {
@@ -409,7 +410,7 @@ Model readMPS(const std::string &path) {
   if (!file.is_open())
     throw std::runtime_error("Cannot open MPS file: " + path);
 
-  enum class Section { NONE, OBJSENSE, ROWS, COLUMNS, RHS, BOUNDS };
+  enum class Section { NONE, OBJSENSE, ROWS, COLUMNS, RHS, RANGES, BOUNDS };
   auto section = Section::NONE;
 
   struct RowInfo {
@@ -433,19 +434,20 @@ Model readMPS(const std::string &path) {
   std::map<std::string, std::map<std::string, double>> columns;                 // 用于 objective
   std::map<std::string, std::vector<std::pair<std::string, double>>> row_terms; // 用于 constraints
   std::map<std::string, double> rhs_values;
+  std::map<std::string, double> ranges_values; // 储存 RANGES
   std::map<std::string, BoundInfo> bounds_map;
   std::map<std::string, bool> is_int_marker;
 
   //----------------------------------------
-  Model lp;
-  lp.obj_sense = ObjSense::Minimize;
+  Model model;
+  model.obj_sense = ObjSense::Minimize;
   std::string line;
   bool in_integer_section = false;
 
   while (std::getline(file, line)) {
     if (line.empty() || line[0] == '*')
       continue;
-    std::istringstream iss(line);
+    std::istringstream iss(line); // isstringstream 可以从 string 里提取单词
     std::string first;
     if (!(iss >> first))
       continue;
@@ -453,8 +455,10 @@ Model readMPS(const std::string &path) {
     //----------------------------------------
     // section switching
     //----------------------------------------
-    if (first == "NAME")
+    if (first == "NAME") {
+      model.model_name = trim(line.substr(5));
       continue;
+    }
     if (first == "OBJSENSE") {
       section = Section::OBJSENSE;
       continue;
@@ -471,6 +475,10 @@ Model readMPS(const std::string &path) {
       section = Section::RHS;
       continue;
     }
+    if (first == "RANGES") {
+      section = Section::RANGES;
+      continue;
+    }
     if (first == "BOUNDS") {
       section = Section::BOUNDS;
       continue;
@@ -483,9 +491,9 @@ Model readMPS(const std::string &path) {
     //----------------------------------------
     if (section == Section::OBJSENSE) {
       if (first == "MAX" || first == "MAXIMIZE")
-        lp.obj_sense = ObjSense::Maximize;
+        model.obj_sense = ObjSense::Maximize;
       else if (first == "MIN" || first == "MINIMIZE")
-        lp.obj_sense = ObjSense::Minimize;
+        model.obj_sense = ObjSense::Minimize;
     }
 
     //----------------------------------------
@@ -505,7 +513,7 @@ Model readMPS(const std::string &path) {
     // COLUMNS
     //----------------------------------------
     else if (section == Section::COLUMNS) {
-      std::string col = first;
+      const std::string &col = first; // 引用绑定，数组长时效率提升明显
       std::string row1;
       iss >> row1;
       // 整数变量
@@ -532,15 +540,16 @@ Model readMPS(const std::string &path) {
       // 用 += 是因为有时候变量重复
       columns[col][row1] += val1;
       if (row1 != objective_name)
-        row_terms[row1].push_back({col, val1});
+        // 当需要向容器中新增一个需要现场构造的对象时（直接传入构造函数的参数），优先使用
+        // emplace_back, 能够省去了移动/拷贝的开销
+        row_terms[row1].emplace_back(col, val1);
 
-      std::string row2;
       double val2{};
 
-      if (iss >> row2 >> val2) {
+      if (std::string row2; iss >> row2 >> val2) {
         columns[col][row2] += val2;
         if (row2 != objective_name)
-          row_terms[row2].push_back({col, val2});
+          row_terms[row2].emplace_back(col, val2);
       }
     }
 
@@ -548,32 +557,44 @@ Model readMPS(const std::string &path) {
     // RHS
     //----------------------------------------
     else if (section == Section::RHS) {
-      std::string rhs_name = first;
-      (void)rhs_name;
+      // const std::string &rhs_name = first;
+      // (void)rhs_name; // 消除编译器 "Unused variable"（未使用的变量）警告 的经典技巧
 
-      std::string row1;
       double val1{};
 
-      if (iss >> row1 >> val1)
+      if (std::string row1; iss >> row1 >> val1)
         rhs_values[row1] += val1;
 
-      std::string row2;
       double val2{};
 
-      if (iss >> row2 >> val2)
+      if (std::string row2; iss >> row2 >> val2)
         rhs_values[row2] += val2;
+    }
+
+    //----------------------------------------
+    // RANGES
+    //----------------------------------------
+    else if (section == Section::RANGES) {
+      // std::string range_name = first;
+      std::string row1;
+      if (double val1{}; iss >> row1 >> val1)
+        ranges_values[row1] = val1;
+
+      double val2{};
+      if (std::string row2; iss >> row2 >> val2)
+        ranges_values[row2] = val2;
     }
 
     //----------------------------------------
     // BOUNDS
     //----------------------------------------
     else if (section == Section::BOUNDS) {
-      std::string btype = first;
+      const std::string &btype = first;
 
-      std::string bname;
+      std::string bound_name;
       std::string col;
 
-      iss >> bname >> col;
+      iss >> bound_name >> col;
       auto &[lb, ub, is_explicit_free, is_binary] = bounds_map[col];
 
       if (btype == "FR") {
@@ -634,7 +655,7 @@ Model readMPS(const std::string &path) {
       type = VarType::Integer;
 
     std::string name = col_name;
-    lp.addVariable(name, lb, ub, type);
+    model.addVariable(name, lb, ub, type);
   }
 
   //----------------------------------------
@@ -649,12 +670,12 @@ Model readMPS(const std::string &path) {
     if (obj_it == col_it->second.end())
       continue;
 
-    ChenInt col = lp.findOrCreateVariable(col_name);
-    lp.objective_coef[col] += obj_it->second;
+    ChenInt col = model.findOrCreateVariable(col_name);
+    model.objective_coef[col] += obj_it->second;
   }
 
   //----------------------------------------
-  // constraints
+  // constraints (包含处理 ranges 上限 与 下限)
   //----------------------------------------
   // 这样循环会降低时间复杂度，从 num_rows*num_cols 降为 num_non_zeros
   for (const auto &[type, name] : rows) {
@@ -662,37 +683,51 @@ Model readMPS(const std::string &path) {
       continue;
 
     std::vector<LinearTerm> terms;
-
-    auto row_it = row_terms.find(name);
-
-    if (row_it != row_terms.end()) {
+    if (auto row_it = row_terms.find(name); row_it != row_terms.end()) {
       terms.reserve(row_it->second.size());
-
       for (const auto &[col_name, coef] : row_it->second) {
-        terms.push_back({lp.findOrCreateVariable(col_name), coef});
+        terms.push_back({model.findOrCreateVariable(col_name), coef});
       }
     }
-    double rhs = 0.0;
-    if (rhs_values.contains(name))
-      rhs = rhs_values[name];
-    std::string con_name = name;
+
+    double rhs = rhs_values.contains(name) ? rhs_values[name] : 0.0;
+    bool has_range = ranges_values.contains(name);
+    double range = has_range ? ranges_values[name] : 0.0;
+
+    double lhs_bound = -INF;
+    double rhs_bound = INF;
 
     switch (type) {
-    case 'L':
-      lp.addConstraint(con_name, terms, -INF, rhs);
+    case 'L': // Ax <= rhs，此时添加一个下界：rhs减去range
+      rhs_bound = rhs;
+      lhs_bound = has_range ? (rhs - std::abs(range)) : -INF;
       break;
-    case 'G':
-      lp.addConstraint(con_name, terms, rhs, INF);
+    case 'G': // Ax >= rhs，此时添加一个上界：rhs加上range
+      lhs_bound = rhs;
+      rhs_bound = has_range ? (rhs + std::abs(range)) : INF;
       break;
-    case 'E':
-      lp.addConstraint(con_name, terms, rhs, rhs);
+    case 'E': // Ax = rhs 或 rhs <= Ax <= rhs + range，此时等式约束退化为区间约束
+      if (!has_range) {
+        lhs_bound = rhs;
+        rhs_bound = rhs;
+      } else if (range > 0) {
+        lhs_bound = rhs;
+        rhs_bound = rhs + range;
+      } else {
+        lhs_bound = rhs + range;
+        rhs_bound = rhs;
+      }
       break;
     default:
       break;
     }
+
+    if (type != 'N') {
+      model.addConstraint(name, terms, lhs_bound, rhs_bound);
+    }
   }
 
-  return lp;
+  return model;
 }
 
 Model read(const std::string &path) {
@@ -714,7 +749,7 @@ int main() {
   std::string file_path;
   // #ifdef 是 C/C++ 预处理器（Preprocessor）指令，_WIN32 为宏
 #ifdef _WIN32
-  file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/boeing1.lp";
+  file_path = "D:/chenzhen/CppOR/linear_programming/test_sets/boeing1.mps";
 #else
   file_path = "/Users/zhenchen/CLionProjects/CppOR/linear_programming/test_sets/boeing1.lp";
 #endif

@@ -63,6 +63,7 @@ enum class ModelStatus : uint8_t {
 
 // user model
 struct Model {
+  std::string model_name;
   ModelStatus status = ModelStatus::Empty;
   ObjSense obj_sense = ObjSense::Minimize;
   std::vector<Variable> variables;
