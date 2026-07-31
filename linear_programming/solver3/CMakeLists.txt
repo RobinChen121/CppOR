@@ -20,4 +20,5 @@ add_executable(${PROJECT_NAME}
         read_file.cpp
         util.h
         config.h
+        ../../stochastic_inventory/random_yield/two_product.h
 )
