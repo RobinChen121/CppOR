@@ -19,7 +19,7 @@
 #include <vector>
 
 struct PMFData {
-  std::vector<int> demand;  // flattened demand
+  std::vector<int> demands; // flattened demand
   std::vector<double> prob; // flattened probability
   std::vector<int> offset;  // start index of each t in flat arrays
   std::vector<int> len;     // length per t
@@ -52,7 +52,7 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
   }
   pmf.offset[T] = total_size;
 
-  pmf.demand.resize(total_size);
+  pmf.demands.resize(total_size);
   pmf.prob.resize(total_size);
 
   // fill flattened arrays
@@ -69,7 +69,7 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
       int demand = lb + j;
       const int idx = base + j;
 
-      pmf.demand[idx] = demand;
+      pmf.demands[idx] = demand;
       pmf.prob[idx] = boost::math::pdf(dist, demand) * norm;
     }
   }
@@ -94,7 +94,7 @@ int main() {
 
   constexpr int min_I = -100;
   constexpr int max_I = 100;
-  constexpr int num_inv = max_I - min_I + 1;
+  constexpr int num_inv = max_I - min_I + 1; // number of possible inventory levels
 
   const auto start_time = std::chrono::high_resolution_clock::now();
   const auto pmf = getPMFPoisson(demands, truncQuantile);
@@ -122,13 +122,14 @@ int main() {
   // *V 就是对应的值，等同于 V[0]
   double *V = value.data(); // Returns a pointer to the underlying array serving as element storage
   int *P = policy.data();
-  const int *demand = pmf.demand.data();
+  const int *demand = pmf.demands.data();
   const double *prob = pmf.prob.data();
   const int *offset = pmf.offset.data();
   const double *H = hold_penalty_costs.data();
 
   // =========================
   // DP CORE (HOT LOOP)
+  // 4 个循环：时间t，初始库存状态，可行决策，随机需求
   // =========================
   for (int t = T - 1; t >= 0; --t) {
 
@@ -138,11 +139,10 @@ int main() {
     const int end = offset[t + 1];
 
     // 指针可以加减，相当于移动位置
-    // 下面相当于把各阶段的 V与 P 提出来了
-    double *V_current = V + base_t;
+    // 下面相当于把各阶段的 V 与 P 提出来了
+    double *V_current = V + base_t; // 关键是一维 value 数组，整除操作比加法，乘法更耗时计算机
     double *V_next = V + base_tp;
     int *P_current = P + base_t;
-
     for (int idx = 0; idx < num_inv; ++idx) {
       int inventory = idx + min_I;
       double best_value = INF;
