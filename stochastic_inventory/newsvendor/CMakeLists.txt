@@ -37,14 +37,15 @@ add_executable(${PROJECT_NAME}
         #        newsvendor_c.c
         #        newsvendor_vanilla.c
         #        heuristic1997.cpp
-        #        newsvendor_capacity.cpp
-        #        newsvendor_vanilla_vector.cpp
-        newsvendor_vanilla.cpp
-        #        newsvendor_vanilla_newhash.cpp
+        #                newsvendor_capacity.cpp
+        newsvendor_1Dvector.cpp
+        #        newsvendor_vanilla.cpp
+        #        newsvendor_newhash.cpp
         #        newsvendor.h
         #
         #        ../../utils/draw_graph.cpp
         #        ../../utils/Kconvexity.cpp
+        ../../utils/pmf.cpp
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )
@@ -117,4 +118,31 @@ else ()
     target_link_libraries(${PROJECT_NAME}
             ${Python3_LIBRARIES}
     )
+endif ()
+
+#-----------------------------------
+# OpenMP needs to be downloaded to the mac, parallel computing api
+if (APPLE)
+    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/21.1.8/include")
+    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/21.1.8/lib") # /libomp.dylib
+    # 手动设置 OpenMP 相关的编译和链接选项
+    set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
+    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")
+    # 应用 OpenMP 选项
+    # 这两行命令使得运行当前并行计算 cpp 等同于在命令行中的设置
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}") # CMAKE_CXX_FLAGS 变量用于存储 C++ 编译器的全局编译选项（flags）
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_LIBS}") # CMAKE_EXE_LINKER_FLAGS 变量用于存储 链接时的额外选项
+    # 添加 OpenMP 头文件路径和库路径
+    include_directories(${OpenMP_INCLUDE_DIR})
+else ()
+    find_package(OpenMP REQUIRED)
+    if (MSVC)
+        target_compile_options(junior_practice PRIVATE /openmp)
+    else ()
+        target_compile_options(${PROJECT_NAME} PRIVATE -fopenmp)
+        target_link_options(${PROJECT_NAME} PRIVATE -fopenmp)
+    endif ()
+    if (OpenMP_CXX_FOUND)
+        target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+    endif ()
 endif ()

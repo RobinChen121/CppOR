@@ -6,9 +6,12 @@
  * using 2D vector is 0.077s; (40 periods, mean demand 20)
  * using 1D vector can be much faster 0.056s; open parallel computation can speed up further to
  * 0.017s; using pointer to access vector values can be faster further 0.04s. 40 periods, running
- * time under serial computing is 0.035s(dell), a little faster than Julia 0.048s
+ * time under serial computing is 0.035s(dell), a little faster than Julia 0.048s.
  *
+ * if precomputing the expected cost for each inventory level, the running time can be further
+ * reduced to 0.003s.
  *
+ * 不参与运算的整型才有必要使用 int8_t
  */
 
 #include <boost/math/distributions/poisson.hpp>
@@ -78,7 +81,7 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 }
 
 int main() {
-  constexpr int T = 40;
+  constexpr int T = 70;
   constexpr double mean_demand = 20.0;
   const std::vector demands(T, mean_demand);
   // const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
@@ -152,6 +155,7 @@ int main() {
     std::vector<double> expected_future(S_len, 0.0);
 
     // Serial precompute over demand support for this time t
+    // 每个 order-up-level 的期望成本可以提前计算出来
     for (int s = s_min; s <= s_max; ++s) {
       double acc = 0.0;
       for (int i = start; i < end; ++i) {
@@ -166,8 +170,11 @@ int main() {
       expected_future[s - s_min] = acc;
     }
 
-    // Parallelize over initial inventory states; each iteration writes disjoint V_current[idx] and P_current[idx]
-#pragma omp parallel for schedule(guided)
+    // Parallelize over initial inventory states; each iteration writes disjoint V_current[idx] and
+    // P_current[idx]
+// #pragma omp parallel for schedule(guided) //
+// 这个表示动态分配，给刚开始的线程分配较大的chunk，逐渐递减
+#pragma omp parallel for // 后面不加任何东西，则默认每个线程平分循环任务
     for (int idx = 0; idx < num_inv; ++idx) {
       int inventory = idx + min_I;
       double best_value = INF;
@@ -178,8 +185,26 @@ int main() {
         const double variable_cost = action * unit_order_cost;
         const int inventory_up_level = inventory + action;
 
-        // action cost is independent of demand; expected_future already contains expected(H + V_next)
-        const double current_value = (fix_cost + variable_cost) + expected_future[inventory_up_level - s_min];
+        // action cost is independent of demand; expected_future already contains expected(H +
+        // V_next)
+        const double current_value =
+            (fix_cost + variable_cost) + expected_future[inventory_up_level - s_min];
+
+        // double current_value = 0.0;
+        // for (int i = start; i < end; ++i) {
+        //   // demand[i] 等同于 *(demand+i)
+        //   int next_inventory = inventory_up_level - demand[i];
+        //
+        //   // fast clamp (branch version)
+        //   if (next_inventory < min_I)
+        //     next_inventory = min_I;
+        //   else if (next_inventory > max_I)
+        //     next_inventory = max_I;
+        //
+        //   int next_index = next_inventory - min_I;
+        //   double cost = fix_cost + variable_cost + H[next_index];
+        //   current_value += prob[i] * (cost + V_next[next_index]);
+        // }
 
         if (current_value < best_value) {
           best_value = current_value;

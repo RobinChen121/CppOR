@@ -15,9 +15,8 @@
 #include <array>
 #include <cmath> // for NAN
 #include <iostream>
-#include <vector>
 #include <unordered_map>
-
+#include <vector>
 
 // 1. 定义结构体
 struct Key {
@@ -26,9 +25,7 @@ struct Key {
   int z;
 
   // 相等比较函数（unordered_map 需要）
-  bool operator==(const Key &other) const {
-    return x == other.x && y == other.y && z == other.z;
-  }
+  bool operator==(const Key &other) const { return x == other.x && y == other.y && z == other.z; }
 };
 
 // 2. 定义自定义哈希函数
@@ -248,7 +245,7 @@ int main() {
   constexpr double h = 1;
   constexpr double pi = 5;
   constexpr double K = 80;
-  constexpr int mean_demand = 10;
+  constexpr int mean_demand = 20;
   constexpr double rho = 0.4;
   constexpr double truncate_quantile = 0.9999; // 这个还挺影响s, S 的具体值的
   constexpr double step_size = 1.0;
@@ -258,10 +255,9 @@ int main() {
   for (int t = 0; t < T; ++t) {
     sigmas[t] = rho * demands[t];
   }
-  const std::vector<std::vector<std::vector<double>>> probs = PMF(truncate_quantile, step_size)
-                                                                  .
-                                                              getPMFNormal(demands, sigmas);
-                                                              // getPMFPoisson(demands);
+  const std::vector<std::vector<std::vector<double>>> probs =
+      PMF(truncate_quantile, step_size).getPMFNormal(demands, sigmas);
+  // getPMFPoisson(demands);
 
   // int max_demand = 100;
   // std::vector<std::vector<std::vector<double> > > probs;
@@ -290,7 +286,7 @@ int main() {
   }
 
   std::vector<double> M_values(T);
-  std::cout << "The M(S-s) for each period are " << std::endl;
+  std::cout << "The M(S-s) or tau for each period are " << std::endl;
   for (int t = 0; t < T; t++) {
     M_values[t] = problem.compute_M(sS[t][1] - sS[t][0], t);
     std::cout << M_values[t] << std::endl;

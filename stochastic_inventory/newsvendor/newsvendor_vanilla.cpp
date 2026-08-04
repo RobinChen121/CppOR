@@ -237,7 +237,7 @@ public:
 };
 
 int main() {
-  constexpr int T = 60;
+  constexpr int T = 70;
   constexpr double mean_demand = 20;
   const std::vector demands(T, mean_demand);
 
