@@ -3,11 +3,10 @@
  * Email: chen.zhen5526@gmail.com
  * Created on: 06/06/2026, 10:59
  * Description: using 2D vector to compute the DP, which is faster than using unordered_map.
- * using 2D vector is 0.077s;
- * using 1D vector can be much faster 0.056s;
- * using pointer to access vector values can be faster further 0.04s.
- * 40 periods, running time under serial computing is 0.035s(dell), a little faster than Julia
- * 0.048s
+ * using 2D vector is 0.077s; (40 periods, mean demand 20)
+ * using 1D vector can be much faster 0.056s; open parallel computation can speed up further to
+ * 0.017s; using pointer to access vector values can be faster further 0.04s. 40 periods, running
+ * time under serial computing is 0.035s(dell), a little faster than Julia 0.048s
  *
  *
  */
@@ -16,6 +15,7 @@
 #include <chrono>
 #include <iostream>
 #include <limits>
+#include <omp.h>
 #include <vector>
 
 struct PMFData {
@@ -78,11 +78,11 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 }
 
 int main() {
-  // constexpr int T = 10;
-  constexpr double mean_demand = 10.0;
-  // const std::vector demands(T, mean_demand);
-  const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
-  const int T = demands.size();
+  constexpr int T = 40;
+  constexpr double mean_demand = 20.0;
+  const std::vector demands(T, mean_demand);
+  // const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
+  // const int T = demands.size();
 
   constexpr int capacity = 150;
   constexpr double fix_order_cost = 0.0;
@@ -143,6 +143,31 @@ int main() {
     double *V_current = V + base_t; // 关键是一维 value 数组，整除操作比加法，乘法更耗时计算机
     double *V_next = V + base_tp;
     int *P_current = P + base_t;
+
+    // Precompute expected future cost for each possible post-order inventory level s
+    // s ranges from min_I .. (max_I + capacity)
+    const int s_min = min_I;
+    const int s_max = max_I + capacity;
+    const int S_len = s_max - s_min + 1; // number of s values
+    std::vector<double> expected_future(S_len, 0.0);
+
+    // Serial precompute over demand support for this time t
+    for (int s = s_min; s <= s_max; ++s) {
+      double acc = 0.0;
+      for (int i = start; i < end; ++i) {
+        int next_inventory = s - demand[i];
+        if (next_inventory < min_I)
+          next_inventory = min_I;
+        else if (next_inventory > max_I)
+          next_inventory = max_I;
+        int next_index = next_inventory - min_I;
+        acc += prob[i] * (H[next_index] + V_next[next_index]);
+      }
+      expected_future[s - s_min] = acc;
+    }
+
+    // Parallelize over initial inventory states; each iteration writes disjoint V_current[idx] and P_current[idx]
+#pragma omp parallel for schedule(guided)
     for (int idx = 0; idx < num_inv; ++idx) {
       int inventory = idx + min_I;
       double best_value = INF;
@@ -153,21 +178,8 @@ int main() {
         const double variable_cost = action * unit_order_cost;
         const int inventory_up_level = inventory + action;
 
-        double current_value = 0.0;
-        for (int i = start; i < end; ++i) {
-          // demand[i] 等同于 *(demand+i)
-          int next_inventory = inventory_up_level - demand[i];
-
-          // fast clamp (branch version)
-          if (next_inventory < min_I)
-            next_inventory = min_I;
-          else if (next_inventory > max_I)
-            next_inventory = max_I;
-
-          int next_index = next_inventory - min_I;
-          double cost = fix_cost + variable_cost + H[next_index];
-          current_value += prob[i] * (cost + V_next[next_index]);
-        }
+        // action cost is independent of demand; expected_future already contains expected(H + V_next)
+        const double current_value = (fix_cost + variable_cost) + expected_future[inventory_up_level - s_min];
 
         if (current_value < best_value) {
           best_value = current_value;
