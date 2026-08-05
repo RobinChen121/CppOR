@@ -69,6 +69,7 @@ struct Model {
   std::vector<Variable> variables;
   // sparse objective coefficients for each column index
   std::map<ChenInt, double> objective_coef;
+  double objective_offset = 0.0;
   std::vector<Constraint> constraints;
 
   // map from var name to its variable index
