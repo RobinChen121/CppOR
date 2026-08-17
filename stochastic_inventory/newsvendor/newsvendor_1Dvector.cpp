@@ -11,7 +11,8 @@
  * if precomputing the expected cost for each inventory level, the running time can be further
  * reduced to 0.003s.
  *
- * 不参与运算的整型才有必要使用 int8_t
+ * 不参与运算的整型才有必要使用 int8_t；
+ * 用指针访问数组并不能显著提升运算速度；
  */
 
 #include <boost/math/distributions/poisson.hpp>
@@ -22,10 +23,10 @@
 #include <vector>
 
 struct PMFData {
-  std::vector<int> demands; // flattened demand
-  std::vector<double> prob; // flattened probability
-  std::vector<int> offset;  // start index of each t in flat arrays
-  std::vector<int> len;     // length per t
+  std::vector<int> demands;       // flattened demand
+  std::vector<double> prob;       // flattened probability
+  std::vector<int> start_index_t; // start index of each t in flat arrays
+  std::vector<int> len_t;         // length per t
 };
 
 PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated_quantile) {
@@ -43,17 +44,17 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 
   PMFData pmf;
 
-  pmf.offset.resize(T + 1, 0);
-  pmf.len.resize(T);
+  pmf.start_index_t.resize(T + 1, 0);
+  pmf.len_t.resize(T);
 
   // compute total size (for allocation)
   int total_size = 0;
   for (size_t t = 0; t < T; ++t) {
-    pmf.len[t] = support_ub[t] - support_lb[t] + 1;
-    pmf.offset[t] = total_size;
-    total_size += pmf.len[t];
+    pmf.len_t[t] = support_ub[t] - support_lb[t] + 1;
+    pmf.start_index_t[t] = total_size;
+    total_size += pmf.len_t[t];
   }
-  pmf.offset[T] = total_size;
+  pmf.start_index_t[T] = total_size;
 
   pmf.demands.resize(total_size);
   pmf.prob.resize(total_size);
@@ -62,13 +63,13 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
   for (size_t t = 0; t < T; ++t) {
     boost::math::poisson_distribution<> dist(demands[t]);
 
-    const int base = pmf.offset[t];
-    const int len = pmf.len[t];
+    const int base = pmf.start_index_t[t];
+    const int len_t = pmf.len_t[t];
     const int lb = support_lb[t];
 
     const double norm = 1.0 / (2.0 * truncated_quantile - 1.0);
 
-    for (int j = 0; j < len; ++j) {
+    for (int j = 0; j < len_t; ++j) {
       int demand = lb + j;
       const int idx = base + j;
 
@@ -81,7 +82,7 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 }
 
 int main() {
-  constexpr int T = 70;
+  constexpr int T = 50;
   constexpr double mean_demand = 20.0;
   const std::vector demands(T, mean_demand);
   // const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
@@ -123,11 +124,12 @@ int main() {
 
   // V 是value首元素指针
   // *V 就是对应的值，等同于 V[0]
+  // C++ 的 std::vector 提供了 .data() 成员函数，它会返回指向内部连续存储数组的指针（首元素地址）
   double *V = value.data(); // Returns a pointer to the underlying array serving as element storage
   int *P = policy.data();
   const int *demand = pmf.demands.data();
   const double *prob = pmf.prob.data();
-  const int *offset = pmf.offset.data();
+  const int *start_index_t = pmf.start_index_t.data();
   const double *H = hold_penalty_costs.data();
 
   // =========================
@@ -138,8 +140,8 @@ int main() {
 
     const int base_t = t * num_inv;
     const int base_tp = (t + 1) * num_inv;
-    const int start = offset[t];
-    const int end = offset[t + 1];
+    const int start = start_index_t[t];
+    const int end = start_index_t[t + 1];
 
     // 指针可以加减，相当于移动位置
     // 下面相当于把各阶段的 V 与 P 提出来了
