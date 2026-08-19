@@ -9,7 +9,7 @@
 #ifndef CHEN_SOLVER_JS_CONFIG_H
 #define CHEN_SOLVER_JS_CONFIG_H
 
-// constexpr 表示变量不仅不能修改，并且在编译时就确定了值
+// constexpr 表示变量不仅不能修改，并且在编译时就确定的值
 constexpr double EPS = 1e-9;
 constexpr int MAX_ITER = 1e5;
 constexpr double INF = 1e100;

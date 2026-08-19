@@ -374,7 +374,6 @@ class LinearModel {
   std::vector<int> constraint_sense; // 0:<=, 1: >=, 2: =
   std::vector<int> var_sign;         // 0: >=, 1: <=, 2: unsigned
   std::vector<double> lb;            // lower bound for each variable
-  std::vector<double> ub;
 
   int enter_rule{}; // 0: Bland, 1: Dantzig, 2: lexicographic
 

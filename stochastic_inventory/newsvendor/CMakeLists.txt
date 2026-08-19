@@ -46,6 +46,11 @@ add_executable(${PROJECT_NAME}
         #        ../../utils/draw_graph.cpp
         #        ../../utils/Kconvexity.cpp
         ../../utils/pmf.cpp
+        ../../linear_programming/chen_solver/include/chen_solver/core/matrix.h
+        ../../linear_programming/chen_solver/include/chen_solver/config.h
+        ../../linear_programming/chen_solver/include/chen_solver/core/variable.cpp
+        ../../linear_programming/chen_solver/include/chen_solver/core/variable.h
+        ../../linear_programming/chen_solver/include/chen_solver/configs.h
         #        ../../tsp/tsp.h
         #        ../../tsp/DP.cpp
 )

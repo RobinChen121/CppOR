@@ -1,0 +1,1 @@
+This folder contains the public headers for users.

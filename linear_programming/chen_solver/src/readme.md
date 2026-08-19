@@ -1,0 +1,1 @@
+This folder contains the solver’s implementation code and is hidden from users.

@@ -255,7 +255,7 @@ Model readLP(const std::string &path) {
 
   // 辅助 lambda：解析并清空目标函数缓冲区
   auto flushObjective = [&]() {
-    std::string text = trim(obj_buffer);
+    const std::string text = trim(obj_buffer);
     if (!text.empty()) {
       for (auto &[index, coef] : parseLinearExpression(removeOptionalLabel(text), model)) {
         model.objective_coef[index] += coef;
