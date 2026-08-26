@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     // Create an environment
     GRBEnv env = GRBEnv(true);
     // env.set("LogFile", "mip1.log");
-    env.set(GRB_IntParam_OutputFlag, 0);
+    env.set(GRB_IntParam_OutputFlag, 1);
     env.start();
     // Start an empty environment. If the environment has already been started,
     // this method will do nothing.
@@ -45,12 +45,9 @@ int main(int argc, char *argv[]) {
 
     model.write("mip1.lp");
 
-    cout << x.get(GRB_StringAttr_VarName) << " " << x.get(GRB_DoubleAttr_X)
-         << endl;
-    cout << y.get(GRB_StringAttr_VarName) << " " << y.get(GRB_DoubleAttr_X)
-         << endl;
-    cout << z.get(GRB_StringAttr_VarName) << " " << z.get(GRB_DoubleAttr_X)
-         << endl;
+    cout << x.get(GRB_StringAttr_VarName) << " " << x.get(GRB_DoubleAttr_X) << endl;
+    cout << y.get(GRB_StringAttr_VarName) << " " << y.get(GRB_DoubleAttr_X) << endl;
+    cout << z.get(GRB_StringAttr_VarName) << " " << z.get(GRB_DoubleAttr_X) << endl;
 
     cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
   } catch (GRBException e) {
