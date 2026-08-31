@@ -41,7 +41,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
       tangent_ycoord[0] = (min_workers - 1) * p + 1; // right
       intercepts[0] = min_workers;
     } else {
-      const int a = static_cast<int>(tangent_xcoord[i - 1]);
+      const int a = std::round(tangent_xcoord[i - 1]);
       tangent_xcoord[i] = a;
       slopes[i] = slopes[i - 1];
 
@@ -51,7 +51,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
         // double test2 = Fy(a, min_workers, p);
         if (Fy_y_minus_w(j, min_workers, p) - Fy_y_minus_w(a, min_workers, p) > 1.0 / segment_num) {
           tangent_xcoord[i] = j;
-          const int b = static_cast<int>(tangent_xcoord[i]);
+          const int b = std::round(tangent_xcoord[i]);
           tangent_ycoord[i] = loss_function_expect(b, min_workers, p);
           slopes[i] = -(1 - p) * (1 - Fy_y_minus_w(b, min_workers, p));
           intercepts[i] = -slopes[i] * tangent_xcoord[i] + tangent_ycoord[i];
@@ -75,8 +75,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
                                   : intercept_xcoord[i + 1] / (slopes[i] - slopes[i + 1]);
     intercept_ycoord[i + 1] =
         slopes[i] * (intercept_xcoord[i + 1] - tangent_xcoord[i]) + tangent_ycoord[i];
-    const double y =
-        loss_function_expect(static_cast<int>(intercept_xcoord[i + 1]), min_workers, p);
+    const double y = loss_function_expect(std::round(intercept_xcoord[i + 1]), min_workers, p);
     intercept_gap[i + 1] = y - intercept_ycoord[i + 1];
   }
 
@@ -220,7 +219,7 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
       y_values[t] = y[t].get(GRB_DoubleAttr_X);
       x_values[t] = x[t].get(GRB_DoubleAttr_X);
       u_values[t] = u[t].get(GRB_DoubleAttr_X);
-      z_values[t] = static_cast<int> (z[t].get(GRB_DoubleAttr_X));
+      z_values[t] = std::round(z[t].get(GRB_DoubleAttr_X));
     }
     // double P_value = P[0][0].get(GRB_DoubleAttr_X);
     std::cout << "values of z are: " << vectorToString(z_values) << std::endl;
@@ -290,7 +289,7 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
       // z[0] == 0
       model.addConstr(z[0] == 0);
 
-      // M can not be too large, or a slight difference of P[j][t] affects results
+      // M can not be too large, or else a slight difference of P[j][t] affects results
       const int M =
           initial_workers + 50 * std::accumulate(min_workers.begin(), min_workers.end(), 0);
       for (int t = 0; t < T - tt; t++) {
@@ -326,7 +325,7 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
         for (int j = 0; j <= t; j++) {
           double p = 1;
           for (int k = j; k <= t; k++)
-            p = p * (1 - turnover_rates[k]);
+            p = p * (1 - turnover_rates[k + tt]);
           GRBLinExpr right2;
           right2 = y[j] * p - (1 - P[j][t]) * M;
           model.addConstr(x[t] >= right2);
@@ -364,13 +363,14 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
       // int status = model.get(GRB_IntAttr_Status);
 
       // output results
-      int S_value = static_cast<int>(S.get(GRB_DoubleAttr_X));
+      double S_value = S.get(GRB_DoubleAttr_X);
       double GS = model.get(GRB_DoubleAttr_ObjVal) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
-      sS[tt][1] = static_cast<int>(S_value);
+      sS[tt][1] = std::round(
+          S_value); // 不能用 static_cast<int>(S_value) 直接转换为int，因为它会丢弃小数部分
 
       // find s
-      int s = find_s(segment_num, S_value, GS, tt);
-      sS[tt][0] = static_cast<int>(s);
+      int s = find_s(segment_num, sS[tt][1], GS, tt);
+      sS[tt][0] = s;
 
     } catch (GRBException &e) {
       std::cout << "Error code = " << e.getErrorCode() << std::endl;
@@ -476,7 +476,7 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
         for (int j = 0; j <= t; j++) {
           double p = 1;
           for (int k = j; k <= t; k++)
-            p = p * (1 - turnover_rates[k]);
+            p = p * (1 - turnover_rates[k + tt]);
           GRBLinExpr right2;
           right2 = y[j] * p - (1 - P[j][t]) * M;
           model.addConstr(x[t] >= right2);
@@ -515,8 +515,7 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
       // model.write("piecewise.sol");
       // int status = model.get(GRB_IntAttr_Status);
 
-      double G_mid =
-              model.get(GRB_DoubleAttr_ObjVal) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
+      double G_mid = model.get(GRB_DoubleAttr_ObjVal) + unit_vari_cost * S.get(GRB_DoubleAttr_X);
       if (G_mid < GS + fix_hire_cost)
         high = mid - stepSize;
       else if (G_mid > GS + fix_hire_cost)
@@ -530,6 +529,6 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
       std::cout << "Exception during optimization" << std::endl;
     }
   }
-  int s = static_cast<int>(mid - 1);
+  int s = std::round(mid - 1);
   return s;
 }

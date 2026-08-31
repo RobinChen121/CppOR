@@ -58,22 +58,25 @@ if (MSVC)
             "${BOOST_LIBRARYDIR}/boost_filesystem-vc143-mt-x64-1_88.lib"
     )
 else ()
-    find_package(Boost REQUIRED COMPONENTS system thread filesystem)
+    find_package(Boost REQUIRED COMPONENTS thread filesystem)
     include_directories(${Boost_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 endif ()
 
 ## 设置 Gurobi 路径（根据你的安装调整）
 if (APPLE)
-    set(GUROBI_HOME "/Library/gurobi1201/macos_universal2") # gurobi 的安装地址
+    set(GUROBI_HOME "/Library/gurobi1302/macos_universal2") # gurobi 的安装地址
     set(GUROBI_INCLUDE_DIR "${GUROBI_HOME}/include") # 头文件路径
     set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib") # 库文件路径
     # 将路径添加到搜索地址
-    include_directories(${GUROBI_INCLUDE_DIR})
-    include_directories(${GUROBI_LIB_DIR})
+    #    include_directories(${GUROBI_INCLUDE_DIR}) # include_directories() 是过时的命令，建议使用 target_include_directories() 来指定目标的包含目录
+    #    include_directories(${GUROBI_LIB_DIR})
+    # target_link_libraries 必须使用关键字 PRIVATE 或 PUBLIC 来指定链接库的可见性
+    target_include_directories(${PROJECT_NAME} PRIVATE ${GUROBI_INCLUDE_DIR}) # 添加 Gurobi 的头文件路径到编译器的搜索路径
+    target_include_directories(${PROJECT_NAME} PRIVATE ${GUROBI_LIB_DIR})
     target_link_libraries(${PROJECT_NAME}
             "${GUROBI_LIB_DIR}/libgurobi_c++.a" # .a 是静态库
-            "${GUROBI_LIB_DIR}/libgurobi120.dylib" # .dylib 是动态库
+            "${GUROBI_LIB_DIR}/libgurobi130.dylib" # .dylib 是动态库
     )
 else ()
     option(CXX "enable C++ compilation" ON)  # 定义一个选项 CXX，描述为 "enable C++ compilation"，默认值为 ON（开启）
@@ -117,8 +120,8 @@ endif ()
 #-----------------------------------
 # OpenMP needs to be downloaded to the mac, parallel computing api
 if (APPLE)
-    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/20.1.8/include")
-    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/20.1.8/lib") # /libomp.dylib
+    set(OpenMP_INCLUDE_DIR "/opt/homebrew/Cellar/libomp/21.1.8/include")
+    set(OpenMP_LIBRARY "/opt/homebrew/Cellar/libomp/21.1.8/lib") # /libomp.dylib
     # 手动设置 OpenMP 相关的编译和链接选项
     set(OpenMP_CXX_LIBS "-L${OpenMP_LIBRARY} -lomp")
     set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_INCLUDE_DIR}")
@@ -145,11 +148,11 @@ endif ()
 # matplotlib setting
 if (APPLE)
     # python head file
-    include_directories(/opt/anaconda3/envs/py312/include/python3.12)
+    include_directories(/opt/anaconda3/include/python3.13)
     # numpy head file
-    include_directories(/opt/anaconda3/envs/py312/lib/python3.12/site-packages/numpy/_core/include)
+    include_directories(/opt/anaconda3/lib/python3.13/site-packages/numpy/_core/include)
     target_link_libraries(${PROJECT_NAME}
-            /opt/anaconda3/envs/py312/lib/libpython3.12.dylib
+            /opt/anaconda3/lib/libpython3.13.dylib
             dl
     )
 elseif (MSVC)

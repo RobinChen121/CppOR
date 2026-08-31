@@ -209,7 +209,7 @@ void WorkforcePlan::compute_stage(const int t, const int start_inventory, const 
   }
 }
 
-std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
+std::pair<double, int> WorkforcePlan::solve(const WorkerState ini_state) {
   if (direction == Direction::FORWARD)
     return {recursion_forward(ini_state), cache_actions.at(ini_state)};
   recursion_backward_parallel();
@@ -220,31 +220,34 @@ std::vector<double> WorkforcePlan::solve(const WorkerState ini_state) {
   std::vector<std::array<int, 2>> arr(T);
 
   if (direction == Direction::FORWARD) {
-    // 把无序 cache_actions 里的所有元素拷贝到有序容器 ordered_cache_actions
-    // std::map<WorkerState, int> ordered_cache_actions(cache_actions.begin(), cache_actions.end());
-    std::map<WorkerState, int> ordered_cache_actions;
-    for (const auto &[ws, val] : cache_actions) {
-      ordered_cache_actions[ws] = static_cast<int>(std::round(val)); // 或 static_cast<int>(val)
-    }
-    int t_index = 1;
+    // 把无序 cache_actions 里的所有元素拷贝到有序容器 ordered_cache_actions，默认是降序
+    std::map ordered_cache_actions(cache_actions.begin(), cache_actions.end());
+    // 直接用map的构造函数可以把无序的 unordered_map 转换为有序的
+    // map，按键排序，下面的代码不是很有必要 std::map<WorkerState, int> ordered_cache_actions; for
+    // (const auto &[ws, val] : cache_actions) {
+    //   ordered_cache_actions[ws] = static_cast<int>(std::round(val)); // 或 static_cast<int>(val)
+    // }
+    int t_index = 0;
     for (const auto &[fst, snd] : ordered_cache_actions) {
-      if (fst.getPeriod() == t_index) {
-        if (snd != 0)
-          arr[t_index - 1][1] = fst.getInitialWorkers() + snd;
-        else {
-          arr[t_index - 1][0] = fst.getInitialWorkers();
-          ++t_index;
-          break;
-        }
+      if (fst.getPeriod() - t_index > 1e-3) {
+        t_index++;
+      }
+
+      if (snd > 1e-3) { // 由于浮点数精度问题，最好不用 snd != 0 {
+        arr[t_index - 1][1] = fst.getInitialWorkers() + snd;
+        arr[t_index - 1][0] = fst.getInitialWorkers() + 1;
+      } else if (std::abs(fst.getPeriod() - t_index) < 1e-3) {
+        t_index++;
       }
     }
     return arr;
   }
+  // backward 的情形
   for (size_t t = 0; t < policies.size(); ++t) {
     for (std::map<WorkerState, int> ordered_cache_actions(policies[t].begin(), policies[t].end());
          const auto &[fst, snd] : ordered_cache_actions) {
       if (fst.getPeriod() == t + 1) {
-        if (snd != 0)
+        if (snd > 1e-3) // 由于浮点数精度问题，不能直接用 snd != 0
           arr[t][1] = fst.getInitialWorkers() + snd;
         else {
           arr[t][0] = fst.getInitialWorkers();
@@ -443,12 +446,18 @@ bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
   return arr;
 }
 
-std::pair<double, std::vector<std::array<int, 2>>> WorkforcePlan::solve_mip() const {
+double WorkforcePlan::solve_mip() const {
   const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
                                           unit_penalty, turnover_rates, min_workers);
-  double mip_obj = mip->piece_approximate(piece_segment);
+  const double mip_obj = mip->piece_approximate(piece_segment);
+  return mip_obj;
+}
+
+std::vector<std::array<int, 2>> WorkforcePlan::solve_mipsS() const {
+  const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
+                                          unit_penalty, turnover_rates, min_workers);
   auto sS_values = mip->get_sS(piece_segment);
-  return {mip_obj, sS_values};
+  return sS_values;
 }
 
 // computer the cumulative turnover rate for any hiring cycle
@@ -550,7 +559,7 @@ int main() {
   auto problem = WorkforcePlan();
   const WorkerState ini_state{1, 0};
   auto start_time = std::chrono::high_resolution_clock::now();
-  auto final_value = problem.solve(ini_state)[0];
+  auto final_value = problem.solve(ini_state).first;
   auto end_time = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time = end_time - start_time;
   if (problem.get_direction() == Direction::FORWARD)
@@ -561,7 +570,7 @@ int main() {
               << time.count() << 's' << std::endl;
   }
   std::cout << "Final optimal cost is " << final_value << std::endl;
-  std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state)[1]
+  std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state).second
             << std::endl;
 
   const auto arr_sS = problem.find_sS();
@@ -575,9 +584,9 @@ int main() {
 
   (void)problem.simulate_sS(problem.get_initial_state(), arr_sS);
 
-  std::cout << "******************** " << std::endl;
+  std::cout << std::string(50, '*') << std::endl;
   auto start_time2 = std::chrono::high_resolution_clock::now();
-  auto [fst, snd] = problem.solve_mip();
+  auto fst = problem.solve_mip();
   auto end_time2 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time2 = end_time2 - start_time2;
   std::cout << "running time of MIP is " << time2.count() << 's' << std::endl;
@@ -585,6 +594,12 @@ int main() {
   const double gap1 = (fst - final_value) / final_value * 100;
   std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 << "%"
             << std::endl;
+  std::cout << std::string(50, '*') << std::endl;
+  auto start_time3 = std::chrono::high_resolution_clock::now();
+  auto snd = problem.solve_mipsS();
+  auto end_time3 = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time3 = end_time3 - start_time3;
+  std::cout << "running time of MIP-sS is " << time3.count() << 's' << std::endl;
   std::cout << "s, S in each period by MIP are: " << std::endl;
   for (const auto row : snd) {
     for (const auto col : row) {

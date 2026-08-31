@@ -1,7 +1,7 @@
 ﻿/*
  * Created by Zhen Chen on 2025/6/17.
  * Email: chen.zhen5526@gmail.com
- * Description:
+ * Description: For 12 periods, the running time of c++ without parallel is 5.14s while java is 94s.
  *
  *
  */
@@ -26,20 +26,20 @@ class WorkforcePlan {
   Direction direction = Direction::BACKWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.5, 0.3, 0.6, 0.7, 0.2};
+  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.5, 0.3, 0.1};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 50.0;
+  double fix_hire_cost = 4000.0;
   double unit_vari_cost = 0.0;
-  double salary = 20.0;
-  double unit_penalty = 80.0;
+  double salary = 2000.0;
+  double unit_penalty = 3000.0;
   // 初始化给定默认值时就可以使用已声明变量的值
-  std::vector<int> min_workers = std::vector<int>(T, 40);
+  std::vector<int> min_workers = std::vector<int>(T, 50);
 
-  int piece_segment = 10;
+  int piece_segment = 5;
 
   std::string varied_parameter;
   std::string K_convexity;
@@ -52,7 +52,7 @@ class WorkforcePlan {
   std::vector<std::vector<double>> p_c; // cumulative binomial probability
   std::vector<std::vector<std::vector<double>>> pmf;
   // std::vector<std::vector<std::vector<std::array<double, 2>>>> pmf2;
-  std::unordered_map<WorkerState, double> cache_actions;
+  std::unordered_map<WorkerState, int> cache_actions;
   std::unordered_map<WorkerState, double> cache_values;
 
   std::mutex mtx; // 互斥锁保护共享数据写入
@@ -88,7 +88,7 @@ public:
   double recursion_forward(WorkerState ini_state);
   void recursion_backward_parallel();
   void compute_stage(int t, int start_inventory, int end_inventory);
-  std::vector<double> solve(WorkerState ini_state);
+  std::pair<double, int> solve(WorkerState ini_state);
   [[nodiscard]] std::vector<std::array<int, 2>> find_sS() const;
   [[nodiscard]] double simulate_sS(WorkerState ini_state,
                                    const std::vector<std::array<int, 2>> &sS) const;
@@ -97,7 +97,8 @@ public:
   compute_expect_Gy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> get_opt_table() const;
 
-  [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_mip() const;
+  [[nodiscard]] double solve_mip() const;
+  std::vector<std::array<int, 2>> solve_mipsS() const;
   [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_tsp() const;
 
   void compute_turnover();
