@@ -48,6 +48,9 @@ public:
   [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
   getPMFBinomial(int max_staff, std::span<const double> ps);
 
+  [[nodiscard]] static std::vector<std::vector<std::vector<double>>>
+  getPMFBinomial(int max_staff, const std::vector<double> &ps);
+
   static std::vector<std::vector<std::vector<std::array<double, 2>>>>
   getPMFBinomial2(int max_staff, std::span<const double> ps);
 

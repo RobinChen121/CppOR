@@ -153,8 +153,32 @@ PMF::getPMFNormal(const std::span<const double> mean, const std::span<const doub
 // get probability mass function values for each period of Binomial
 // 头文件避免多余 const，保持清晰
 // cpp 中加 const 限制修改，提升安全性
+// span 是一个轻量级的对象，表示一段连续的内存区域，类似于数组的视图
+// span 与 vector 的区别在于，span 不拥有数据，它只是对现有数据的引用，而 vector
+// 是一个动态数组，拥有自己的内存管理
 std::vector<std::vector<std::vector<double>>>
 PMF::getPMFBinomial(const int max_staff, const std::span<const double> ps) {
+  const auto T = ps.size();
+  std::vector pmf(T, std::vector<std::vector<double>>());
+  for (size_t t = 0; t < T; ++t) {
+    pmf[t] = std::vector(max_staff + 1, std::vector<double>());
+    for (int i = 0; i <= max_staff; ++i) {
+      pmf[t][i] = std::vector<double>(i + 1);
+      if (i == 0)
+        pmf[t][i][0] = 1;
+      else {
+        boost::math::binomial_distribution<> dist(i, ps[t]);
+        for (int j = 0; j <= i; ++j) {
+          pmf[t][i][j] = pdf(dist, j);
+        }
+      }
+    }
+  }
+  return pmf;
+}
+
+std::vector<std::vector<std::vector<double>>> PMF::getPMFBinomial(const int max_staff,
+                                                                  const std::vector<double> &ps) {
   const auto T = ps.size();
   std::vector pmf(T, std::vector<std::vector<double>>());
   for (size_t t = 0; t < T; ++t) {
