@@ -11,6 +11,9 @@
  * if precomputing the expected cost for each inventory level, the running time can be further
  * reduced to 0.003s.
  *
+ * boost poisson 20 quantile for 0.0001 outputs 5, which should be 6 by my codes and many other
+ * software such as Java, Matlab, Scipy, Mathematica
+ *
  * 不参与运算的整型才有必要使用 int8_t；
  * 用指针访问数组并不能显著提升运算速度；
  */
@@ -21,6 +24,8 @@
 #include <limits>
 #include <omp.h>
 #include <vector>
+
+#include "../../utils/pmf.h"
 
 struct PMFData {
   std::vector<int> demands;       // flattened demand
@@ -37,9 +42,11 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 
   // compute bounds
   for (size_t t = 0; t < T; ++t) {
-    boost::math::poisson_distribution<> dist(demands[t]);
-    support_lb[t] = static_cast<int>(boost::math::quantile(dist, 1 - truncated_quantile));
-    support_ub[t] = static_cast<int>(boost::math::quantile(dist, truncated_quantile));
+    // boost::math::poisson_distribution<> dist(demands[t]);
+    // support_lb[t] = std::round(boost::math::quantile(dist, 1 - truncated_quantile));
+    // support_ub[t] = std::round(boost::math::quantile(dist, truncated_quantile));
+    support_lb[t] = PMF::poisson_quantile(1 - truncated_quantile, demands[t]);
+    support_ub[t] = PMF::poisson_quantile(truncated_quantile, demands[t]);
   }
 
   PMFData pmf;
@@ -61,7 +68,7 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 
   // fill flattened arrays
   for (size_t t = 0; t < T; ++t) {
-    boost::math::poisson_distribution<> dist(demands[t]);
+    // boost::math::poisson_distribution<> dist(demands[t]);
 
     const int base = pmf.start_index_t[t];
     const int len_t = pmf.len_t[t];
@@ -74,7 +81,8 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
       const int idx = base + j;
 
       pmf.demands[idx] = demand;
-      pmf.prob[idx] = boost::math::pdf(dist, demand) * norm;
+      // pmf.prob[idx] = boost::math::pdf(dist, demand) * norm;
+      pmf.prob[idx] = PMF::poisson_pmf(demand, demands[t]) * norm;
     }
   }
 
@@ -82,7 +90,7 @@ PMFData getPMFPoisson(const std::vector<double> &demands, const double truncated
 }
 
 int main() {
-  constexpr int T = 50;
+  constexpr int T = 40;
   constexpr double mean_demand = 20.0;
   const std::vector demands(T, mean_demand);
   // const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
@@ -125,12 +133,12 @@ int main() {
   // V 是value首元素指针
   // *V 就是对应的值，等同于 V[0]
   // C++ 的 std::vector 提供了 .data() 成员函数，它会返回指向内部连续存储数组的指针（首元素地址）
-  double *V = value.data(); // Returns a pointer to the underlying array serving as element storage
-  int *P = policy.data();
-  const int *demand = pmf.demands.data();
-  const double *prob = pmf.prob.data();
-  const int *start_index_t = pmf.start_index_t.data();
-  const double *H = hold_penalty_costs.data();
+  // double *V = value.data(); // Returns a pointer to the underlying array
+  // int *P = policy.data();
+  // const int *demand = pmf.demands.data();
+  // const double *prob = pmf.prob.data();
+  // const int *start_index_t = pmf.start_index_t.data();
+  // const double *H = hold_penalty_costs.data();
 
   // =========================
   // DP CORE (HOT LOOP)
@@ -140,14 +148,17 @@ int main() {
 
     const int base_t = t * num_inv;
     const int base_tp = (t + 1) * num_inv;
-    const int start = start_index_t[t];
-    const int end = start_index_t[t + 1];
+
+    const int start = pmf.start_index_t[t];
+    const int end = pmf.start_index_t[t + 1];
+    // const int start = start_index_t[t];
+    // const int end = start_index_t[t + 1];
 
     // 指针可以加减，相当于移动位置
     // 下面相当于把各阶段的 V 与 P 提出来了
-    double *V_current = V + base_t; // 关键是一维 value 数组，整除操作比加法，乘法更耗时计算机
-    double *V_next = V + base_tp;
-    int *P_current = P + base_t;
+    // double *V_current = V + base_t; // 关键是一维 value 数组，整除操作比加法，乘法更耗时计算机
+    // double *V_next = V + base_tp;
+    // int *P_current = P + base_t;
 
     // Precompute expected future cost for each possible post-order inventory level s
     // s ranges from min_I .. (max_I + capacity)
@@ -161,13 +172,15 @@ int main() {
     for (int s = s_min; s <= s_max; ++s) {
       double acc = 0.0;
       for (int i = start; i < end; ++i) {
-        int next_inventory = s - demand[i];
+        int next_inventory = s - pmf.demands[i];
+        // int next_inventory = s - demand[i];
         if (next_inventory < min_I)
           next_inventory = min_I;
         else if (next_inventory > max_I)
           next_inventory = max_I;
         int next_index = next_inventory - min_I;
-        acc += prob[i] * (H[next_index] + V_next[next_index]);
+        acc += pmf.prob[i] * (hold_penalty_costs[next_index] + value[base_tp + next_index]);
+        // acc += prob[i] * (H[next_index] + V_next[next_index]);
       }
       expected_future[s - s_min] = acc;
     }
@@ -214,8 +227,10 @@ int main() {
         }
       }
 
-      V_current[idx] = best_value; // 同时也赋值了V
-      P_current[idx] = best_action;
+      // V_current[idx] = best_value; // 同时也赋值了V
+      // P_current[idx] = best_action;
+      value[base_t + idx] = best_value; // 同时也赋值了V
+      policy[base_t + idx] = best_action;
     }
   }
 

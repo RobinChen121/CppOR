@@ -10,6 +10,7 @@
 // #include <csignal>
 #include <boost/math/distributions/binomial.hpp> // 二项分布头文件, random 库有分布但没有pdf函数
 #include <boost/math/distributions/normal.hpp>
+#include <iostream>
 
 // initializing the class
 PMF::PMF(const double truncated_quantile, const double step_size)
@@ -30,12 +31,13 @@ PMF::PMF(const double truncated_quantile, const double step_size)
 // get the probability mass function value of Poisson
 double PMF::poisson_pmf(const int k, const int lambda) {
   if (k < 0 || lambda < 0)
-    return 0.0; // 确保参数合法
-  if (k == 0 and lambda == 0)
-    return 1.0;
-  // lgamma 对 tgamma 取 ln
+    return 0.0;
+  if (lambda == 0)
+    return k == 0 ? 1.0 : 0.0;
+
+  // lgamma gives log(k!)
   const double logP = -lambda + k * std::log(lambda) - std::lgamma(k + 1);
-  return std::exp(logP); // Use the logarithmic form to avoid overflow from std::tgamma(k + 1)
+  return std::exp(logP);
 
   // return (std::pow(lambda, k) * std::exp(-lambda)) / std::tgamma(k + 1);
   // // tgamma(k+1) is a gamma function, 等同于 factorial(k)
@@ -51,27 +53,51 @@ double PMF::normalPMF(const int k, const double mean, const double sigma,
 
 // get cumulative distribution function value of Poisson
 double PMF::poisson_cdf(const int k, const double lambda) {
+  if (k < 0)
+    return 0.0;
+  if (lambda < 0)
+    return 0.0;
+  if (lambda == 0)
+    return 1.0;
+
   double cumulative = 0.0;
-  double term = std::exp(-lambda); // P(X=0)
+  double term = std::exp(-static_cast<double>(lambda)); // P(X=0)
   for (int i = 0; i <= k; ++i) {
     cumulative += term;
     if (i < k)
-      term *= lambda / (i + 1); // 递推计算 P(X=i)
+      term *= static_cast<double>(lambda) / static_cast<double>(i + 1); // 递推计算 P(X=i)
   }
-
   return cumulative;
 }
 
 // get inverse cumulative distribution function value of Poisson
 int PMF::poisson_quantile(const double p, const double lambda) {
-  int low = 0, high = std::max(100, static_cast<int>(lambda * 3)); // 初始搜索区间
+  if (p <= 0.0)
+    return 0;
+  if (p >= 1.0)
+    return std::numeric_limits<int>::max();
+  if (lambda < 0)
+    return 0;
+
+  int low = 0;
+  int high = lambda;
+  // Boost 风格的离散分位数：返回满足 CDF(k) >= p 的最小整数 k
+  while (poisson_cdf(high, lambda) < p) {
+    if (high > std::numeric_limits<int>::max() / 2)
+      return std::numeric_limits<int>::max();
+    high *= 2;
+  }
+  // std::cout << poisson_cdf(38, lambda) << std::endl;
+  // std::cout << poisson_cdf(39, lambda) << std::endl;
+
   while (low < high) {
-    if (const int mid = (low + high) / 2; poisson_cdf(mid, lambda) < p) {
+    if (const int mid = (high + low) / 2; poisson_cdf(mid, lambda) < p) {
       low = mid + 1;
     } else {
       high = mid;
     }
   }
+
   return low;
 }
 

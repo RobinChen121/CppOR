@@ -96,7 +96,7 @@ public:
   explicit State(const int period, const double ini_inventory)
       : period(period), ini_inventory(ini_inventory) {};
 
-  [[nodiscard]] double get_ini_inventory() const { return ini_inventory; }
+  [[nodiscard]] double getIniInventory() const { return ini_inventory; }
 
   [[nodiscard]] int getPeriod() const { return period; }
 
@@ -131,7 +131,7 @@ template <> struct std::hash<State> {
   }
 };
 
-class NewsvendorDP {
+class Newsvendor {
   size_t T;
   int capacity;
   double fix_order_cost;
@@ -151,10 +151,10 @@ class NewsvendorDP {
   std::vector<int> feasible_actions;
 
 public:
-  NewsvendorDP(const size_t T, const int capacity, const double fix_order_cost,
-               const double unit_vari_order_cost, const double unit_hold_cost,
-               const double unit_penalty_cost, const double truncated_quantile, const double max_I,
-               const double min_I, const std::vector<std::vector<std::array<double, 2>>> &pmf)
+  Newsvendor(const size_t T, const int capacity, const double fix_order_cost,
+             const double unit_vari_order_cost, const double unit_hold_cost,
+             const double unit_penalty_cost, const double truncated_quantile, const double max_I,
+             const double min_I, const std::vector<std::vector<std::array<double, 2>>> &pmf)
       : T(static_cast<int>(T)), capacity(capacity), fix_order_cost(fix_order_cost),
         unit_vari_order_cost(unit_vari_order_cost), unit_hold_cost(unit_hold_cost),
         unit_penalty_cost(unit_penalty_cost), truncated_quantile(truncated_quantile), max_I(max_I),
@@ -175,9 +175,9 @@ public:
   //   return actions;
   // }
 
-  [[nodiscard]] State stateTransitionFunction(const State &state, const double action,
-                                              const double demand) const {
-    double nextInventory = state.get_ini_inventory() + action - demand;
+  State stateTransitionFunction(const State &state, const double action,
+                                const double demand) const {
+    double nextInventory = state.getIniInventory() + action - demand;
 
     // nextInventory = nextInventory > max_I ? max_I : nextInventory;
     // nextInventory = nextInventory < min_I ? min_I : nextInventory;
@@ -194,7 +194,7 @@ public:
                                               const double demand) const {
     const double fixCost = action > 0 ? fix_order_cost : 0;
     const double variCost = action * unit_vari_order_cost;
-    double nextInventory = state.get_ini_inventory() + action - demand;
+    double nextInventory = state.getIniInventory() + action - demand;
     // nextInventory = nextInventory > max_I ? max_I : nextInventory;
     // nextInventory = nextInventory < min_I ? min_I : nextInventory;
     nextInventory = std::ranges::clamp(nextInventory, min_I, max_I);
@@ -251,8 +251,8 @@ int main() {
   constexpr double minI = -100;            // minimum possible inventory
 
   const auto pmf = getPMFPoisson(demands, truncQuantile);
-  auto model = NewsvendorDP(T, capacity, fix_order_cost, unitVariOderCost, unit_hold_cost,
-                            unit_penalty_cost, truncQuantile, maxI, minI, pmf);
+  auto model = Newsvendor(T, capacity, fix_order_cost, unitVariOderCost, unit_hold_cost,
+                          unit_penalty_cost, truncQuantile, maxI, minI, pmf);
 
   const auto initialState = State(1, 0);
   const auto start_time = std::chrono::high_resolution_clock::now();

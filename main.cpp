@@ -23,17 +23,26 @@
 //   return 0;
 // }
 
-#include <cstddef>
+#include <cmath>
+#include <iomanip>
 #include <iostream>
 
-struct LinearTerm {
-  int col;
-  double val;
-};
+double poisson_pmf_log(int k, double lambda) {
+  // ln(P(X=k)) = k * ln(lambda) - lambda - ln(k!)
+  return k * std::log(lambda) - lambda - std::lgamma(k + 1);
+}
 
 int main() {
-  std::cout << sizeof(LinearTerm) << '\n';
+  double lambda = 20.0;
+  double cdf = 0.0;
 
-  std::cout << offsetof(LinearTerm, col) << '\n';
-  std::cout << offsetof(LinearTerm, val) << '\n';
+  std::cout << std::setprecision(15); // 打印高精度结果
+
+  for (int k = 0; k <= 39; ++k) {
+    cdf += std::exp(poisson_pmf_log(k, lambda));
+    if (k >= 37) {
+      std::cout << "k = " << k << " | CDF = " << cdf << std::endl;
+    }
+  }
+  return 0;
 }

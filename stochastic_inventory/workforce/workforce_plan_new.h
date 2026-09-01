@@ -57,6 +57,12 @@ public:
   // printExplicitVector(20) // 这个函数的参数是一个 ExplicitVector 对象
   // explicit 禁止隐式转换和隐式初始化
   explicit WorkforcePlanNew(const std::vector<std::vector<std::vector<double>>> &pmf) : pmf(pmf) {};
+
+  explicit WorkforcePlanNew(const std::vector<double> &turnover_rate, const double fix_hire_cost,
+                            const double salary, const double unit_penalty,
+                            const std::vector<int> &min_workers)
+      : turnover_rates(turnover_rate), fix_hire_cost(fix_hire_cost), salary(salary),
+        unit_penalty(unit_penalty), min_workers(min_workers) {};
 };
 
 #endif // WORKFORCE_WORKFORCE_PLAN_NEW_H
