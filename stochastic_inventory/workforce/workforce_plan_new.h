@@ -17,9 +17,11 @@
 #include <vector>
 
 struct PMFData {
-  std::vector<double> prob;   // binomial probability for each t
-  std::vector<size_t> offset; // starting index foe each i, which is i * (i + 1) / 2
-  size_t per_t; // number of elements per t, which is (max_staff + 1) * (max_staff + 2) / 2
+  std::vector<double> prob;   // binomial probability for the possible number of workers in each
+                              // period, flattened 1-D vector
+  std::vector<size_t> offset; // starting index foe each y, which is y * (y + 1) / 2
+  size_t per_t =
+      0; // number of elements per t, which is (max_worker_num + 1) * (max_worker_num + 2) / 2
 };
 
 PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
@@ -27,8 +29,8 @@ PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
 double binomialPdf(int n, int k, double p);
 
 class WorkforcePlanNew {
-  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.1, 0.3, 0.5, 0.1, 0.3};
-  int T = turnover_rates.size();
+  std::vector<double> turnover_rates = {0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1};
+  int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
@@ -44,6 +46,7 @@ class WorkforcePlanNew {
   int max_worker_num = 500;
   int piece_segment = 5;
   int state_num = max_worker_num + 1; // number of possible worker states, from 0 to max_worker_num
+  double INF = 1e100;
 
   // for DP using map
   std::unordered_map<WorkerState, int> cache_actions;
@@ -52,27 +55,34 @@ class WorkforcePlanNew {
   // for DP using 1-D vector
   // 类中 vector 初始化需要用花括号 {}，而不是圆括号 ()，否则会被解释为函数声明
   std::vector<double> value{
-      std::vector<double>((T + 1) * state_num, 0.0)}; // 1-D vector to store the value function
-  std::vector<int> policy{
-      std::vector<int>(T * state_num, 0)}; // 1-D vector to store the policy function
+      std::vector((T + 1) * state_num, 0.0)};             // 1-D vector to store the value function
+  std::vector<int> policy{std::vector(T * state_num, 0)}; // 1-D vector to store the policy function
 
-  std::vector<std::vector<std::vector<double>>> pmf;
+  PMFData pmf;
 
 public:
-  WorkforcePlanNew() { pmf = PMF::getPMFBinomial(max_worker_num, turnover_rates); };
+  WorkforcePlanNew() { pmf = getPMFBinomial(max_worker_num, turnover_rates); }
 
   // 建议将所有单参数构造函数（或带有默认参数的构造函数）默认声明为 explicit
   // 否则下面两种情况会导致隐式转换
   // ExplicitVector ev1 = 10; // ExplicitVector 是一个单参数构造的类
   // printExplicitVector(20) // 这个函数的参数是一个 ExplicitVector 对象
   // explicit 禁止隐式转换和隐式初始化
-  explicit WorkforcePlanNew(const std::vector<std::vector<std::vector<double>>> &pmf) : pmf(pmf) {};
+  // explicit WorkforcePlanNew(const std::vector<std::vector<std::vector<double>>> &pmf) : pmf(pmf)
+  // {};
 
   explicit WorkforcePlanNew(const std::vector<double> &turnover_rate, const double fix_hire_cost,
                             const double salary, const double unit_penalty,
                             const std::vector<int> &min_workers)
       : turnover_rates(turnover_rate), fix_hire_cost(fix_hire_cost), salary(salary),
         unit_penalty(unit_penalty), min_workers(min_workers) {};
+
+  [[nodiscard]] int getInitialWorkers() const { return initial_workers; }
+  [[nodiscard]] int getT() const { return T; }
+
+  [[nodiscard]] std::vector<double> computeSalaryPenaltyCost(int t) const;
+  [[nodiscard]] std::vector<double> computeExpectCost(int t) const;
+  std::pair<double, double> DP1DVector();
 };
 
 #endif // WORKFORCE_WORKFORCE_PLAN_NEW_H

@@ -27,6 +27,7 @@ endif ()
 add_executable(${PROJECT_NAME}
         worker_state.cpp
         workforce_plan_new.cpp
+        #        workforce_plan.cpp
 
         #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp

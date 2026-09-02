@@ -23,10 +23,10 @@ enum class Direction { FORWARD, BACKWARD };
 enum class ToComputeGy { True, False };
 
 class WorkforcePlan {
-  Direction direction = Direction::BACKWARD; // backward will be parallel computing
+  Direction direction = Direction::FORWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3};
+  std::vector<double> turnover_rates = {0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
