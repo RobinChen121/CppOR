@@ -18,7 +18,7 @@ double poissonPmf(const int k, const int lambda) {
   if (lambda == 0)
     return k == 0 ? 1.0 : 0.0;
 
-  // lgamma gives log(k!)
+  // lgamma(k+1) gives log(k!)
   const double logP = -lambda + static_cast<double>(k) * std::log(static_cast<double>(lambda)) -
                       std::lgamma(static_cast<double>(k) + 1.0);
   return std::exp(logP);

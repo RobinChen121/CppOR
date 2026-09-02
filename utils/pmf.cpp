@@ -35,7 +35,7 @@ double PMF::poisson_pmf(const int k, const int lambda) {
   if (lambda == 0)
     return k == 0 ? 1.0 : 0.0;
 
-  // lgamma gives log(k!)
+  // lgamma(k+1) gives log(k!)
   const double logP = -lambda + k * std::log(lambda) - std::lgamma(k + 1);
   return std::exp(logP);
 

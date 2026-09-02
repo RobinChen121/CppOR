@@ -16,6 +16,16 @@
 #include <unordered_map>
 #include <vector>
 
+struct PMFData {
+  std::vector<double> prob;   // binomial probability for each t
+  std::vector<size_t> offset; // starting index foe each i, which is i * (i + 1) / 2
+  size_t per_t; // number of elements per t, which is (max_staff + 1) * (max_staff + 2) / 2
+};
+
+PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
+
+double binomialPdf(int n, int k, double p);
+
 class WorkforcePlanNew {
   std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.1, 0.3, 0.5, 0.1, 0.3};
   int T = turnover_rates.size();
