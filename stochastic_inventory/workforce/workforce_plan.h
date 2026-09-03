@@ -40,7 +40,7 @@ class WorkforcePlan {
   // 初始化给定默认值时就可以使用已声明变量的值
   std::vector<int> min_workers = std::vector<int>(T, 50);
 
-  int piece_segment = 5;
+  int piece_segment = 10;
 
   std::string varied_parameter;
   std::string K_convexity;
@@ -98,7 +98,7 @@ public:
   compute_expect_Gy(const std::vector<double> &Gy) const;
   [[nodiscard]] std::vector<std::vector<double>> get_opt_table() const;
 
-  [[nodiscard]] double solve_mip() const;
+  [[nodiscard]] std::pair<double, double> solve_mip() const;
   std::vector<std::array<int, 2>> solve_mipsS() const;
   [[nodiscard]] std::pair<double, std::vector<std::array<int, 2>>> solve_tsp() const;
 

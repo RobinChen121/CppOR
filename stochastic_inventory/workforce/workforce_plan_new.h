@@ -26,8 +26,6 @@ struct PMFData {
 
 PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
 
-double binomialPdf(int n, int k, double p);
-
 class WorkforcePlanNew {
   std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   int T = static_cast<int>(turnover_rates.size());
@@ -84,6 +82,10 @@ public:
   [[nodiscard]] std::vector<double> computeSalaryPenaltyCost(int t) const;
   [[nodiscard]] std::vector<double> computeExpectCost(int t) const;
   std::pair<double, double> DP1DVector();
+
+  std::pair<double, double> solve_mip() const;
+  std::vector<std::array<int, 2>> solve_mipsS() const;
+  double simulate_sS(int ini_workers, const std::vector<std::array<int, 2>> &sS) const;
 };
 
 #endif // WORKFORCE_WORKFORCE_PLAN_NEW_H

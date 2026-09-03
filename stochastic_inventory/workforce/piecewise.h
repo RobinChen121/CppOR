@@ -28,7 +28,9 @@ public:
 
   static std::vector<std::vector<double>> piecewise(int segment_num, int min_workers, double p);
 
-  [[nodiscard]] double piece_approximate(int segment_num) const;
+  [[nodiscard]] std::pair<double, double> piece_approximate(int segment_num) const;
+  [[nodiscard]] double computeLineGap(const std::vector<int> &z, const std::vector<double> &y,
+                                      const std::vector<double> &u) const;
   [[nodiscard]] std::vector<std::array<int, 2>> get_sS(int segment_num) const;
   [[nodiscard]] int find_s(int segment_num, int S_value, double GS, int tt) const;
 };

@@ -52,7 +52,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
         if (Fy_y_minus_w(j, min_workers, p) - Fy_y_minus_w(a, min_workers, p) > 1.0 / segment_num) {
           tangent_xcoord[i] = j;
           const int b = std::round(tangent_xcoord[i]);
-          tangent_ycoord[i] = loss_function_expect(b, min_workers, p);
+          tangent_ycoord[i] = lossFunctionExpect(b, min_workers, p);
           slopes[i] = -(1 - p) * (1 - Fy_y_minus_w(b, min_workers, p));
           intercepts[i] = -slopes[i] * tangent_xcoord[i] + tangent_ycoord[i];
           break;
@@ -75,7 +75,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
                                   : intercept_xcoord[i + 1] / (slopes[i] - slopes[i + 1]);
     intercept_ycoord[i + 1] =
         slopes[i] * (intercept_xcoord[i + 1] - tangent_xcoord[i]) + tangent_ycoord[i];
-    const double y = loss_function_expect(std::round(intercept_xcoord[i + 1]), min_workers, p);
+    const double y = lossFunctionExpect(std::round(intercept_xcoord[i + 1]), min_workers, p);
     intercept_gap[i + 1] = y - intercept_ycoord[i + 1];
   }
 
@@ -89,7 +89,7 @@ PiecewiseWorkforce::piecewise(const int segment_num, const int min_workers, cons
   return result;
 }
 
-double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
+std::pair<double, double> PiecewiseWorkforce::piece_approximate(const int segment_num) const {
   try {
     // gurobi environments and model
     auto env = GRBEnv(true); // create an empty environment
@@ -226,7 +226,7 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
     std::cout << "values of x are: " << vectorToString(x_values) << std::endl;
     std::cout << "values of y are: " << vectorToString(y_values) << std::endl;
     std::cout << "values of u are: " << vectorToString(u_values) << std::endl;
-    return this_obj;
+    return {this_obj, computeLineGap(z_values, y_values, u_values)};
 
   } catch (GRBException &e) {
     std::cout << "Error code = " << e.getErrorCode() << std::endl;
@@ -234,7 +234,31 @@ double PiecewiseWorkforce::piece_approximate(const int segment_num) const {
   } catch (...) {
     std::cout << "Exception during optimization" << std::endl;
   }
-  return 0;
+  return {0.0, 0.0};
+}
+
+double PiecewiseWorkforce::computeLineGap(const std::vector<int> &z, const std::vector<double> &y,
+                                          const std::vector<double> &u) const {
+  double gap = 0.0;
+  for (int t = 0; t < T; t++) {
+    if (std::abs(z[t] - 1) < 1e-6) {
+      const double real_u = lossFunctionExpect(y[t], min_workers[t], turnover_rates[t]);
+      gap += (real_u - u[t]) * unit_penalty;
+    } else {
+      int last_z = 0;
+      double pc = 1 - turnover_rates[t];
+      for (int j = t - 1; j >= 0; j--) {
+        if (std::abs(z[j] - 1) < 1e-6) {
+          last_z = j;
+          pc *= 1 - turnover_rates[j];
+          break;
+        }
+      }
+      const double real_u = lossFunctionExpect(y[last_z], min_workers[t], 1 - pc);
+      gap += (real_u - u[t]) * unit_penalty;
+    }
+  }
+  return gap;
 }
 
 std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) const {

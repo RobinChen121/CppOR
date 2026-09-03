@@ -8,30 +8,13 @@
 
 #include "workforce_plan_new.h"
 
+#include "piecewise.h"
+#include "util_binomial.h"
+
 #include <chrono>
-#include <cmath>
+#include <iomanip>
 #include <iostream>
-#include <limits>
-
-// Binomial PMF: P(X = k)
-double binomialPdf(const int n, const int k, const double p) {
-  if (k < 0 || k > n)
-    return 0.0;
-  if (p < 0.0 || p > 1.0)
-    return std::numeric_limits<double>::quiet_NaN();
-
-  if (p == 0.0)
-    return (k == 0) ? 1.0 : 0.0;
-  if (p == 1.0)
-    return (k == n) ? 1.0 : 0.0;
-
-  // lgamma(k+1) gives log(k!)
-  // 通过计算log，避免较大的阶乘溢出
-  const double log_prob = std::lgamma(n + 1.0) - std::lgamma(k + 1.0) - std::lgamma(n - k + 1.0) +
-                          k * std::log(p) + (n - k) * std::log(1.0 - p);
-
-  return std::exp(log_prob);
-}
+#include <random>
 
 PMFData getPMFBinomial(const int max_staff, const std::vector<double> &ps) {
   const size_t T = ps.size();
@@ -53,7 +36,7 @@ PMFData getPMFBinomial(const int max_staff, const std::vector<double> &ps) {
         p[0] = 1.0;
       } else {
         for (int j = 0; j <= i; ++j) {
-          p[j] = binomialPdf(i, j, ps[t]);
+          p[j] = binomialPDF(i, ps[t], j);
         }
       }
     }
@@ -140,6 +123,79 @@ std::pair<double, double> WorkforcePlanNew::DP1DVector() {
   return {value[static_cast<int>(initial_workers)], policy[static_cast<int>(initial_workers)]};
 }
 
+std::pair<double, double> WorkforcePlanNew::solve_mip() const {
+  // c++ 如果使用 new 创建对象，则是一个指针，访问对象时用 -> 操作符，必须使用 delete
+  // 释放内存，否则会造成内存泄漏
+  const auto mip = PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
+                                      unit_penalty, turnover_rates, min_workers);
+  return mip.piece_approximate(piece_segment);
+}
+
+std::vector<std::array<int, 2>> WorkforcePlanNew::solve_mipsS() const {
+  const auto mip = PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
+                                      unit_penalty, turnover_rates, min_workers);
+  auto sS_values = mip.get_sS(piece_segment);
+  return sS_values;
+}
+
+double WorkforcePlanNew::simulate_sS(const int ini_workers,
+                                     const std::vector<std::array<int, 2>> &sS) const {
+  std::vector<int> sample_nums(T);
+  int sample_num_total = 1;
+  std::vector<int> sample_num_accumulate(T);
+  for (size_t t = 0; t < T; ++t) {
+    if (t > 2)
+      sample_nums[t] = 1;
+    else
+      sample_nums[t] = 30;
+    sample_num_total *= sample_nums[t];
+    sample_num_accumulate[t] = sample_num_total;
+  }
+
+  std::vector<std::vector<int>> inventories(T);
+  std::vector<std::vector<double>> costs(T);
+
+  std::random_device rd;  // 真随机种子（硬件）
+  std::mt19937 gen(rd()); // 伪随机数引擎
+
+  for (size_t t = 0; t < T; ++t) {
+    const int N = sample_nums[t];
+    const size_t last_length = t == 0 ? 1 : inventories[t - 1].size();
+    inventories[t].reserve(N * last_length);
+    costs[t].reserve(N * last_length);
+    for (size_t i = 0; i < last_length; ++i) {
+      const int this_ini_workers = t == 0 ? ini_workers : inventories[t - 1][i];
+
+      const int Q = this_ini_workers < sS[t][0] ? sS[t][1] - this_ini_workers : 0;
+      const int hire_up_to = this_ini_workers + Q;
+
+      // C++ 标准库里有产生二项分布随机数的函数 std::binomial_distribution
+      std::binomial_distribution<> dist(hire_up_to, turnover_rates[t]); // 二项分布
+      for (size_t k = 0; k < N; ++k) {
+        const int random_demand = dist(gen);
+        const int next_workers = this_ini_workers + Q - random_demand;
+        inventories[t].push_back(next_workers);
+        const double fix_cost = Q > 0 ? fix_hire_cost : 0;
+        const double vari_cost = unit_vari_cost * Q;
+        const double salary_cost = salary * next_workers;
+        const double penalty_cost =
+            next_workers > min_workers[t] ? 0 : unit_penalty * (min_workers[t] - next_workers);
+        const double immediate_cost = fix_cost + vari_cost + salary_cost + penalty_cost;
+        if (t == 0)
+          costs[t].push_back(immediate_cost);
+        else
+          costs[t].push_back(costs[t - 1][i] + immediate_cost);
+      }
+    }
+  }
+  const double simulate_cost =
+      std::accumulate(costs[T - 1].begin(), costs[T - 1].end(), 0.0) / sample_num_total;
+
+  std::cout << "simulate cost in " << sample_num_total << " samples is " << simulate_cost
+            << std::endl;
+  return simulate_cost;
+}
+
 int main() {
   const auto start_time = std::chrono::high_resolution_clock::now();
   auto problem = WorkforcePlanNew();
@@ -155,7 +211,37 @@ int main() {
   std::cout << "optimal value = " << best_value << '\n';
   std::cout << "optimal hiring at t = 1, initial worker = " << problem.getInitialWorkers()
             << " is: " << best_action << '\n';
-  std::cout << "*******************************" << std::endl;
+  std::cout << std::string(50, '*') << std::endl;
+
+  const auto start_time2 = std::chrono::high_resolution_clock::now();
+  auto [fst, snd] = problem.solve_mip();
+  const auto end_time2 = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time2 = end_time2 - start_time2;
+  std::cout << "running time of MIP is " << time2.count() << 's' << std::endl;
+  const double gap1 = (best_value - fst) / best_value * 100;
+  std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2) << gap1 << "%"
+            << std::endl;
+  const double gap2 = snd / (fst + snd) * 100;
+  std::cout << "the linearization gap by MIP is: " << std::fixed << std::setprecision(2) << gap2
+            << "%" << std::endl;
+
+  std::cout << std::string(50, '*') << std::endl;
+  const auto start_time3 = std::chrono::high_resolution_clock::now();
+  const auto sS_values = problem.solve_mipsS();
+  const auto end_time3 = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time3 = end_time3 - start_time3;
+  std::cout << "running time of MIP-sS is " << time3.count() << 's' << std::endl;
+  std::cout << "s, S in each period by MIP are: " << std::endl;
+  for (const auto row : sS_values) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+  const double mip_sS = problem.simulate_sS(problem.getInitialWorkers(), sS_values);
+  const double gap3 = (mip_sS - best_value) / best_value * 100;
+  std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap3
+            << "%" << std::endl;
 
   return 0;
 }

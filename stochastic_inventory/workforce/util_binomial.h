@@ -9,6 +9,8 @@
 #ifndef UTIL_BINOMIAL_H
 #define UTIL_BINOMIAL_H
 
-double loss_function_expect(int y, int min_worker, double turnover_rate);
+double binomialPDF(int n, double p, int k);
+double binomialCDF(int n, double p, int k);
+double lossFunctionExpect(int y, int min_worker, double turnover_rate);
 double Fy_y_minus_w(int y, int min_worker, double turnover_rate);
 #endif // UTIL_BINOMIAL_H

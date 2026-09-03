@@ -447,17 +447,16 @@ bool WorkforcePlan::check_convexity(const std::vector<double> &Gy) {
   return arr;
 }
 
-double WorkforcePlan::solve_mip() const {
-  const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
-                                          unit_penalty, turnover_rates, min_workers);
-  const double mip_obj = mip->piece_approximate(piece_segment);
-  return mip_obj;
+std::pair<double, double> WorkforcePlan::solve_mip() const {
+  const auto mip = PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
+                                      unit_penalty, turnover_rates, min_workers);
+  return mip.piece_approximate(piece_segment);
 }
 
 std::vector<std::array<int, 2>> WorkforcePlan::solve_mipsS() const {
-  const auto mip = new PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
-                                          unit_penalty, turnover_rates, min_workers);
-  auto sS_values = mip->get_sS(piece_segment);
+  const auto mip = PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
+                                      unit_penalty, turnover_rates, min_workers);
+  auto sS_values = mip.get_sS(piece_segment);
   return sS_values;
 }
 
@@ -548,7 +547,7 @@ double WorkforcePlan::compute_Ltj_y(const int t, const int j, const int y) const
   double right_term = 0;
   for (int k = t; k <= j; k++) {
     left_term += 1 - p_c[t][k];
-    right_term += loss_function_expect(y, min_workers[k], p_c[t][k]); // min_workers[t]
+    right_term += lossFunctionExpect(y, min_workers[k], p_c[t][k]); // min_workers[t]
   }
   left_term *= salary * y;
   right_term *= unit_penalty;

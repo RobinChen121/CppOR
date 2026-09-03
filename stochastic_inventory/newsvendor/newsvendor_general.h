@@ -89,16 +89,18 @@ template <> struct std::hash<State> {
 };
 
 class Newsvendor {
-  int T = 40;
-  int mean_demand = 20;
-  std::vector<int> demands = std::vector(T, mean_demand);
-  // const std::vector<double> demands = {10.0, 20, 10, 20, 10, 20, 10, 20};
-  // const int T = demands.size();
+  // int T = 25;
+  // int mean_demand = 100;
+  // std::vector<int> demands = std::vector(T, mean_demand);
 
-  int capacity = 150;
-  double fix_order_cost = 0.0;
+  const std::vector<int> demands = {178, 178, 136, 211, 119, 165, 47, 100, 62, 31, 43, 199, 172,
+                                    96,  69,  8,   29,  135, 97,  70, 248, 57, 11, 94, 13};
+  const int T = demands.size();
+
+  int capacity = 3000;
+  double fix_order_cost = 300.0;
   double unit_order_cost = 1.0;
-  double hold_cost = 2.0;
+  double hold_cost = 0.0;
   double penalty_cost = 10.0;
   double truncQuantile = 0.9999;
   double ini_inventory = 0.0;
