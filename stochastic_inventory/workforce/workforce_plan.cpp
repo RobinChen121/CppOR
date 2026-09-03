@@ -15,6 +15,7 @@
 #include "util_binomial.h"
 #include <boost/math/distributions/binomial.hpp>
 #include <cmath>
+#include <numeric>
 #include <random>
 #include <thread>
 // #include <omp.h>

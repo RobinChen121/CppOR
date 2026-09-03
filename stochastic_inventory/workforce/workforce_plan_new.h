@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Created by Zhen Chen on 2026/8/31.
  * Email: chen.zhen5526@gmail.com
  * Description: use a 1-D vector to store the value function and policy function, which is faster
@@ -29,16 +29,16 @@ PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
 double binomialPdf(int n, int k, double p);
 
 class WorkforcePlanNew {
-  std::vector<double> turnover_rates = {0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1};
+  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 4000.0;
+  double fix_hire_cost = 4000.0; // 2000, 6000
   double unit_vari_cost = 0.0;
-  double salary = 2000.0;
-  double unit_penalty = 3000.0;
+  double salary = 2000.0;       // 1500, 2500, 3500
+  double unit_penalty = 3000.0; // 2000, 4000, 6000
   // 初始化给定默认值时就可以使用已声明变量的值
   std::vector<int> min_workers = std::vector<int>(T, 50);
 
@@ -55,8 +55,9 @@ class WorkforcePlanNew {
   // for DP using 1-D vector
   // 类中 vector 初始化需要用花括号 {}，而不是圆括号 ()，否则会被解释为函数声明
   std::vector<double> value{
-      std::vector((T + 1) * state_num, 0.0)};             // 1-D vector to store the value function
-  std::vector<int> policy{std::vector(T * state_num, 0)}; // 1-D vector to store the policy function
+      std::vector<double>((T + 1) * state_num, 0.0)}; // 1-D vector to store the value function
+  std::vector<int> policy{
+      std::vector<int>(T * state_num, 0)}; // 1-D vector to store the policy function
 
   PMFData pmf;
 

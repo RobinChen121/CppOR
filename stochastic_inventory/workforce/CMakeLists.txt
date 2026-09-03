@@ -26,8 +26,8 @@ endif ()
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         worker_state.cpp
-        workforce_plan_new.cpp
-        #        workforce_plan.cpp
+        #        workforce_plan_new.cpp
+        workforce_plan.cpp
 
         #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp
@@ -171,44 +171,44 @@ else ()
     endif ()
 endif ()
 
-#-----------------------------------
-# matplotlib setting
-if (APPLE)
-    # python head file
-    include_directories(/opt/anaconda3/include/python3.13)
-    # numpy head file
-    include_directories(/opt/anaconda3/lib/python3.13/site-packages/numpy/_core/include)
-    target_link_libraries(${PROJECT_NAME}
-            /opt/anaconda3/lib/libpython3.13.dylib
-            dl
-    )
-elseif (MSVC)
-    find_package(Python3 REQUIRED COMPONENTS Development NumPy)
-
-    target_include_directories(${PROJECT_NAME} PRIVATE
-            ${Python3_INCLUDE_DIRS}
-            ${Python3_NumPy_INCLUDE_DIRS}
-    )
-
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${Python3_LIBRARIES}
-    )
-else ()
-    FetchContent_Declare(
-            matplotlib_cpp
-            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
-            GIT_TAG master
-    )
-    FetchContent_MakeAvailable(matplotlib_cpp)
-    # Include matplotlib-cpp
-    target_include_directories(${PROJECT_NAME} ${matplotlib_cpp_SOURCE_DIR})
-    # Link Python and NumPy
-    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
-    target_include_directories(${PROJECT_NAME}
-            ${Python3_INCLUDE_DIRS}
-            ${Python3_NumPy_INCLUDE_DIRS}
-    )
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${Python3_LIBRARIES}
-    )
-endif ()
+##-----------------------------------
+## matplotlib setting
+#if (APPLE)
+#    # python head file
+#    include_directories(/opt/anaconda3/include/python3.13)
+#    # numpy head file
+#    include_directories(/opt/anaconda3/lib/python3.13/site-packages/numpy/_core/include)
+#    target_link_libraries(${PROJECT_NAME}
+#            /opt/anaconda3/lib/libpython3.13.dylib
+#            dl
+#    )
+#elseif (MSVC)
+#    find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+#
+#    target_include_directories(${PROJECT_NAME} PRIVATE
+#            ${Python3_INCLUDE_DIRS}
+#            ${Python3_NumPy_INCLUDE_DIRS}
+#    )
+#
+#    target_link_libraries(${PROJECT_NAME} PRIVATE
+#            ${Python3_LIBRARIES}
+#    )
+#else ()
+#    FetchContent_Declare(
+#            matplotlib_cpp
+#            GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
+#            GIT_TAG master
+#    )
+#    FetchContent_MakeAvailable(matplotlib_cpp)
+#    # Include matplotlib-cpp
+#    target_include_directories(${PROJECT_NAME} ${matplotlib_cpp_SOURCE_DIR})
+#    # Link Python and NumPy
+#    find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
+#    target_include_directories(${PROJECT_NAME}
+#            ${Python3_INCLUDE_DIRS}
+#            ${Python3_NumPy_INCLUDE_DIRS}
+#    )
+#    target_link_libraries(${PROJECT_NAME} PRIVATE
+#            ${Python3_LIBRARIES}
+#    )
+#endif ()

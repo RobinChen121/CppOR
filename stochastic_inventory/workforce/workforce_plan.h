@@ -9,7 +9,7 @@
 #ifndef WORKFORCE_PLAN_H
 #define WORKFORCE_PLAN_H
 
-#include "../../utils/draw_graph.h"
+// #include "../../utils/draw_graph.h"
 #include "../../utils/pmf.h"
 #include "worker_state.h"
 #include <chrono>
@@ -17,6 +17,7 @@
 // #include <map>
 #include <mutex>
 // #include <thread>
+#include <map>
 #include <unordered_map>
 
 enum class Direction { FORWARD, BACKWARD };
@@ -26,7 +27,7 @@ class WorkforcePlan {
   Direction direction = Direction::FORWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1};
+  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
