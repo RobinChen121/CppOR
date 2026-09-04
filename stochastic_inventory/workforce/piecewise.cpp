@@ -248,9 +248,9 @@ double PiecewiseWorkforce::computeLineGap(const std::vector<int> &z, const std::
       int last_z = 0;
       double pc = 1 - turnover_rates[t];
       for (int j = t - 1; j >= 0; j--) {
+        pc *= 1 - turnover_rates[j];
         if (std::abs(z[j] - 1) < 1e-6) {
           last_z = j;
-          pc *= 1 - turnover_rates[j];
           break;
         }
       }

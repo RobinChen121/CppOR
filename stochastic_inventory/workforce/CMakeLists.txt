@@ -25,13 +25,14 @@ endif ()
 # set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer -pthread")
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        worker_state.cpp
+        #        worker_state.cpp
         workforce_plan_new.cpp
-        #        workforce_plan.cpp
+        workforce_plan_testing.cpp
+        #                workforce_plan.cpp
 
         #        workforce_testing_animation.cpp
         #        ../../utils/pmf.cpp
-        ../../utils/common.h
+        ../../utils/common.cpp
         #        ../../utils/draw_graph.cpp
         #        binomial_product_test.cpp
         #        Binomial_conditional_expectation_test.cpp

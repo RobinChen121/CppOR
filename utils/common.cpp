@@ -68,6 +68,27 @@ double compute_ub_sigma(const std::vector<double> &ubs, double avg_ub) {
   return std::sqrt(sigma_square);
 }
 
+// 通用写入函数：支持任意类型的 vector
+template <typename T>
+void append_csv_row(const std::string &filename, const std::vector<T> &row_data) {
+  std::ofstream file(filename, std::ios::app);
+  // std::cerr 是 C++ 标准库里用于输出错误信息的一个输出流，用于输出错误、警告、调试信息等
+  if (!file.is_open()) {
+    std::cerr << "unable to open the file!" << filename << std::endl;
+    return;
+  }
+
+  // 转换为字符串列表
+  std::vector<std::string> string_rows;
+  for (const auto &item : row_data) {
+    string_rows.push_back(anyToString(item));
+  }
+
+  // 写入
+  file << to_csv_line(string_rows) << "\n";
+  file.close();
+}
+
 // int main() {
 //   appendRowToCSV("output.csv", std::vector<int>{7, 8, 9});
 //   appendRowToCSV("output.csv", std::vector<double>{1.23, 4.56});

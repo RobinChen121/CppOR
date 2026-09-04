@@ -27,18 +27,18 @@ struct PMFData {
 PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
 
 class WorkforcePlanNew {
-  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
+  std::vector<double> turnover_rates = {0.7, 0.7, 0.7, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1};
   int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 4000.0; // 2000, 6000
+  double fix_hire_cost = 6000.0; // 2000, 6000
   double unit_vari_cost = 0.0;
-  double salary = 2000.0;       // 1500, 2500, 3500
-  double unit_penalty = 3000.0; // 2000, 4000, 6000
+  double salary = 3000.0; // 1500, 2500, 3500
+  double unit_penalty = 3500.0;
   // 初始化给定默认值时就可以使用已声明变量的值
-  std::vector<int> min_workers = std::vector<int>(T, 50);
+  std::vector<int> min_workers = {6, 22, 8, 34, 54, 27, 27, 62, 35, 66, 8, 27};
 
   int max_hire_num = 500;
   int max_worker_num = 500;
@@ -74,7 +74,9 @@ public:
                             const double salary, const double unit_penalty,
                             const std::vector<int> &min_workers)
       : turnover_rates(turnover_rate), fix_hire_cost(fix_hire_cost), salary(salary),
-        unit_penalty(unit_penalty), min_workers(min_workers) {};
+        unit_penalty(unit_penalty), min_workers(min_workers) {
+    pmf = getPMFBinomial(max_worker_num, turnover_rates);
+  };
 
   [[nodiscard]] int getInitialWorkers() const { return initial_workers; }
   [[nodiscard]] int getT() const { return T; }
