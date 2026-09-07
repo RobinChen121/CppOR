@@ -13,6 +13,7 @@
 #include "../../utils/pmf.h"
 #include "worker_state.h"
 
+#include <array>
 #include <unordered_map>
 #include <vector>
 
@@ -27,14 +28,14 @@ struct PMFData {
 PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
 
 class WorkforcePlanNew {
-  std::vector<double> turnover_rates = {0.7, 0.7, 0.7, 0.5, 0.5, 0.5, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1};
+  std::vector<double> turnover_rates = {0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};
   int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
   double fix_hire_cost = 6000.0; // 2000, 6000
-  double unit_vari_cost = 0.0;
+  double unit_vari_cost = 500.0;
   double salary = 3000.0; // 1500, 2500, 3500
   double unit_penalty = 3500.0;
   // 初始化给定默认值时就可以使用已声明变量的值
@@ -85,9 +86,10 @@ public:
   [[nodiscard]] std::vector<double> computeExpectCost(int t) const;
   std::pair<double, double> DP1DVector();
 
-  std::pair<double, double> solve_mip() const;
-  std::vector<std::array<int, 2>> solve_mipsS() const;
-  double simulate_sS(int ini_workers, const std::vector<std::array<int, 2>> &sS) const;
+  [[nodiscard]] std::pair<double, double> solve_mip() const;
+  [[nodiscard]] std::vector<std::array<int, 2>> solve_mipsS() const;
+  [[nodiscard]] double simulate_sS(int ini_workers,
+                                   const std::vector<std::array<int, 2>> &sS) const;
 };
 
 #endif // WORKFORCE_WORKFORCE_PLAN_NEW_H
