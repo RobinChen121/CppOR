@@ -586,7 +586,7 @@ int main() {
 
   std::cout << std::string(50, '*') << std::endl;
   auto start_time2 = std::chrono::high_resolution_clock::now();
-  auto fst = problem.solve_mip();
+  auto [fst, snd] = problem.solve_mip();
   auto end_time2 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time2 = end_time2 - start_time2;
   std::cout << "running time of MIP is " << time2.count() << 's' << std::endl;
@@ -596,18 +596,18 @@ int main() {
             << std::endl;
   std::cout << std::string(50, '*') << std::endl;
   auto start_time3 = std::chrono::high_resolution_clock::now();
-  auto snd = problem.solve_mipsS();
+  auto sS_array = problem.solve_mipsS();
   auto end_time3 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time3 = end_time3 - start_time3;
   std::cout << "running time of MIP-sS is " << time3.count() << 's' << std::endl;
   std::cout << "s, S in each period by MIP are: " << std::endl;
-  for (const auto row : snd) {
+  for (const auto row : sS_array) {
     for (const auto col : row) {
       std::cout << col << ' ';
     }
     std::cout << std::endl;
   }
-  const double mip_sS = problem.simulate_sS(problem.get_initial_state(), snd);
+  const double mip_sS = problem.simulate_sS(problem.get_initial_state(), sS_array);
   const double gap2 = (mip_sS - final_value) / final_value * 100;
   std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
             << "%" << std::endl;

@@ -35,7 +35,7 @@ class WorkforcePlanNew {
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
   double fix_hire_cost = 6000.0; // 2000, 6000
-  double unit_vari_cost = 500.0;
+  double unit_vari_cost = 100.0;
   double salary = 3000.0; // 1500, 2500, 3500
   double unit_penalty = 3500.0;
   // 初始化给定默认值时就可以使用已声明变量的值

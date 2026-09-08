@@ -315,7 +315,7 @@ std::vector<std::array<int, 2>> PiecewiseWorkforce::get_sS(int segment_num) cons
 
       // M can not be too large, or else a slight difference of P[j][t] affects results
       const int M =
-          initial_workers + 50 * std::accumulate(min_workers.begin(), min_workers.end(), 0);
+          initial_workers + T * std::accumulate(min_workers.begin(), min_workers.end(), 0);
       for (int t = 0; t < T - tt; t++) {
         // y_t - x_{t-1} >= 0
         // y_t - x_{t-1} <= z_t M
@@ -466,7 +466,7 @@ int PiecewiseWorkforce::find_s(int segment_num, int S_value, double GS, int tt) 
 
       // M can not be too large, or a slight difference of P[j][t] affects results
       const int M =
-          initial_workers + 50 * std::accumulate(min_workers.begin(), min_workers.end(), 0);
+          initial_workers + T * std::accumulate(min_workers.begin(), min_workers.end(), 0);
       for (int t = 0; t < T - tt; t++) {
         // y_t - x_{t-1} >= 0
         // y_t - x_{t-1} <= z_t M

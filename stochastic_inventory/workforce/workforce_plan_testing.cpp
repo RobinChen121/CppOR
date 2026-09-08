@@ -85,48 +85,44 @@ int main() {
             auto problem =
                 WorkforcePlanNew(turnover_rates[i], fix_cost, salary, penalty, min_workers[j]);
 
-            // const auto start_time = std::chrono::high_resolution_clock::now();
-            // auto [best_value, best_action] = problem.DP1DVector();
-            // const auto end_time = std::chrono::high_resolution_clock::now();
-            // const std::chrono::duration<double> elapsed_SDP = end_time - start_time;
-            // std::cout << "running time of SDP = " << elapsed_SDP.count() << " seconds\n";
-            // std::cout << "optimal value = " << best_value << '\n';
+            const auto start_time = std::chrono::high_resolution_clock::now();
+            auto [best_value, best_action] = problem.DP1DVector();
+            const auto end_time = std::chrono::high_resolution_clock::now();
+            const std::chrono::duration<double> elapsed_SDP = end_time - start_time;
+            std::cout << "running time of SDP = " << elapsed_SDP.count() << " seconds\n";
+            std::cout << "optimal value = " << best_value << '\n';
 
             const auto start_time2 = std::chrono::high_resolution_clock::now();
             auto [mip_value, mip_linearization_gap] = problem.solve_mip();
-            // const auto end_time2 = std::chrono::high_resolution_clock::now();
-            // const std::chrono::duration<double> elapsed_mip = end_time2 - start_time2;
-            // std::cout << "running time of MIP = " << elapsed_mip.count() << " seconds\n";
-            // std::cout << "value of MIP = " << mip_value << '\n';
-            // const double optimality_gap = best_value - mip_value;
-            // const double gap_mip = (best_value - mip_value) / best_value * 100;
-            // std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2)
-            //           << gap_mip << "%" << std::endl;
-            // const double gap_line =
-            //     (mip_linearization_gap + mip_value - best_value) / best_value * 100;
-            // std::cout << "the linear gap by MIP is: " << std::fixed << std::setprecision(2)
-            //           << gap_line << "%" << std::endl;
+            const auto end_time2 = std::chrono::high_resolution_clock::now();
+            const std::chrono::duration<double> elapsed_mip = end_time2 - start_time2;
+            std::cout << "running time of MIP = " << elapsed_mip.count() << " seconds\n";
+            std::cout << "value of MIP = " << mip_value << '\n';
+            const double optimality_gap = best_value - mip_value;
+            const double gap_mip = (best_value - mip_value) / best_value * 100;
+            std::cout << "the optimality gap by MIP is: " << std::fixed << std::setprecision(2)
+                      << gap_mip << "%" << std::endl;
+            const double gap_line =
+                (mip_linearization_gap + mip_value - best_value) / best_value * 100;
+            std::cout << "the linear gap by MIP is: " << std::fixed << std::setprecision(2)
+                      << gap_line << "%" << std::endl;
 
-            // const auto start_time3 = std::chrono::high_resolution_clock::now();
-            // auto sS = problem.solve_mipsS();
-            // double mip_sS = problem.simulate_sS(problem.getInitialWorkers(), sS);
-            // const auto end_time3 = std::chrono::high_resolution_clock::now();
-            // const std::chrono::duration<double> elapsed_sS = end_time3 - start_time3;
-            // std::cout << "running time of MIP-sS = " << elapsed_sS.count() << " seconds\n";
-            // const double sS_gap = best_value - mip_sS;
-            // const double gap_sS = sS_gap / best_value * 100;
-            // std::cout << "the optimality gap by MIP-sS is: " << std::fixed <<
-            // std::setprecision(2)
-            //           << gap_sS << "%" << std::endl;
-            // const std::chrono::duration<double> elapsed_mipsS = end_time3 - start_time3;
+            const auto start_time3 = std::chrono::high_resolution_clock::now();
+            auto sS = problem.solve_mipsS();
+            double mip_sS = problem.simulate_sS(problem.getInitialWorkers(), sS);
+            const auto end_time3 = std::chrono::high_resolution_clock::now();
+            const std::chrono::duration<double> elapsed_sS = end_time3 - start_time3;
+            std::cout << "running time of MIP-sS = " << elapsed_sS.count() << " seconds\n";
+            const double sS_gap = best_value - mip_sS;
+            const double gap_sS = sS_gap / best_value * 100;
+            std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2)
+                      << gap_sS << "%" << std::endl;
+            const std::chrono::duration<double> elapsed_mipsS = end_time3 - start_time3;
 
-            // appendCSVRowAny(file_name, TurnoverTypeNames[i], fix_cost, salary, penalty,
-            //                 MinWorkerTypeNames[j], elapsed_SDP.count(), best_value,
-            //                 elapsed_mip.count(), mip_value, optimality_gap,
-            //                 mip_linearization_gap, elapsed_mipsS.count(), mip_sS, sS_gap);
             appendCSVRowAny(file_name, TurnoverTypeNames[i], fix_cost, salary, penalty,
-                            MinWorkerTypeNames[j], 0, 0, 0, mip_value, 0, mip_linearization_gap, 0,
-                            0, 0);
+                            MinWorkerTypeNames[j], elapsed_SDP.count(), best_value,
+                            elapsed_mip.count(), mip_value, optimality_gap, mip_linearization_gap,
+                            elapsed_mipsS.count(), mip_sS, sS_gap);
             std::cout << std::string(50, '*') << std::endl;
           }
         }

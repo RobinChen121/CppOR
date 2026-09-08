@@ -2,6 +2,8 @@
  * Created by Zhen Chen on 2025/6/17.
  * Email: chen.zhen5526@gmail.com
  * Description: For 12 periods, the running time of c++ without parallel is 5.14s while java is 94s.
+ * If using map, the running time of c++ is 31s. When planning horizon is large, the method for
+ * computing sS takes too long (the step size should be larger to speed up the computation).
  *
  *
  */
@@ -27,7 +29,8 @@ class WorkforcePlan {
   Direction direction = Direction::FORWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
+  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3,
+                                        0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
@@ -40,7 +43,7 @@ class WorkforcePlan {
   // 初始化给定默认值时就可以使用已声明变量的值
   std::vector<int> min_workers = std::vector<int>(T, 50);
 
-  int piece_segment = 10;
+  int piece_segment = 5;
 
   std::string varied_parameter;
   std::string K_convexity;
@@ -53,8 +56,8 @@ class WorkforcePlan {
   std::vector<std::vector<double>> p_c; // cumulative binomial probability
   std::vector<std::vector<std::vector<double>>> pmf;
   // std::vector<std::vector<std::vector<std::array<double, 2>>>> pmf2;
-  std::unordered_map<WorkerState, int> cache_actions;
-  std::unordered_map<WorkerState, double> cache_values;
+  std::map<WorkerState, int> cache_actions;
+  std::map<WorkerState, double> cache_values;
 
   std::mutex mtx; // 互斥锁保护共享数据写入
 
