@@ -2,8 +2,9 @@
  * Created by Zhen Chen on 2025/6/17.
  * Email: chen.zhen5526@gmail.com
  * Description: For 12 periods, the running time of c++ without parallel is 5.14s while java is 94s.
- * If using map, the running time of c++ is 31s. When planning horizon is large, the method for
- * computing sS takes too long (the step size should be larger to speed up the computation).
+ * If using map, the running time of c++ is 31s, or 36s when making inventory value float. When
+ * planning horizon is large, the method for computing sS takes too long (the step size should be
+ * larger to speed up the computation).
  *
  *
  */
@@ -26,11 +27,11 @@ enum class Direction { FORWARD, BACKWARD };
 enum class ToComputeGy { True, False };
 
 class WorkforcePlan {
-  Direction direction = Direction::FORWARD; // backward will be parallel computing
+  Direction direction = Direction::BACKWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3,
-                                        0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
+  std::vector<double> turnover_rates = {0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};
+  // 0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;

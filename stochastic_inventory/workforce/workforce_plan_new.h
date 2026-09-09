@@ -3,6 +3,7 @@
  * Email: chen.zhen5526@gmail.com
  * Description: use a 1-D vector to store the value function and policy function, which is faster
  * than using unordered_map.
+ * For 12 period problem, running time is 0.14s while java is 66s.
  *
  *
  */
@@ -34,12 +35,12 @@ class WorkforcePlanNew {
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 6000.0; // 2000, 6000
+  double fix_hire_cost = 4000.0; // 2000, 6000
   double unit_vari_cost = 100.0;
-  double salary = 3000.0; // 1500, 2500, 3500
-  double unit_penalty = 3500.0;
+  double salary = 2000.0; // 1500, 2500, 3500
+  double unit_penalty = 3000.0;
   // 初始化给定默认值时就可以使用已声明变量的值
-  std::vector<int> min_workers = {6, 22, 8, 34, 54, 27, 27, 62, 35, 66, 8, 27};
+  std::vector<int> min_workers = {50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50};
 
   int max_hire_num = 500;
   int max_worker_num = 500;
