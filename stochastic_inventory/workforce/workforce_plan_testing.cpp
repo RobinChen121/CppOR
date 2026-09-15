@@ -93,7 +93,7 @@ int main() {
             std::cout << "optimal value = " << best_value << '\n';
 
             const auto start_time2 = std::chrono::high_resolution_clock::now();
-            auto [mip_value, mip_linearization_gap] = problem.solve_mip();
+            auto [mip_value, mip_linearization_gap] = problem.solveMIP();
             const auto end_time2 = std::chrono::high_resolution_clock::now();
             const std::chrono::duration<double> elapsed_mip = end_time2 - start_time2;
             std::cout << "running time of MIP = " << elapsed_mip.count() << " seconds\n";

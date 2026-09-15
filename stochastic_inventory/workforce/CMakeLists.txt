@@ -26,9 +26,9 @@ endif ()
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
         worker_state.cpp
-        #        workforce_plan_new.cpp
+        workforce_plan_new.cpp
         #        workforce_plan_testing.cpp
-        workforce_plan.cpp
+        #        workforce_plan.cpp
 
         #        workforce_testing_animation.cpp
         ../../utils/pmf.cpp

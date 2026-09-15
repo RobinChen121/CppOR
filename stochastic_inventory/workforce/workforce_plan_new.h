@@ -12,6 +12,7 @@
 #define WORKFORCE_WORKFORCE_PLAN_NEW_H
 
 #include "../../utils/pmf.h"
+#include "piecewise.h"
 #include "worker_state.h"
 
 #include <array>
@@ -28,23 +29,29 @@ struct PMFData {
 
 PMFData getPMFBinomial(int max_staff, const std::vector<double> &ps);
 
+enum class CallBack { True, False };
+
 class WorkforcePlanNew {
-  std::vector<double> turnover_rates = {0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};
+  CallBack call_back = CallBack::False;
+
+  std::vector<double> turnover_rates = std::vector<double>(12, 0.4);
   int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 4000.0; // 2000, 6000
-  double unit_vari_cost = 100.0;
-  double salary = 2000.0; // 1500, 2500, 3500
-  double unit_penalty = 3000.0;
+  double fix_hire_cost = 2000.0; // 2000, 6000
+  double unit_vari_cost = 0.0;
+  double salary = 1500.0; // 1500, 2500, 3500
+  double unit_penalty = 3500.0;
   // 初始化给定默认值时就可以使用已声明变量的值
-  std::vector<int> min_workers = {50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50};
+  std::vector<int> min_workers = std::vector<int>(T, 100);
 
   int max_hire_num = 500;
   int max_worker_num = 500;
-  int piece_segment = 5;
+  int piece_segment =
+      5; // the actual number of segments is piece_segment + 1, e.g., 1 means 2 segments
+  // the last segment line is x axis
   int state_num = max_worker_num + 1; // number of possible worker states, from 0 to max_worker_num
   double INF = 1e100;
 
@@ -61,15 +68,26 @@ class WorkforcePlanNew {
 
   PMFData pmf;
 
+  // mip 是外层类的一个内部成员。将其声明为 const 意味着：
+  // 在外层类对象的整个生命周期内，这个 mip 成员不能被重新赋值
+  // 在外层类的成员函数中，只能调用 PiecewiseWorkforce 的 const 成员函数，除非该成员函数被声明为
+  // mutable 这样更加安全，防止在外层类中意外修改 mip 的状态，从而保持数据的一致性和完整性
+  const PiecewiseWorkforce mip =
+      PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary, unit_penalty,
+                         turnover_rates, min_workers, piece_segment);
+
 public:
   WorkforcePlanNew() { pmf = getPMFBinomial(max_worker_num, turnover_rates); }
+
+  void mipPiecewisePrecompute() const { mip.preparePiecewiseCache(); }
 
   // 建议将所有单参数构造函数（或带有默认参数的构造函数）默认声明为 explicit
   // 否则下面两种情况会导致隐式转换
   // ExplicitVector ev1 = 10; // ExplicitVector 是一个单参数构造的类
   // printExplicitVector(20) // 这个函数的参数是一个 ExplicitVector 对象
   // explicit 禁止隐式转换和隐式初始化
-  // explicit WorkforcePlanNew(const std::vector<std::vector<std::vector<double>>> &pmf) : pmf(pmf)
+  // explicit WorkforcePlanNew(const std::vector<std::vector<std::vector<double>>> &pmf) :
+  // pmf(pmf)
   // {};
 
   explicit WorkforcePlanNew(const std::vector<double> &turnover_rate, const double fix_hire_cost,
@@ -87,8 +105,8 @@ public:
   [[nodiscard]] std::vector<double> computeExpectCost(int t) const;
   std::pair<double, double> DP1DVector();
 
-  [[nodiscard]] std::pair<double, double> solve_mip() const;
-  [[nodiscard]] std::vector<std::array<int, 2>> solve_mipsS() const;
+  [[nodiscard]] std::pair<double, double> solveMIP() const;
+  [[nodiscard]] std::vector<std::array<int, 2>> solveMIPsS() const;
   [[nodiscard]] double simulate_sS(int ini_workers,
                                    const std::vector<std::array<int, 2>> &sS) const;
 };

@@ -13,18 +13,15 @@
 
 class WorkerState {
   int period{};
-  double initial_workers{};
+  int initial_workers{};
 
 public:
   WorkerState() = default; // WorkerState() {} 并不初始化类的变量
   WorkerState(const int period, const int initial_workers)
       : period(period), initial_workers(initial_workers) {};
 
-  WorkerState(const int period, const double initial_workers)
-      : period(period), initial_workers(initial_workers) {};
-
   [[nodiscard]] int getPeriod() const { return period; }
-  [[nodiscard]] double getInitialWorkers() const { return initial_workers; }
+  [[nodiscard]] int getInitialWorkers() const { return initial_workers; }
 
   // define operator < or give a self defined comparator for sorting map
   bool operator<(const WorkerState &other) const;

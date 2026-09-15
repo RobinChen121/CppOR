@@ -1,10 +1,9 @@
 ﻿/*
  * Created by Zhen Chen on 2025/6/17.
  * Email: chen.zhen5526@gmail.com
- * Description: For 12 periods, the running time of c++ without parallel is 5.14s while java is 94s.
- * If using map, the running time of c++ is 31s, or 36s when making inventory value float. When
- * planning horizon is large, the method for computing sS takes too long (the step size should be
- * larger to speed up the computation).
+ * Description: For 12 periods, if using unordered_map, the running time of c++ without parallel
+ * is 5.14s while java is 94s. If using map, the running time of c++ is 31s, or 36s when making
+ * inventory value float. If using 1-D vector, the running time of c++ is 0.14s.
  *
  *
  */
@@ -30,7 +29,7 @@ class WorkforcePlan {
   Direction direction = Direction::FORWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = std::vector<double>(30, 0.5);
+  std::vector<double> turnover_rates = std::vector<double>(12, 0.4);
   ; //{0.4, 0.5, 0.4, 0.6, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};
   // 0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   size_t T = turnover_rates.size();
@@ -38,28 +37,29 @@ class WorkforcePlan {
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 4000.5;
-  double unit_vari_cost = 0.5;
-  double salary = 2000.8;
-  double unit_penalty = 3000.5;
+  double fix_hire_cost = 2000.0; // 2000, 6000
+  double unit_vari_cost = 0.0;
+  double salary = 1500.0; // 1500, 2500, 3500
+  double unit_penalty = 3500.0;
   // 初始化给定默认值时就可以使用已声明变量的值
-  std::vector<int> min_workers = std::vector<int>(T, 50);
+  std::vector<int> min_workers = std::vector<int>(T, 100);
 
-  int piece_segment = 5;
+  int piece_segment = 1;
 
   std::string varied_parameter;
   std::string K_convexity;
   std::string binomial_K_convexity;
   std::string convexity;
 
-  int max_hire_num = 500;
-  int max_worker_num = 500;
+  int max_hire_num = 1500; // can affect the computational time very much, if it is 1800, 12
+                           // periods, running time is 305s, if it is 1500, running time is 152s
+  int max_worker_num = 1500;
 
   std::vector<std::vector<double>> p_c; // cumulative binomial probability
   std::vector<std::vector<std::vector<double>>> pmf;
   // std::vector<std::vector<std::vector<std::array<double, 2>>>> pmf2;
-  std::map<WorkerState, int> cache_actions;
-  std::map<WorkerState, double> cache_values;
+  std::unordered_map<WorkerState, int> cache_actions;
+  std::unordered_map<WorkerState, double> cache_values;
 
   std::mutex mtx; // 互斥锁保护共享数据写入
 

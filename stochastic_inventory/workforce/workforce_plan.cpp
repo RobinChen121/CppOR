@@ -4,6 +4,7 @@
  * Description: For a 3 period problem, c++ serial can solve in 0.63 seconds while java is 7s.
  * For 5 periods, c++ parallel 8 threads mac m1 time is 0.77s while serial is 1.76s.
  * dell 7740, 12 threads, time is 1.85s while serial is 3.98s.
+ * For the recursion-free algorithm, it is very fast.
  *
  *
  *
@@ -560,6 +561,7 @@ int main() {
   const WorkerState ini_state{1, 0};
   auto start_time = std::chrono::high_resolution_clock::now();
   auto final_value = problem.solve(ini_state).first;
+  const auto arr_sS = problem.find_sS();
   auto end_time = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time = end_time - start_time;
   if (problem.get_direction() == Direction::FORWARD)
@@ -573,7 +575,6 @@ int main() {
   std::cout << "Optimal hiring number in the first period is " << problem.solve(ini_state).second
             << std::endl;
 
-  const auto arr_sS = problem.find_sS();
   std::cout << "s, S in each period are: " << std::endl;
   for (const auto row : arr_sS) {
     for (const auto col : row) {
@@ -612,26 +613,27 @@ int main() {
   std::cout << "the optimality gap by MIP-sS is: " << std::fixed << std::setprecision(2) << gap2
             << "%" << std::endl;
 
-  // const auto ww_result = problem.compute_ww();
-  // std::cout << std::endl;
-  // std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
-  // const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
-  // std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3
-  // <<
-  // "%"
-  //           << std::endl;
-  // auto sS_ww = ww_result.second;
-  // for (const auto row : sS_ww) {
-  //   for (const auto col : row) {
-  //     std::cout << col << ' ';
-  //   }
-  //   std::cout << std::endl;
-  // }
-  // const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
-  // const double gap4 = (ww_sS - final_value) / final_value * 100;
-  // std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) <<
-  // gap4
-  //           << "%" << std::endl;
+  std::cout << std::string(50, '*') << std::endl;
+  auto start_time4 = std::chrono::high_resolution_clock::now();
+  const auto ww_result = problem.compute_ww();
+  auto end_time4 = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> time4 = end_time4 - start_time4;
+  std::cout << "running time of WW is " << time4.count() << 's' << std::endl;
+  std::cout << "V in the 1st period is: " << ww_result.first[0] << std::endl;
+  const double gap3 = (ww_result.first[0] - final_value) / final_value * 100;
+  std::cout << "the optimality gap by WW is: " << std::fixed << std::setprecision(2) << gap3 << "%"
+            << std::endl;
+  auto sS_ww = ww_result.second;
+  for (const auto row : sS_ww) {
+    for (const auto col : row) {
+      std::cout << col << ' ';
+    }
+    std::cout << std::endl;
+  }
+  const double ww_sS = problem.simulate_sS(problem.get_initial_state(), ww_result.second);
+  const double gap4 = (ww_sS - final_value) / final_value * 100;
+  std::cout << "the optimality gap by ww-sS is: " << std::fixed << std::setprecision(2) << gap4
+            << "%" << std::endl;
 
   // start_time = std::chrono::high_resolution_clock::now();
   // const auto arr = problem.compute_Gy();

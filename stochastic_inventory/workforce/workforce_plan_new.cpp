@@ -124,17 +124,13 @@ std::pair<double, double> WorkforcePlanNew::DP1DVector() {
   return {value[static_cast<int>(initial_workers)], policy[static_cast<int>(initial_workers)]};
 }
 
-std::pair<double, double> WorkforcePlanNew::solve_mip() const {
+std::pair<double, double> WorkforcePlanNew::solveMIP() const {
   // c++ 如果使用 new 创建对象，则是一个指针，访问对象时用 -> 操作符，必须使用 delete
   // 释放内存，否则会造成内存泄漏
-  const auto mip = PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
-                                      unit_penalty, turnover_rates, min_workers);
-  return mip.piece_approximate(piece_segment);
+  return mip.pieceApproximate(piece_segment);
 }
 
-std::vector<std::array<int, 2>> WorkforcePlanNew::solve_mipsS() const {
-  const auto mip = PiecewiseWorkforce(initial_workers, fix_hire_cost, unit_vari_cost, salary,
-                                      unit_penalty, turnover_rates, min_workers);
+std::vector<std::array<int, 2>> WorkforcePlanNew::solveMIPsS() const {
   auto sS_values = mip.get_sS(piece_segment);
   return sS_values;
 }
@@ -214,8 +210,9 @@ int main() {
             << " is: " << best_action << '\n';
   std::cout << std::string(50, '*') << std::endl;
 
+  problem.mipPiecewisePrecompute();
   const auto start_time2 = std::chrono::high_resolution_clock::now();
-  auto [fst, snd] = problem.solve_mip();
+  auto [fst, snd] = problem.solveMIP();
   const auto end_time2 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time2 = end_time2 - start_time2;
   std::cout << "running time of MIP is " << time2.count() << 's' << std::endl;
@@ -228,7 +225,7 @@ int main() {
 
   std::cout << std::string(50, '*') << std::endl;
   const auto start_time3 = std::chrono::high_resolution_clock::now();
-  const auto sS_values = problem.solve_mipsS();
+  const auto sS_values = problem.solveMIPsS();
   const auto end_time3 = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> time3 = end_time3 - start_time3;
   std::cout << "running time of MIP-sS is " << time3.count() << 's' << std::endl;
