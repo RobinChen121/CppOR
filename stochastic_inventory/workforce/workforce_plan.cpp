@@ -5,7 +5,7 @@
  * For 5 periods, c++ parallel 8 threads mac m1 time is 0.77s while serial is 1.76s.
  * dell 7740, 12 threads, time is 1.85s while serial is 3.98s.
  *
- * When using mip, the turnover rate in each period should be same.
+ *
  *
  */
 

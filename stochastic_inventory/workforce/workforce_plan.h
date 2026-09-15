@@ -27,20 +27,21 @@ enum class Direction { FORWARD, BACKWARD };
 enum class ToComputeGy { True, False };
 
 class WorkforcePlan {
-  Direction direction = Direction::BACKWARD; // backward will be parallel computing
+  Direction direction = Direction::FORWARD; // backward will be parallel computing
   ToComputeGy to_compute_gy = ToComputeGy::False;
 
-  std::vector<double> turnover_rates = {0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};
+  std::vector<double> turnover_rates = std::vector<double>(30, 0.5);
+  ; //{0.4, 0.5, 0.4, 0.6, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};
   // 0.1, 0.3, 0.5, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.5, 0.3};
   size_t T = turnover_rates.size();
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
-  double fix_hire_cost = 4000.0;
-  double unit_vari_cost = 0.0;
-  double salary = 2000.0;
-  double unit_penalty = 3000.0;
+  double fix_hire_cost = 4000.5;
+  double unit_vari_cost = 0.5;
+  double salary = 2000.8;
+  double unit_penalty = 3000.5;
   // 初始化给定默认值时就可以使用已声明变量的值
   std::vector<int> min_workers = std::vector<int>(T, 50);
 
