@@ -11,7 +11,7 @@
 
 class PiecewiseWorkforce {
   using PiecewiseResult = std::vector<std::vector<double>>;
-  using PiecewiseKey = std::pair<int, int>;
+  using PiecewiseKey = std::tuple<int, int, int>;
 
   int initial_workers{};
   double fix_hire_cost{};
@@ -36,7 +36,7 @@ public:
         turnover_rates(turnover_rates), min_workers(min_workers), segment_num_(segment_num) {};
 
   static PiecewiseResult piecewise(int segment_num, int min_worker, double p);
-  std::pair<double, double> pieceApproximateCallback(int segment_num) const;
+  std::pair<double, double> pieceApproximateCallback() const;
   void preparePiecewiseCache(int segment_num) const;
   void preparePiecewiseCache() const;
   [[nodiscard]] const PiecewiseResult &getPiecewiseResult(int segment_num, int t, int j) const;
@@ -45,7 +45,9 @@ public:
   [[nodiscard]] double computeLineGap(const std::vector<int> &z, const std::vector<double> &y,
                                       const std::vector<double> &u) const;
   [[nodiscard]] std::vector<std::array<int, 2>> get_sS(int segment_num) const;
+  [[nodiscard]] std::vector<std::array<int, 2>> get_sS_callback() const;
   [[nodiscard]] int find_s(int segment_num, int S_value, double GS, int tt) const;
+  [[nodiscard]] int find_s_callback(int S_value, double GS, int tt) const;
 };
 
 #endif // PIECEWISE_H

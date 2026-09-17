@@ -34,23 +34,23 @@ enum class CallBack { True, False };
 class WorkforcePlanNew {
   CallBack call_back = CallBack::False;
 
-  std::vector<double> turnover_rates = std::vector<double>(12, 0.4);
+  std::vector<double> turnover_rates = std::vector<double>(15, 0.4);
   int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
   // 类初始化 {} 更安全，防止类属性窄化，例如从 double 到 int 这样的精度丢失
   WorkerState ini_state = WorkerState{1, initial_workers};
   double fix_hire_cost = 2000.0; // 2000, 6000
-  double unit_vari_cost = 0.0;
+  double unit_vari_cost = 100.0;
   double salary = 1500.0; // 1500, 2500, 3500
   double unit_penalty = 3500.0;
   // 初始化给定默认值时就可以使用已声明变量的值
   std::vector<int> min_workers = std::vector<int>(T, 100);
 
-  int max_hire_num = 500;
-  int max_worker_num = 500;
+  int max_hire_num = 1500;
+  int max_worker_num = 1500;
   int piece_segment =
-      5; // the actual number of segments is piece_segment + 1, e.g., 1 means 2 segments
+      2; // the actual number of segments is piece_segment + 1, e.g., 1 means 2 segments
   // the last segment line is x axis
   int state_num = max_worker_num + 1; // number of possible worker states, from 0 to max_worker_num
   double INF = 1e100;
@@ -80,6 +80,9 @@ public:
   WorkforcePlanNew() { pmf = getPMFBinomial(max_worker_num, turnover_rates); }
 
   void mipPiecewisePrecompute() const { mip.preparePiecewiseCache(); }
+
+  void openCallback() { call_back = CallBack::True; }
+  void closeCallback() { call_back = CallBack::False; }
 
   // 建议将所有单参数构造函数（或带有默认参数的构造函数）默认声明为 explicit
   // 否则下面两种情况会导致隐式转换

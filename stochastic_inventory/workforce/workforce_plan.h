@@ -72,6 +72,14 @@ public:
     compute_turnover();
     // pmf2 = PMF::getPMFBinomial2(max_worker_num, turnover_rates);
   }
+  explicit WorkforcePlan(const std::vector<double> &turnover_rate, const double fix_hire_cost,
+                         const double salary, const double unit_penalty,
+                         const std::vector<int> &min_workers)
+      : turnover_rates(turnover_rate), fix_hire_cost(fix_hire_cost), salary(salary),
+        unit_penalty(unit_penalty), min_workers(min_workers) {
+    pmf = PMF::getPMFBinomial(max_worker_num, turnover_rates);
+    compute_turnover();
+  };
 
   void set_fix_cost(double value);
   void set_salary(double value);
