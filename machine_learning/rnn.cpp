@@ -146,6 +146,8 @@ struct RNN {
   // compute gradients via BPTT for a single sequence (x_seq) and target y_true (scalar)
   // using formulas you provided: delta_y_t = (y_hat_t - y_t) * (1 - y_hat_t^2)
   // delta_h_t = (Why^T * delta_y_t + Whh^T * delta_h_{t+1}) .* f'(z_h_t)
+  // Backpropagation Through Time (BPTT)
+  // the most important part of RNN training, compute gradients for all parameters
   void bptt(const std::vector<double> &x_seq, const double y_true,
             const std::vector<std::vector<double>> &z_h, const std::vector<std::vector<double>> &h,
             const std::vector<std::vector<double>> &z_y,
@@ -358,13 +360,13 @@ int main() {
 
   auto normalize = [&](const double x) -> double { // lambda function
     // scale to [-1,1]
-//    return -1.0 + 2.0 * (x - min_data) / (max_data - min_data);
+    //    return -1.0 + 2.0 * (x - min_data) / (max_data - min_data);
     // scale to [0,1]
     return (x - min_data) / (max_data - min_data);
   };
   auto denormalize = [&](const double y) -> double { // lambda function
     // inverse map from [-1,1] back to original
-//    return min_data + (y + 1.0) * (max_data - min_data) / 2.0;
+    //    return min_data + (y + 1.0) * (max_data - min_data) / 2.0;
     // inverse map from [0,1] back to original
     return min_data + y * (max_data - min_data);
   };
@@ -436,10 +438,10 @@ int main() {
       double lr = 0.001;
 
       // apply SGD update
-       rnn.SDG(dWxh, dWhh, dWhy, dbh, dby, lr);
+      rnn.SDG(dWxh, dWhh, dWhy, dbh, dby, lr);
 
       // apply ADAM update
-//      rnn.ADAM(dWxh, dWhh, dWhy, dbh, dby, lr);
+      //      rnn.ADAM(dWxh, dWhh, dWhy, dbh, dby, lr);
     }
 
     epoch_loss /= std::max(1, train_samples);

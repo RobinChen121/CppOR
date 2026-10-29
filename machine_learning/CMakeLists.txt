@@ -15,10 +15,10 @@ endif ()
 
 # 创建可执行程序，需要运行的 cpp 文件放在这里
 add_executable(${PROJECT_NAME}
-        back_propagation.cpp
+        #        back_propagation.cpp
         #        activation.h
         #        simple_rnn.cpp
-        #        rnn.cpp
+        rnn.cpp
         #        simple_nn.cpp
         #        rnn_libtorch.cpp
         #        lstm.cpp
@@ -54,9 +54,9 @@ if (APPLE)
             dl
     )
 elseif (MSVC)
-    include_directories(C:/ProgramData/anaconda3/include/)
-    include_directories(C:/ProgramData/anaconda3/Lib/site-packages/numpy/core/include/)
+    include_directories(D:/Users/Administrator/AppData/Local/Programs/Python/Python313/include/)
+    include_directories(D:/Users/Administrator/AppData/Local/Programs/Python/Python313/Lib/site-packages/numpy/_core/include/)
     target_link_libraries(${PROJECT_NAME}
-            C:/ProgramData/anaconda3/libs/python312.lib
+            D:/Users/Administrator/AppData/Local/Programs/Python/Python313/libs/python313.lib
     )
 endif ()
