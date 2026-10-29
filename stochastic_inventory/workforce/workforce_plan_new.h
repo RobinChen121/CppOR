@@ -34,7 +34,8 @@ enum class CallBack { True, False };
 class WorkforcePlanNew {
   CallBack call_back = CallBack::False;
 
-  std::vector<double> turnover_rates = std::vector<double>(15, 0.4);
+  std::vector<double> turnover_rates = {0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.5,
+                                        0.5, 0.5, 0.7, 0.7, 0.7}; // std::vector<double>(15, 0.4);
   int T = static_cast<int>(turnover_rates.size());
 
   int initial_workers = 0;
@@ -43,14 +44,15 @@ class WorkforcePlanNew {
   double fix_hire_cost = 2000.0; // 2000, 6000
   double unit_vari_cost = 100.0;
   double salary = 1500.0; // 1500, 2500, 3500
-  double unit_penalty = 3500.0;
+  double unit_penalty = 5000.0;
   // 初始化给定默认值时就可以使用已声明变量的值
-  std::vector<int> min_workers = std::vector<int>(T, 100);
+  std::vector<int> min_workers = {188, 64,  279, 453, 224, 223,
+                                  517, 291, 547, 646, 224, 215}; // std::vector<int>(T, 100);
 
-  int max_hire_num = 1500;
-  int max_worker_num = 1500;
+  int max_hire_num = 2500;
+  int max_worker_num = 2500;
   int piece_segment =
-      2; // the actual number of segments is piece_segment + 1, e.g., 1 means 2 segments
+      1; // the actual number of segments is piece_segment + 1, e.g., 1 means 2 segments
   // the last segment line is x axis
   int state_num = max_worker_num + 1; // number of possible worker states, from 0 to max_worker_num
   double INF = 1e100;

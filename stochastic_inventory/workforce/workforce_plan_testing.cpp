@@ -72,13 +72,16 @@ int main() {
     for (double fix_cost : fix_costs) {
       for (double salary : salaries) {
         for (double penalty : unit_penalties) {
-          for (int j = 0; j < static_cast<int>(MinWorkerType::MinWorkerCount); j++) {
+          for (int j = 9; j < static_cast<int>(MinWorkerType::MinWorkerCount); j++) {
+            // auto problem =
+            //     WorkforcePlan(turnover_rates[i], fix_cost, salary, penalty, min_workers[j]);
+
             auto problem =
-                WorkforcePlan(turnover_rates[i], fix_cost, salary, penalty, min_workers[j]);
+                WorkforcePlanNew(turnover_rates[i], fix_cost, salary, penalty, min_workers[j]);
 
             const auto start_time = std::chrono::high_resolution_clock::now();
-            // auto [best_value, best_action] = problem.DP1DVector();
-            auto [best_value, best_action] = problem.solve(WorkerState{1, 0});
+            auto [best_value, best_action] = problem.DP1DVector();
+            // auto [best_value, best_action] = problem.solve(WorkerState{1, 0});
             const auto end_time = std::chrono::high_resolution_clock::now();
             const std::chrono::duration<double> elapsed_SDP = end_time - start_time;
             std::cout << "running time of SDP = " << elapsed_SDP.count() << " seconds\n";
